@@ -41,3 +41,40 @@ maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com
 specificationVersion: '0.19'
+common:
+  - name: Postman Network
+    url: https://www.postman.com/grey-rocket-585331
+    type: PostmanNetwork
+  - name: Buy Acronis True Image (formerly Acronis Home Office)
+    description: 'null'
+    url: https://www.acronis.com/en-us/products/true-image/purchasing/
+    type: Pricing
+  - name: Acronis Cyber Protect  Purchasing options
+    description: 'null'
+    url: https://www.acronis.com/en-us/products/cyber-protect/purchasing/
+    type: Pricing
+  - name: Acronis Cyber Protect Cloud Pricing and Licensing for Service Providers
+    description: 'null'
+    url: https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/
+    type: Pricing
+  - name: 'Acronis #CyberFit Partner Program'
+    description: 'null'
+    url: https://www.acronis.com/en-us/partners/
+    type: Partners
+  - name: Acronis Affiliate Program
+    description: 'null'
+    url: https://www.acronis.com/en-us/partners/affiliates/
+    type: Affiliate
+  - name: Acronis Forum
+    description: 'null'
+    url: https://forum.acronis.com/?ckattempt=1
+    type: Forums
+  - name: 'Acronis Resource Center: Case Studies'
+    description: 'null'
+    url: >-
+      https://www.acronis.com/en-us/resource-center/category/case-studies/?sort=recent
+    type: CaseStudies
+  - name: Cyber Protection & Cybersecurity Blog
+    description: 'null'
+    url: https://www.acronis.com/en-us/blog/
+    type: Blog
