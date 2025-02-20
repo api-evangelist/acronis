@@ -15,6 +15,69 @@ apis:
       providers and system integrators. Here, we build partnerships and
       integrations, share ideas and best practices, to achieve better business
       results together. 
+  - aid: acronis:account-management-api
+    name: Account Management API
+    description: 'null'
+    humanURL: >-
+      https://developer.acronis.com/doc/account-management/v2/reference/index.html#docs/summary/summary
+    tags: []
+    properties: []
+  - aid: acronis:agent-management-rest-api
+    name: Agent Management REST API
+    description: 'null'
+    humanURL: >-
+      https://developer.acronis.com/doc/agents/v2/reference/index.html#docs/summary/summary
+    tags: []
+    properties: []
+  - aid: acronis:resource-and-policy-management-api
+    name: Resource and Policy Management API
+    description: 'null'
+    humanURL: >-
+      https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html#docs/summary/summary
+    tags: []
+    properties: []
+  - aid: acronis:task-manager-api
+    name: Task Manager API
+    description: 'null'
+    humanURL: >-
+      https://developer.acronis.com/doc/tasks/v2/reference/index.html#docs/summary/summary
+    tags: []
+    properties: []
+  - aid: acronis:advanced-automation-api
+    name: Advanced Automation API
+    description: 'null'
+    humanURL: >-
+      https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html#docs/summary/summary
+    tags: []
+    properties: []
+  - aid: acronis:event-manager-api
+    name: Event Manager API
+    description: 'null'
+    humanURL: >-
+      https://developer.acronis.com/doc/events/v1/reference/index.html#docs/summary/summary
+    tags: []
+    properties: []
+  - aid: acronis:disaster-recovery-service-api
+    name: Disaster Recovery Service API
+    description: 'null'
+    humanURL: >-
+      https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html#docs/summary/summary
+    tags: []
+    properties: []
+  - aid: acronis:endpoint-detection-and-response-api
+    name: Endpoint Detection and Response API
+    description: 'null'
+    humanURL: >-
+      https://developer.acronis.com/doc/mdr/v1/reference/index.html#docs/summary/summary
+    tags: []
+    properties: []
+  - aid: acronis:vault-manager-rest-api
+    name: Vault Manager REST API
+    description: 'null'
+    humanURL: >-
+      https://developer.acronis.com/doc/vaultman/v1/reference/index.html#docs/summary/summary
+    tags: []
+    properties: []
 name: Acronis
 tags:
   - Data Protection
@@ -78,3 +141,19 @@ common:
     description: 'null'
     url: https://www.acronis.com/en-us/blog/
     type: Blog
+  - name: Getting started - Integration Guide
+    description: 'null'
+    url: https://developer.acronis.com/doc/outbound/apis/getting-started/index.html
+    type: GettingStarted
+  - name: Authentication - Integration Guide
+    description: 'null'
+    url: https://developer.acronis.com/doc/outbound/apis/authentication/index.html
+    type: Authentication
+  - name: Pagination - Integration Guide
+    description: 'null'
+    url: https://developer.acronis.com/doc/outbound/apis/pagination.html
+    type: Pagination
+  - name: Glossary - Integration Guide
+    description: 'null'
+    url: https://developer.acronis.com/doc/glossary.html
+    type: Glossary
