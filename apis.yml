@@ -2,82 +2,69 @@ aid: acronis
 url: >-
   https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/apis.yml
 apis:
-  - aid: acronis:acronis
-    name: Acronis
-    tags:
-      - API
-    humanURL: ' https://developer.acronis.com/en-us/'
-    properties:
-      - url: ' https://developer.acronis.com/en-us/'
-        type: Documentation
-    description: >-
-      Welcome to our ecosystem of software vendors, developers, service
-      providers and system integrators. Here, we build partnerships and
-      integrations, share ideas and best practices, to achieve better business
-      results together. 
   - aid: acronis:account-management-api
     name: Account Management API
-    description: 'null'
+    tags: []
     humanURL: >-
       https://developer.acronis.com/doc/account-management/v2/reference/index.html#docs/summary/summary
-    tags: []
     properties: []
+    description: 'null'
   - aid: acronis:agent-management-rest-api
     name: Agent Management REST API
-    description: 'null'
+    tags: []
     humanURL: >-
       https://developer.acronis.com/doc/agents/v2/reference/index.html#docs/summary/summary
-    tags: []
     properties: []
+    description: 'null'
   - aid: acronis:resource-and-policy-management-api
     name: Resource and Policy Management API
-    description: 'null'
+    tags: []
     humanURL: >-
       https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html#docs/summary/summary
-    tags: []
     properties: []
+    description: 'null'
   - aid: acronis:task-manager-api
     name: Task Manager API
-    description: 'null'
+    tags: []
     humanURL: >-
       https://developer.acronis.com/doc/tasks/v2/reference/index.html#docs/summary/summary
-    tags: []
     properties: []
+    description: 'null'
   - aid: acronis:advanced-automation-api
     name: Advanced Automation API
-    description: 'null'
+    tags: []
     humanURL: >-
       https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html#docs/summary/summary
-    tags: []
     properties: []
+    description: 'null'
   - aid: acronis:event-manager-api
     name: Event Manager API
-    description: 'null'
+    tags: []
     humanURL: >-
       https://developer.acronis.com/doc/events/v1/reference/index.html#docs/summary/summary
-    tags: []
     properties: []
+    description: 'null'
   - aid: acronis:disaster-recovery-service-api
     name: Disaster Recovery Service API
-    description: 'null'
+    tags: []
     humanURL: >-
       https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html#docs/summary/summary
-    tags: []
     properties: []
+    description: 'null'
   - aid: acronis:endpoint-detection-and-response-api
     name: Endpoint Detection and Response API
-    description: 'null'
+    tags: []
     humanURL: >-
       https://developer.acronis.com/doc/mdr/v1/reference/index.html#docs/summary/summary
-    tags: []
     properties: []
+    description: 'null'
   - aid: acronis:vault-manager-rest-api
     name: Vault Manager REST API
-    description: 'null'
+    tags: []
     humanURL: >-
       https://developer.acronis.com/doc/vaultman/v1/reference/index.html#docs/summary/summary
-    tags: []
     properties: []
+    description: 'null'
 name: Acronis
 tags:
   - Data Protection
@@ -86,6 +73,59 @@ tags:
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 access: 3rd-Party
+common:
+  - url: https://www.postman.com/grey-rocket-585331
+    name: Postman Network
+    type: PostmanNetwork
+  - url: https://www.acronis.com/en-us/products/true-image/purchasing/
+    name: Buy Acronis True Image (formerly Acronis Home Office)
+    type: Pricing
+    description: 'null'
+  - url: https://www.acronis.com/en-us/products/cyber-protect/purchasing/
+    name: Acronis Cyber Protect  Purchasing options
+    type: Pricing
+    description: 'null'
+  - url: https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/
+    name: Acronis Cyber Protect Cloud Pricing and Licensing for Service Providers
+    type: Pricing
+    description: 'null'
+  - url: https://www.acronis.com/en-us/partners/
+    name: 'Acronis #CyberFit Partner Program'
+    type: Partners
+    description: 'null'
+  - url: https://www.acronis.com/en-us/partners/affiliates/
+    name: Acronis Affiliate Program
+    type: Affiliate
+    description: 'null'
+  - url: https://forum.acronis.com/?ckattempt=1
+    name: Acronis Forum
+    type: Forums
+    description: 'null'
+  - url: >-
+      https://www.acronis.com/en-us/resource-center/category/case-studies/?sort=recent
+    name: 'Acronis Resource Center: Case Studies'
+    type: CaseStudies
+    description: 'null'
+  - url: https://www.acronis.com/en-us/blog/
+    name: Cyber Protection & Cybersecurity Blog
+    type: Blog
+    description: 'null'
+  - url: https://developer.acronis.com/doc/outbound/apis/getting-started/index.html
+    name: Getting started - Integration Guide
+    type: GettingStarted
+    description: 'null'
+  - url: https://developer.acronis.com/doc/outbound/apis/authentication/index.html
+    name: Authentication - Integration Guide
+    type: Authentication
+    description: 'null'
+  - url: https://developer.acronis.com/doc/outbound/apis/pagination.html
+    name: Pagination - Integration Guide
+    type: Pagination
+    description: 'null'
+  - url: https://developer.acronis.com/doc/glossary.html
+    name: Glossary - Integration Guide
+    type: Glossary
+    description: 'null'
 created: '2025-02-17'
 modified: '2025-02-19'
 position: Consumer
@@ -104,56 +144,3 @@ maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com
 specificationVersion: '0.19'
-common:
-  - name: Postman Network
-    url: https://www.postman.com/grey-rocket-585331
-    type: PostmanNetwork
-  - name: Buy Acronis True Image (formerly Acronis Home Office)
-    description: 'null'
-    url: https://www.acronis.com/en-us/products/true-image/purchasing/
-    type: Pricing
-  - name: Acronis Cyber Protect  Purchasing options
-    description: 'null'
-    url: https://www.acronis.com/en-us/products/cyber-protect/purchasing/
-    type: Pricing
-  - name: Acronis Cyber Protect Cloud Pricing and Licensing for Service Providers
-    description: 'null'
-    url: https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/
-    type: Pricing
-  - name: 'Acronis #CyberFit Partner Program'
-    description: 'null'
-    url: https://www.acronis.com/en-us/partners/
-    type: Partners
-  - name: Acronis Affiliate Program
-    description: 'null'
-    url: https://www.acronis.com/en-us/partners/affiliates/
-    type: Affiliate
-  - name: Acronis Forum
-    description: 'null'
-    url: https://forum.acronis.com/?ckattempt=1
-    type: Forums
-  - name: 'Acronis Resource Center: Case Studies'
-    description: 'null'
-    url: >-
-      https://www.acronis.com/en-us/resource-center/category/case-studies/?sort=recent
-    type: CaseStudies
-  - name: Cyber Protection & Cybersecurity Blog
-    description: 'null'
-    url: https://www.acronis.com/en-us/blog/
-    type: Blog
-  - name: Getting started - Integration Guide
-    description: 'null'
-    url: https://developer.acronis.com/doc/outbound/apis/getting-started/index.html
-    type: GettingStarted
-  - name: Authentication - Integration Guide
-    description: 'null'
-    url: https://developer.acronis.com/doc/outbound/apis/authentication/index.html
-    type: Authentication
-  - name: Pagination - Integration Guide
-    description: 'null'
-    url: https://developer.acronis.com/doc/outbound/apis/pagination.html
-    type: Pagination
-  - name: Glossary - Integration Guide
-    description: 'null'
-    url: https://developer.acronis.com/doc/glossary.html
-    type: Glossary
