@@ -5,9 +5,9 @@ name: Acronis
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
+  - Cybersecurity
   - Data Protection
   - Endpoint Management
-  - Cybersecurity
 description: >-
   Acronis is a leading provider of cyber protection solutions that deliver
   innovative technology to protect data, applications, and systems from the
