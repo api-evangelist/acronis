@@ -1,0 +1,148 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: Acronis Task Manager API
+  description: Acronis Task Manager API for monitoring backup and protection tasks and activities.
+  tags:
+    - Acronis
+    - Backup
+    - Cybersecurity
+    - Monitoring
+    - Tasks
+  created: "2026-04-19"
+  modified: "2026-04-19"
+
+binds:
+  - namespace: env
+    keys:
+      ACRONIS_ACCESS_TOKEN: ACRONIS_ACCESS_TOKEN
+
+capability:
+  consumes:
+    - type: http
+      namespace: acronis-tasks
+      baseUri: https://eu2-cloud.acronis.com/api/task_manager/v2
+      description: Acronis Task Manager API v2
+      authentication:
+        type: bearer
+        token: "{{ACRONIS_ACCESS_TOKEN}}"
+      resources:
+        - name: tasks
+          path: /tasks
+          description: Backup and protection task monitoring
+          operations:
+            - name: list-tasks
+              method: GET
+              description: List backup tasks with filtering and pagination
+              inputParameters:
+                - name: tenant_id
+                  in: query
+                  type: string
+                  required: false
+                  description: Tenant UUID filter
+                - name: state
+                  in: query
+                  type: string
+                  required: false
+                  description: Filter by task state
+                - name: result_code
+                  in: query
+                  type: string
+                  required: false
+                  description: Filter by result code
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: get-task
+              method: GET
+              description: Get task details by ID
+              inputParameters:
+                - name: task_id
+                  in: path
+                  type: string
+                  required: true
+                  description: Task identifier
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: activities
+          path: /activities
+          description: Task activity monitoring
+          operations:
+            - name: list-activities
+              method: GET
+              description: List task activities
+              inputParameters:
+                - name: task_id
+                  in: query
+                  type: string
+                  required: false
+                  description: Parent task ID filter
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  exposes:
+    - type: rest
+      port: 8102
+      namespace: acronis-tasks-api
+      resources:
+        - path: /v1/tasks
+          name: tasks
+          description: Task monitoring
+          operations:
+            - method: GET
+              name: list-tasks
+              description: List tasks
+              call: "acronis-tasks.list-tasks"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9102
+      namespace: acronis-tasks-mcp
+      transport: http
+      tools:
+        - name: list-tasks
+          description: List Acronis backup and protection tasks with filtering by state and result
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "acronis-tasks.list-tasks"
+          with:
+            tenant_id: "tools.tenant_id"
+            state: "tools.state"
+            result_code: "tools.result_code"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-task
+          description: Get details about a specific Acronis backup task
+          hints:
+            readOnly: true
+            idempotent: true
+          call: "acronis-tasks.get-task"
+          with:
+            task_id: "tools.task_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: list-activities
+          description: List activities for a specific Acronis task
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "acronis-tasks.list-activities"
+          with:
+            task_id: "tools.task_id"
+          outputParameters:
+            - type: object
+              mapping: "$."

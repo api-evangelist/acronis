@@ -1,0 +1,373 @@
+openapi: 3.0.3
+info:
+  title: Acronis Task Manager API
+  description: >-
+    The Acronis Task Manager API provides endpoints for monitoring backup and protection
+    tasks and activities across the Acronis Cyber Protect Cloud platform. Tasks represent
+    top-level operations while activities are subordinate execution units.
+  version: '2.0'
+  contact:
+    name: Acronis Developer Portal
+    url: https://developer.acronis.com
+  x-generated-from: documentation
+  x-last-validated: '2026-04-19'
+
+servers:
+  - url: https://{datacenter}.acronis.com/api/task_manager/v2
+    description: Acronis Task Manager API
+    variables:
+      datacenter:
+        default: eu2-cloud
+        description: Acronis datacenter region
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Tasks
+    description: Backup and protection task monitoring
+  - name: Activities
+    description: Task activity and sub-operation tracking
+
+paths:
+  /tasks:
+    get:
+      operationId: listTasks
+      summary: Acronis List Tasks
+      description: Fetch a list of backup and protection tasks with filtering, ordering, and pagination support.
+      tags: [Tasks]
+      parameters:
+        - name: tenant_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter tasks by tenant UUID
+        - name: state
+          in: query
+          schema:
+            type: string
+            enum: [enqueued, assigned, started, paused, completed]
+          description: Filter by task state
+        - name: result_code
+          in: query
+          schema:
+            type: string
+            enum: [ok, error, warning, cancelled, abandoned, timedout]
+          description: Filter by task result
+        - name: policy_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by protection policy ID
+        - name: resource_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by protected resource ID
+        - name: order
+          in: query
+          schema:
+            type: string
+          description: Sort order (e.g., startedAt desc)
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+          description: Maximum tasks to return
+        - name: after
+          in: query
+          schema:
+            type: string
+          description: Pagination cursor
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskList'
+              examples:
+                ListTasks200Example:
+                  summary: Default listTasks 200 response
+                  x-microcks-default: true
+                  value:
+                    items:
+                      - id: task-uuid-001
+                        type: backup
+                        state: completed
+                        result_code: ok
+                        startedAt: '2025-03-15T14:30:00Z'
+                        completedAt: '2025-03-15T14:45:00Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /tasks/{task_id}:
+    get:
+      operationId: getTask
+      summary: Acronis Get Task
+      description: Retrieve details about a specific backup or protection task by ID.
+      tags: [Tasks]
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Task unique identifier
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+              examples:
+                GetTask200Example:
+                  summary: Default getTask 200 response
+                  x-microcks-default: true
+                  value:
+                    id: task-uuid-001
+                    type: backup
+                    state: completed
+                    result_code: ok
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /activities:
+    get:
+      operationId: listActivities
+      summary: Acronis List Activities
+      description: Fetch a list of task activities with filtering and pagination.
+      tags: [Activities]
+      parameters:
+        - name: tenant_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter activities by tenant UUID
+        - name: task_id
+          in: query
+          schema:
+            type: string
+          description: Filter activities by parent task ID
+        - name: state
+          in: query
+          schema:
+            type: string
+            enum: [enqueued, assigned, started, paused, completed]
+          description: Filter by activity state
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+          description: Maximum activities to return
+        - name: after
+          in: query
+          schema:
+            type: string
+          description: Pagination cursor
+      responses:
+        '200':
+          description: List of activities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /activities/{activity_id}:
+    get:
+      operationId: getActivity
+      summary: Acronis Get Activity
+      description: Retrieve details about a specific task activity by ID.
+      tags: [Activities]
+      parameters:
+        - name: activity_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Activity unique identifier
+      responses:
+        '200':
+          description: Activity details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Task:
+      type: object
+      description: A top-level Acronis backup or protection task
+      properties:
+        id:
+          type: string
+          description: Task unique identifier
+          example: task-uuid-001
+        uuid:
+          type: string
+          format: uuid
+          description: Task UUID
+        type:
+          type: string
+          description: Task type (backup, restore, replication, etc.)
+          example: backup
+        state:
+          type: string
+          enum: [enqueued, assigned, started, paused, completed]
+          description: Current task state
+          example: completed
+        result_code:
+          type: string
+          enum: [ok, error, warning, cancelled, abandoned, timedout]
+          description: Task result upon completion
+          example: ok
+        priority:
+          type: string
+          description: Task execution priority
+        policy_id:
+          type: string
+          format: uuid
+          description: Protection policy that initiated this task
+        resource_id:
+          type: string
+          format: uuid
+          description: Protected resource this task operates on
+        executor_id:
+          type: string
+          description: Agent or executor that ran the task
+        enqueuedAt:
+          type: string
+          format: date-time
+          description: When the task was queued
+        startedAt:
+          type: string
+          format: date-time
+          description: When task execution began
+        completedAt:
+          type: string
+          format: date-time
+          description: When task completed
+        updatedAt:
+          type: string
+          format: date-time
+        tenant_id:
+          type: string
+          format: uuid
+
+    TaskList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        paging:
+          type: object
+          properties:
+            cursors:
+              type: object
+
+    Activity:
+      type: object
+      description: A subordinate activity within a task
+      properties:
+        id:
+          type: string
+          description: Activity unique identifier
+        type:
+          type: string
+          description: Activity type
+        state:
+          type: string
+          enum: [enqueued, assigned, started, paused, completed]
+        result_code:
+          type: string
+          enum: [ok, error, warning, cancelled, abandoned, timedout]
+        parent_activity_id:
+          type: string
+          description: Parent activity UUID if nested
+        task_id:
+          type: string
+          description: Parent task identifier
+        sustainable:
+          type: boolean
+          description: Whether activity can be requeued on failure
+        createdAt:
+          type: string
+          format: date-time
+        startedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+
+    ActivityList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+        paging:
+          type: object
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string

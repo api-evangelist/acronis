@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-structure/task-manager-task-structure.json",
+  "description": "A top-level Acronis backup or protection task",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Task unique identifier",
+      "example": "task-uuid-001"
+    },
+    "uuid": {
+      "type": "uuid",
+      "description": "Task UUID"
+    },
+    "type": {
+      "type": "string",
+      "description": "Task type (backup, restore, replication, etc.)",
+      "example": "backup"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "enqueued",
+        "assigned",
+        "started",
+        "paused",
+        "completed"
+      ],
+      "description": "Current task state",
+      "example": "completed"
+    },
+    "result_code": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "error",
+        "warning",
+        "cancelled",
+        "abandoned",
+        "timedout"
+      ],
+      "description": "Task result upon completion",
+      "example": "ok"
+    },
+    "priority": {
+      "type": "string",
+      "description": "Task execution priority"
+    },
+    "policy_id": {
+      "type": "uuid",
+      "description": "Protection policy that initiated this task"
+    },
+    "resource_id": {
+      "type": "uuid",
+      "description": "Protected resource this task operates on"
+    },
+    "executor_id": {
+      "type": "string",
+      "description": "Agent or executor that ran the task"
+    },
+    "enqueuedAt": {
+      "type": "datetime",
+      "description": "When the task was queued"
+    },
+    "startedAt": {
+      "type": "datetime",
+      "description": "When task execution began"
+    },
+    "completedAt": {
+      "type": "datetime",
+      "description": "When task completed"
+    },
+    "updatedAt": {
+      "type": "datetime"
+    },
+    "tenant_id": {
+      "type": "uuid"
+    }
+  },
+  "name": "Task"
+}

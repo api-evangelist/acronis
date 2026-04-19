@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-schema/account-management-report-schema.json",
+  "title": "Report",
+  "description": "Usage report configuration",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Report identifier"
+    },
+    "schedule": {
+      "type": "object",
+      "description": "Report schedule configuration"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Report parameters"
+    }
+  }
+}

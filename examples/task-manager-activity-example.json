@@ -1,0 +1,12 @@
+{
+  "id": "sample-uuid-001",
+  "type": "sample-value",
+  "state": "enqueued",
+  "result_code": "ok",
+  "parent_activity_id": "sample-uuid-001",
+  "task_id": "sample-uuid-001",
+  "sustainable": true,
+  "createdAt": "2025-03-15T14:30:00Z",
+  "startedAt": "2025-03-15T14:30:00Z",
+  "completedAt": "2025-03-15T14:30:00Z"
+}

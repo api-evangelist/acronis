@@ -1,0 +1,9 @@
+{
+  "firstname": "Production Tenant",
+  "lastname": "Production Tenant",
+  "email": "admin@example.com",
+  "phone": "sample-value",
+  "address1": "sample-value",
+  "city": "sample-value",
+  "country": "sample-value"
+}

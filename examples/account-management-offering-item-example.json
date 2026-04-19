@@ -1,0 +1,7 @@
+{
+  "name": "Production Tenant",
+  "application_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "status": 1,
+  "quota": "sample-value",
+  "edition": "sample-value"
+}

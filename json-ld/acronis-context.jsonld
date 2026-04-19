@@ -1,0 +1,272 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "acronis": "https://developer.acronis.com/schema/",
+    "schema": "https://schema.org/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "Activity": "acronis:Activity",
+    "Contact": "acronis:Contact",
+    "Task": "acronis:Task",
+    "Tenant": "acronis:Tenant",
+    "SearchResults": "acronis:SearchResults",
+    "User": "acronis:User",
+    "OfferingItem": "acronis:OfferingItem",
+    "HardwareNode": "acronis:HardwareNode",
+    "Agent": "acronis:Agent",
+    "Quota": "acronis:Quota",
+    "Report": "acronis:Report",
+    "Client": "acronis:Client",
+    "TokenResponse": "acronis:TokenResponse",
+    "UsageItem": "acronis:UsageItem",
+    "AgentUpdateSettings": "acronis:AgentUpdateSettings",
+    "AgentOS": "acronis:AgentOS",
+    "id": {
+      "@id": "acronis:id",
+      "@type": "xsd:string"
+    },
+    "type": {
+      "@id": "acronis:type",
+      "@type": "xsd:string"
+    },
+    "state": {
+      "@id": "acronis:state",
+      "@type": "xsd:string"
+    },
+    "result_code": {
+      "@id": "acronis:result_code",
+      "@type": "xsd:string"
+    },
+    "parent_activity_id": {
+      "@id": "acronis:parent_activity_id",
+      "@type": "xsd:string"
+    },
+    "task_id": {
+      "@id": "acronis:task_id",
+      "@type": "xsd:string"
+    },
+    "sustainable": {
+      "@id": "acronis:sustainable",
+      "@type": "xsd:boolean"
+    },
+    "createdAt": {
+      "@id": "acronis:createdAt",
+      "@type": "xsd:dateTime"
+    },
+    "startedAt": {
+      "@id": "acronis:startedAt",
+      "@type": "xsd:dateTime"
+    },
+    "completedAt": {
+      "@id": "acronis:completedAt",
+      "@type": "xsd:dateTime"
+    },
+    "firstname": {
+      "@id": "acronis:firstname",
+      "@type": "xsd:string"
+    },
+    "lastname": {
+      "@id": "acronis:lastname",
+      "@type": "xsd:string"
+    },
+    "email": "schema:email",
+    "phone": {
+      "@id": "acronis:phone",
+      "@type": "xsd:string"
+    },
+    "address1": {
+      "@id": "acronis:address1",
+      "@type": "xsd:string"
+    },
+    "city": {
+      "@id": "acronis:city",
+      "@type": "xsd:string"
+    },
+    "country": {
+      "@id": "acronis:country",
+      "@type": "xsd:string"
+    },
+    "uuid": {
+      "@id": "acronis:uuid",
+      "@type": "@id"
+    },
+    "priority": {
+      "@id": "acronis:priority",
+      "@type": "xsd:string"
+    },
+    "policy_id": {
+      "@id": "acronis:policy_id",
+      "@type": "@id"
+    },
+    "resource_id": {
+      "@id": "acronis:resource_id",
+      "@type": "@id"
+    },
+    "executor_id": {
+      "@id": "acronis:executor_id",
+      "@type": "xsd:string"
+    },
+    "enqueuedAt": {
+      "@id": "acronis:enqueuedAt",
+      "@type": "xsd:dateTime"
+    },
+    "updatedAt": {
+      "@id": "acronis:updatedAt",
+      "@type": "xsd:dateTime"
+    },
+    "tenant_id": {
+      "@id": "acronis:tenant_id",
+      "@type": "@id"
+    },
+    "name": "schema:name",
+    "kind": {
+      "@id": "acronis:kind",
+      "@type": "xsd:string"
+    },
+    "enabled": {
+      "@id": "acronis:enabled",
+      "@type": "xsd:boolean"
+    },
+    "parent_id": {
+      "@id": "acronis:parent_id",
+      "@type": "@id"
+    },
+    "customer_type": {
+      "@id": "acronis:customer_type",
+      "@type": "xsd:string"
+    },
+    "created_at": {
+      "@id": "acronis:created_at",
+      "@type": "xsd:dateTime"
+    },
+    "updated_at": {
+      "@id": "acronis:updated_at",
+      "@type": "xsd:dateTime"
+    },
+    "version": {
+      "@id": "acronis:version",
+      "@type": "xsd:integer"
+    },
+    "contact": {
+      "@id": "acronis:contact",
+      "@type": "xsd:string"
+    },
+    "items": {
+      "@id": "acronis:items",
+      "@container": "@set",
+      "@type": "xsd:string"
+    },
+    "size": {
+      "@id": "acronis:size",
+      "@type": "xsd:integer"
+    },
+    "login": {
+      "@id": "acronis:login",
+      "@type": "xsd:string"
+    },
+    "application_id": {
+      "@id": "acronis:application_id",
+      "@type": "@id"
+    },
+    "status": {
+      "@id": "acronis:status",
+      "@type": "xsd:integer"
+    },
+    "quota": {
+      "@id": "acronis:quota",
+      "@type": "xsd:string"
+    },
+    "edition": {
+      "@id": "acronis:edition",
+      "@type": "xsd:string"
+    },
+    "hostname": {
+      "@id": "acronis:hostname",
+      "@type": "xsd:string"
+    },
+    "os": {
+      "@id": "acronis:os",
+      "@type": "xsd:string"
+    },
+    "last_seen": {
+      "@id": "acronis:last_seen",
+      "@type": "xsd:dateTime"
+    },
+    "registration_time": {
+      "@id": "acronis:registration_time",
+      "@type": "xsd:dateTime"
+    },
+    "value": {
+      "@id": "acronis:value",
+      "@type": "xsd:decimal"
+    },
+    "overage": {
+      "@id": "acronis:overage",
+      "@type": "xsd:decimal"
+    },
+    "schedule": {
+      "@id": "acronis:schedule",
+      "@type": "xsd:string"
+    },
+    "parameters": {
+      "@id": "acronis:parameters",
+      "@type": "xsd:string"
+    },
+    "client_id": {
+      "@id": "acronis:client_id",
+      "@type": "xsd:string"
+    },
+    "client_secret": {
+      "@id": "acronis:client_secret",
+      "@type": "xsd:string"
+    },
+    "data": {
+      "@id": "acronis:data",
+      "@type": "xsd:string"
+    },
+    "access_token": {
+      "@id": "acronis:access_token",
+      "@type": "xsd:string"
+    },
+    "token_type": {
+      "@id": "acronis:token_type",
+      "@type": "xsd:string"
+    },
+    "expires_in": {
+      "@id": "acronis:expires_in",
+      "@type": "xsd:integer"
+    },
+    "refresh_token": {
+      "@id": "acronis:refresh_token",
+      "@type": "xsd:string"
+    },
+    "scope": {
+      "@id": "acronis:scope",
+      "@type": "xsd:string"
+    },
+    "offering_item": {
+      "@id": "acronis:offering_item",
+      "@type": "xsd:string"
+    },
+    "update_channel": {
+      "@id": "acronis:update_channel",
+      "@type": "xsd:string"
+    },
+    "automatic": {
+      "@id": "acronis:automatic",
+      "@type": "xsd:boolean"
+    },
+    "maintenance_window": {
+      "@id": "acronis:maintenance_window",
+      "@type": "xsd:string"
+    },
+    "family": {
+      "@id": "acronis:family",
+      "@type": "xsd:string"
+    },
+    "arch": {
+      "@id": "acronis:arch",
+      "@type": "xsd:string"
+    }
+  }
+}

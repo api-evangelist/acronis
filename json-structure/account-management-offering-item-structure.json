@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-structure/account-management-offering-item-structure.json",
+  "description": "An Acronis service or feature that can be enabled for a tenant",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Offering item identifier name",
+      "example": "vms"
+    },
+    "application_id": {
+      "type": "uuid",
+      "description": "Application that provides this offering item"
+    },
+    "status": {
+      "type": "int32",
+      "description": "Item status (1=active, 0=inactive)",
+      "example": 1
+    },
+    "quota": {
+      "$ref": "#/components/schemas/Quota"
+    },
+    "edition": {
+      "type": "string",
+      "description": "Edition name this item belongs to",
+      "example": "standard"
+    }
+  },
+  "name": "OfferingItem"
+}

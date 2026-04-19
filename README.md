@@ -1,138 +1,153 @@
 # Acronis (acronis)
-Acronis is a leading provider of cyber protection solutions that deliver innovative technology to protect data, applications, and systems from the ever-evolving threats of today's digital world. They offer a comprehensive suite of products, including backup and disaster recovery solutions, file sync and share services, and anti-malware protection. With a focus on combining data protection and cybersecurity, Acronis helps businesses and individuals safeguard their critical information and ensure business continuity in the face of cyberattacks, natural disasters, and human error. Their cutting-edge technology and user-friendly interface make it easy for customers to securely manage and protect their data across a variety of platforms and devices.
+Acronis is a leading provider of cyber protection solutions delivering innovative technology to protect data, applications, and systems. They offer backup and disaster recovery, file sync and share, anti-malware, and endpoint detection and response through the Acronis Cyber Protect Cloud platform. The Acronis developer API enables MSPs, IT administrators, and security teams to automate tenant management, agent monitoring, backup task tracking, and usage reporting.
 
-**URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/apis.yml)
+**URL:** [Visit APIs.json](https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/apis.yml)
 
-## Scope
-
-- **Type:** Index 
-- **Position:** Consumer 
-- **Access:** 3rd-Party 
+**Run:** [Capabilities Using Naftiko](https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=company-api-evangelist&utm_content=repo)
 
 ## Tags:
 
- - Data Protection, Endpoint Management, Cybersecurity
+ - Cybersecurity, Data Protection, Endpoint Management
 
 ## Timestamps
 
-- **Created:** 2025-02-17 
-- **Modified:** 2025-02-19 
+- **Created:** 2025-02-17
+- **Modified:** 2026-04-19
 
 ## APIs
 
 ### Acronis Account Management API
-The Acronis Account Management API is a tool that allows organizations to easily manage and automate their user accounts within the Acronis platform. With this API, administrators can create, update, and delete user accounts, as well as assign roles and permissions to specific users. This helps to streamline the account management process and ensure that the right users have access to the appropriate resources. Additionally, the API provides real-time information on user activity and account usage, enabling administrators to monitor and optimize their organization's Acronis account management practices.
+Manages tenant hierarchy, users, OAuth clients, applications, licensing (offering items), usage reporting, and infrastructure within Acronis Cyber Protect Cloud.
 
-**Human URL:** [https://developer.acronis.com/doc/account-management/v2/reference/index.html#docs/summary/summary](https://developer.acronis.com/doc/account-management/v2/reference/index.html#docs/summary/summary)
-
+**Human URL:** [https://developer.acronis.com/doc/account-management/v2/reference/index.html](https://developer.acronis.com/doc/account-management/v2/reference/index.html)
 
 #### Tags:
 
- - No Tags
+ - Account Management, Acronis, Tenants, Users
 
 #### Properties
 
-- [Documentation](https://developer.acronis.com/doc/account-management/v2/guide/index.html)
+- [Documentation](https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html)
+- [OpenAPI](openapi/acronis-account-management-openapi.yaml)
+- [NaftikoCapability](capabilities/shared/acronis-account-management.yaml)
+
+---
+
 ### Acronis Agent Management REST API
-The Acronis Agent Management REST API is a versatile tool that allows users to remotely manage and monitor Acronis agents from a centralized location. With this API, users can easily create, update, and delete agent profiles, as well as retrieve information about agent status, activity, and configuration settings. Additionally, users can schedule backups, set alerts, and perform various other administrative tasks with ease. By leveraging the power of the Acronis Agent Management REST API, users can streamline their workflow, improve efficiency, and ensure that their data is properly protected at all times.
+Provides endpoints for managing Acronis backup agents registered across the platform, update settings, and hardware node management.
 
-**Human URL:** [https://developer.acronis.com/doc/agents/v2/reference/index.html#docs/summary/summary](https://developer.acronis.com/doc/agents/v2/reference/index.html#docs/summary/summary)
-
+**Human URL:** [https://developer.acronis.com/doc/agents/v2/reference/index.html](https://developer.acronis.com/doc/agents/v2/reference/index.html)
 
 #### Tags:
 
- - No Tags
+ - Acronis, Agent Management, Backup, Endpoints
 
 #### Properties
 
 - [Documentation](https://developer.acronis.com/doc/agents/v2/reference/index.html)
+- [OpenAPI](openapi/acronis-agent-management-openapi.yaml)
+
+---
+
 ### Acronis Resource and Policy Management API
-Acronis Resource and Policy Management API is a powerful tool that enables organizations to efficiently manage their resources and policies within their IT infrastructure. This API allows users to define and enforce resource allocation policies, ensuring that resources are allocated in a fair and efficient manner. Additionally, the API provides real-time monitoring and reporting capabilities, allowing organizations to track resource usage and identify potential bottlenecks or inefficiencies. By utilizing Acronis Resource and Policy Management API, organizations can streamline their IT operations, optimize resource utilization, and improve overall performance and reliability.
+Enables organizations to manage protection policies and resources within their IT infrastructure.
 
-**Human URL:** [https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html#docs/summary/summary](https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html#docs/summary/summary)
-
+**Human URL:** [https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html](https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html)
 
 #### Tags:
 
- - No Tags
+ - Acronis, Policy Management, Resources
 
 #### Properties
 
 - [Documentation](https://developer.acronis.com/doc/resource-policy-management/v4/guide/index.html)
+
+---
+
 ### Acronis Task Manager API
-Acronis Task Manager API is a versatile tool that allows users to manage tasks and processes within the Acronis backup platform. This API enables users to create, edit, and monitor tasks, as well as retrieve detailed information about them. With Acronis Task Manager API, users can automate backup processes, schedule tasks to run at specific times, and easily keep track of the status of their tasks. By providing a seamless way to manage tasks within the Acronis platform, this API streamlines the backup process and helps users ensure that their data is always protected and secure.
+Monitors backup and protection tasks and activities with filtering, state tracking, and pagination.
 
-**Human URL:** [https://developer.acronis.com/doc/tasks/v2/reference/index.html#docs/summary/summary](https://developer.acronis.com/doc/tasks/v2/reference/index.html#docs/summary/summary)
-
+**Human URL:** [https://developer.acronis.com/doc/tasks/v2/reference/index.html](https://developer.acronis.com/doc/tasks/v2/reference/index.html)
 
 #### Tags:
 
- - No Tags
+ - Acronis, Backup, Monitoring, Tasks
 
 #### Properties
 
 - [Documentation](https://developer.acronis.com/doc/tasks/v2/guide/index.html)
+- [OpenAPI](openapi/acronis-task-manager-openapi.yaml)
+
+---
+
 ### Acronis Advanced Automation API
-The Acronis Advanced Automation API is a powerful tool that allows users to automate and streamline their backup and recovery processes. This API provides a set of functions and commands that can be used to manage backups, perform data recovery, and monitor system status. With the Advanced Automation API, users can create custom scripts and workflows to handle complex backup scenarios and integrate Acronis solutions into their existing IT infrastructure. This versatile tool allows for increased efficiency, flexibility, and control over backup and recovery operations, making it an essential component for any organization looking to optimize their data protection strategy.
+Automates and streamlines backup and recovery processes with custom scripts and workflows for MSPs.
 
-**Human URL:** [https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html#docs/summary/summary](https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html#docs/summary/summary)
-
+**Human URL:** [https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html](https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html)
 
 #### Tags:
 
- - No Tags
+ - Acronis, Advanced Automation, PSA
 
 #### Properties
 
 - [Documentation](https://developer.acronis.com/doc/outbound/apis/api-library/advanced-automation/index.html)
+
+---
+
 ### Acronis Event Manager API
-The Acronis Event Manager API is a powerful tool that allows users to monitor and manage events across their entire Acronis ecosystem. This API provides real-time access to event data, allowing users to track changes, monitor system activities, and respond quickly to potential security threats or system issues. By integrating with the Acronis Event Manager API, users can automate event monitoring processes, set up triggers and alert systems, and customize event management workflows to meet their specific needs. This API plays a crucial role in ensuring the smooth operation and security of Acronis environments, helping users stay informed, proactive, and in control of their data protection and recovery processes.
+Monitors and manages events across the Acronis ecosystem with real-time event data access.
 
-**Human URL:** [https://developer.acronis.com/doc/events/v1/reference/index.html#docs/summary/summary](https://developer.acronis.com/doc/events/v1/reference/index.html#docs/summary/summary)
-
+**Human URL:** [https://developer.acronis.com/doc/events/v1/reference/index.html](https://developer.acronis.com/doc/events/v1/reference/index.html)
 
 #### Tags:
 
- - No Tags
+ - Acronis, Events, Monitoring
 
 #### Properties
 
 - [Documentation](https://developer.acronis.com/doc/vendor-side/apis/api-library/events/index.html)
+
+---
+
 ### Acronis Disaster Recovery Service API
-The Acronis Disaster Recovery Service API is a powerful tool that allows organizations to automate and streamline their disaster recovery processes. This API provides developers with a set of tools and resources to manage and monitor the backup and recovery of critical data and applications. It enables businesses to easily integrate disaster recovery capabilities into their existing workflows, enabling faster recovery times and minimizing downtime in the event of a disaster. With this API, organizations can ensure the protection and availability of their data and applications, giving them peace of mind and confidence in their disaster recovery plans.
+Automates and streamlines disaster recovery processes for business continuity.
 
-**Human URL:** [https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html#docs/summary/summary](https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html#docs/summary/summary)
-
+**Human URL:** [https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html](https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html)
 
 #### Tags:
 
- - No Tags
+ - Acronis, Disaster Recovery
 
 #### Properties
 
 - [Documentation](https://developer.acronis.com/doc/outbound/apis/api-library/dr/index.html)
+
+---
+
 ### Acronis Endpoint Detection and Response API
-The Acronis Endpoint Detection and Response API is a comprehensive security solution that helps organizations detect and respond to cybersecurity threats in real-time. With this API, organizations can monitor and analyze endpoint devices for any suspicious activities or potential security breaches. It provides advanced threat detection capabilities, such as behavioral analysis and machine learning algorithms, to identify and prioritize threats based on their severity. In addition, the API allows organizations to automate response actions, such as isolating compromised devices or blocking malicious activities, to contain and remediate security incidents quickly. Overall, the Acronis Endpoint Detection and Response API empowers organizations to strengthen their cybersecurity defenses and protect their sensitive data from cyber threats.
+Provides EDR capabilities for detecting and responding to cybersecurity threats in real-time.
 
-**Human URL:** [https://developer.acronis.com/doc/mdr/v1/reference/index.html#docs/summary/summary](https://developer.acronis.com/doc/mdr/v1/reference/index.html#docs/summary/summary)
-
+**Human URL:** [https://developer.acronis.com/doc/mdr/v1/reference/index.html](https://developer.acronis.com/doc/mdr/v1/reference/index.html)
 
 #### Tags:
 
- - No Tags
+ - Acronis, EDR, Endpoint Security
 
 #### Properties
 
 - [Documentation](https://developer.acronis.com/doc/outbound/apis/api-library/mdr/index.html)
+
+---
+
 ### Acronis Vault Manager REST API
-The Acronis Vault Manager REST API is a tool that allows users to manage and interact with their Acronis Vault storage solutions programmatically. With the REST API, users can automate tasks such as creating, deleting, and updating backup vaults, as well as managing access controls and permissions. This API also enables users to retrieve information about their vaults and monitor their storage usage. By providing a way to integrate Acronis Vault Manager functionality into their own applications and workflows, the REST API streamlines the management of backup storage and enhances overall data protection capabilities.
+Manages Acronis Vault storage solutions programmatically for backup storage configuration.
 
-**Human URL:** [https://developer.acronis.com/doc/vaultman/v1/reference/index.html#docs/summary/summary](https://developer.acronis.com/doc/vaultman/v1/reference/index.html#docs/summary/summary)
-
+**Human URL:** [https://developer.acronis.com/doc/vaultman/v1/reference/index.html](https://developer.acronis.com/doc/vaultman/v1/reference/index.html)
 
 #### Tags:
 
- - No Tags
+ - Acronis, Storage, Vault Management
 
 #### Properties
 
@@ -140,23 +155,108 @@ The Acronis Vault Manager REST API is a tool that allows users to manage and int
 
 ## Common Properties
 
-- [PostmanNetwork](https://www.postman.com/grey-rocket-585331)
-- [Pricing](https://www.acronis.com/en-us/products/true-image/purchasing/)
-- [Pricing](https://www.acronis.com/en-us/products/cyber-protect/purchasing/)
-- [Pricing](https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/)
-- [Partners](https://www.acronis.com/en-us/partners/)
-- [Affiliate](https://www.acronis.com/en-us/partners/affiliates/)
-- [Forums](https://forum.acronis.com/?ckattempt=1)
-- [CaseStudies](https://www.acronis.com/en-us/resource-center/category/case-studies/?sort=recent)
-- [Blog](https://www.acronis.com/en-us/blog/)
+- [Portal](https://developer.acronis.com/)
 - [GettingStarted](https://developer.acronis.com/doc/outbound/apis/getting-started/index.html)
 - [Authentication](https://developer.acronis.com/doc/outbound/apis/authentication/index.html)
-- [Pagination](https://developer.acronis.com/doc/outbound/apis/pagination.html)
-- [Glossary](https://developer.acronis.com/doc/glossary.html)
+- [Blog](https://www.acronis.com/en-us/blog/)
+- [Support](https://www.acronis.com/en-us/support/)
+- [Pricing](https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/)
+- [Partners](https://www.acronis.com/en-us/partners/)
+- [GitHubOrganization](https://github.com/acronis)
+
+## Features
+
+| Name | Description |
+|------|-------------|
+| Tenant Hierarchy Management | Multi-tier tenant management for MSPs, partners, and customers with offering item quotas. |
+| Agent Management | Remote management of Acronis backup agents across Windows, Linux, macOS, and cloud workloads. |
+| Backup Task Monitoring | Real-time monitoring of backup and protection tasks with state, result, and activity tracking. |
+| Usage Reporting | Automated usage metrics collection and report generation for billing and capacity planning. |
+| Policy Management | Programmatic creation and application of protection policies to resources. |
+| Disaster Recovery API | Automated failover and recovery orchestration for business continuity. |
+| Endpoint Detection and Response | EDR capabilities for threat detection, investigation, and response via API. |
+
+## Use Cases
+
+| Name | Description |
+|------|-------------|
+| MSP Platform Automation | Automate tenant provisioning, licensing management, and usage reporting for managed service providers. |
+| Backup Monitoring Dashboard | Build custom dashboards tracking backup task status, failures, and completion rates. |
+| Agent Health Monitoring | Monitor agent online status, version compliance, and update management across endpoints. |
+| Compliance Reporting | Generate automated reports on data protection status for compliance and audit requirements. |
+| Disaster Recovery Automation | Trigger and monitor DR failover workflows programmatically for RTO/RPO compliance. |
+
+## Integrations
+
+| Name | Description |
+|------|-------------|
+| PSA Platforms | Integration with ConnectWise, Autotask, and other PSA platforms for MSP billing and ticketing. |
+| SIEM Systems | Event streaming to SIEM platforms via Event Manager API for security monitoring. |
+| RMM Tools | Integration with RMM platforms for agent deployment and backup policy management. |
+| Billing Systems | Usage data export for automated billing via usage and offering item APIs. |
+
+## Artifacts
+
+Machine-readable API specifications organized by format.
+
+### OpenAPI
+
+- [Acronis Account Management API](openapi/acronis-account-management-openapi.yaml)
+- [Acronis Agent Management REST API](openapi/acronis-agent-management-openapi.yaml)
+- [Acronis Task Manager API](openapi/acronis-task-manager-openapi.yaml)
+
+### JSON Schema
+
+- [Tenant Schema](json-schema/account-management-tenant-schema.json)
+- [User Schema](json-schema/account-management-user-schema.json)
+- [Agent Schema](json-schema/agent-management-agent-schema.json)
+- [Task Schema](json-schema/task-manager-task-schema.json)
+- [Offering Item Schema](json-schema/account-management-offering-item-schema.json)
+- [Client Schema](json-schema/account-management-client-schema.json)
+- [Usage Item Schema](json-schema/account-management-usage-item-schema.json)
+
+### JSON Structure
+
+- [Tenant Structure](json-structure/account-management-tenant-structure.json)
+- [Agent Structure](json-structure/agent-management-agent-structure.json)
+- [Task Structure](json-structure/task-manager-task-structure.json)
+
+### JSON-LD
+
+- [Acronis Context](json-ld/acronis-context.jsonld)
+
+### Examples
+
+- [Tenant Example](examples/account-management-tenant-example.json)
+- [Agent Example](examples/agent-management-agent-example.json)
+- [Task Example](examples/task-manager-task-example.json)
+
+## Capabilities
+
+Naftiko capabilities organized as shared per-API definitions composed into customer-facing workflows.
+
+### Shared Per-API Definitions
+
+- [Acronis Account Management](capabilities/shared/acronis-account-management.yaml) — 7 operations for tenant, user, and licensing management
+- [Acronis Agent Management](capabilities/shared/acronis-agent-management.yaml) — 3 operations for agent monitoring
+- [Acronis Task Manager](capabilities/shared/acronis-task-manager.yaml) — 3 operations for task monitoring
+
+### Workflow Capabilities
+
+| Workflow | APIs Combined | Tools | Persona |
+|----------|--------------|-------|---------|
+| [Cyber Protection Operations](capabilities/cyber-protection-operations.yaml) | Account, Agents, Tasks | 10 | MSP Administrator, IT Administrator, Security Analyst |
+
+## Vocabulary
+
+- [Acronis Vocabulary](vocabulary/acronis-vocabulary.yaml) — Unified taxonomy mapping 12 resources, 7 actions, 1 workflow, and 3 personas across operational (OpenAPI) and capability (Naftiko) dimensions
+
+## Rules
+
+- [Acronis Spectral Rules](rules/acronis-spectral-rules.yml) — 35+ rules across 13 categories enforcing Acronis API conventions
 
 ## Maintainers
 
 **FN:** Kin Lane
 
-**Email:** info@apievangelist.com
-
+**Email:** kin@apievangelist.com

@@ -1,0 +1,336 @@
+vocabulary: "1.0.0"
+
+info:
+  provider: Acronis
+  description: >-
+    Vocabulary covering the Acronis Cyber Protect Cloud platform API taxonomy, mapping
+    operational dimensions (tenants, agents, tasks) and capability dimensions (workflows,
+    personas) for cyber protection, backup, and disaster recovery management.
+  created: "2026-04-19"
+  modified: "2026-04-19"
+
+operational:
+  apis:
+    - name: Acronis Account Management API
+      namespace: acronis-account
+      version: "2.0"
+      baseUrl: https://eu2-cloud.acronis.com/api/2
+      status: active
+
+    - name: Acronis Agent Management REST API
+      namespace: acronis-agents
+      version: "2.0"
+      baseUrl: https://eu2-cloud.acronis.com/api/agent_manager/v2
+      status: active
+
+    - name: Acronis Task Manager API
+      namespace: acronis-tasks
+      version: "2.0"
+      baseUrl: https://eu2-cloud.acronis.com/api/task_manager/v2
+      status: active
+
+    - name: Acronis Resource and Policy Management API
+      namespace: acronis-policy
+      version: "4.0"
+      baseUrl: https://eu2-cloud.acronis.com/api
+      status: active
+
+    - name: Acronis Event Manager API
+      namespace: acronis-events
+      version: "1.0"
+      baseUrl: https://eu2-cloud.acronis.com/api/event_manager/v1
+      status: active
+
+    - name: Acronis Disaster Recovery Service API
+      namespace: acronis-dr
+      version: "2.0"
+      baseUrl: https://eu2-cloud.acronis.com/api/dr/v2
+      status: active
+
+    - name: Acronis Endpoint Detection and Response API
+      namespace: acronis-edr
+      version: "1.0"
+      baseUrl: https://eu2-cloud.acronis.com/api/edr/v1
+      status: active
+
+  resources:
+    - name: tenants
+      apis: [acronis-account]
+      actions: [list, create, get, update, delete, search]
+      description: Multi-tier tenant hierarchy (root, partner, folder, customer, unit)
+
+    - name: users
+      apis: [acronis-account]
+      actions: [list, get]
+      description: User accounts within tenant hierarchy
+
+    - name: clients
+      apis: [acronis-account]
+      actions: [list, create, get, delete]
+      description: OAuth2 client credentials for API authentication
+
+    - name: offering-items
+      apis: [acronis-account]
+      actions: [list, update]
+      description: Services and quotas configurable per tenant
+
+    - name: usages
+      apis: [acronis-account]
+      actions: [list, get]
+      description: Usage metrics across services for billing and capacity planning
+
+    - name: reports
+      apis: [acronis-account]
+      actions: [create, get]
+      description: Scheduled and on-demand usage reports
+
+    - name: agents
+      apis: [acronis-agents]
+      actions: [list, get, delete, update]
+      description: Acronis protection agents on Windows, Linux, macOS endpoints
+
+    - name: hardware-nodes
+      apis: [acronis-agents]
+      actions: [list, get]
+      description: Physical and virtual hardware nodes in the Acronis infrastructure
+
+    - name: tasks
+      apis: [acronis-tasks]
+      actions: [list, get]
+      description: Backup, restore, and protection task execution monitoring
+
+    - name: activities
+      apis: [acronis-tasks]
+      actions: [list, get]
+      description: Subordinate activities within tasks
+
+    - name: policies
+      apis: [acronis-policy]
+      actions: [list, create, get, update, delete]
+      description: Protection policies defining backup schedules and retention
+
+    - name: resources
+      apis: [acronis-policy]
+      actions: [list, create, get, delete]
+      description: Protected resources (machines, VMs, applications)
+
+  actions:
+    - name: list
+      httpMethod: GET
+      pattern: read
+      description: Retrieve collections with filtering and pagination
+
+    - name: get
+      httpMethod: GET
+      pattern: read
+      description: Retrieve a single resource by identifier
+
+    - name: create
+      httpMethod: POST
+      pattern: write
+      description: Create a new resource
+
+    - name: update
+      httpMethod: PUT
+      pattern: write
+      description: Update an existing resource
+
+    - name: delete
+      httpMethod: DELETE
+      pattern: destructive
+      description: Delete a resource
+
+    - name: search
+      httpMethod: GET
+      pattern: read
+      description: Search across tenants and users
+
+  schemas:
+    core:
+      - name: Tenant
+        description: Acronis tenant account in the multi-tier hierarchy
+        keyProperties: [id, name, kind, enabled, parent_id, customer_type, contact]
+
+      - name: User
+        description: Acronis platform user account
+        keyProperties: [id, login, email, firstname, lastname, enabled, tenant_id]
+
+      - name: Agent
+        description: Acronis protection agent on an endpoint
+        keyProperties: [id, hostname, status, version, os, tenant_id, last_seen]
+
+      - name: Task
+        description: Backup or protection task execution record
+        keyProperties: [id, type, state, result_code, policy_id, resource_id, startedAt, completedAt]
+
+    auxiliary:
+      - name: OfferingItem
+        description: Acronis service or feature with quota configuration
+        keyProperties: [name, application_id, status, quota, edition]
+
+      - name: Client
+        description: OAuth2 client credential for API access
+        keyProperties: [client_id, client_secret, tenant_id, type, status]
+
+  parameters:
+    identifiers:
+      - name: tenant_id
+        description: Tenant UUID (v4 format)
+      - name: agent_id
+        description: Agent unique identifier
+      - name: task_id
+        description: Task unique identifier
+      - name: client_id
+        description: OAuth2 client identifier
+
+    filters:
+      - name: state
+        description: Task or agent state filter
+      - name: result_code
+        description: Task result code filter
+      - name: os_family
+        description: Agent OS family filter
+
+    pagination:
+      - name: limit
+        description: Maximum results per page
+      - name: after
+        description: Pagination cursor
+
+  enums:
+    tenantKind:
+      - root
+      - partner
+      - folder
+      - customer
+      - unit
+
+    agentStatus:
+      - online
+      - offline
+      - unknown
+
+    taskState:
+      - enqueued
+      - assigned
+      - started
+      - paused
+      - completed
+
+    taskResultCode:
+      - ok
+      - error
+      - warning
+      - cancelled
+      - abandoned
+      - timedout
+
+    osFamily:
+      - WINDOWS
+      - LINUX
+      - MACOSX
+      - SOLARIS
+
+  authentication:
+    schemes:
+      - name: bearerAuth
+        type: Bearer
+        format: JWT
+        description: OAuth2 access token obtained from /idp/token endpoint
+      - name: basicAuth
+        type: Basic
+        description: Base64-encoded client_id:client_secret for token requests
+
+capability:
+  workflows:
+    - name: Cyber Protection Operations
+      file: capabilities/cyber-protection-operations.yaml
+      description: Unified tenant, agent, and task management for MSPs and IT admins
+      apisCombined: [acronis-account, acronis-agents, acronis-tasks]
+      toolCount: 10
+      personas: [MSP Administrator, IT Administrator, Security Analyst]
+
+  personas:
+    - id: msp-administrator
+      name: MSP Administrator
+      description: Managed service provider admin managing multiple customer tenants, licensing, and usage
+      workflows: [Cyber Protection Operations]
+
+    - id: it-administrator
+      name: IT Administrator
+      description: Enterprise IT admin managing backup agents, policies, and task monitoring
+      workflows: [Cyber Protection Operations]
+
+    - id: security-analyst
+      name: Security Analyst
+      description: Security professional monitoring EDR events and threat response
+      workflows: [Cyber Protection Operations]
+
+  domains:
+    - name: Tenant Administration
+      resources: [tenants, users, clients, offering-items]
+      description: Multi-tier tenant hierarchy and licensing management
+
+    - name: Endpoint Protection
+      resources: [agents, hardware-nodes]
+      description: Backup agent deployment and management across endpoints
+
+    - name: Task Monitoring
+      resources: [tasks, activities]
+      description: Backup and recovery task execution tracking
+
+    - name: Policy Management
+      resources: [policies, resources]
+      description: Protection policy creation and application
+
+  namespaces:
+    - name: acronis-account
+      type: consumed
+      description: Account Management API
+
+    - name: acronis-agents
+      type: consumed
+      description: Agent Management API
+
+    - name: acronis-tasks
+      type: consumed
+      description: Task Manager API
+
+    - name: acronis-cyber-protection-api
+      type: rest-exposed
+      port: 8080
+
+    - name: acronis-cyber-protection-mcp
+      type: mcp-exposed
+      port: 9090
+
+  binds:
+    - name: ACRONIS_ACCESS_TOKEN
+      description: OAuth2 bearer token for all Acronis API authentication
+      workflows: [Cyber Protection Operations]
+
+crossReference:
+  - resource: tenants
+    operations: [list-tenants, get-tenant, create-tenant]
+    workflows: [Cyber Protection Operations]
+    personas: [MSP Administrator]
+
+  - resource: users
+    operations: [list-tenant-users]
+    workflows: [Cyber Protection Operations]
+    personas: [MSP Administrator, IT Administrator]
+
+  - resource: usages
+    operations: [get-tenant-usages]
+    workflows: [Cyber Protection Operations]
+    personas: [MSP Administrator]
+
+  - resource: agents
+    operations: [list-agents, get-agent]
+    workflows: [Cyber Protection Operations]
+    personas: [IT Administrator, Security Analyst]
+
+  - resource: tasks
+    operations: [list-tasks, get-task]
+    workflows: [Cyber Protection Operations]
+    personas: [IT Administrator, Security Analyst]

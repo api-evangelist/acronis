@@ -1,0 +1,10 @@
+{
+  "id": "sample-uuid-001",
+  "hostname": "Production Tenant",
+  "status": "online",
+  "version": "21.12.30",
+  "tenant_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "os": "sample-value",
+  "last_seen": "2025-03-15T14:30:00Z",
+  "registration_time": "2025-03-15T14:30:00Z"
+}

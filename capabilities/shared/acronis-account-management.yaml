@@ -1,0 +1,253 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: Acronis Account Management API
+  description: Acronis Account Management API for tenant hierarchy, user management, OAuth clients, licensing, and usage reporting.
+  tags:
+    - Acronis
+    - Account Management
+    - Cybersecurity
+    - Tenants
+    - Users
+  created: "2026-04-19"
+  modified: "2026-04-19"
+
+binds:
+  - namespace: env
+    keys:
+      ACRONIS_ACCESS_TOKEN: ACRONIS_ACCESS_TOKEN
+      ACRONIS_DATACENTER_URL: ACRONIS_DATACENTER_URL
+
+capability:
+  consumes:
+    - type: http
+      namespace: acronis-account
+      baseUri: https://eu2-cloud.acronis.com/api/2
+      description: Acronis Account Management API v2
+      authentication:
+        type: bearer
+        token: "{{ACRONIS_ACCESS_TOKEN}}"
+      resources:
+        - name: tenants
+          path: /tenants
+          description: Tenant hierarchy management
+          operations:
+            - name: list-tenants
+              method: GET
+              description: List tenants in the hierarchy
+              inputParameters:
+                - name: parent_id
+                  in: query
+                  type: string
+                  required: false
+                  description: Parent tenant UUID filter
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: create-tenant
+              method: POST
+              description: Create a new tenant
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+              body:
+                type: json
+                data:
+                  name: "{{tools.name}}"
+                  kind: "{{tools.kind}}"
+                  parent_id: "{{tools.parent_id}}"
+
+        - name: tenant-by-id
+          path: /tenants/{tenant_id}
+          description: Single tenant operations
+          operations:
+            - name: get-tenant
+              method: GET
+              description: Get tenant details
+              inputParameters:
+                - name: tenant_id
+                  in: path
+                  type: string
+                  required: true
+                  description: Tenant UUID
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: tenant-users
+          path: /tenants/{tenant_id}/users
+          description: Tenant user management
+          operations:
+            - name: list-tenant-users
+              method: GET
+              description: List users in a tenant
+              inputParameters:
+                - name: tenant_id
+                  in: path
+                  type: string
+                  required: true
+                  description: Tenant UUID
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: offering-items
+          path: /tenants/{tenant_id}/offering_items
+          description: Tenant licensing management
+          operations:
+            - name: list-offering-items
+              method: GET
+              description: List offering items for a tenant
+              inputParameters:
+                - name: tenant_id
+                  in: path
+                  type: string
+                  required: true
+                  description: Tenant UUID
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: usages
+          path: /tenants/{tenant_id}/usages
+          description: Tenant usage metrics
+          operations:
+            - name: get-tenant-usages
+              method: GET
+              description: Get usage metrics for a tenant
+              inputParameters:
+                - name: tenant_id
+                  in: path
+                  type: string
+                  required: true
+                  description: Tenant UUID
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: clients
+          path: /clients
+          description: OAuth client management
+          operations:
+            - name: list-clients
+              method: GET
+              description: List OAuth2 clients
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: search
+          path: /search
+          description: Cross-tenant search
+          operations:
+            - name: search
+              method: GET
+              description: Search tenants and users
+              inputParameters:
+                - name: query
+                  in: query
+                  type: string
+                  required: true
+                  description: Search query string
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  exposes:
+    - type: rest
+      port: 8100
+      namespace: acronis-account-api
+      resources:
+        - path: /v1/tenants
+          name: tenants
+          description: Tenant management
+          operations:
+            - method: GET
+              name: list-tenants
+              description: List tenants
+              call: "acronis-account.list-tenants"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: POST
+              name: create-tenant
+              description: Create tenant
+              call: "acronis-account.create-tenant"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9100
+      namespace: acronis-account-mcp
+      transport: http
+      tools:
+        - name: list-tenants
+          description: List tenants in the Acronis hierarchy
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "acronis-account.list-tenants"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-tenant
+          description: Get details about a specific Acronis tenant
+          hints:
+            readOnly: true
+            idempotent: true
+          call: "acronis-account.get-tenant"
+          with:
+            tenant_id: "tools.tenant_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: list-tenant-users
+          description: List users in a specific Acronis tenant
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "acronis-account.list-tenant-users"
+          with:
+            tenant_id: "tools.tenant_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-tenant-usages
+          description: Get usage metrics for a tenant across all Acronis services
+          hints:
+            readOnly: true
+            idempotent: true
+          call: "acronis-account.get-tenant-usages"
+          with:
+            tenant_id: "tools.tenant_id"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: search
+          description: Search Acronis tenants and users by name, email, or login
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "acronis-account.search"
+          with:
+            query: "tools.query"
+          outputParameters:
+            - type: object
+              mapping: "$."

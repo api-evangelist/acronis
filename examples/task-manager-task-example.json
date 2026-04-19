@@ -1,0 +1,16 @@
+{
+  "id": "sample-uuid-001",
+  "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "type": "sample-value",
+  "state": "enqueued",
+  "result_code": "ok",
+  "priority": "sample-value",
+  "policy_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "resource_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "executor_id": "sample-uuid-001",
+  "enqueuedAt": "2025-03-15T14:30:00Z",
+  "startedAt": "2025-03-15T14:30:00Z",
+  "completedAt": "2025-03-15T14:30:00Z",
+  "updatedAt": "2025-03-15T14:30:00Z",
+  "tenant_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}

@@ -1,0 +1,990 @@
+openapi: 3.0.3
+info:
+  title: Acronis Account Management API
+  description: >-
+    The Acronis Account Management API provides endpoints for managing tenants, users,
+    OAuth clients, applications, licensing (offering items), usage reporting, infrastructure,
+    and branding within the Acronis Cyber Protect Cloud platform.
+  version: '2.0'
+  contact:
+    name: Acronis Developer Portal
+    url: https://developer.acronis.com
+  x-generated-from: documentation
+  x-last-validated: '2026-04-19'
+
+servers:
+  - url: https://{datacenter}.acronis.com/api/2
+    description: Acronis Cloud API - Account Management
+    variables:
+      datacenter:
+        default: eu2-cloud
+        description: Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Authentication
+    description: Token issuance, revocation, and introspection
+  - name: Tenants
+    description: Tenant hierarchy management and configuration
+  - name: Users
+    description: User account management within tenants
+  - name: Clients
+    description: OAuth2 client credential management
+  - name: Applications
+    description: Application binding and settings management
+  - name: Licensing
+    description: Offering items, quotas, and edition management
+  - name: Usage
+    description: Usage metrics and reporting
+  - name: Infrastructure
+    description: Infrastructure component and location management
+  - name: Branding
+    description: Custom branding and white-labeling
+
+paths:
+  /idp/token:
+    post:
+      operationId: requestToken
+      summary: Acronis Request Access Token
+      description: Request an OAuth2 access token using client credentials, authorization code, or other grant types.
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [grant_type]
+              properties:
+                grant_type:
+                  type: string
+                  enum: [client_credentials, authorization_code, password, refresh_token]
+                  description: OAuth2 grant type
+                client_id:
+                  type: string
+                  description: OAuth2 client identifier
+                client_secret:
+                  type: string
+                  description: OAuth2 client secret
+      responses:
+        '200':
+          description: Access token issued successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /idp/revoke_token:
+    post:
+      operationId: revokeToken
+      summary: Acronis Revoke Access Token
+      description: Revoke an OAuth2 access or refresh token.
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+                  description: Token to revoke
+      responses:
+        '200':
+          description: Token revoked successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /tenants:
+    get:
+      operationId: listTenants
+      summary: Acronis List Tenants
+      description: List tenants in the hierarchy. Can filter by parent tenant UUID or retrieve by specific UUIDs.
+      tags: [Tenants]
+      parameters:
+        - name: parent_id
+          in: query
+          description: Filter tenants by parent tenant UUID
+          schema:
+            type: string
+            format: uuid
+        - name: uuids
+          in: query
+          description: Comma-separated list of tenant UUIDs to retrieve
+          schema:
+            type: string
+        - name: subtree_root_id
+          in: query
+          description: Root tenant UUID for subtree traversal
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of tenants
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantList'
+              examples:
+                ListTenants200Example:
+                  summary: Default listTenants 200 response
+                  x-microcks-default: true
+                  value:
+                    items:
+                      - id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                        name: My Company
+                        kind: customer
+                        enabled: true
+                        parent_id: root-tenant-uuid
+                        created_at: '2025-03-15T14:30:00Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+    post:
+      operationId: createTenant
+      summary: Acronis Create Tenant
+      description: Create a new tenant as a child of an existing tenant.
+      tags: [Tenants]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+            examples:
+              CreateTenantRequestExample:
+                summary: Default createTenant request
+                x-microcks-default: true
+                value:
+                  name: New Partner Tenant
+                  kind: partner
+                  parent_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+      responses:
+        '201':
+          description: Tenant created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /tenants/{tenant_id}:
+    get:
+      operationId: getTenant
+      summary: Acronis Get Tenant
+      description: Retrieve details about a specific tenant by ID.
+      tags: [Tenants]
+      parameters:
+        - name: tenant_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID
+      responses:
+        '200':
+          description: Tenant details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+    put:
+      operationId: updateTenant
+      summary: Acronis Update Tenant
+      description: Update tenant properties including name, contact, and enabled status.
+      tags: [Tenants]
+      parameters:
+        - name: tenant_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRequest'
+      responses:
+        '200':
+          description: Tenant updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+    delete:
+      operationId: deleteTenant
+      summary: Acronis Delete Tenant
+      description: Delete a tenant. The tenant must have no children or active services.
+      tags: [Tenants]
+      parameters:
+        - name: tenant_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID
+        - name: version
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: Tenant version for optimistic concurrency
+      responses:
+        '204':
+          description: Tenant deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /tenants/{tenant_id}/users:
+    get:
+      operationId: listTenantUsers
+      summary: Acronis List Tenant Users
+      description: List all users belonging to a specific tenant.
+      tags: [Users]
+      parameters:
+        - name: tenant_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+          description: Maximum number of results
+        - name: after
+          in: query
+          schema:
+            type: string
+          description: Cursor for pagination
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /tenants/{tenant_id}/offering_items:
+    get:
+      operationId: listOfferingItems
+      summary: Acronis List Offering Items
+      description: List all offering items (services and quotas) configured for a tenant.
+      tags: [Licensing]
+      parameters:
+        - name: tenant_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID
+        - name: edition
+          in: query
+          schema:
+            type: string
+          description: Filter by edition name
+      responses:
+        '200':
+          description: List of offering items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferingItemList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+    put:
+      operationId: updateOfferingItems
+      summary: Acronis Update Offering Items
+      description: Enable, disable, or set quotas for offering items on a tenant.
+      tags: [Licensing]
+      parameters:
+        - name: tenant_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferingItemUpdateRequest'
+      responses:
+        '200':
+          description: Offering items updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferingItemList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /tenants/{tenant_id}/usages:
+    get:
+      operationId: getTenantUsages
+      summary: Acronis Get Tenant Usages
+      description: Get current usage metrics for a tenant across all services and resources.
+      tags: [Usage]
+      parameters:
+        - name: tenant_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID
+        - name: edition
+          in: query
+          schema:
+            type: string
+          description: Filter by edition
+      responses:
+        '200':
+          description: Tenant usage metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /clients:
+    get:
+      operationId: listClients
+      summary: Acronis List OAuth Clients
+      description: List OAuth2 client credentials registered in the system.
+      tags: [Clients]
+      parameters:
+        - name: tenant_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter clients by tenant UUID
+      responses:
+        '200':
+          description: List of OAuth clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientList'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+    post:
+      operationId: createClient
+      summary: Acronis Create OAuth Client
+      description: Create a new OAuth2 client credential for API authentication.
+      tags: [Clients]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRequest'
+      responses:
+        '201':
+          description: Client created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /clients/{client_id}:
+    get:
+      operationId: getClient
+      summary: Acronis Get OAuth Client
+      description: Retrieve details about a specific OAuth2 client.
+      tags: [Clients]
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: OAuth2 client identifier
+      responses:
+        '200':
+          description: Client details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+    delete:
+      operationId: deleteClient
+      summary: Acronis Delete OAuth Client
+      description: Delete an OAuth2 client credential.
+      tags: [Clients]
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: OAuth2 client identifier
+      responses:
+        '204':
+          description: Client deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /reports:
+    post:
+      operationId: createReport
+      summary: Acronis Create Usage Report
+      description: Create a scheduled or on-demand usage report configuration.
+      tags: [Usage]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+      responses:
+        '201':
+          description: Report created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /search:
+    get:
+      operationId: search
+      summary: Acronis Search Tenants and Users
+      description: Search for tenants and users by name, email, or login across the accessible hierarchy.
+      tags: [Tenants]
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query string
+        - name: tenant_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Scope search to a specific tenant subtree
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: Maximum results to return
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: OAuth2 bearer token obtained from /idp/token
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Base64-encoded client_id:client_secret
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized - missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Conflict - resource state conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    TokenResponse:
+      type: object
+      description: OAuth2 token response
+      properties:
+        access_token:
+          type: string
+          description: JWT access token
+          example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+        token_type:
+          type: string
+          enum: [Bearer]
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token lifetime in seconds
+          example: 3600
+        refresh_token:
+          type: string
+          description: Refresh token for obtaining new access tokens
+        scope:
+          type: string
+          description: Granted OAuth2 scopes
+
+    Tenant:
+      type: object
+      description: Acronis tenant representing a company, partner, or customer account
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Tenant unique identifier
+          example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        name:
+          type: string
+          description: Tenant display name
+          example: Acme Corporation
+        kind:
+          type: string
+          enum: [root, partner, folder, customer, unit]
+          description: Tenant type in the hierarchy
+          example: customer
+        enabled:
+          type: boolean
+          description: Whether the tenant is active
+          example: true
+        parent_id:
+          type: string
+          format: uuid
+          description: Parent tenant UUID
+        customer_type:
+          type: string
+          enum: [default, trial]
+          description: Customer account type
+          example: default
+        created_at:
+          type: string
+          format: date-time
+          description: Tenant creation timestamp
+          example: '2025-03-15T14:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        version:
+          type: integer
+          description: Optimistic concurrency version
+          example: 1
+        contact:
+          $ref: '#/components/schemas/Contact'
+
+    TenantRequest:
+      type: object
+      required: [name, kind, parent_id]
+      description: Request body for creating or updating a tenant
+      properties:
+        name:
+          type: string
+          description: Tenant display name
+          example: New Partner
+        kind:
+          type: string
+          enum: [partner, folder, customer, unit]
+          description: Tenant type
+        parent_id:
+          type: string
+          format: uuid
+          description: Parent tenant UUID
+        enabled:
+          type: boolean
+          description: Whether the tenant should be enabled
+          example: true
+        contact:
+          $ref: '#/components/schemas/Contact'
+
+    TenantList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tenant'
+        paging:
+          $ref: '#/components/schemas/Paging'
+
+    Contact:
+      type: object
+      description: Contact information for a tenant
+      properties:
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Smith
+        email:
+          type: string
+          format: email
+          example: john.smith@example.com
+        phone:
+          type: string
+          example: +1-555-0100
+        address1:
+          type: string
+          example: 123 Main Street
+        city:
+          type: string
+          example: Springfield
+        country:
+          type: string
+          example: US
+
+    User:
+      type: object
+      description: Acronis platform user account
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: User unique identifier
+        login:
+          type: string
+          description: Username/login for the user
+          example: jsmith
+        email:
+          type: string
+          format: email
+          description: User email address
+          example: jsmith@example.com
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Smith
+        enabled:
+          type: boolean
+          description: Whether the user account is active
+        tenant_id:
+          type: string
+          format: uuid
+          description: Tenant the user belongs to
+        created_at:
+          type: string
+          format: date-time
+
+    UserList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        paging:
+          $ref: '#/components/schemas/Paging'
+
+    Client:
+      type: object
+      description: OAuth2 client credential
+      properties:
+        client_id:
+          type: string
+          description: OAuth2 client identifier
+          example: abc123def456
+        client_secret:
+          type: string
+          description: OAuth2 client secret (only shown on creation)
+        tenant_id:
+          type: string
+          format: uuid
+          description: Tenant the client belongs to
+        type:
+          type: string
+          enum: [api_client, agent]
+          description: Client type
+        status:
+          type: string
+          enum: [enabled, disabled]
+        data:
+          type: object
+          additionalProperties: true
+          description: Additional client metadata
+
+    ClientRequest:
+      type: object
+      required: [tenant_id, type]
+      properties:
+        tenant_id:
+          type: string
+          format: uuid
+          description: Tenant UUID to associate the client with
+        type:
+          type: string
+          enum: [api_client]
+          description: Client type
+        data:
+          type: object
+          additionalProperties: true
+
+    ClientList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Client'
+
+    OfferingItem:
+      type: object
+      description: An Acronis service or feature that can be enabled for a tenant
+      properties:
+        name:
+          type: string
+          description: Offering item identifier name
+          example: vms
+        application_id:
+          type: string
+          format: uuid
+          description: Application that provides this offering item
+        status:
+          type: integer
+          description: Item status (1=active, 0=inactive)
+          example: 1
+        quota:
+          $ref: '#/components/schemas/Quota'
+        edition:
+          type: string
+          description: Edition name this item belongs to
+          example: standard
+
+    Quota:
+      type: object
+      description: Quota configuration for an offering item
+      properties:
+        value:
+          type: number
+          description: Quota value (null for unlimited)
+          example: 100
+        overage:
+          type: number
+          description: Allowed overage beyond quota
+        version:
+          type: integer
+          description: Quota version for concurrency
+
+    OfferingItemList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OfferingItem'
+
+    OfferingItemUpdateRequest:
+      type: object
+      properties:
+        offering_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OfferingItem'
+
+    UsageItem:
+      type: object
+      description: Usage metric for a specific service or resource
+      properties:
+        offering_item:
+          type: string
+          description: Name of the offering item
+          example: vms
+        application_id:
+          type: string
+          format: uuid
+        value:
+          type: number
+          description: Current usage value
+          example: 42
+        edition:
+          type: string
+
+    UsageList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsageItem'
+
+    Report:
+      type: object
+      description: Usage report configuration
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Report identifier
+        schedule:
+          type: object
+          description: Report schedule configuration
+        parameters:
+          type: object
+          description: Report parameters
+
+    ReportRequest:
+      type: object
+      properties:
+        schedule:
+          type: object
+          additionalProperties: true
+        parameters:
+          type: object
+          additionalProperties: true
+
+    SearchResults:
+      type: object
+      description: Search results containing matching tenants and users
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        size:
+          type: integer
+          description: Total number of results
+
+    Paging:
+      type: object
+      properties:
+        cursors:
+          type: object
+          properties:
+            after:
+              type: string
+              description: Cursor for next page
+
+    Error:
+      type: object
+      description: API error response
+      properties:
+        code:
+          type: integer
+          description: Error code
+          example: 400
+        message:
+          type: string
+          description: Human-readable error message
+          example: Invalid request parameters
+        details:
+          type: array
+          items:
+            type: string

@@ -1,0 +1,10 @@
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "login": "sample-value",
+  "email": "admin@example.com",
+  "firstname": "Production Tenant",
+  "lastname": "Production Tenant",
+  "enabled": true,
+  "tenant_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "created_at": "2025-03-15T14:30:00Z"
+}

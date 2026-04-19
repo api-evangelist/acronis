@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-schema/task-manager-task-schema.json",
+  "title": "Task",
+  "description": "A top-level Acronis backup or protection task",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Task unique identifier",
+      "example": "task-uuid-001"
+    },
+    "uuid": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Task UUID"
+    },
+    "type": {
+      "type": "string",
+      "description": "Task type (backup, restore, replication, etc.)",
+      "example": "backup"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "enqueued",
+        "assigned",
+        "started",
+        "paused",
+        "completed"
+      ],
+      "description": "Current task state",
+      "example": "completed"
+    },
+    "result_code": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "error",
+        "warning",
+        "cancelled",
+        "abandoned",
+        "timedout"
+      ],
+      "description": "Task result upon completion",
+      "example": "ok"
+    },
+    "priority": {
+      "type": "string",
+      "description": "Task execution priority"
+    },
+    "policy_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Protection policy that initiated this task"
+    },
+    "resource_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Protected resource this task operates on"
+    },
+    "executor_id": {
+      "type": "string",
+      "description": "Agent or executor that ran the task"
+    },
+    "enqueuedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the task was queued"
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When task execution began"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When task completed"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  }
+}

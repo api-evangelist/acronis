@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-schema/account-management-client-schema.json",
+  "title": "Client",
+  "description": "OAuth2 client credential",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "OAuth2 client identifier",
+      "example": "abc123def456"
+    },
+    "client_secret": {
+      "type": "string",
+      "description": "OAuth2 client secret (only shown on creation)"
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Tenant the client belongs to"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "api_client",
+        "agent"
+      ],
+      "description": "Client type"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "enabled",
+        "disabled"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Additional client metadata"
+    }
+  }
+}

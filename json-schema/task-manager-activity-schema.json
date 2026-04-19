@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-schema/task-manager-activity-schema.json",
+  "title": "Activity",
+  "description": "A subordinate activity within a task",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Activity unique identifier"
+    },
+    "type": {
+      "type": "string",
+      "description": "Activity type"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "enqueued",
+        "assigned",
+        "started",
+        "paused",
+        "completed"
+      ]
+    },
+    "result_code": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "error",
+        "warning",
+        "cancelled",
+        "abandoned",
+        "timedout"
+      ]
+    },
+    "parent_activity_id": {
+      "type": "string",
+      "description": "Parent activity UUID if nested"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Parent task identifier"
+    },
+    "sustainable": {
+      "type": "boolean",
+      "description": "Whether activity can be requeued on failure"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

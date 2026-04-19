@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-structure/account-management-search-results-structure.json",
+  "description": "Search results containing matching tenants and users",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "size": {
+      "type": "int32",
+      "description": "Total number of results"
+    }
+  },
+  "name": "SearchResults"
+}

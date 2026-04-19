@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-structure/account-management-quota-structure.json",
+  "description": "Quota configuration for an offering item",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "double",
+      "description": "Quota value (null for unlimited)",
+      "example": 100
+    },
+    "overage": {
+      "type": "double",
+      "description": "Allowed overage beyond quota"
+    },
+    "version": {
+      "type": "int32",
+      "description": "Quota version for concurrency"
+    }
+  },
+  "name": "Quota"
+}

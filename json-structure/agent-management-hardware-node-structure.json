@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-structure/agent-management-hardware-node-structure.json",
+  "description": "Physical or virtual hardware node managed by Acronis",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Hardware node identifier"
+    },
+    "hostname": {
+      "type": "string",
+      "description": "Node hostname"
+    },
+    "type": {
+      "type": "string",
+      "description": "Node type"
+    },
+    "status": {
+      "type": "string",
+      "description": "Node operational status"
+    },
+    "tenant_id": {
+      "type": "uuid"
+    }
+  },
+  "name": "HardwareNode"
+}

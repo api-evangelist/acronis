@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/json-structure/account-management-report-structure.json",
+  "description": "Usage report configuration",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "uuid",
+      "description": "Report identifier"
+    },
+    "schedule": {
+      "type": "object",
+      "description": "Report schedule configuration"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Report parameters"
+    }
+  },
+  "name": "Report"
+}
