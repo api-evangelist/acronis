@@ -1,0 +1,13 @@
+{
+  "repo": "acronis",
+  "feeds": [
+    {
+      "source": "https://www.acronis.com/en-us/blog/",
+      "feed_url": "https://www.acronis.com/en-us/blog/feed.xml",
+      "saved": 10,
+      "title": "Blog"
+    }
+  ],
+  "post_count": 10,
+  "fetched": "2026-05-03T23:20:28Z"
+}
