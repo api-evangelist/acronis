@@ -4,159 +4,149 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Acronis
 providerId: acronis
 created: '2026-05-04'
-modified: '2026-05-04'
+modified: '2026-05-05'
+reconciled: false
 tags:
   - Cybersecurity
   - Data Protection
+  - Backup
   - Endpoint Management
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+  - Disaster Recovery
+description: Acronis sells two distinct product lines. (1) Acronis True Image — consumer / SOHO backup
+  with three editions (Essentials, Advanced, Premium) sized by number of devices and cloud storage.
+  (2) Acronis Cyber Protect Cloud — an MSP / service-provider platform with a base agent and per-workload
+  / per-GB add-on packs (Backup, Disaster Recovery, Email Security, EDR, XDR, Management, etc.).
+  Pricing on the public site is region-gated and the per-tier dollar amounts are not consistently published;
+  Cyber Protect Cloud is sold to MSPs via partner portals.
+sources:
+  - https://www.acronis.com/en/products/true-image/
+  - https://www.acronis.com/en/products/true-image/purchasing/
+  - https://www.acronis.com/en-us/products/cloud/cyber-protect/
+notes: Public per-tier dollar prices are not reliably shown on the Acronis pricing pages (they require
+  region selection / sign-in for partners). Plan structure below is reconciled to the products and tiers
+  Acronis publishes; specific dollar amounts must come from a region-specific store front or partner portal.
 plans:
-  - id: acronis-free
-    name: Free
-    type: freemium
-    description: Free entry tier for the Acronis API surface. Intended for evaluation, prototyping, and
-      low-volume integrations. Real limits and pricing must be reconciled with the provider's published
-      plan documentation.
+  - id: acronis-true-image-essentials
+    name: Acronis True Image — Essentials
+    type: subscription
+    description: Basic local backup, cloning, and ransomware protection. Sized 1–5 devices, 1-year subscription.
     entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
+      - label: Annual subscription
+        name: ti_essentials
+        type: subscription
+        metric: device
+        limit: 5
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: see acronis.com region pricing
+        userMultiplied: true
+    elements:
+      - name: Local backup
+      - name: Disk cloning
+      - name: Ransomware protection
+  - id: acronis-true-image-advanced
+    name: Acronis True Image — Advanced
+    type: subscription
+    description: Local + cloud backup with up to 500 GB cloud storage and antimalware. Sized 1–5 devices.
+    entries:
+      - label: Annual subscription
+        name: ti_advanced
+        type: subscription
+        metric: device
+        limit: 5
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: see acronis.com region pricing
+        userMultiplied: true
+      - label: Included cloud storage
+        name: ti_advanced_cloud
         type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
+        metric: storage
+        limit: 500
+        timeFrame: year
         geo: global
-        domains: []
         unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
+        price: included
         userMultiplied: false
     elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: Acronis Account Management API
-      - name: Acronis Agent Management REST API
-      - name: Acronis Resource and Policy Management API
-      - name: Acronis Task Manager API
-      - name: Acronis Advanced Automation API
-      - name: Acronis Event Manager API
-      - name: Acronis Disaster Recovery Service API
-      - name: Acronis Endpoint Detection and Response API
-  - id: acronis-pro
-    name: Professional
-    type: paid
-    description: Production tier for Acronis. Provides higher quotas, priority support, and access to
-      the broader API portfolio. Pricing placeholder; align with the provider's pricing page.
+      - name: Local + cloud backup
+      - name: Antimalware
+      - name: Up to 500 GB Acronis Cloud
+  - id: acronis-true-image-premium
+    name: Acronis True Image — Premium
+    type: subscription
+    description: Comprehensive data protection with up to 10 TB cloud storage, antimalware, and blockchain
+      notarization. Sized 1–5 devices.
     entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
+      - label: Annual subscription
+        name: ti_premium
+        type: subscription
+        metric: device
+        limit: 5
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: see acronis.com region pricing
+        userMultiplied: true
+      - label: Included cloud storage
+        name: ti_premium_cloud
         type: quota
-        metric: requests
-        limit: 100000
-        timeFrame: month
+        metric: storage
+        limit: 10000
+        timeFrame: year
         geo: global
-        domains: []
         unit: 1
-        price: TBD
+        price: included
         userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
+    elements:
+      - name: Up to 10 TB Acronis Cloud
+      - name: Antimalware
+      - name: Blockchain notarization (Acronis Notary)
+  - id: acronis-cyber-protect-cloud
+    name: Cyber Protect Cloud (Service Provider)
+    type: usage-based
+    description: MSP-targeted platform billed per protected workload and per GB of storage / data, with
+      optional add-on packs (Advanced Backup, Disaster Recovery, Email Security, EDR, XDR, MDR, DLP,
+      Management / RMM, Microsoft 365 protection).
+    entries:
+      - label: Per-workload base
+        name: workload
         type: metered
-        metric: requests
+        metric: workload
         limit: -1
         timeFrame: month
         geo: global
-        domains: []
-        unit: 1000
-        price: TBD
+        unit: 1
+        price: see partner portal
         userMultiplied: false
-    elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: Acronis Account Management API
-      - name: Acronis Agent Management REST API
-      - name: Acronis Resource and Policy Management API
-      - name: Acronis Task Manager API
-      - name: Acronis Advanced Automation API
-      - name: Acronis Event Manager API
-      - name: Acronis Disaster Recovery Service API
-      - name: Acronis Endpoint Detection and Response API
-      - name: Acronis Vault Manager REST API
-  - id: acronis-enterprise
-    name: Enterprise
-    type: enterprise
-    description: Custom-negotiated tier for Acronis. Includes dedicated capacity, contractual SLAs, security
-      review, data residency options, and named technical account management.
-    entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
+      - label: Acronis Cloud storage
+        name: cloud_storage
+        type: metered
+        metric: storage
         limit: -1
         timeFrame: month
-        geo: configurable
-        domains: []
+        geo: global
         unit: 1
-        price: custom
+        price: see partner portal
         userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains: []
+      - label: Advanced packs (Backup, DR, Email Security, EDR, XDR, Management)
+        name: advanced_packs
+        type: metered
+        metric: addon
+        limit: -1
+        timeFrame: month
+        geo: global
         unit: 1
-        price: custom
+        price: see partner portal
         userMultiplied: false
     elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: Acronis Account Management API
-      - name: Acronis Agent Management REST API
-      - name: Acronis Resource and Policy Management API
-      - name: Acronis Task Manager API
-      - name: Acronis Advanced Automation API
-      - name: Acronis Event Manager API
-      - name: Acronis Disaster Recovery Service API
-      - name: Acronis Endpoint Detection and Response API
-      - name: Acronis Vault Manager REST API
+      - name: Single agent / single console
+      - name: Backup, disaster recovery, archival storage
+      - name: EDR, XDR, MDR, email security, DLP
+      - name: RMM and PSA integrations (ConnectWise, Kaseya, Autotask, Atera)
+      - name: Microsoft 365 protection
 maintainers:
   - FN: Kin Lane
-    email: kin@apievangelist.com
+    email: info@apievangelist.com

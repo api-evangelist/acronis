@@ -1,5 +1,6 @@
 specification: FinOps Framework
 specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
 alignedWith:
   framework: FinOps Foundation Framework
   frameworkUrl: https://www.finops.org/framework/
@@ -8,189 +9,93 @@ alignedWith:
   dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
 provider: Acronis
 providerId: acronis
-publisherName: Acronis
-serviceCategory: API
+publisherName: Acronis International GmbH
+serviceCategory: Cyber Protection / Backup / Endpoint Security
 created: '2026-05-04'
-modified: '2026-05-04'
+modified: '2026-05-05'
+reconciled: false
 tags:
   - Cybersecurity
   - Data Protection
+  - Backup
   - Endpoint Management
   - FinOps
-  - Cost Management
   - FOCUS
-description: FinOps framework definition for the Acronis API surface. Provides a FOCUS-aligned mapping
-  for cost allocation, usage measurement, and unit-economics reporting across the provider's APIs.
-principles:
-  - name: Visibility
-    description: Make API consumption costs visible to engineering, product, and finance teams in near
-      real-time.
-  - name: Allocation
-    description: Tag every chargeable API call with the consuming team, environment, application, and
-      feature so cost can be allocated.
-  - name: Optimization
-    description: Continuously evaluate request patterns, caching, batching, and tier selection to reduce
-      cost per useful unit of work.
-  - name: Accountability
-    description: Establish budget owners and chargeback or showback flows for each consuming team.
-domains:
-  - name: Understand Usage and Cost
-    capabilities:
-      - Data Ingestion
-      - Allocation
-      - Reporting and Analytics
-      - Anomaly Management
-  - name: Quantify Business Value
-    capabilities:
-      - Planning and Estimating
-      - Forecasting
-      - Budgeting
-      - Benchmarking
-      - Unit Economics
-  - name: Optimize Usage and Cost
-    capabilities:
-      - Architecting for Cloud
-      - Rate Optimization
-      - Workload Optimization
-      - Cloud Sustainability
-      - Licensing and SaaS
-  - name: Manage the FinOps Practice
-    capabilities:
-      - FinOps Practice Operations
-      - FinOps Education and Enablement
-      - Invoicing and Chargeback
-      - Onboarding Workloads
-      - Intersecting Disciplines
+description: FOCUS-aligned FinOps for Acronis. Two distinct shapes — consumer / SOHO True Image as a
+  fixed-tier annual subscription per device, and Cyber Protect Cloud as MSP usage-based billing per
+  workload + per GB of cloud storage with optional advanced packs.
+sources:
+  - https://www.acronis.com/en/products/true-image/
+  - https://www.acronis.com/en-us/products/cloud/cyber-protect/
 billingModel:
-  pricingCategory: Usage-Based
+  pricingCategory: Subscription + Pay-As-You-Go
   billingFrequency: Monthly
   billingCurrency: USD
   chargeCategories:
-    - Usage
     - Purchase
-    - Tax
-    - Credit
-    - Adjustment
-  chargeFrequency: Recurring
+    - Usage
 focusColumns:
   ServiceName: Acronis
-  ServiceCategory: Developer Tools / API
+  ServiceCategory: Cyber Protection / Backup
   ProviderName: Acronis
-  PublisherName: Acronis
-  InvoiceIssuerName: Acronis
-  PricingCategory: Usage-Based
-  PricingUnit: request
+  PublisherName: Acronis International GmbH
+  InvoiceIssuerName: Acronis International GmbH
   BillingCurrency: USD
   ChargeCategory: Usage
 meters:
-  - name: api_requests
-    description: Count of billable API requests
-    unit: request
-    aggregation: sum
+  - name: protected_workload
+    description: A protected workload in Cyber Protect Cloud (server, workstation, VM, mailbox, mobile,
+      Microsoft 365 seat, Google Workspace seat, hosted website).
+    unit: workload
+    aggregation: max
     dimensions:
-      - api
-      - endpoint
-      - tier
+      - workload_type
+      - tenant
       - region
-      - consumer
-  - name: data_egress
-    description: Bytes returned over the network in API responses
+  - name: cloud_storage
+    description: Acronis Cloud storage consumed for backup / DR / archive.
     unit: GB
-    aggregation: sum
+    aggregation: max
     dimensions:
-      - api
+      - tenant
+      - storage_class
       - region
-      - consumer
-  - name: compute_seconds
-    description: Server-side compute consumed by the request, where applicable
-    unit: second
+  - name: dr_compute
+    description: Disaster Recovery compute points / runtime when Acronis DR is invoked.
+    unit: compute-point
     aggregation: sum
     dimensions:
-      - api
-      - endpoint
-      - tier
-apis:
-  - name: Acronis Account Management API
-    baseURL: ''
-    tags:
-      - Account Management
-      - Acronis
-      - Tenants
-      - Users
-    serviceName: Acronis Account Management API
-    serviceCategory: API
-  - name: Acronis Agent Management REST API
-    baseURL: ''
-    tags:
-      - Acronis
-      - Agent Management
-      - Backup
-      - Endpoints
-    serviceName: Acronis Agent Management REST API
-    serviceCategory: API
-  - name: Acronis Resource and Policy Management API
-    baseURL: ''
-    tags:
-      - Acronis
-      - Policy Management
-      - Resources
-    serviceName: Acronis Resource and Policy Management API
-    serviceCategory: API
-  - name: Acronis Task Manager API
-    baseURL: ''
-    tags:
-      - Acronis
-      - Backup
-      - Monitoring
-      - Tasks
-    serviceName: Acronis Task Manager API
-    serviceCategory: API
-  - name: Acronis Advanced Automation API
-    baseURL: ''
-    tags:
-      - Acronis
-      - Advanced Automation
-      - PSA
-    serviceName: Acronis Advanced Automation API
-    serviceCategory: API
-  - name: Acronis Event Manager API
-    baseURL: ''
-    tags:
-      - Acronis
-      - Events
-      - Monitoring
-    serviceName: Acronis Event Manager API
-    serviceCategory: API
-  - name: Acronis Disaster Recovery Service API
-    baseURL: ''
-    tags:
-      - Acronis
-      - Disaster Recovery
-    serviceName: Acronis Disaster Recovery Service API
-    serviceCategory: API
-  - name: Acronis Endpoint Detection and Response API
-    baseURL: ''
-    tags:
-      - Acronis
-      - EDR
-      - Endpoint Security
-    serviceName: Acronis Endpoint Detection and Response API
-    serviceCategory: API
-  - name: Acronis Vault Manager REST API
-    baseURL: ''
-    tags:
-      - Acronis
-      - Storage
-      - Vault Management
-    serviceName: Acronis Vault Manager REST API
-    serviceCategory: API
-unitEconomics:
-  - name: Cost per 1K Requests
-    metric: billed_cost / (api_requests / 1000)
-    target: TBD
-  - name: Cost per Active Consumer
-    metric: billed_cost / active_consumers
-    target: TBD
+      - tenant
+      - vm
+  - name: advanced_pack
+    description: Add-on packs (Advanced Backup, Advanced DR, Advanced Email Security, EDR, XDR, MDR,
+      Advanced Management, Advanced DLP) attached to workloads.
+    unit: workload-pack
+    aggregation: max
+    dimensions:
+      - pack
+      - tenant
+  - name: device_subscription
+    description: True Image annual per-device subscription seat (consumer line).
+    unit: device-year
+    aggregation: max
+    dimensions:
+      - edition
+principles:
+  - name: Visibility
+    description: Use the Acronis Cyber Cloud Reports API and the partner portal usage reports to pull
+      per-tenant workload and storage counts; True Image consumer license counts come from the personal
+      account portal.
+  - name: Allocation
+    description: Allocate workload and storage cost to the end-customer tenant in MSP scenarios; allocate
+      consumer True Image seats to the household / individual using them.
+  - name: Optimization
+    description: Tune backup schedules and retention policies to manage cloud-storage growth, leverage
+      Acronis local-only storage where possible, deactivate unused advanced packs, and consolidate workloads
+      onto a single agent rather than overlapping point tools.
+  - name: Accountability
+    description: MSP service-delivery owners reconcile per-tenant usage monthly; consumer True Image
+      cost is owned by the individual account holder.
 maintainers:
   - FN: Kin Lane
-    email: kin@apievangelist.com
+    email: info@apievangelist.com

@@ -4,124 +4,41 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Acronis
 providerId: acronis
 created: '2026-05-04'
-modified: '2026-05-04'
+modified: '2026-05-05'
+reconciled: false
 tags:
   - Cybersecurity
   - Data Protection
+  - Backup
   - Endpoint Management
   - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the Acronis API surface. Captures per-tier quotas,
-  burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to be replaced
-  with published provider limits.
-headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+description: Acronis Cyber Cloud APIs (Account Management, Tasks, Reports, Search, Notifications, etc.)
+  are exposed to MSPs and ISVs through the Acronis Cyber Platform. Public developer documentation does
+  not surface a fixed RPS / RPM table; throttling is applied per tenant and per API token at the gateway,
+  with 429 returned when quotas are exceeded.
+sources:
+  - https://developer.acronis.com/
+  - https://www.acronis.com/en-us/products/cloud/cyber-protect/
+notes: Acronis does not publish a numeric rate-limit table on the public developer portal. Reconciled
+  flag is false because per-second numbers are not provider-published.
 responseCodes:
   throttled: 429
-  quotaExceeded: 429
   serviceUnavailable: 503
 limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - Acronis Account Management API
-      - Acronis Agent Management REST API
-      - Acronis Resource and Policy Management API
-      - Acronis Task Manager API
-      - Acronis Advanced Automation API
-      - Acronis Event Manager API
-      - Acronis Disaster Recovery Service API
-      - Acronis Endpoint Detection and Response API
-      - Acronis Vault Manager REST API
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Acronis Account Management API
-      - Acronis Agent Management REST API
-      - Acronis Resource and Policy Management API
-      - Acronis Task Manager API
-      - Acronis Advanced Automation API
-      - Acronis Event Manager API
-      - Acronis Disaster Recovery Service API
-      - Acronis Endpoint Detection and Response API
-      - Acronis Vault Manager REST API
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - Acronis Account Management API
-      - Acronis Agent Management REST API
-      - Acronis Resource and Policy Management API
-      - Acronis Task Manager API
-      - Acronis Advanced Automation API
-      - Acronis Event Manager API
-      - Acronis Disaster Recovery Service API
-      - Acronis Endpoint Detection and Response API
-      - Acronis Vault Manager REST API
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Acronis Account Management API
-      - Acronis Agent Management REST API
-      - Acronis Resource and Policy Management API
-      - Acronis Task Manager API
-      - Acronis Advanced Automation API
-      - Acronis Event Manager API
-      - Acronis Disaster Recovery Service API
-      - Acronis Endpoint Detection and Response API
-      - Acronis Vault Manager REST API
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - Acronis Account Management API
-      - Acronis Agent Management REST API
-      - Acronis Resource and Policy Management API
-      - Acronis Task Manager API
-      - Acronis Advanced Automation API
-      - Acronis Event Manager API
-      - Acronis Disaster Recovery Service API
-      - Acronis Endpoint Detection and Response API
-      - Acronis Vault Manager REST API
+  - name: Cyber Cloud API throttling
+    scope: api-token
+    metric: varies
+    limit: see Acronis Cyber Platform documentation
+    notes: Per-tenant throttling applied at the API gateway; specific numbers are not published publicly.
 policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+  - name: Backoff
+    description: Honor 429 responses with exponential backoff and jitter; respect any Retry-After header.
+  - name: Tenant Isolation
+    description: Limits are scoped per Acronis tenant / partner account; sub-tenants inherit from the
+      parent partner allocation.
+  - name: Webhook Preference
+    description: Acronis encourages event-driven integration via notifications / webhooks rather than
+      polling, to reduce request volume against rate-limited endpoints.
 maintainers:
   - FN: Kin Lane
-    email: kin@apievangelist.com
+    email: info@apievangelist.com
