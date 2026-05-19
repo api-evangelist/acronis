@@ -165,6 +165,8 @@ apis:
     The Acronis Vault Manager REST API allows users to manage and interact
     with their Acronis Vault storage solutions programmatically.
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/acronis
 - type: Portal
   url: https://developer.acronis.com/
 - type: GettingStarted

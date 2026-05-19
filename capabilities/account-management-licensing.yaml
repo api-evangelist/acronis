@@ -1,0 +1,128 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Acronis Account Management API — Licensing
+  description: 'Acronis Account Management API — Licensing. 2 operations. Lead operation: Acronis List Offering Items. Self-contained
+    Naftiko capability covering one Acronis business surface.'
+  tags:
+  - Acronis
+  - Licensing
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    ACRONIS_API_KEY: ACRONIS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: account-management-licensing
+    baseUri: https://{datacenter}.acronis.com/api/2
+    description: Acronis Account Management API — Licensing business capability. Self-contained, no shared references.
+    resources:
+    - name: tenants-tenant_id-offering_items
+      path: /tenants/{tenant_id}/offering_items
+      operations:
+      - name: listofferingitems
+        method: GET
+        description: Acronis List Offering Items
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: tenant_id
+          in: path
+          type: string
+          description: Tenant UUID
+          required: true
+        - name: edition
+          in: query
+          type: string
+          description: Filter by edition name
+      - name: updateofferingitems
+        method: PUT
+        description: Acronis Update Offering Items
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: tenant_id
+          in: path
+          type: string
+          description: Tenant UUID
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: bearer
+      token: '{{env.ACRONIS_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: account-management-licensing-rest
+    port: 8080
+    description: REST adapter for Acronis Account Management API — Licensing. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/tenants/{tenant-id}/offering-items
+      name: tenants-tenant-id-offering-items
+      description: REST surface for tenants-tenant_id-offering_items.
+      operations:
+      - method: GET
+        name: listofferingitems
+        description: Acronis List Offering Items
+        call: account-management-licensing.listofferingitems
+        with:
+          tenant_id: rest.tenant_id
+          edition: rest.edition
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updateofferingitems
+        description: Acronis Update Offering Items
+        call: account-management-licensing.updateofferingitems
+        with:
+          tenant_id: rest.tenant_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: account-management-licensing-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Acronis Account Management API — Licensing. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: acronis-list-offering-items
+      description: Acronis List Offering Items
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: account-management-licensing.listofferingitems
+      with:
+        tenant_id: tools.tenant_id
+        edition: tools.edition
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: acronis-update-offering-items
+      description: Acronis Update Offering Items
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: account-management-licensing.updateofferingitems
+      with:
+        tenant_id: tools.tenant_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

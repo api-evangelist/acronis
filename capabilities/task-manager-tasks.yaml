@@ -1,0 +1,163 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Acronis Task Manager API — Tasks
+  description: 'Acronis Task Manager API — Tasks. 2 operations. Lead operation: Acronis List Tasks. Self-contained Naftiko
+    capability covering one Acronis business surface.'
+  tags:
+  - Acronis
+  - Tasks
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    ACRONIS_API_KEY: ACRONIS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: task-manager-tasks
+    baseUri: https://{datacenter}.acronis.com/api/task_manager/v2
+    description: Acronis Task Manager API — Tasks business capability. Self-contained, no shared references.
+    resources:
+    - name: tasks
+      path: /tasks
+      operations:
+      - name: listtasks
+        method: GET
+        description: Acronis List Tasks
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: tenant_id
+          in: query
+          type: string
+          description: Filter tasks by tenant UUID
+        - name: state
+          in: query
+          type: string
+          description: Filter by task state
+        - name: result_code
+          in: query
+          type: string
+          description: Filter by task result
+        - name: policy_id
+          in: query
+          type: string
+          description: Filter by protection policy ID
+        - name: resource_id
+          in: query
+          type: string
+          description: Filter by protected resource ID
+        - name: order
+          in: query
+          type: string
+          description: Sort order (e.g., startedAt desc)
+        - name: limit
+          in: query
+          type: integer
+          description: Maximum tasks to return
+        - name: after
+          in: query
+          type: string
+          description: Pagination cursor
+    - name: tasks-task_id
+      path: /tasks/{task_id}
+      operations:
+      - name: gettask
+        method: GET
+        description: Acronis Get Task
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: task_id
+          in: path
+          type: string
+          description: Task unique identifier
+          required: true
+    authentication:
+      type: bearer
+      token: '{{env.ACRONIS_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: task-manager-tasks-rest
+    port: 8080
+    description: REST adapter for Acronis Task Manager API — Tasks. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/tasks
+      name: tasks
+      description: REST surface for tasks.
+      operations:
+      - method: GET
+        name: listtasks
+        description: Acronis List Tasks
+        call: task-manager-tasks.listtasks
+        with:
+          tenant_id: rest.tenant_id
+          state: rest.state
+          result_code: rest.result_code
+          policy_id: rest.policy_id
+          resource_id: rest.resource_id
+          order: rest.order
+          limit: rest.limit
+          after: rest.after
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/tasks/{task-id}
+      name: tasks-task-id
+      description: REST surface for tasks-task_id.
+      operations:
+      - method: GET
+        name: gettask
+        description: Acronis Get Task
+        call: task-manager-tasks.gettask
+        with:
+          task_id: rest.task_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: task-manager-tasks-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Acronis Task Manager API — Tasks. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: acronis-list-tasks
+      description: Acronis List Tasks
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: task-manager-tasks.listtasks
+      with:
+        tenant_id: tools.tenant_id
+        state: tools.state
+        result_code: tools.result_code
+        policy_id: tools.policy_id
+        resource_id: tools.resource_id
+        order: tools.order
+        limit: tools.limit
+        after: tools.after
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: acronis-get-task
+      description: Acronis Get Task
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: task-manager-tasks.gettask
+      with:
+        task_id: tools.task_id
+      outputParameters:
+      - type: object
+        mapping: $.

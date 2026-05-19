@@ -1,0 +1,191 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Acronis Account Management API — Clients
+  description: 'Acronis Account Management API — Clients. 4 operations. Lead operation: Acronis List OAuth Clients. Self-contained
+    Naftiko capability covering one Acronis business surface.'
+  tags:
+  - Acronis
+  - Clients
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    ACRONIS_API_KEY: ACRONIS_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: account-management-clients
+    baseUri: https://{datacenter}.acronis.com/api/2
+    description: Acronis Account Management API — Clients business capability. Self-contained, no shared references.
+    resources:
+    - name: clients
+      path: /clients
+      operations:
+      - name: listclients
+        method: GET
+        description: Acronis List OAuth Clients
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: tenant_id
+          in: query
+          type: string
+          description: Filter clients by tenant UUID
+      - name: createclient
+        method: POST
+        description: Acronis Create OAuth Client
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: clients-client_id
+      path: /clients/{client_id}
+      operations:
+      - name: getclient
+        method: GET
+        description: Acronis Get OAuth Client
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: client_id
+          in: path
+          type: string
+          description: OAuth2 client identifier
+          required: true
+      - name: deleteclient
+        method: DELETE
+        description: Acronis Delete OAuth Client
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: client_id
+          in: path
+          type: string
+          description: OAuth2 client identifier
+          required: true
+    authentication:
+      type: bearer
+      token: '{{env.ACRONIS_API_KEY}}'
+  exposes:
+  - type: rest
+    namespace: account-management-clients-rest
+    port: 8080
+    description: REST adapter for Acronis Account Management API — Clients. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/clients
+      name: clients
+      description: REST surface for clients.
+      operations:
+      - method: GET
+        name: listclients
+        description: Acronis List OAuth Clients
+        call: account-management-clients.listclients
+        with:
+          tenant_id: rest.tenant_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createclient
+        description: Acronis Create OAuth Client
+        call: account-management-clients.createclient
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/clients/{client-id}
+      name: clients-client-id
+      description: REST surface for clients-client_id.
+      operations:
+      - method: GET
+        name: getclient
+        description: Acronis Get OAuth Client
+        call: account-management-clients.getclient
+        with:
+          client_id: rest.client_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteclient
+        description: Acronis Delete OAuth Client
+        call: account-management-clients.deleteclient
+        with:
+          client_id: rest.client_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: account-management-clients-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Acronis Account Management API — Clients. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: acronis-list-oauth-clients
+      description: Acronis List OAuth Clients
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: account-management-clients.listclients
+      with:
+        tenant_id: tools.tenant_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: acronis-create-oauth-client
+      description: Acronis Create OAuth Client
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: account-management-clients.createclient
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: acronis-get-oauth-client
+      description: Acronis Get OAuth Client
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: account-management-clients.getclient
+      with:
+        client_id: tools.client_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: acronis-delete-oauth-client
+      description: Acronis Delete OAuth Client
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: account-management-clients.deleteclient
+      with:
+        client_id: tools.client_id
+      outputParameters:
+      - type: object
+        mapping: $.
