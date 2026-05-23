@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/Tenant",
+  "title": "Tenant",
+  "type": "object",
+  "description": "Acronis tenant representing a company, partner, or customer account",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Tenant unique identifier",
+      "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    },
+    "name": {
+      "type": "string",
+      "description": "Tenant display name",
+      "example": "Acme Corporation"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "root",
+        "partner",
+        "folder",
+        "customer",
+        "unit"
+      ],
+      "description": "Tenant type in the hierarchy",
+      "example": "customer"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether the tenant is active",
+      "example": true
+    },
+    "parent_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Parent tenant UUID"
+    },
+    "customer_type": {
+      "type": "string",
+      "enum": [
+        "default",
+        "trial"
+      ],
+      "description": "Customer account type",
+      "example": "default"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Tenant creation timestamp",
+      "example": "2025-03-15T14:30:00Z"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    },
+    "version": {
+      "type": "integer",
+      "description": "Optimistic concurrency version",
+      "example": 1
+    },
+    "contact": {
+      "$ref": "#/components/schemas/Contact"
+    }
+  }
+}

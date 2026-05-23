@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/TenantRequest",
+  "title": "TenantRequest",
+  "type": "object",
+  "required": [
+    "name",
+    "kind",
+    "parent_id"
+  ],
+  "description": "Request body for creating or updating a tenant",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Tenant display name",
+      "example": "New Partner"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "partner",
+        "folder",
+        "customer",
+        "unit"
+      ],
+      "description": "Tenant type"
+    },
+    "parent_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Parent tenant UUID"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether the tenant should be enabled",
+      "example": true
+    },
+    "contact": {
+      "$ref": "#/components/schemas/Contact"
+    }
+  }
+}

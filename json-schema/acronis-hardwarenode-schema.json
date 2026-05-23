@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/HardwareNode",
+  "title": "HardwareNode",
+  "type": "object",
+  "description": "Physical or virtual hardware node managed by Acronis",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Hardware node identifier"
+    },
+    "hostname": {
+      "type": "string",
+      "description": "Node hostname"
+    },
+    "type": {
+      "type": "string",
+      "description": "Node type"
+    },
+    "status": {
+      "type": "string",
+      "description": "Node operational status"
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  }
+}

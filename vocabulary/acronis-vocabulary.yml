@@ -1,0 +1,23 @@
+name: Acronis Domain Vocabulary
+provider: Acronis
+providerId: acronis
+description: Tag-derived vocabulary for the Acronis API surface; sourced from openapi/ tags.
+terms:
+- term: Authentication
+  description: Token issuance, revocation, and introspection
+- term: Tenants
+  description: Tenant hierarchy management and configuration
+- term: Users
+  description: User account management within tenants
+- term: Clients
+  description: OAuth2 client credential management
+- term: Applications
+  description: Application binding and settings management
+- term: Licensing
+  description: Offering items, quotas, and edition management
+- term: Usage
+  description: Usage metrics and reporting
+- term: Infrastructure
+  description: Infrastructure component and location management
+- term: Branding
+  description: Custom branding and white-labeling

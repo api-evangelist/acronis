@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/Report",
+  "title": "Report",
+  "type": "object",
+  "description": "Usage report configuration",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Report identifier"
+    },
+    "schedule": {
+      "type": "object",
+      "description": "Report schedule configuration"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Report parameters"
+    }
+  }
+}

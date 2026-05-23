@@ -1,0 +1,28 @@
+{
+  "operationId": "listAgents",
+  "method": "GET",
+  "path": "/agents",
+  "summary": "Acronis List Agents",
+  "requestExamples": [],
+  "responseExamples": [
+    {
+      "status": "200",
+      "contentType": "application/json",
+      "name": "ListAgents200Example",
+      "example": {
+        "items": [
+          {
+            "id": "agent-uuid-001",
+            "hostname": "workstation-01",
+            "os": {
+              "family": "WINDOWS",
+              "arch": "X64"
+            },
+            "status": "online",
+            "tenant_id": "tenant-uuid-001"
+          }
+        ]
+      }
+    }
+  ]
+}

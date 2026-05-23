@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/MaintenanceWindow",
+  "title": "MaintenanceWindow",
+  "type": "object",
+  "description": "Time window for restricting automatic updates",
+  "properties": {
+    "time_from": {
+      "type": "string",
+      "description": "Start time in HH:MM format (UTC)",
+      "example": "02:00"
+    },
+    "time_to": {
+      "type": "string",
+      "description": "End time in HH:MM format (UTC)",
+      "example": "06:00"
+    },
+    "days_of_week": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY",
+          "THURSDAY",
+          "FRIDAY",
+          "SATURDAY",
+          "SUNDAY"
+        ]
+      },
+      "description": "Days when maintenance window applies"
+    }
+  }
+}

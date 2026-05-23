@@ -1,0 +1,20 @@
+{
+  "operationId": "getTask",
+  "method": "GET",
+  "path": "/tasks/{task_id}",
+  "summary": "Acronis Get Task",
+  "requestExamples": [],
+  "responseExamples": [
+    {
+      "status": "200",
+      "contentType": "application/json",
+      "name": "GetTask200Example",
+      "example": {
+        "id": "task-uuid-001",
+        "type": "backup",
+        "state": "completed",
+        "result_code": "ok"
+      }
+    }
+  ]
+}

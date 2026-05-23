@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/AgentUpdateSettings",
+  "title": "AgentUpdateSettings",
+  "type": "object",
+  "description": "Configuration for automatic agent updates",
+  "properties": {
+    "update_channel": {
+      "type": "string",
+      "enum": [
+        "CURRENT",
+        "STABLE"
+      ],
+      "description": "Update channel to use",
+      "example": "STABLE"
+    },
+    "automatic": {
+      "type": "boolean",
+      "description": "Whether updates should be applied automatically",
+      "example": true
+    },
+    "maintenance_window": {
+      "$ref": "#/components/schemas/MaintenanceWindow"
+    }
+  }
+}

@@ -1,0 +1,298 @@
+{
+  "provider": "Acronis",
+  "providerId": "acronis",
+  "kind": "json-structure",
+  "description": "Structural overview of the Acronis API surface; extracted from openapi/.",
+  "schemaCount": 21,
+  "operationCount": 17,
+  "schemas": [
+    {
+      "name": "TokenResponse",
+      "type": "object",
+      "propertyCount": 5,
+      "required": []
+    },
+    {
+      "name": "Tenant",
+      "type": "object",
+      "propertyCount": 10,
+      "required": []
+    },
+    {
+      "name": "TenantRequest",
+      "type": "object",
+      "propertyCount": 5,
+      "required": [
+        "name",
+        "kind",
+        "parent_id"
+      ]
+    },
+    {
+      "name": "TenantList",
+      "type": "object",
+      "propertyCount": 2,
+      "required": []
+    },
+    {
+      "name": "Contact",
+      "type": "object",
+      "propertyCount": 7,
+      "required": []
+    },
+    {
+      "name": "User",
+      "type": "object",
+      "propertyCount": 8,
+      "required": []
+    },
+    {
+      "name": "UserList",
+      "type": "object",
+      "propertyCount": 2,
+      "required": []
+    },
+    {
+      "name": "Client",
+      "type": "object",
+      "propertyCount": 6,
+      "required": []
+    },
+    {
+      "name": "ClientRequest",
+      "type": "object",
+      "propertyCount": 3,
+      "required": [
+        "tenant_id",
+        "type"
+      ]
+    },
+    {
+      "name": "ClientList",
+      "type": "object",
+      "propertyCount": 1,
+      "required": []
+    },
+    {
+      "name": "OfferingItem",
+      "type": "object",
+      "propertyCount": 5,
+      "required": []
+    },
+    {
+      "name": "Quota",
+      "type": "object",
+      "propertyCount": 3,
+      "required": []
+    },
+    {
+      "name": "OfferingItemList",
+      "type": "object",
+      "propertyCount": 1,
+      "required": []
+    },
+    {
+      "name": "OfferingItemUpdateRequest",
+      "type": "object",
+      "propertyCount": 1,
+      "required": []
+    },
+    {
+      "name": "UsageItem",
+      "type": "object",
+      "propertyCount": 4,
+      "required": []
+    },
+    {
+      "name": "UsageList",
+      "type": "object",
+      "propertyCount": 1,
+      "required": []
+    },
+    {
+      "name": "Report",
+      "type": "object",
+      "propertyCount": 3,
+      "required": []
+    },
+    {
+      "name": "ReportRequest",
+      "type": "object",
+      "propertyCount": 2,
+      "required": []
+    },
+    {
+      "name": "SearchResults",
+      "type": "object",
+      "propertyCount": 2,
+      "required": []
+    },
+    {
+      "name": "Paging",
+      "type": "object",
+      "propertyCount": 1,
+      "required": []
+    },
+    {
+      "name": "Error",
+      "type": "object",
+      "propertyCount": 3,
+      "required": []
+    }
+  ],
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/idp/token",
+      "operationId": "requestToken",
+      "summary": "Acronis Request Access Token",
+      "tags": [
+        "Authentication"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/idp/revoke_token",
+      "operationId": "revokeToken",
+      "summary": "Acronis Revoke Access Token",
+      "tags": [
+        "Authentication"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/tenants",
+      "operationId": "listTenants",
+      "summary": "Acronis List Tenants",
+      "tags": [
+        "Tenants"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/tenants",
+      "operationId": "createTenant",
+      "summary": "Acronis Create Tenant",
+      "tags": [
+        "Tenants"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/tenants/{tenant_id}",
+      "operationId": "getTenant",
+      "summary": "Acronis Get Tenant",
+      "tags": [
+        "Tenants"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/tenants/{tenant_id}",
+      "operationId": "updateTenant",
+      "summary": "Acronis Update Tenant",
+      "tags": [
+        "Tenants"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/tenants/{tenant_id}",
+      "operationId": "deleteTenant",
+      "summary": "Acronis Delete Tenant",
+      "tags": [
+        "Tenants"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/tenants/{tenant_id}/users",
+      "operationId": "listTenantUsers",
+      "summary": "Acronis List Tenant Users",
+      "tags": [
+        "Users"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/tenants/{tenant_id}/offering_items",
+      "operationId": "listOfferingItems",
+      "summary": "Acronis List Offering Items",
+      "tags": [
+        "Licensing"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/tenants/{tenant_id}/offering_items",
+      "operationId": "updateOfferingItems",
+      "summary": "Acronis Update Offering Items",
+      "tags": [
+        "Licensing"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/tenants/{tenant_id}/usages",
+      "operationId": "getTenantUsages",
+      "summary": "Acronis Get Tenant Usages",
+      "tags": [
+        "Usage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/clients",
+      "operationId": "listClients",
+      "summary": "Acronis List OAuth Clients",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "operationId": "createClient",
+      "summary": "Acronis Create OAuth Client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/clients/{client_id}",
+      "operationId": "getClient",
+      "summary": "Acronis Get OAuth Client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/clients/{client_id}",
+      "operationId": "deleteClient",
+      "summary": "Acronis Delete OAuth Client",
+      "tags": [
+        "Clients"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/reports",
+      "operationId": "createReport",
+      "summary": "Acronis Create Usage Report",
+      "tags": [
+        "Usage"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/search",
+      "operationId": "search",
+      "summary": "Acronis Search Tenants and Users",
+      "tags": [
+        "Tenants"
+      ]
+    }
+  ]
+}

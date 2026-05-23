@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/User",
+  "title": "User",
+  "type": "object",
+  "description": "Acronis platform user account",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User unique identifier"
+    },
+    "login": {
+      "type": "string",
+      "description": "Username/login for the user",
+      "example": "jsmith"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "User email address",
+      "example": "jsmith@example.com"
+    },
+    "firstname": {
+      "type": "string",
+      "example": "John"
+    },
+    "lastname": {
+      "type": "string",
+      "example": "Smith"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether the user account is active"
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Tenant the user belongs to"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

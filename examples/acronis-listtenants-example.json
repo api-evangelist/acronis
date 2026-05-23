@@ -1,0 +1,26 @@
+{
+  "operationId": "listTenants",
+  "method": "GET",
+  "path": "/tenants",
+  "summary": "Acronis List Tenants",
+  "requestExamples": [],
+  "responseExamples": [
+    {
+      "status": "200",
+      "contentType": "application/json",
+      "name": "ListTenants200Example",
+      "example": {
+        "items": [
+          {
+            "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "name": "My Company",
+            "kind": "customer",
+            "enabled": true,
+            "parent_id": "root-tenant-uuid",
+            "created_at": "2025-03-15T14:30:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}

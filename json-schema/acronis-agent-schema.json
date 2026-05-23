@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/Agent",
+  "title": "Agent",
+  "type": "object",
+  "description": "Acronis protection agent registered on an endpoint",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Agent unique identifier",
+      "example": "agent-uuid-001"
+    },
+    "hostname": {
+      "type": "string",
+      "description": "Hostname of the protected machine",
+      "example": "workstation-01"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "online",
+        "offline",
+        "unknown"
+      ],
+      "description": "Current agent connection status",
+      "example": "online"
+    },
+    "version": {
+      "type": "string",
+      "description": "Agent software version",
+      "example": "21.12.30"
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Tenant this agent belongs to"
+    },
+    "os": {
+      "$ref": "#/components/schemas/AgentOS"
+    },
+    "last_seen": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time agent communicated with the platform"
+    },
+    "registration_time": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

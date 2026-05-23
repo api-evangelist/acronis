@@ -1,0 +1,20 @@
+{
+  "operationId": "getAgent",
+  "method": "GET",
+  "path": "/agents/{agent_id}",
+  "summary": "Acronis Get Agent",
+  "requestExamples": [],
+  "responseExamples": [
+    {
+      "status": "200",
+      "contentType": "application/json",
+      "name": "GetAgent200Example",
+      "example": {
+        "id": "agent-uuid-001",
+        "hostname": "workstation-01",
+        "status": "online",
+        "version": "21.12.30"
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/Quota",
+  "title": "Quota",
+  "type": "object",
+  "description": "Quota configuration for an offering item",
+  "properties": {
+    "value": {
+      "type": "number",
+      "description": "Quota value (null for unlimited)",
+      "example": 100
+    },
+    "overage": {
+      "type": "number",
+      "description": "Allowed overage beyond quota"
+    },
+    "version": {
+      "type": "integer",
+      "description": "Quota version for concurrency"
+    }
+  }
+}

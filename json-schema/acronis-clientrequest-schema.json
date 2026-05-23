@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/ClientRequest",
+  "title": "ClientRequest",
+  "type": "object",
+  "required": [
+    "tenant_id",
+    "type"
+  ],
+  "properties": {
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Tenant UUID to associate the client with"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "api_client"
+      ],
+      "description": "Client type"
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

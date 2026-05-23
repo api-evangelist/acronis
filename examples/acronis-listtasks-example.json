@@ -1,0 +1,26 @@
+{
+  "operationId": "listTasks",
+  "method": "GET",
+  "path": "/tasks",
+  "summary": "Acronis List Tasks",
+  "requestExamples": [],
+  "responseExamples": [
+    {
+      "status": "200",
+      "contentType": "application/json",
+      "name": "ListTasks200Example",
+      "example": {
+        "items": [
+          {
+            "id": "task-uuid-001",
+            "type": "backup",
+            "state": "completed",
+            "result_code": "ok",
+            "startedAt": "2025-03-15T14:30:00Z",
+            "completedAt": "2025-03-15T14:45:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}

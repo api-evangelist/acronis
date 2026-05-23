@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "#/components/schemas/Contact",
+  "title": "Contact",
+  "type": "object",
+  "description": "Contact information for a tenant",
+  "properties": {
+    "firstname": {
+      "type": "string",
+      "example": "John"
+    },
+    "lastname": {
+      "type": "string",
+      "example": "Smith"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "example": "john.smith@example.com"
+    },
+    "phone": {
+      "type": "string",
+      "example": "+1-555-0100"
+    },
+    "address1": {
+      "type": "string",
+      "example": "123 Main Street"
+    },
+    "city": {
+      "type": "string",
+      "example": "Springfield"
+    },
+    "country": {
+      "type": "string",
+      "example": "US"
+    }
+  }
+}

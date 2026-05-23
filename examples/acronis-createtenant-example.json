@@ -1,0 +1,18 @@
+{
+  "operationId": "createTenant",
+  "method": "POST",
+  "path": "/tenants",
+  "summary": "Acronis Create Tenant",
+  "requestExamples": [
+    {
+      "contentType": "application/json",
+      "name": "CreateTenantRequestExample",
+      "example": {
+        "name": "New Partner Tenant",
+        "kind": "partner",
+        "parent_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+      }
+    }
+  ],
+  "responseExamples": []
+}
