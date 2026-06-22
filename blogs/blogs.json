@@ -4,8 +4,8 @@
     {
       "source": "https://www.acronis.com/en-us/blog/feed.xml",
       "feed_url": "https://www.acronis.com/en-us/blog/feed.xml",
-      "title": "",
-      "saved": 3,
+      "title": "Blog",
+      "saved": 2,
       "method": "feed"
     },
     {
@@ -16,6 +16,6 @@
       "method": "none"
     }
   ],
-  "post_count": 42,
-  "fetched": "2026-06-14T20:42:17Z"
+  "post_count": 44,
+  "fetched": "2026-06-21T17:00:00Z"
 }
