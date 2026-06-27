@@ -32,7 +32,7 @@ apis:
       url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
     - type: OpenAPI
       url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/openapi/acronis-account-management-openapi.yaml
-    - type: NaftikoCapability
+    - type: X-NaftikoCapability
       url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
     description: >-
       The Acronis Account Management API allows organizations to manage and
@@ -187,7 +187,7 @@ common:
     url: https://github.com/acronis
   - type: SpectralRules
     url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/rules/acronis-spectral-rules.yml
-  - type: NaftikoCapability
+  - type: X-NaftikoCapability
     url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/cyber-protection-operations.yaml
   - type: Vocabulary
     url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/vocabulary/acronis-vocabulary.yaml
