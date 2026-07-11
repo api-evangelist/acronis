@@ -1,0 +1,23 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/acronis-account-management-openapi.yaml, openapi/acronis-agent-management-openapi.yaml,
+  openapi/acronis-task-manager-openapi.yaml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: OAuth2 bearer token obtained from /idp/token
+  sources:
+  - openapi/acronis-account-management-openapi.yaml
+  - openapi/acronis-agent-management-openapi.yaml
+  - openapi/acronis-task-manager-openapi.yaml
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: Base64-encoded client_id:client_secret
+  sources:
+  - openapi/acronis-account-management-openapi.yaml
