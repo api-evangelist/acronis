@@ -165,6 +165,8 @@ apis:
       The Acronis Vault Manager REST API allows users to manage and interact
       with their Acronis Vault storage solutions programmatically.
 common:
+  - type: AgenticAccess
+    url: agentic-access/acronis-agentic-access.yml
   - type: VulnerabilityDisclosure
     url: security/acronis-vulnerability-disclosure.yml
   - type: DomainSecurity
