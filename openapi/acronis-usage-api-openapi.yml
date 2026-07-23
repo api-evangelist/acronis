@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: Acronis Account Management Activities Usage API
+  description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
+  version: '2.0'
+  contact:
+    name: Acronis Developer Portal
+    url: https://developer.acronis.com
+  x-generated-from: documentation
+  x-last-validated: '2026-04-19'
+servers:
+- url: https://{datacenter}.acronis.com/api/2
+  description: Acronis Cloud API - Account Management
+  variables:
+    datacenter:
+      default: eu2-cloud
+      description: Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)
+security:
+- bearerAuth: []
+tags:
+- name: Usage
+  description: Usage metrics and reporting
+paths:
+  /tenants/{tenant_id}/usages:
+    get:
+      operationId: getTenantUsages
+      summary: Acronis Get Tenant Usages
+      description: Get current usage metrics for a tenant across all services and resources.
+      tags:
+      - Usage
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Tenant UUID
+      - name: edition
+        in: query
+        schema:
+          type: string
+        description: Filter by edition
+      responses:
+        '200':
+          description: Tenant usage metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageList'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /reports:
+    post:
+      operationId: createReport
+      summary: Acronis Create Usage Report
+      description: Create a scheduled or on-demand usage report configuration.
+      tags:
+      - Usage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+      responses:
+        '201':
+          description: Report created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    UsageList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsageItem'
+    ReportRequest:
+      type: object
+      properties:
+        schedule:
+          type: object
+          additionalProperties: true
+        parameters:
+          type: object
+          additionalProperties: true
+    Report:
+      type: object
+      description: Usage report configuration
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Report identifier
+        schedule:
+          type: object
+          description: Report schedule configuration
+        parameters:
+          type: object
+          description: Report parameters
+    UsageItem:
+      type: object
+      description: Usage metric for a specific service or resource
+      properties:
+        offering_item:
+          type: string
+          description: Name of the offering item
+          example: vms
+        application_id:
+          type: string
+          format: uuid
+        value:
+          type: number
+          description: Current usage value
+          example: 42
+        edition:
+          type: string
+    Error:
+      type: object
+      description: API error response
+      properties:
+        code:
+          type: integer
+          description: Error code
+          example: 400
+        message:
+          type: string
+          description: Human-readable error message
+          example: Invalid request parameters
+        details:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: OAuth2 bearer token obtained from /idp/token
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Base64-encoded client_id:client_secret

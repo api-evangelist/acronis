@@ -1,0 +1,286 @@
+openapi: 3.0.3
+info:
+  title: Acronis Account Management Activities Agents API
+  description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
+  version: '2.0'
+  contact:
+    name: Acronis Developer Portal
+    url: https://developer.acronis.com
+  x-generated-from: documentation
+  x-last-validated: '2026-04-19'
+servers:
+- url: https://{datacenter}.acronis.com/api/2
+  description: Acronis Cloud API - Account Management
+  variables:
+    datacenter:
+      default: eu2-cloud
+      description: Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)
+security:
+- bearerAuth: []
+tags:
+- name: Agents
+  description: Acronis protection agent management
+paths:
+  /agents:
+    get:
+      operationId: listAgents
+      summary: Acronis List Agents
+      description: List all registered Acronis protection agents visible from a specified tenant.
+      tags:
+      - Agents
+      parameters:
+      - name: tenant_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Tenant UUID to scope agent listing
+      - name: os_family
+        in: query
+        schema:
+          type: string
+          enum:
+          - WINDOWS
+          - LINUX
+          - MACOSX
+          - SOLARIS
+        description: Filter by operating system family
+      - name: os_arch
+        in: query
+        schema:
+          type: string
+          enum:
+          - X86
+          - X64
+          - ARM
+          - ARM64
+        description: Filter by OS architecture
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 100
+        description: Maximum number of agents to return
+      - name: order
+        in: query
+        schema:
+          type: string
+        description: Sort order (e.g., hostname asc)
+      responses:
+        '200':
+          description: List of registered agents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentList'
+              examples:
+                ListAgents200Example:
+                  summary: Default listAgents 200 response
+                  x-microcks-default: true
+                  value:
+                    items:
+                    - id: agent-uuid-001
+                      hostname: workstation-01
+                      os:
+                        family: WINDOWS
+                        arch: X64
+                      status: online
+                      tenant_id: tenant-uuid-001
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    delete:
+      operationId: deleteAgents
+      summary: Acronis Delete Agents
+      description: Cancel registration and delete service accounts for multiple agents.
+      tags:
+      - Agents
+      parameters:
+      - name: ids
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Comma-separated list of agent IDs to delete
+      responses:
+        '204':
+          description: Agents deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /agents/{agent_id}:
+    get:
+      operationId: getAgent
+      summary: Acronis Get Agent
+      description: Retrieve details about a specific registered Acronis agent.
+      tags:
+      - Agents
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Agent unique identifier
+      responses:
+        '200':
+          description: Agent details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+              examples:
+                GetAgent200Example:
+                  summary: Default getAgent 200 response
+                  x-microcks-default: true
+                  value:
+                    id: agent-uuid-001
+                    hostname: workstation-01
+                    status: online
+                    version: 21.12.30
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    delete:
+      operationId: deleteAgent
+      summary: Acronis Delete Agent
+      description: Cancel registration of a specific Acronis agent.
+      tags:
+      - Agents
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Agent unique identifier
+      responses:
+        '204':
+          description: Agent deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Agent:
+      type: object
+      description: Acronis protection agent registered on an endpoint
+      properties:
+        id:
+          type: string
+          description: Agent unique identifier
+          example: agent-uuid-001
+        hostname:
+          type: string
+          description: Hostname of the protected machine
+          example: workstation-01
+        status:
+          type: string
+          enum:
+          - online
+          - offline
+          - unknown
+          description: Current agent connection status
+          example: online
+        version:
+          type: string
+          description: Agent software version
+          example: 21.12.30
+        tenant_id:
+          type: string
+          format: uuid
+          description: Tenant this agent belongs to
+        os:
+          $ref: '#/components/schemas/AgentOS'
+        last_seen:
+          type: string
+          format: date-time
+          description: Last time agent communicated with the platform
+        registration_time:
+          type: string
+          format: date-time
+    AgentOS:
+      type: object
+      description: Operating system information for an agent
+      properties:
+        family:
+          type: string
+          enum:
+          - WINDOWS
+          - LINUX
+          - MACOSX
+          - SOLARIS
+          example: WINDOWS
+        arch:
+          type: string
+          enum:
+          - X86
+          - X64
+          - ARM
+          - ARM64
+          example: X64
+        name:
+          type: string
+          example: Windows 11 Pro
+        version:
+          type: string
+          example: 10.0.22621
+    AgentList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agent'
+        paging:
+          type: object
+          properties:
+            cursors:
+              type: object
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: OAuth2 bearer token obtained from /idp/token
+    basicAuth:
+      type: http
+      scheme: basic
+      description: Base64-encoded client_id:client_secret
