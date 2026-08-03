@@ -1,0 +1,34 @@
+{
+  "provider": "acronis",
+  "sources": [
+    "acronis-activities-api-openapi.yml",
+    "acronis-agent-updates-api-openapi.yml",
+    "acronis-agents-api-openapi.yml",
+    "acronis-authentication-api-openapi.yml",
+    "acronis-clients-api-openapi.yml",
+    "acronis-hardware-nodes-api-openapi.yml",
+    "acronis-licensing-api-openapi.yml",
+    "acronis-tasks-api-openapi.yml",
+    "acronis-tenants-api-openapi.yml",
+    "acronis-usage-api-openapi.yml",
+    "acronis-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "acronis-activities-api-openapi.yml",
+    "acronis-agent-updates-api-openapi.yml",
+    "acronis-agents-api-openapi.yml",
+    "acronis-authentication-api-openapi.yml",
+    "acronis-clients-api-openapi.yml",
+    "acronis-hardware-nodes-api-openapi.yml",
+    "acronis-licensing-api-openapi.yml",
+    "acronis-tasks-api-openapi.yml",
+    "acronis-tenants-api-openapi.yml",
+    "acronis-usage-api-openapi.yml",
+    "acronis-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

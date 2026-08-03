@@ -1,0 +1,513 @@
+{
+  "info": {
+    "_postman_id": "afd32a18-70fb-4ae9-b9a5-d2f4774c10f4",
+    "name": "Acronis Account Management Activities Tasks API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:07.000Z",
+    "updatedAt": "2026-07-28T00:28:07.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-afd32a18-70fb-4ae9-b9a5-d2f4774c10f4"
+  },
+  "item": [
+    {
+      "name": "tasks",
+      "item": [
+        {
+          "name": "{task_id}",
+          "item": [
+            {
+              "name": "Acronis Get Task",
+              "id": "92bc0fd0-248b-48ff-8481-f3d5e3eb7a31",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/tasks/:task_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "b7808b3c-1381-4349-a04b-04e48c962d0e",
+                      "key": "task_id",
+                      "value": "<string>",
+                      "description": "(Required) Task unique identifier"
+                    }
+                  ]
+                },
+                "description": "Retrieve details about a specific backup or protection task by ID."
+              },
+              "response": [
+                {
+                  "id": "95796264-aebf-4597-9f41-1f00560baab5",
+                  "name": "Task details",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tasks/:task_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tasks",
+                        ":task_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "task_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<string>\",\n  \"uuid\": \"<uuid>\",\n  \"type\": \"<string>\",\n  \"state\": \"completed\",\n  \"result_code\": \"cancelled\",\n  \"priority\": \"<string>\",\n  \"policy_id\": \"<uuid>\",\n  \"resource_id\": \"<uuid>\",\n  \"executor_id\": \"<string>\",\n  \"enqueuedAt\": \"<dateTime>\",\n  \"startedAt\": \"<dateTime>\",\n  \"completedAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\",\n  \"tenant_id\": \"<uuid>\"\n}",
+                  "createdAt": "2026-07-28T00:28:07.000Z",
+                  "updatedAt": "2026-07-28T00:28:07.000Z",
+                  "uid": "35240-95796264-aebf-4597-9f41-1f00560baab5"
+                },
+                {
+                  "id": "7eb176c0-8c26-4e7d-8002-1d944db058e0",
+                  "name": "Not found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tasks/:task_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tasks",
+                        ":task_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "task_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T00:28:07.000Z",
+                  "updatedAt": "2026-07-28T00:28:07.000Z",
+                  "uid": "35240-7eb176c0-8c26-4e7d-8002-1d944db058e0"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:07.000Z",
+              "updatedAt": "2026-07-28T00:28:07.000Z",
+              "uid": "35240-92bc0fd0-248b-48ff-8481-f3d5e3eb7a31"
+            }
+          ],
+          "id": "9772e03c-4c94-4e6b-9e90-4404eb36777e",
+          "createdAt": "2026-07-28T00:28:07.000Z",
+          "updatedAt": "2026-07-28T00:28:07.000Z",
+          "uid": "35240-9772e03c-4c94-4e6b-9e90-4404eb36777e"
+        },
+        {
+          "name": "Acronis List Tasks",
+          "id": "7520d768-e588-4297-8565-955001db71a5",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks?tenant_id=<uuid>&state=completed&result_code=cancelled&policy_id=<uuid>&resource_id=<uuid>&order=<string>&limit=100&after=<string>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tasks"
+              ],
+              "query": [
+                {
+                  "description": "Filter tasks by tenant UUID",
+                  "key": "tenant_id",
+                  "value": "<uuid>"
+                },
+                {
+                  "description": "Filter by task state",
+                  "key": "state",
+                  "value": "completed"
+                },
+                {
+                  "description": "Filter by task result",
+                  "key": "result_code",
+                  "value": "cancelled"
+                },
+                {
+                  "description": "Filter by protection policy ID",
+                  "key": "policy_id",
+                  "value": "<uuid>"
+                },
+                {
+                  "description": "Filter by protected resource ID",
+                  "key": "resource_id",
+                  "value": "<uuid>"
+                },
+                {
+                  "description": "Sort order (e.g., startedAt desc)",
+                  "key": "order",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Maximum tasks to return",
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "description": "Pagination cursor",
+                  "key": "after",
+                  "value": "<string>"
+                }
+              ]
+            },
+            "description": "Fetch a list of backup and protection tasks with filtering, ordering, and pagination support."
+          },
+          "response": [
+            {
+              "id": "48f247df-4dad-4b0e-ac6a-b7531a4fda61",
+              "name": "List of tasks",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/tasks?tenant_id=<uuid>&state=completed&result_code=cancelled&policy_id=<uuid>&resource_id=<uuid>&order=<string>&limit=100&after=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter tasks by tenant UUID",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter by task state",
+                      "key": "state",
+                      "value": "completed"
+                    },
+                    {
+                      "description": "Filter by task result",
+                      "key": "result_code",
+                      "value": "cancelled"
+                    },
+                    {
+                      "description": "Filter by protection policy ID",
+                      "key": "policy_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter by protected resource ID",
+                      "key": "resource_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Sort order (e.g., startedAt desc)",
+                      "key": "order",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Maximum tasks to return",
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "description": "Pagination cursor",
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"<string>\",\n      \"uuid\": \"<uuid>\",\n      \"type\": \"<string>\",\n      \"state\": \"started\",\n      \"result_code\": \"timedout\",\n      \"priority\": \"<string>\",\n      \"policy_id\": \"<uuid>\",\n      \"resource_id\": \"<uuid>\",\n      \"executor_id\": \"<string>\",\n      \"enqueuedAt\": \"<dateTime>\",\n      \"startedAt\": \"<dateTime>\",\n      \"completedAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\",\n      \"tenant_id\": \"<uuid>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"uuid\": \"<uuid>\",\n      \"type\": \"<string>\",\n      \"state\": \"assigned\",\n      \"result_code\": \"abandoned\",\n      \"priority\": \"<string>\",\n      \"policy_id\": \"<uuid>\",\n      \"resource_id\": \"<uuid>\",\n      \"executor_id\": \"<string>\",\n      \"enqueuedAt\": \"<dateTime>\",\n      \"startedAt\": \"<dateTime>\",\n      \"completedAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\",\n      \"tenant_id\": \"<uuid>\"\n    }\n  ],\n  \"paging\": {\n    \"cursors\": {}\n  }\n}",
+              "createdAt": "2026-07-28T00:28:07.000Z",
+              "updatedAt": "2026-07-28T00:28:07.000Z",
+              "uid": "35240-48f247df-4dad-4b0e-ac6a-b7531a4fda61"
+            },
+            {
+              "id": "343d153f-cacb-484f-9610-a662811e8b78",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/tasks?tenant_id=<uuid>&state=completed&result_code=cancelled&policy_id=<uuid>&resource_id=<uuid>&order=<string>&limit=100&after=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter tasks by tenant UUID",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter by task state",
+                      "key": "state",
+                      "value": "completed"
+                    },
+                    {
+                      "description": "Filter by task result",
+                      "key": "result_code",
+                      "value": "cancelled"
+                    },
+                    {
+                      "description": "Filter by protection policy ID",
+                      "key": "policy_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter by protected resource ID",
+                      "key": "resource_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Sort order (e.g., startedAt desc)",
+                      "key": "order",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Maximum tasks to return",
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "description": "Pagination cursor",
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+              "createdAt": "2026-07-28T00:28:07.000Z",
+              "updatedAt": "2026-07-28T00:28:07.000Z",
+              "uid": "35240-343d153f-cacb-484f-9610-a662811e8b78"
+            },
+            {
+              "id": "529607fd-c12e-44ce-bebe-ed5fbc25404c",
+              "name": "Forbidden",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/tasks?tenant_id=<uuid>&state=completed&result_code=cancelled&policy_id=<uuid>&resource_id=<uuid>&order=<string>&limit=100&after=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter tasks by tenant UUID",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter by task state",
+                      "key": "state",
+                      "value": "completed"
+                    },
+                    {
+                      "description": "Filter by task result",
+                      "key": "result_code",
+                      "value": "cancelled"
+                    },
+                    {
+                      "description": "Filter by protection policy ID",
+                      "key": "policy_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter by protected resource ID",
+                      "key": "resource_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Sort order (e.g., startedAt desc)",
+                      "key": "order",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Maximum tasks to return",
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "description": "Pagination cursor",
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+              "createdAt": "2026-07-28T00:28:07.000Z",
+              "updatedAt": "2026-07-28T00:28:07.000Z",
+              "uid": "35240-529607fd-c12e-44ce-bebe-ed5fbc25404c"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:07.000Z",
+          "updatedAt": "2026-07-28T00:28:07.000Z",
+          "uid": "35240-7520d768-e588-4297-8565-955001db71a5"
+        }
+      ],
+      "id": "88a6aea9-0c74-4fb7-8e72-acfa6090873c",
+      "createdAt": "2026-07-28T00:28:07.000Z",
+      "updatedAt": "2026-07-28T00:28:07.000Z",
+      "uid": "35240-88a6aea9-0c74-4fb7-8e72-acfa6090873c"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

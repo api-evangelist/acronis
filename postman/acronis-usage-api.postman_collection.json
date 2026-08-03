@@ -1,0 +1,387 @@
+{
+  "info": {
+    "_postman_id": "4bf3106e-1398-4338-aac3-5865bbe4a416",
+    "name": "Acronis Account Management Activities Usage API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:09.000Z",
+    "updatedAt": "2026-07-28T00:28:09.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-4bf3106e-1398-4338-aac3-5865bbe4a416"
+  },
+  "item": [
+    {
+      "name": "tenants",
+      "item": [
+        {
+          "name": "{tenant_id}",
+          "item": [
+            {
+              "name": "usages",
+              "item": [
+                {
+                  "name": "Acronis Get Tenant Usages",
+                  "id": "9bff5c66-0ab0-4abc-bcec-4804dbc97ada",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id/usages?edition=<string>",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id",
+                        "usages"
+                      ],
+                      "query": [
+                        {
+                          "description": "Filter by edition",
+                          "key": "edition",
+                          "value": "<string>"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "id": "d11c503d-f2d2-48a6-a531-d3c195e30bd3",
+                          "key": "tenant_id",
+                          "value": "<uuid>",
+                          "description": "(Required) Tenant UUID"
+                        }
+                      ]
+                    },
+                    "description": "Get current usage metrics for a tenant across all services and resources."
+                  },
+                  "response": [
+                    {
+                      "id": "28a8cbf5-061e-4b56-abe9-0e5ffcf8f4d8",
+                      "name": "Tenant usage metrics",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/tenants/:tenant_id/usages?edition=<string>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "tenants",
+                            ":tenant_id",
+                            "usages"
+                          ],
+                          "query": [
+                            {
+                              "description": "Filter by edition",
+                              "key": "edition",
+                              "value": "<string>"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "tenant_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"items\": [\n    {\n      \"offering_item\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"value\": \"<number>\",\n      \"edition\": \"<string>\"\n    },\n    {\n      \"offering_item\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"value\": \"<number>\",\n      \"edition\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T00:28:09.000Z",
+                      "updatedAt": "2026-07-28T00:28:09.000Z",
+                      "uid": "35240-28a8cbf5-061e-4b56-abe9-0e5ffcf8f4d8"
+                    },
+                    {
+                      "id": "d709db1a-39f7-445a-9b03-66e72a9d0c05",
+                      "name": "Resource not found",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/tenants/:tenant_id/usages?edition=<string>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "tenants",
+                            ":tenant_id",
+                            "usages"
+                          ],
+                          "query": [
+                            {
+                              "description": "Filter by edition",
+                              "key": "edition",
+                              "value": "<string>"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "tenant_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                      "createdAt": "2026-07-28T00:28:09.000Z",
+                      "updatedAt": "2026-07-28T00:28:09.000Z",
+                      "uid": "35240-d709db1a-39f7-445a-9b03-66e72a9d0c05"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T00:28:09.000Z",
+                  "updatedAt": "2026-07-28T00:28:09.000Z",
+                  "uid": "35240-9bff5c66-0ab0-4abc-bcec-4804dbc97ada"
+                }
+              ],
+              "id": "241c6fa4-f2af-4b17-b4a1-bcfe78146bec",
+              "createdAt": "2026-07-28T00:28:09.000Z",
+              "updatedAt": "2026-07-28T00:28:09.000Z",
+              "uid": "35240-241c6fa4-f2af-4b17-b4a1-bcfe78146bec"
+            }
+          ],
+          "id": "921c2cf4-e7dd-410b-8ff8-f98394175a9a",
+          "createdAt": "2026-07-28T00:28:09.000Z",
+          "updatedAt": "2026-07-28T00:28:09.000Z",
+          "uid": "35240-921c2cf4-e7dd-410b-8ff8-f98394175a9a"
+        }
+      ],
+      "id": "eeee1764-f556-4bec-a276-b4e9894673bf",
+      "createdAt": "2026-07-28T00:28:09.000Z",
+      "updatedAt": "2026-07-28T00:28:09.000Z",
+      "uid": "35240-eeee1764-f556-4bec-a276-b4e9894673bf"
+    },
+    {
+      "name": "reports",
+      "item": [
+        {
+          "name": "Acronis Create Usage Report",
+          "id": "f0f15593-f122-4054-9ae1-c2f6bd4d1e34",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schedule\": {\n    \"ipsum_d5\": 12275572\n  },\n  \"parameters\": {\n    \"exercitation7c\": -72069264\n  }\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            },
+            "description": "Create a scheduled or on-demand usage report configuration."
+          },
+          "response": [
+            {
+              "id": "faba8ef0-a76b-4205-9bc3-99c8f8dae87d",
+              "name": "Report created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"schedule\": {\n    \"ipsum_d5\": 12275572\n  },\n  \"parameters\": {\n    \"exercitation7c\": -72069264\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/reports",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reports"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"id\": \"<uuid>\",\n  \"schedule\": {},\n  \"parameters\": {}\n}",
+              "createdAt": "2026-07-28T00:28:09.000Z",
+              "updatedAt": "2026-07-28T00:28:09.000Z",
+              "uid": "35240-faba8ef0-a76b-4205-9bc3-99c8f8dae87d"
+            },
+            {
+              "id": "a48aff9a-9523-4013-a89c-907878da5913",
+              "name": "Bad request - invalid input",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"schedule\": {\n    \"ipsum_d5\": 12275572\n  },\n  \"parameters\": {\n    \"exercitation7c\": -72069264\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/reports",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reports"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "createdAt": "2026-07-28T00:28:09.000Z",
+              "updatedAt": "2026-07-28T00:28:09.000Z",
+              "uid": "35240-a48aff9a-9523-4013-a89c-907878da5913"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:09.000Z",
+          "updatedAt": "2026-07-28T00:28:09.000Z",
+          "uid": "35240-f0f15593-f122-4054-9ae1-c2f6bd4d1e34"
+        }
+      ],
+      "id": "c9642b68-27c8-41c4-a858-f003455ca71a",
+      "createdAt": "2026-07-28T00:28:09.000Z",
+      "updatedAt": "2026-07-28T00:28:09.000Z",
+      "uid": "35240-c9642b68-27c8-41c4-a858-f003455ca71a"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

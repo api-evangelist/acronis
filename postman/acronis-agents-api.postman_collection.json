@@ -1,0 +1,707 @@
+{
+  "info": {
+    "_postman_id": "ec86516d-7e3e-481a-bd42-4cf34410a6cf",
+    "name": "Acronis Account Management Activities Agents API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:02.000Z",
+    "updatedAt": "2026-07-28T00:28:02.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-ec86516d-7e3e-481a-bd42-4cf34410a6cf"
+  },
+  "item": [
+    {
+      "name": "agents",
+      "item": [
+        {
+          "name": "{agent_id}",
+          "item": [
+            {
+              "name": "Acronis Get Agent",
+              "id": "6af42887-f81a-4c66-9f50-a27a62a5c3a7",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/agents/:agent_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agents",
+                    ":agent_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "b3511337-d350-4530-8e12-232f900440d3",
+                      "key": "agent_id",
+                      "value": "<string>",
+                      "description": "(Required) Agent unique identifier"
+                    }
+                  ]
+                },
+                "description": "Retrieve details about a specific registered Acronis agent."
+              },
+              "response": [
+                {
+                  "id": "ab756d54-0aad-4e57-937a-9116200d27f3",
+                  "name": "Agent details",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/agents/:agent_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "agents",
+                        ":agent_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "agent_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<string>\",\n  \"hostname\": \"<string>\",\n  \"status\": \"online\",\n  \"version\": \"<string>\",\n  \"tenant_id\": \"<uuid>\",\n  \"os\": {\n    \"family\": \"LINUX\",\n    \"arch\": \"X86\",\n    \"name\": \"<string>\",\n    \"version\": \"<string>\"\n  },\n  \"last_seen\": \"<dateTime>\",\n  \"registration_time\": \"<dateTime>\"\n}",
+                  "createdAt": "2026-07-28T00:28:02.000Z",
+                  "updatedAt": "2026-07-28T00:28:02.000Z",
+                  "uid": "35240-ab756d54-0aad-4e57-937a-9116200d27f3"
+                },
+                {
+                  "id": "617d6ddb-0cef-4535-b0cb-19263874acfc",
+                  "name": "Not found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/agents/:agent_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "agents",
+                        ":agent_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "agent_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T00:28:02.000Z",
+                  "updatedAt": "2026-07-28T00:28:02.000Z",
+                  "uid": "35240-617d6ddb-0cef-4535-b0cb-19263874acfc"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:02.000Z",
+              "updatedAt": "2026-07-28T00:28:02.000Z",
+              "uid": "35240-6af42887-f81a-4c66-9f50-a27a62a5c3a7"
+            },
+            {
+              "name": "Acronis Delete Agent",
+              "id": "0abbea37-6f45-4483-82da-15456f857d14",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/agents/:agent_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agents",
+                    ":agent_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "110daaa2-db12-4a55-b76b-3406d0368fdf",
+                      "key": "agent_id",
+                      "value": "<string>",
+                      "description": "(Required) Agent unique identifier"
+                    }
+                  ]
+                },
+                "description": "Cancel registration of a specific Acronis agent."
+              },
+              "response": [
+                {
+                  "id": "42dae265-b5af-4a15-9f08-3ce0b9220ca5",
+                  "name": "Agent deleted",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/agents/:agent_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "agents",
+                        ":agent_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "agent_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "No Content",
+                  "code": 204,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T00:28:02.000Z",
+                  "updatedAt": "2026-07-28T00:28:02.000Z",
+                  "uid": "35240-42dae265-b5af-4a15-9f08-3ce0b9220ca5"
+                },
+                {
+                  "id": "0e7b1ecf-3410-4d6e-91ef-a13f0dcf1a23",
+                  "name": "Not found",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/agents/:agent_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "agents",
+                        ":agent_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "agent_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T00:28:02.000Z",
+                  "updatedAt": "2026-07-28T00:28:02.000Z",
+                  "uid": "35240-0e7b1ecf-3410-4d6e-91ef-a13f0dcf1a23"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:02.000Z",
+              "updatedAt": "2026-07-28T00:28:02.000Z",
+              "uid": "35240-0abbea37-6f45-4483-82da-15456f857d14"
+            }
+          ],
+          "id": "c5a909bf-ff82-46ee-8675-850b0a192c69",
+          "createdAt": "2026-07-28T00:28:02.000Z",
+          "updatedAt": "2026-07-28T00:28:02.000Z",
+          "uid": "35240-c5a909bf-ff82-46ee-8675-850b0a192c69"
+        },
+        {
+          "name": "Acronis List Agents",
+          "id": "57cd4228-ce70-4116-91b2-c883eca25bd7",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agents?tenant_id=<uuid>&os_family=LINUX&os_arch=ARM64&limit=100&order=<string>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agents"
+              ],
+              "query": [
+                {
+                  "description": "(Required) Tenant UUID to scope agent listing",
+                  "key": "tenant_id",
+                  "value": "<uuid>"
+                },
+                {
+                  "description": "Filter by operating system family",
+                  "key": "os_family",
+                  "value": "LINUX"
+                },
+                {
+                  "description": "Filter by OS architecture",
+                  "key": "os_arch",
+                  "value": "ARM64"
+                },
+                {
+                  "description": "Maximum number of agents to return",
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "description": "Sort order (e.g., hostname asc)",
+                  "key": "order",
+                  "value": "<string>"
+                }
+              ]
+            },
+            "description": "List all registered Acronis protection agents visible from a specified tenant."
+          },
+          "response": [
+            {
+              "id": "b53e4212-095b-49bc-a19d-1a664ce878c2",
+              "name": "List of registered agents",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/agents?tenant_id=<uuid>&os_family=LINUX&os_arch=ARM64&limit=100&order=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agents"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) Tenant UUID to scope agent listing",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter by operating system family",
+                      "key": "os_family",
+                      "value": "LINUX"
+                    },
+                    {
+                      "description": "Filter by OS architecture",
+                      "key": "os_arch",
+                      "value": "ARM64"
+                    },
+                    {
+                      "description": "Maximum number of agents to return",
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "description": "Sort order (e.g., hostname asc)",
+                      "key": "order",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"<string>\",\n      \"hostname\": \"<string>\",\n      \"status\": \"offline\",\n      \"version\": \"<string>\",\n      \"tenant_id\": \"<uuid>\",\n      \"os\": {\n        \"family\": \"LINUX\",\n        \"arch\": \"ARM\",\n        \"name\": \"<string>\",\n        \"version\": \"<string>\"\n      },\n      \"last_seen\": \"<dateTime>\",\n      \"registration_time\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"hostname\": \"<string>\",\n      \"status\": \"online\",\n      \"version\": \"<string>\",\n      \"tenant_id\": \"<uuid>\",\n      \"os\": {\n        \"family\": \"MACOSX\",\n        \"arch\": \"ARM64\",\n        \"name\": \"<string>\",\n        \"version\": \"<string>\"\n      },\n      \"last_seen\": \"<dateTime>\",\n      \"registration_time\": \"<dateTime>\"\n    }\n  ],\n  \"paging\": {\n    \"cursors\": {}\n  }\n}",
+              "createdAt": "2026-07-28T00:28:02.000Z",
+              "updatedAt": "2026-07-28T00:28:02.000Z",
+              "uid": "35240-b53e4212-095b-49bc-a19d-1a664ce878c2"
+            },
+            {
+              "id": "91707462-6c18-4adc-9a3f-133d83f0a8e3",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/agents?tenant_id=<uuid>&os_family=LINUX&os_arch=ARM64&limit=100&order=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agents"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) Tenant UUID to scope agent listing",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter by operating system family",
+                      "key": "os_family",
+                      "value": "LINUX"
+                    },
+                    {
+                      "description": "Filter by OS architecture",
+                      "key": "os_arch",
+                      "value": "ARM64"
+                    },
+                    {
+                      "description": "Maximum number of agents to return",
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "description": "Sort order (e.g., hostname asc)",
+                      "key": "order",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+              "createdAt": "2026-07-28T00:28:02.000Z",
+              "updatedAt": "2026-07-28T00:28:02.000Z",
+              "uid": "35240-91707462-6c18-4adc-9a3f-133d83f0a8e3"
+            },
+            {
+              "id": "c15c347b-18bd-45a5-80d1-ebb959edb078",
+              "name": "Forbidden",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/agents?tenant_id=<uuid>&os_family=LINUX&os_arch=ARM64&limit=100&order=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agents"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) Tenant UUID to scope agent listing",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter by operating system family",
+                      "key": "os_family",
+                      "value": "LINUX"
+                    },
+                    {
+                      "description": "Filter by OS architecture",
+                      "key": "os_arch",
+                      "value": "ARM64"
+                    },
+                    {
+                      "description": "Maximum number of agents to return",
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "description": "Sort order (e.g., hostname asc)",
+                      "key": "order",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+              "createdAt": "2026-07-28T00:28:02.000Z",
+              "updatedAt": "2026-07-28T00:28:02.000Z",
+              "uid": "35240-c15c347b-18bd-45a5-80d1-ebb959edb078"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:02.000Z",
+          "updatedAt": "2026-07-28T00:28:02.000Z",
+          "uid": "35240-57cd4228-ce70-4116-91b2-c883eca25bd7"
+        },
+        {
+          "name": "Acronis Delete Agents",
+          "id": "c5662d27-9e90-4247-9556-2428669082ed",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agents?ids=<string>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agents"
+              ],
+              "query": [
+                {
+                  "description": "(Required) Comma-separated list of agent IDs to delete",
+                  "key": "ids",
+                  "value": "<string>"
+                }
+              ]
+            },
+            "description": "Cancel registration and delete service accounts for multiple agents."
+          },
+          "response": [
+            {
+              "id": "329ef062-6357-4269-8c8b-626e5e09e571",
+              "name": "Agents deleted",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/agents?ids=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agents"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) Comma-separated list of agent IDs to delete",
+                      "key": "ids",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "responseTime": null,
+              "body": null,
+              "createdAt": "2026-07-28T00:28:02.000Z",
+              "updatedAt": "2026-07-28T00:28:02.000Z",
+              "uid": "35240-329ef062-6357-4269-8c8b-626e5e09e571"
+            },
+            {
+              "id": "3e415672-c03b-49f6-bced-8aaa9106420e",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/agents?ids=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agents"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) Comma-separated list of agent IDs to delete",
+                      "key": "ids",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+              "createdAt": "2026-07-28T00:28:02.000Z",
+              "updatedAt": "2026-07-28T00:28:02.000Z",
+              "uid": "35240-3e415672-c03b-49f6-bced-8aaa9106420e"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:02.000Z",
+          "updatedAt": "2026-07-28T00:28:02.000Z",
+          "uid": "35240-c5662d27-9e90-4247-9556-2428669082ed"
+        }
+      ],
+      "id": "75a1a142-69c7-4615-b326-187e50a6578c",
+      "createdAt": "2026-07-28T00:28:02.000Z",
+      "updatedAt": "2026-07-28T00:28:02.000Z",
+      "uid": "35240-75a1a142-69c7-4615-b326-187e50a6578c"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

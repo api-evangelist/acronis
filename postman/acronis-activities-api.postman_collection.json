@@ -1,0 +1,384 @@
+{
+  "info": {
+    "_postman_id": "c5809931-fdd9-4ae9-b9e5-d81f3dc880dd",
+    "name": "Acronis Account Management Activities API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:27:59.000Z",
+    "updatedAt": "2026-07-28T00:28:00.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-c5809931-fdd9-4ae9-b9e5-d81f3dc880dd"
+  },
+  "item": [
+    {
+      "name": "activities",
+      "item": [
+        {
+          "name": "{activity_id}",
+          "item": [
+            {
+              "name": "Acronis Get Activity",
+              "id": "222572d4-db69-4535-b008-8e823a594c1b",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/activities/:activity_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "activities",
+                    ":activity_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "5163865b-a0fd-4db5-afa2-8db3cfcd3659",
+                      "key": "activity_id",
+                      "value": "<string>",
+                      "description": "(Required) Activity unique identifier"
+                    }
+                  ]
+                },
+                "description": "Retrieve details about a specific task activity by ID."
+              },
+              "response": [
+                {
+                  "id": "0368cbc9-52de-414c-b44e-c13506e7a7ce",
+                  "name": "Activity details",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/activities/:activity_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "activities",
+                        ":activity_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "activity_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<string>\",\n  \"type\": \"<string>\",\n  \"state\": \"enqueued\",\n  \"result_code\": \"ok\",\n  \"parent_activity_id\": \"<string>\",\n  \"task_id\": \"<string>\",\n  \"sustainable\": \"<boolean>\",\n  \"createdAt\": \"<dateTime>\",\n  \"startedAt\": \"<dateTime>\",\n  \"completedAt\": \"<dateTime>\"\n}",
+                  "createdAt": "2026-07-28T00:28:00.000Z",
+                  "updatedAt": "2026-07-28T00:28:00.000Z",
+                  "uid": "35240-0368cbc9-52de-414c-b44e-c13506e7a7ce"
+                },
+                {
+                  "id": "8c1c4ad7-fae1-4a55-90d2-f4f956bcb526",
+                  "name": "Not found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/activities/:activity_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "activities",
+                        ":activity_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "activity_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T00:28:00.000Z",
+                  "updatedAt": "2026-07-28T00:28:00.000Z",
+                  "uid": "35240-8c1c4ad7-fae1-4a55-90d2-f4f956bcb526"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:00.000Z",
+              "updatedAt": "2026-07-28T00:28:00.000Z",
+              "uid": "35240-222572d4-db69-4535-b008-8e823a594c1b"
+            }
+          ],
+          "id": "f1439673-286d-433f-9d6f-d4ecad1fa0b2",
+          "createdAt": "2026-07-28T00:28:00.000Z",
+          "updatedAt": "2026-07-28T00:28:00.000Z",
+          "uid": "35240-f1439673-286d-433f-9d6f-d4ecad1fa0b2"
+        },
+        {
+          "name": "Acronis List Activities",
+          "id": "229d2845-4a27-4d1e-803e-01dc0aebb448",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/activities?tenant_id=<uuid>&task_id=<string>&state=assigned&limit=100&after=<string>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "activities"
+              ],
+              "query": [
+                {
+                  "description": "Filter activities by tenant UUID",
+                  "key": "tenant_id",
+                  "value": "<uuid>"
+                },
+                {
+                  "description": "Filter activities by parent task ID",
+                  "key": "task_id",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Filter by activity state",
+                  "key": "state",
+                  "value": "assigned"
+                },
+                {
+                  "description": "Maximum activities to return",
+                  "key": "limit",
+                  "value": "100"
+                },
+                {
+                  "description": "Pagination cursor",
+                  "key": "after",
+                  "value": "<string>"
+                }
+              ]
+            },
+            "description": "Fetch a list of task activities with filtering and pagination."
+          },
+          "response": [
+            {
+              "id": "d0f003d2-ef8b-40ea-8452-e070b8a16865",
+              "name": "List of activities",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/activities?tenant_id=<uuid>&task_id=<string>&state=assigned&limit=100&after=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "activities"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter activities by tenant UUID",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter activities by parent task ID",
+                      "key": "task_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter by activity state",
+                      "key": "state",
+                      "value": "assigned"
+                    },
+                    {
+                      "description": "Maximum activities to return",
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "description": "Pagination cursor",
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"<string>\",\n      \"type\": \"<string>\",\n      \"state\": \"assigned\",\n      \"result_code\": \"cancelled\",\n      \"parent_activity_id\": \"<string>\",\n      \"task_id\": \"<string>\",\n      \"sustainable\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"startedAt\": \"<dateTime>\",\n      \"completedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"type\": \"<string>\",\n      \"state\": \"enqueued\",\n      \"result_code\": \"ok\",\n      \"parent_activity_id\": \"<string>\",\n      \"task_id\": \"<string>\",\n      \"sustainable\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"startedAt\": \"<dateTime>\",\n      \"completedAt\": \"<dateTime>\"\n    }\n  ],\n  \"paging\": {}\n}",
+              "createdAt": "2026-07-28T00:28:00.000Z",
+              "updatedAt": "2026-07-28T00:28:00.000Z",
+              "uid": "35240-d0f003d2-ef8b-40ea-8452-e070b8a16865"
+            },
+            {
+              "id": "6695769a-6fcb-4acf-aeb2-1f94dc4080a5",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/activities?tenant_id=<uuid>&task_id=<string>&state=assigned&limit=100&after=<string>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "activities"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter activities by tenant UUID",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Filter activities by parent task ID",
+                      "key": "task_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Filter by activity state",
+                      "key": "state",
+                      "value": "assigned"
+                    },
+                    {
+                      "description": "Maximum activities to return",
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "description": "Pagination cursor",
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+              "createdAt": "2026-07-28T00:28:00.000Z",
+              "updatedAt": "2026-07-28T00:28:00.000Z",
+              "uid": "35240-6695769a-6fcb-4acf-aeb2-1f94dc4080a5"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:00.000Z",
+          "updatedAt": "2026-07-28T00:28:00.000Z",
+          "uid": "35240-229d2845-4a27-4d1e-803e-01dc0aebb448"
+        }
+      ],
+      "id": "22035996-e073-4b1e-a788-24b1b60d2fb3",
+      "createdAt": "2026-07-28T00:28:00.000Z",
+      "updatedAt": "2026-07-28T00:28:00.000Z",
+      "uid": "35240-22035996-e073-4b1e-a788-24b1b60d2fb3"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

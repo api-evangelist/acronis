@@ -1,0 +1,478 @@
+openapi: 3.0.3
+info:
+  title: Acronis Agent Management REST API
+  description: >-
+    The Acronis Agent Management API provides endpoints for managing Acronis backup and
+    protection agents registered across the platform, including listing agents, managing
+    update settings, and hardware node management.
+  version: '2.0'
+  contact:
+    name: Acronis Developer Portal
+    url: https://developer.acronis.com
+  x-generated-from: documentation
+  x-last-validated: '2026-04-19'
+
+servers:
+  - url: https://{datacenter}.acronis.com/api/agent_manager/v2
+    description: Acronis Agent Management API
+    variables:
+      datacenter:
+        default: eu2-cloud
+        description: Acronis datacenter region
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Agents
+    description: Acronis protection agent management
+  - name: Agent Updates
+    description: Agent update configuration and execution
+  - name: Hardware Nodes
+    description: Hardware node management
+
+paths:
+  /agents:
+    get:
+      operationId: listAgents
+      summary: Acronis List Agents
+      description: List all registered Acronis protection agents visible from a specified tenant.
+      tags: [Agents]
+      parameters:
+        - name: tenant_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID to scope agent listing
+        - name: os_family
+          in: query
+          schema:
+            type: string
+            enum: [WINDOWS, LINUX, MACOSX, SOLARIS]
+          description: Filter by operating system family
+        - name: os_arch
+          in: query
+          schema:
+            type: string
+            enum: [X86, X64, ARM, ARM64]
+          description: Filter by OS architecture
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+          description: Maximum number of agents to return
+        - name: order
+          in: query
+          schema:
+            type: string
+          description: Sort order (e.g., hostname asc)
+      responses:
+        '200':
+          description: List of registered agents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentList'
+              examples:
+                ListAgents200Example:
+                  summary: Default listAgents 200 response
+                  x-microcks-default: true
+                  value:
+                    items:
+                      - id: agent-uuid-001
+                        hostname: workstation-01
+                        os: {family: WINDOWS, arch: X64}
+                        status: online
+                        tenant_id: tenant-uuid-001
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+    delete:
+      operationId: deleteAgents
+      summary: Acronis Delete Agents
+      description: Cancel registration and delete service accounts for multiple agents.
+      tags: [Agents]
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Comma-separated list of agent IDs to delete
+      responses:
+        '204':
+          description: Agents deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /agents/{agent_id}:
+    get:
+      operationId: getAgent
+      summary: Acronis Get Agent
+      description: Retrieve details about a specific registered Acronis agent.
+      tags: [Agents]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Agent unique identifier
+      responses:
+        '200':
+          description: Agent details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+              examples:
+                GetAgent200Example:
+                  summary: Default getAgent 200 response
+                  x-microcks-default: true
+                  value:
+                    id: agent-uuid-001
+                    hostname: workstation-01
+                    status: online
+                    version: '21.12.30'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+    delete:
+      operationId: deleteAgent
+      summary: Acronis Delete Agent
+      description: Cancel registration of a specific Acronis agent.
+      tags: [Agents]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Agent unique identifier
+      responses:
+        '204':
+          description: Agent deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /agents/update:force:
+    post:
+      operationId: forceAgentUpdate
+      summary: Acronis Force Agent Update
+      description: Launch a forced agent update bypassing maintenance windows for specified agents.
+      tags: [Agent Updates]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [agent_ids]
+              properties:
+                agent_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: List of agent IDs to force update
+      responses:
+        '200':
+          description: Update initiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                    description: Task ID tracking the update operation
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /agent_update_settings:
+    get:
+      operationId: getAgentUpdateSettings
+      summary: Acronis Get Agent Update Settings
+      description: Fetch update configuration settings for agents or tenants.
+      tags: [Agent Updates]
+      parameters:
+        - name: tenant_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID to scope settings
+      responses:
+        '200':
+          description: Agent update settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentUpdateSettings'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+    put:
+      operationId: updateAgentUpdateSettings
+      summary: Acronis Update Agent Update Settings
+      description: Store or update agent update configuration settings including maintenance windows.
+      tags: [Agent Updates]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentUpdateSettings'
+      responses:
+        '200':
+          description: Settings updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentUpdateSettings'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /hardware_nodes:
+    get:
+      operationId: listHardwareNodes
+      summary: Acronis List Hardware Nodes
+      description: List all hardware nodes visible from a specified tenant.
+      tags: [Hardware Nodes]
+      parameters:
+        - name: tenant_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Tenant UUID to scope listing
+      responses:
+        '200':
+          description: List of hardware nodes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwareNodeList'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+  /hardware_nodes/{node_id}:
+    get:
+      operationId: getHardwareNode
+      summary: Acronis Get Hardware Node
+      description: Retrieve specific hardware node information including storage configuration.
+      tags: [Hardware Nodes]
+      parameters:
+        - name: node_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Hardware node identifier
+      responses:
+        '200':
+          description: Hardware node details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HardwareNode'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Agent:
+      type: object
+      description: Acronis protection agent registered on an endpoint
+      properties:
+        id:
+          type: string
+          description: Agent unique identifier
+          example: agent-uuid-001
+        hostname:
+          type: string
+          description: Hostname of the protected machine
+          example: workstation-01
+        status:
+          type: string
+          enum: [online, offline, unknown]
+          description: Current agent connection status
+          example: online
+        version:
+          type: string
+          description: Agent software version
+          example: '21.12.30'
+        tenant_id:
+          type: string
+          format: uuid
+          description: Tenant this agent belongs to
+        os:
+          $ref: '#/components/schemas/AgentOS'
+        last_seen:
+          type: string
+          format: date-time
+          description: Last time agent communicated with the platform
+        registration_time:
+          type: string
+          format: date-time
+
+    AgentOS:
+      type: object
+      description: Operating system information for an agent
+      properties:
+        family:
+          type: string
+          enum: [WINDOWS, LINUX, MACOSX, SOLARIS]
+          example: WINDOWS
+        arch:
+          type: string
+          enum: [X86, X64, ARM, ARM64]
+          example: X64
+        name:
+          type: string
+          example: Windows 11 Pro
+        version:
+          type: string
+          example: '10.0.22621'
+
+    AgentList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agent'
+        paging:
+          type: object
+          properties:
+            cursors:
+              type: object
+
+    AgentUpdateSettings:
+      type: object
+      description: Configuration for automatic agent updates
+      properties:
+        update_channel:
+          type: string
+          enum: [CURRENT, STABLE]
+          description: Update channel to use
+          example: STABLE
+        automatic:
+          type: boolean
+          description: Whether updates should be applied automatically
+          example: true
+        maintenance_window:
+          $ref: '#/components/schemas/MaintenanceWindow'
+
+    MaintenanceWindow:
+      type: object
+      description: Time window for restricting automatic updates
+      properties:
+        time_from:
+          type: string
+          description: Start time in HH:MM format (UTC)
+          example: '02:00'
+        time_to:
+          type: string
+          description: End time in HH:MM format (UTC)
+          example: '06:00'
+        days_of_week:
+          type: array
+          items:
+            type: string
+            enum: [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
+          description: Days when maintenance window applies
+
+    HardwareNode:
+      type: object
+      description: Physical or virtual hardware node managed by Acronis
+      properties:
+        id:
+          type: string
+          description: Hardware node identifier
+        hostname:
+          type: string
+          description: Node hostname
+        type:
+          type: string
+          description: Node type
+        status:
+          type: string
+          description: Node operational status
+        tenant_id:
+          type: string
+          format: uuid
+
+    HardwareNodeList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/HardwareNode'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string

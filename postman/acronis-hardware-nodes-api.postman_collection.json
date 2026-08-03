@@ -1,0 +1,275 @@
+{
+  "info": {
+    "_postman_id": "5b214298-2324-48c9-9c16-83fe2207376b",
+    "name": "Acronis Account Management Activities Hardware Nodes API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:05.000Z",
+    "updatedAt": "2026-07-28T00:28:05.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-5b214298-2324-48c9-9c16-83fe2207376b"
+  },
+  "item": [
+    {
+      "name": "hardware_nodes",
+      "item": [
+        {
+          "name": "{node_id}",
+          "item": [
+            {
+              "name": "Acronis Get Hardware Node",
+              "id": "96db32d7-7679-4edb-a272-7537d09e4001",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/hardware_nodes/:node_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hardware_nodes",
+                    ":node_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "0991f45c-5114-4e32-bfab-11c0adaa3810",
+                      "key": "node_id",
+                      "value": "<string>",
+                      "description": "(Required) Hardware node identifier"
+                    }
+                  ]
+                },
+                "description": "Retrieve specific hardware node information including storage configuration."
+              },
+              "response": [
+                {
+                  "id": "8ed15c3d-fe93-49b6-b6f8-c99e0de2241a",
+                  "name": "Hardware node details",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/hardware_nodes/:node_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "hardware_nodes",
+                        ":node_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "node_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<string>\",\n  \"hostname\": \"<string>\",\n  \"type\": \"<string>\",\n  \"status\": \"<string>\",\n  \"tenant_id\": \"<uuid>\"\n}",
+                  "createdAt": "2026-07-28T00:28:05.000Z",
+                  "updatedAt": "2026-07-28T00:28:05.000Z",
+                  "uid": "35240-8ed15c3d-fe93-49b6-b6f8-c99e0de2241a"
+                },
+                {
+                  "id": "11631a0f-e3e5-437c-a039-8b6eb9f44a84",
+                  "name": "Not found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/hardware_nodes/:node_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "hardware_nodes",
+                        ":node_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "node_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T00:28:05.000Z",
+                  "updatedAt": "2026-07-28T00:28:05.000Z",
+                  "uid": "35240-11631a0f-e3e5-437c-a039-8b6eb9f44a84"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:05.000Z",
+              "updatedAt": "2026-07-28T00:28:05.000Z",
+              "uid": "35240-96db32d7-7679-4edb-a272-7537d09e4001"
+            }
+          ],
+          "id": "9e4b810f-2cc1-47f2-93dd-e99a83a19655",
+          "createdAt": "2026-07-28T00:28:05.000Z",
+          "updatedAt": "2026-07-28T00:28:05.000Z",
+          "uid": "35240-9e4b810f-2cc1-47f2-93dd-e99a83a19655"
+        },
+        {
+          "name": "Acronis List Hardware Nodes",
+          "id": "8aa632ac-499e-4b63-a315-c22dff6126a1",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hardware_nodes?tenant_id=<uuid>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hardware_nodes"
+              ],
+              "query": [
+                {
+                  "description": "(Required) Tenant UUID to scope listing",
+                  "key": "tenant_id",
+                  "value": "<uuid>"
+                }
+              ]
+            },
+            "description": "List all hardware nodes visible from a specified tenant."
+          },
+          "response": [
+            {
+              "id": "c158c189-11fb-47a7-aa37-f25df86de156",
+              "name": "List of hardware nodes",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/hardware_nodes?tenant_id=<uuid>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hardware_nodes"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) Tenant UUID to scope listing",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"<string>\",\n      \"hostname\": \"<string>\",\n      \"type\": \"<string>\",\n      \"status\": \"<string>\",\n      \"tenant_id\": \"<uuid>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"hostname\": \"<string>\",\n      \"type\": \"<string>\",\n      \"status\": \"<string>\",\n      \"tenant_id\": \"<uuid>\"\n    }\n  ]\n}",
+              "createdAt": "2026-07-28T00:28:05.000Z",
+              "updatedAt": "2026-07-28T00:28:05.000Z",
+              "uid": "35240-c158c189-11fb-47a7-aa37-f25df86de156"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:05.000Z",
+          "updatedAt": "2026-07-28T00:28:05.000Z",
+          "uid": "35240-8aa632ac-499e-4b63-a315-c22dff6126a1"
+        }
+      ],
+      "id": "2760e97c-2fed-4a11-b6b8-3b253f16c911",
+      "createdAt": "2026-07-28T00:28:05.000Z",
+      "updatedAt": "2026-07-28T00:28:05.000Z",
+      "uid": "35240-2760e97c-2fed-4a11-b6b8-3b253f16c911"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

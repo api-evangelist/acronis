@@ -1,0 +1,559 @@
+{
+  "info": {
+    "_postman_id": "27853913-2551-4491-bf52-63f8053b2661",
+    "name": "Acronis Account Management Activities Clients API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:04.000Z",
+    "updatedAt": "2026-07-28T00:28:04.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-27853913-2551-4491-bf52-63f8053b2661"
+  },
+  "item": [
+    {
+      "name": "clients",
+      "item": [
+        {
+          "name": "{client_id}",
+          "item": [
+            {
+              "name": "Acronis Get OAuth Client",
+              "id": "2077b578-3f13-429c-8e9d-f37a48883e55",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clients/:client_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients",
+                    ":client_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "a7d45256-78db-4f67-a0c5-109fa3a78b36",
+                      "key": "client_id",
+                      "value": "<string>",
+                      "description": "(Required) OAuth2 client identifier"
+                    }
+                  ]
+                },
+                "description": "Retrieve details about a specific OAuth2 client."
+              },
+              "response": [
+                {
+                  "id": "337a72fa-daf7-4a3a-bf2b-2e1e96269c23",
+                  "name": "Client details",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\",\n  \"tenant_id\": \"<uuid>\",\n  \"type\": \"agent\",\n  \"status\": \"disabled\",\n  \"data\": {\n    \"sint_09\": \"magna Duis enim ex aliqua\",\n    \"consecteture\": \"ut exercitation\"\n  }\n}",
+                  "createdAt": "2026-07-28T00:28:04.000Z",
+                  "updatedAt": "2026-07-28T00:28:04.000Z",
+                  "uid": "35240-337a72fa-daf7-4a3a-bf2b-2e1e96269c23"
+                },
+                {
+                  "id": "2a13c94b-d182-45c0-a6b5-592eea385787",
+                  "name": "Resource not found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-07-28T00:28:04.000Z",
+                  "updatedAt": "2026-07-28T00:28:04.000Z",
+                  "uid": "35240-2a13c94b-d182-45c0-a6b5-592eea385787"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:04.000Z",
+              "updatedAt": "2026-07-28T00:28:04.000Z",
+              "uid": "35240-2077b578-3f13-429c-8e9d-f37a48883e55"
+            },
+            {
+              "name": "Acronis Delete OAuth Client",
+              "id": "bdea0ab3-cd8e-4fb2-b648-f0aa15798206",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clients/:client_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients",
+                    ":client_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "f95ae7e6-8a32-4710-b8e1-92ff1397a100",
+                      "key": "client_id",
+                      "value": "<string>",
+                      "description": "(Required) OAuth2 client identifier"
+                    }
+                  ]
+                },
+                "description": "Delete an OAuth2 client credential."
+              },
+              "response": [
+                {
+                  "id": "f08ca096-71de-4f85-ae46-9dcde70dabed",
+                  "name": "Client deleted",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "No Content",
+                  "code": 204,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T00:28:04.000Z",
+                  "updatedAt": "2026-07-28T00:28:04.000Z",
+                  "uid": "35240-f08ca096-71de-4f85-ae46-9dcde70dabed"
+                },
+                {
+                  "id": "59f17cd8-c511-472f-a0ac-cebebe33b13b",
+                  "name": "Resource not found",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/clients/:client_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "clients",
+                        ":client_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "client_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-07-28T00:28:04.000Z",
+                  "updatedAt": "2026-07-28T00:28:04.000Z",
+                  "uid": "35240-59f17cd8-c511-472f-a0ac-cebebe33b13b"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:04.000Z",
+              "updatedAt": "2026-07-28T00:28:04.000Z",
+              "uid": "35240-bdea0ab3-cd8e-4fb2-b648-f0aa15798206"
+            }
+          ],
+          "id": "62157186-cb6c-41f2-94d6-b57c0482a735",
+          "createdAt": "2026-07-28T00:28:04.000Z",
+          "updatedAt": "2026-07-28T00:28:04.000Z",
+          "uid": "35240-62157186-cb6c-41f2-94d6-b57c0482a735"
+        },
+        {
+          "name": "Acronis List OAuth Clients",
+          "id": "cbaa859e-fac6-4e49-83e2-858ccfa6d84a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clients?tenant_id=<uuid>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clients"
+              ],
+              "query": [
+                {
+                  "description": "Filter clients by tenant UUID",
+                  "key": "tenant_id",
+                  "value": "<uuid>"
+                }
+              ]
+            },
+            "description": "List OAuth2 client credentials registered in the system."
+          },
+          "response": [
+            {
+              "id": "2b122389-481d-4bda-8f60-2881da1b52ea",
+              "name": "List of OAuth clients",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/clients?tenant_id=<uuid>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter clients by tenant UUID",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"items\": [\n    {\n      \"client_id\": \"<string>\",\n      \"client_secret\": \"<string>\",\n      \"tenant_id\": \"<uuid>\",\n      \"type\": \"agent\",\n      \"status\": \"disabled\",\n      \"data\": {\n        \"reprehenderit_596\": -4845395,\n        \"cupidatate\": true,\n        \"commodo_ed\": -22680973,\n        \"sitbd1\": -10957238\n      }\n    },\n    {\n      \"client_id\": \"<string>\",\n      \"client_secret\": \"<string>\",\n      \"tenant_id\": \"<uuid>\",\n      \"type\": \"api_client\",\n      \"status\": \"disabled\",\n      \"data\": {\n        \"in_6\": false,\n        \"proident347\": -42265275\n      }\n    }\n  ]\n}",
+              "createdAt": "2026-07-28T00:28:04.000Z",
+              "updatedAt": "2026-07-28T00:28:04.000Z",
+              "uid": "35240-2b122389-481d-4bda-8f60-2881da1b52ea"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:04.000Z",
+          "updatedAt": "2026-07-28T00:28:04.000Z",
+          "uid": "35240-cbaa859e-fac6-4e49-83e2-858ccfa6d84a"
+        },
+        {
+          "name": "Acronis Create OAuth Client",
+          "id": "5ec01c58-88e8-4131-9ae6-56350b36333e",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenant_id\": \"<uuid>\",\n  \"type\": \"api_client\",\n  \"data\": {\n    \"proident__9\": -83316440,\n    \"proident_561\": -72890000,\n    \"irure2\": 43610137\n  }\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "clients"
+              ]
+            },
+            "description": "Create a new OAuth2 client credential for API authentication."
+          },
+          "response": [
+            {
+              "id": "81bc9cb3-153a-4b5c-b9ca-c3b2a50b49e8",
+              "name": "Client created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tenant_id\": \"<uuid>\",\n  \"type\": \"api_client\",\n  \"data\": {\n    \"proident__9\": -83316440,\n    \"proident_561\": -72890000,\n    \"irure2\": 43610137\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/clients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"client_id\": \"<string>\",\n  \"client_secret\": \"<string>\",\n  \"tenant_id\": \"<uuid>\",\n  \"type\": \"agent\",\n  \"status\": \"disabled\",\n  \"data\": {\n    \"sint_09\": \"magna Duis enim ex aliqua\",\n    \"consecteture\": \"ut exercitation\"\n  }\n}",
+              "createdAt": "2026-07-28T00:28:04.000Z",
+              "updatedAt": "2026-07-28T00:28:04.000Z",
+              "uid": "35240-81bc9cb3-153a-4b5c-b9ca-c3b2a50b49e8"
+            },
+            {
+              "id": "d2a74897-1635-4dd6-a2b6-ebf51d982224",
+              "name": "Bad request - invalid input",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tenant_id\": \"<uuid>\",\n  \"type\": \"api_client\",\n  \"data\": {\n    \"proident__9\": -83316440,\n    \"proident_561\": -72890000,\n    \"irure2\": 43610137\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/clients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "createdAt": "2026-07-28T00:28:04.000Z",
+              "updatedAt": "2026-07-28T00:28:04.000Z",
+              "uid": "35240-d2a74897-1635-4dd6-a2b6-ebf51d982224"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:04.000Z",
+          "updatedAt": "2026-07-28T00:28:04.000Z",
+          "uid": "35240-5ec01c58-88e8-4131-9ae6-56350b36333e"
+        }
+      ],
+      "id": "85823675-3a19-4206-9927-5b8b17f11b51",
+      "createdAt": "2026-07-28T00:28:04.000Z",
+      "updatedAt": "2026-07-28T00:28:04.000Z",
+      "uid": "35240-85823675-3a19-4206-9927-5b8b17f11b51"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

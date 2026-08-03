@@ -1,0 +1,409 @@
+{
+  "info": {
+    "_postman_id": "3f42bfc4-2710-4d12-b3dd-59f2557e7d06",
+    "name": "Acronis Account Management Activities Agent Updates API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:01.000Z",
+    "updatedAt": "2026-07-28T00:28:01.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-3f42bfc4-2710-4d12-b3dd-59f2557e7d06"
+  },
+  "item": [
+    {
+      "name": "agents",
+      "item": [
+        {
+          "name": "update:force",
+          "item": [
+            {
+              "name": "Acronis Force Agent Update",
+              "id": "cacaca4b-e061-4450-95dd-87692935a432",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"agent_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/agents/update:force",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agents",
+                    "update:force"
+                  ]
+                },
+                "description": "Launch a forced agent update bypassing maintenance windows for specified agents."
+              },
+              "response": [
+                {
+                  "id": "a21cd7e5-b0be-4f1b-93bf-3b8501f5a09f",
+                  "name": "Update initiated",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"agent_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/agents/update:force",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "agents",
+                        "update:force"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"task_id\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T00:28:01.000Z",
+                  "updatedAt": "2026-07-28T00:28:01.000Z",
+                  "uid": "35240-a21cd7e5-b0be-4f1b-93bf-3b8501f5a09f"
+                },
+                {
+                  "id": "0be3ed5b-60dc-4c86-9ddf-5a3128a325af",
+                  "name": "Bad request",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"agent_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/agents/update:force",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "agents",
+                        "update:force"
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T00:28:01.000Z",
+                  "updatedAt": "2026-07-28T00:28:01.000Z",
+                  "uid": "35240-0be3ed5b-60dc-4c86-9ddf-5a3128a325af"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:01.000Z",
+              "updatedAt": "2026-07-28T00:28:01.000Z",
+              "uid": "35240-cacaca4b-e061-4450-95dd-87692935a432"
+            }
+          ],
+          "id": "37ae371f-9fda-4531-9782-195194f22f9d",
+          "createdAt": "2026-07-28T00:28:01.000Z",
+          "updatedAt": "2026-07-28T00:28:01.000Z",
+          "uid": "35240-37ae371f-9fda-4531-9782-195194f22f9d"
+        }
+      ],
+      "id": "55a50ace-d18a-4b1f-9be1-ad7d114b3a91",
+      "createdAt": "2026-07-28T00:28:01.000Z",
+      "updatedAt": "2026-07-28T00:28:01.000Z",
+      "uid": "35240-55a50ace-d18a-4b1f-9be1-ad7d114b3a91"
+    },
+    {
+      "name": "agent_update_settings",
+      "item": [
+        {
+          "name": "Acronis Get Agent Update Settings",
+          "id": "a862012f-ca63-4a8a-8b16-14f327833e57",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agent_update_settings?tenant_id=<uuid>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agent_update_settings"
+              ],
+              "query": [
+                {
+                  "description": "Tenant UUID to scope settings",
+                  "key": "tenant_id",
+                  "value": "<uuid>"
+                }
+              ]
+            },
+            "description": "Fetch update configuration settings for agents or tenants."
+          },
+          "response": [
+            {
+              "id": "6b3cc9ce-5cf4-428d-b05c-01d1e10a30b5",
+              "name": "Agent update settings",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/agent_update_settings?tenant_id=<uuid>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agent_update_settings"
+                  ],
+                  "query": [
+                    {
+                      "description": "Tenant UUID to scope settings",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"update_channel\": \"CURRENT\",\n  \"automatic\": \"<boolean>\",\n  \"maintenance_window\": {\n    \"time_from\": \"<string>\",\n    \"time_to\": \"<string>\",\n    \"days_of_week\": [\n      \"FRIDAY\",\n      \"WEDNESDAY\"\n    ]\n  }\n}",
+              "createdAt": "2026-07-28T00:28:01.000Z",
+              "updatedAt": "2026-07-28T00:28:01.000Z",
+              "uid": "35240-6b3cc9ce-5cf4-428d-b05c-01d1e10a30b5"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:01.000Z",
+          "updatedAt": "2026-07-28T00:28:01.000Z",
+          "uid": "35240-a862012f-ca63-4a8a-8b16-14f327833e57"
+        },
+        {
+          "name": "Acronis Update Agent Update Settings",
+          "id": "0ccf0a95-a656-412d-8200-7228383de35f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"update_channel\": \"CURRENT\",\n  \"automatic\": \"<boolean>\",\n  \"maintenance_window\": {\n    \"time_from\": \"<string>\",\n    \"time_to\": \"<string>\",\n    \"days_of_week\": [\n      \"FRIDAY\",\n      \"WEDNESDAY\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/agent_update_settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "agent_update_settings"
+              ]
+            },
+            "description": "Store or update agent update configuration settings including maintenance windows."
+          },
+          "response": [
+            {
+              "id": "2c771546-72a2-4f9b-a45b-54b66d807eff",
+              "name": "Settings updated",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"update_channel\": \"CURRENT\",\n  \"automatic\": \"<boolean>\",\n  \"maintenance_window\": {\n    \"time_from\": \"<string>\",\n    \"time_to\": \"<string>\",\n    \"days_of_week\": [\n      \"FRIDAY\",\n      \"WEDNESDAY\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/agent_update_settings",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "agent_update_settings"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"update_channel\": \"CURRENT\",\n  \"automatic\": \"<boolean>\",\n  \"maintenance_window\": {\n    \"time_from\": \"<string>\",\n    \"time_to\": \"<string>\",\n    \"days_of_week\": [\n      \"FRIDAY\",\n      \"WEDNESDAY\"\n    ]\n  }\n}",
+              "createdAt": "2026-07-28T00:28:01.000Z",
+              "updatedAt": "2026-07-28T00:28:01.000Z",
+              "uid": "35240-2c771546-72a2-4f9b-a45b-54b66d807eff"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:01.000Z",
+          "updatedAt": "2026-07-28T00:28:01.000Z",
+          "uid": "35240-0ccf0a95-a656-412d-8200-7228383de35f"
+        }
+      ],
+      "id": "198d3f42-8887-4134-8176-191f57355c44",
+      "createdAt": "2026-07-28T00:28:01.000Z",
+      "updatedAt": "2026-07-28T00:28:01.000Z",
+      "uid": "35240-198d3f42-8887-4134-8176-191f57355c44"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

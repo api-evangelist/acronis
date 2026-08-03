@@ -1,0 +1,1123 @@
+{
+  "info": {
+    "_postman_id": "9b964d62-7368-46d6-a74c-f0bb9b936dc9",
+    "name": "Acronis Account Management Activities Tenants API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:08.000Z",
+    "updatedAt": "2026-07-28T00:28:08.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-9b964d62-7368-46d6-a74c-f0bb9b936dc9"
+  },
+  "item": [
+    {
+      "name": "tenants",
+      "item": [
+        {
+          "name": "{tenant_id}",
+          "item": [
+            {
+              "name": "Acronis Get Tenant",
+              "id": "f72c1bb5-b246-4db1-839c-4ff91889cdde",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/tenants/:tenant_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tenants",
+                    ":tenant_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "d1ca4265-a3a7-480e-92a0-2aeff7aa0f29",
+                      "key": "tenant_id",
+                      "value": "<uuid>",
+                      "description": "(Required) Tenant UUID"
+                    }
+                  ]
+                },
+                "description": "Retrieve details about a specific tenant by ID."
+              },
+              "response": [
+                {
+                  "id": "e763e996-2ad6-46bc-b950-9247ced346c1",
+                  "name": "Tenant details",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "tenant_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<uuid>\",\n  \"name\": \"<string>\",\n  \"kind\": \"folder\",\n  \"enabled\": \"<boolean>\",\n  \"parent_id\": \"<uuid>\",\n  \"customer_type\": \"trial\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"version\": \"<integer>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+                  "createdAt": "2026-07-28T00:28:08.000Z",
+                  "updatedAt": "2026-07-28T00:28:08.000Z",
+                  "uid": "35240-e763e996-2ad6-46bc-b950-9247ced346c1"
+                },
+                {
+                  "id": "134970f5-a014-418c-8b89-42ff5015bfbf",
+                  "name": "Resource not found",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "tenant_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-07-28T00:28:08.000Z",
+                  "updatedAt": "2026-07-28T00:28:08.000Z",
+                  "uid": "35240-134970f5-a014-418c-8b89-42ff5015bfbf"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-f72c1bb5-b246-4db1-839c-4ff91889cdde"
+            },
+            {
+              "name": "Acronis Update Tenant",
+              "id": "4498a33b-0ebe-41cb-b512-49e256622f9f",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"kind\": \"customer\",\n  \"parent_id\": \"<uuid>\",\n  \"enabled\": \"<boolean>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/tenants/:tenant_id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tenants",
+                    ":tenant_id"
+                  ],
+                  "variable": [
+                    {
+                      "id": "47ec8c3c-22e1-4c49-9d2a-7f086d310cbd",
+                      "key": "tenant_id",
+                      "value": "<uuid>",
+                      "description": "(Required) Tenant UUID"
+                    }
+                  ]
+                },
+                "description": "Update tenant properties including name, contact, and enabled status."
+              },
+              "response": [
+                {
+                  "id": "1207458f-b4ff-48cd-98a4-8badcfa71042",
+                  "name": "Tenant updated",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"<string>\",\n  \"kind\": \"customer\",\n  \"parent_id\": \"<uuid>\",\n  \"enabled\": \"<boolean>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "tenant_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<uuid>\",\n  \"name\": \"<string>\",\n  \"kind\": \"folder\",\n  \"enabled\": \"<boolean>\",\n  \"parent_id\": \"<uuid>\",\n  \"customer_type\": \"trial\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"version\": \"<integer>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+                  "createdAt": "2026-07-28T00:28:08.000Z",
+                  "updatedAt": "2026-07-28T00:28:08.000Z",
+                  "uid": "35240-1207458f-b4ff-48cd-98a4-8badcfa71042"
+                },
+                {
+                  "id": "b638615e-5242-4853-8804-67ccaecfed29",
+                  "name": "Resource not found",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"<string>\",\n  \"kind\": \"customer\",\n  \"parent_id\": \"<uuid>\",\n  \"enabled\": \"<boolean>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "tenant_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-07-28T00:28:08.000Z",
+                  "updatedAt": "2026-07-28T00:28:08.000Z",
+                  "uid": "35240-b638615e-5242-4853-8804-67ccaecfed29"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-4498a33b-0ebe-41cb-b512-49e256622f9f"
+            },
+            {
+              "name": "Acronis Delete Tenant",
+              "id": "92d76f36-be26-48af-85d8-323c8f9b4377",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/tenants/:tenant_id?version=<integer>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tenants",
+                    ":tenant_id"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) Tenant version for optimistic concurrency",
+                      "key": "version",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "id": "ba5e3a97-0f40-48be-b96e-b82d614d8833",
+                      "key": "tenant_id",
+                      "value": "<uuid>",
+                      "description": "(Required) Tenant UUID"
+                    }
+                  ]
+                },
+                "description": "Delete a tenant. The tenant must have no children or active services."
+              },
+              "response": [
+                {
+                  "id": "17a41046-dd72-4b3b-a352-2aa148495cd7",
+                  "name": "Tenant deleted",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id?version=<integer>",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id"
+                      ],
+                      "query": [
+                        {
+                          "description": "(Required) Tenant version for optimistic concurrency",
+                          "key": "version",
+                          "value": "<integer>"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "key": "tenant_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "No Content",
+                  "code": 204,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T00:28:08.000Z",
+                  "updatedAt": "2026-07-28T00:28:08.000Z",
+                  "uid": "35240-17a41046-dd72-4b3b-a352-2aa148495cd7"
+                },
+                {
+                  "id": "69c8c6ad-77d3-4996-a313-7b92cb7457ae",
+                  "name": "Resource not found",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id?version=<integer>",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id"
+                      ],
+                      "query": [
+                        {
+                          "description": "(Required) Tenant version for optimistic concurrency",
+                          "key": "version",
+                          "value": "<integer>"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "key": "tenant_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-07-28T00:28:08.000Z",
+                  "updatedAt": "2026-07-28T00:28:08.000Z",
+                  "uid": "35240-69c8c6ad-77d3-4996-a313-7b92cb7457ae"
+                },
+                {
+                  "id": "fa3df305-149d-493d-bc1f-58d0b5551be9",
+                  "name": "Conflict - resource state conflict",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id?version=<integer>",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id"
+                      ],
+                      "query": [
+                        {
+                          "description": "(Required) Tenant version for optimistic concurrency",
+                          "key": "version",
+                          "value": "<integer>"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "key": "tenant_id"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Conflict",
+                  "code": 409,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-07-28T00:28:08.000Z",
+                  "updatedAt": "2026-07-28T00:28:08.000Z",
+                  "uid": "35240-fa3df305-149d-493d-bc1f-58d0b5551be9"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-92d76f36-be26-48af-85d8-323c8f9b4377"
+            }
+          ],
+          "id": "23b71998-526f-4a6c-8335-703dc3eb6dd5",
+          "createdAt": "2026-07-28T00:28:08.000Z",
+          "updatedAt": "2026-07-28T00:28:08.000Z",
+          "uid": "35240-23b71998-526f-4a6c-8335-703dc3eb6dd5"
+        },
+        {
+          "name": "Acronis List Tenants",
+          "id": "76ab16f6-3138-4d3b-9f84-f72064350810",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tenants?parent_id=<uuid>&uuids=<string>&subtree_root_id=<uuid>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tenants"
+              ],
+              "query": [
+                {
+                  "description": "Filter tenants by parent tenant UUID",
+                  "key": "parent_id",
+                  "value": "<uuid>"
+                },
+                {
+                  "description": "Comma-separated list of tenant UUIDs to retrieve",
+                  "key": "uuids",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Root tenant UUID for subtree traversal",
+                  "key": "subtree_root_id",
+                  "value": "<uuid>"
+                }
+              ]
+            },
+            "description": "List tenants in the hierarchy. Can filter by parent tenant UUID or retrieve by specific UUIDs."
+          },
+          "response": [
+            {
+              "id": "2568e3c7-5fea-4598-8ed9-62408f8b494c",
+              "name": "List of tenants",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/tenants?parent_id=<uuid>&uuids=<string>&subtree_root_id=<uuid>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tenants"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter tenants by parent tenant UUID",
+                      "key": "parent_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Comma-separated list of tenant UUIDs to retrieve",
+                      "key": "uuids",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Root tenant UUID for subtree traversal",
+                      "key": "subtree_root_id",
+                      "value": "<uuid>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\",\n      \"kind\": \"partner\",\n      \"enabled\": \"<boolean>\",\n      \"parent_id\": \"<uuid>\",\n      \"customer_type\": \"default\",\n      \"created_at\": \"<dateTime>\",\n      \"updated_at\": \"<dateTime>\",\n      \"version\": \"<integer>\",\n      \"contact\": {\n        \"firstname\": \"<string>\",\n        \"lastname\": \"<string>\",\n        \"email\": \"<email>\",\n        \"phone\": \"<string>\",\n        \"address1\": \"<string>\",\n        \"city\": \"<string>\",\n        \"country\": \"<string>\"\n      }\n    },\n    {\n      \"id\": \"<uuid>\",\n      \"name\": \"<string>\",\n      \"kind\": \"root\",\n      \"enabled\": \"<boolean>\",\n      \"parent_id\": \"<uuid>\",\n      \"customer_type\": \"trial\",\n      \"created_at\": \"<dateTime>\",\n      \"updated_at\": \"<dateTime>\",\n      \"version\": \"<integer>\",\n      \"contact\": {\n        \"firstname\": \"<string>\",\n        \"lastname\": \"<string>\",\n        \"email\": \"<email>\",\n        \"phone\": \"<string>\",\n        \"address1\": \"<string>\",\n        \"city\": \"<string>\",\n        \"country\": \"<string>\"\n      }\n    }\n  ],\n  \"paging\": {\n    \"cursors\": {\n      \"after\": \"<string>\"\n    }\n  }\n}",
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-2568e3c7-5fea-4598-8ed9-62408f8b494c"
+            },
+            {
+              "id": "cbe9d559-caf6-4ad7-8843-feae14cc1239",
+              "name": "Unauthorized - missing or invalid authentication",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/tenants?parent_id=<uuid>&uuids=<string>&subtree_root_id=<uuid>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tenants"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter tenants by parent tenant UUID",
+                      "key": "parent_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Comma-separated list of tenant UUIDs to retrieve",
+                      "key": "uuids",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Root tenant UUID for subtree traversal",
+                      "key": "subtree_root_id",
+                      "value": "<uuid>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-cbe9d559-caf6-4ad7-8843-feae14cc1239"
+            },
+            {
+              "id": "08617682-d7c3-4392-8183-208c9d47a311",
+              "name": "Forbidden - insufficient permissions",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/tenants?parent_id=<uuid>&uuids=<string>&subtree_root_id=<uuid>",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tenants"
+                  ],
+                  "query": [
+                    {
+                      "description": "Filter tenants by parent tenant UUID",
+                      "key": "parent_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Comma-separated list of tenant UUIDs to retrieve",
+                      "key": "uuids",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Root tenant UUID for subtree traversal",
+                      "key": "subtree_root_id",
+                      "value": "<uuid>"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-08617682-d7c3-4392-8183-208c9d47a311"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:08.000Z",
+          "updatedAt": "2026-07-28T00:28:08.000Z",
+          "uid": "35240-76ab16f6-3138-4d3b-9f84-f72064350810"
+        },
+        {
+          "name": "Acronis Create Tenant",
+          "id": "512656db-4e82-44e4-90a1-32b284834b73",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"kind\": \"customer\",\n  \"parent_id\": \"<uuid>\",\n  \"enabled\": \"<boolean>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tenants",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tenants"
+              ]
+            },
+            "description": "Create a new tenant as a child of an existing tenant."
+          },
+          "response": [
+            {
+              "id": "2c7a0847-f021-4c08-99f8-0d5f5225a552",
+              "name": "Tenant created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"kind\": \"customer\",\n  \"parent_id\": \"<uuid>\",\n  \"enabled\": \"<boolean>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/tenants",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tenants"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"id\": \"<uuid>\",\n  \"name\": \"<string>\",\n  \"kind\": \"folder\",\n  \"enabled\": \"<boolean>\",\n  \"parent_id\": \"<uuid>\",\n  \"customer_type\": \"trial\",\n  \"created_at\": \"<dateTime>\",\n  \"updated_at\": \"<dateTime>\",\n  \"version\": \"<integer>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-2c7a0847-f021-4c08-99f8-0d5f5225a552"
+            },
+            {
+              "id": "b0bd952e-2e8c-4bd4-8808-13299214d57e",
+              "name": "Bad request - invalid input",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"kind\": \"customer\",\n  \"parent_id\": \"<uuid>\",\n  \"enabled\": \"<boolean>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/tenants",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tenants"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-b0bd952e-2e8c-4bd4-8808-13299214d57e"
+            },
+            {
+              "id": "d21ec726-8728-43a0-8753-77f0df7c3a14",
+              "name": "Unauthorized - missing or invalid authentication",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"kind\": \"customer\",\n  \"parent_id\": \"<uuid>\",\n  \"enabled\": \"<boolean>\",\n  \"contact\": {\n    \"firstname\": \"<string>\",\n    \"lastname\": \"<string>\",\n    \"email\": \"<email>\",\n    \"phone\": \"<string>\",\n    \"address1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"country\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/tenants",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tenants"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-d21ec726-8728-43a0-8753-77f0df7c3a14"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:08.000Z",
+          "updatedAt": "2026-07-28T00:28:08.000Z",
+          "uid": "35240-512656db-4e82-44e4-90a1-32b284834b73"
+        }
+      ],
+      "id": "cebec0b0-443a-4374-b7fc-14f8ec8494fd",
+      "createdAt": "2026-07-28T00:28:08.000Z",
+      "updatedAt": "2026-07-28T00:28:08.000Z",
+      "uid": "35240-cebec0b0-443a-4374-b7fc-14f8ec8494fd"
+    },
+    {
+      "name": "search",
+      "item": [
+        {
+          "name": "Acronis Search Tenants and Users",
+          "id": "3f19965b-26fd-42e9-adc7-45b31f825adb",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/search?query=<string>&tenant_id=<uuid>&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "search"
+              ],
+              "query": [
+                {
+                  "description": "(Required) Search query string",
+                  "key": "query",
+                  "value": "<string>"
+                },
+                {
+                  "description": "Scope search to a specific tenant subtree",
+                  "key": "tenant_id",
+                  "value": "<uuid>"
+                },
+                {
+                  "description": "Maximum results to return",
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Search for tenants and users by name, email, or login across the accessible hierarchy."
+          },
+          "response": [
+            {
+              "id": "43b9647c-50c4-4f59-bab4-2cb868275fc1",
+              "name": "Search results",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "description": "Added as a part of security scheme: bearer",
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/search?query=<string>&tenant_id=<uuid>&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "description": "(Required) Search query string",
+                      "key": "query",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "Scope search to a specific tenant subtree",
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "description": "Maximum results to return",
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n  \"items\": [\n    {\n      \"cillum2\": false,\n      \"velite_\": 95611315.4823519\n    },\n    {\n      \"qui00\": true,\n      \"elit_9\": false\n    }\n  ],\n  \"size\": \"<integer>\"\n}",
+              "createdAt": "2026-07-28T00:28:08.000Z",
+              "updatedAt": "2026-07-28T00:28:08.000Z",
+              "uid": "35240-43b9647c-50c4-4f59-bab4-2cb868275fc1"
+            }
+          ],
+          "createdAt": "2026-07-28T00:28:08.000Z",
+          "updatedAt": "2026-07-28T00:28:08.000Z",
+          "uid": "35240-3f19965b-26fd-42e9-adc7-45b31f825adb"
+        }
+      ],
+      "id": "f8f8e2ea-2200-474f-9b02-1c0b793d2ac7",
+      "createdAt": "2026-07-28T00:28:08.000Z",
+      "updatedAt": "2026-07-28T00:28:08.000Z",
+      "uid": "35240-f8f8e2ea-2200-474f-9b02-1c0b793d2ac7"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

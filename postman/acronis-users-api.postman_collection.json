@@ -1,0 +1,236 @@
+{
+  "info": {
+    "_postman_id": "f4e63c3c-008a-4ec5-9b4a-19ce0be76b40",
+    "name": "Acronis Account Management Activities Users API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:10.000Z",
+    "updatedAt": "2026-07-28T00:28:10.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-f4e63c3c-008a-4ec5-9b4a-19ce0be76b40"
+  },
+  "item": [
+    {
+      "name": "tenants",
+      "item": [
+        {
+          "name": "{tenant_id}",
+          "item": [
+            {
+              "name": "users",
+              "item": [
+                {
+                  "name": "Acronis List Tenant Users",
+                  "id": "8413434f-ac73-4816-b49b-0ff9b8f0ef55",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id/users?limit=100&after=<string>",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id",
+                        "users"
+                      ],
+                      "query": [
+                        {
+                          "description": "Maximum number of results",
+                          "key": "limit",
+                          "value": "100"
+                        },
+                        {
+                          "description": "Cursor for pagination",
+                          "key": "after",
+                          "value": "<string>"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "id": "7dd48f3b-ed39-4b7e-aa7a-c6fd86ca088e",
+                          "key": "tenant_id",
+                          "value": "<uuid>",
+                          "description": "(Required) Tenant UUID"
+                        }
+                      ]
+                    },
+                    "description": "List all users belonging to a specific tenant."
+                  },
+                  "response": [
+                    {
+                      "id": "bd8d9259-04b2-490d-b553-3d0e0967040d",
+                      "name": "List of users",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/tenants/:tenant_id/users?limit=100&after=<string>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "tenants",
+                            ":tenant_id",
+                            "users"
+                          ],
+                          "query": [
+                            {
+                              "description": "Maximum number of results",
+                              "key": "limit",
+                              "value": "100"
+                            },
+                            {
+                              "description": "Cursor for pagination",
+                              "key": "after",
+                              "value": "<string>"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "tenant_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"items\": [\n    {\n      \"id\": \"<uuid>\",\n      \"login\": \"<string>\",\n      \"email\": \"<email>\",\n      \"firstname\": \"<string>\",\n      \"lastname\": \"<string>\",\n      \"enabled\": \"<boolean>\",\n      \"tenant_id\": \"<uuid>\",\n      \"created_at\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<uuid>\",\n      \"login\": \"<string>\",\n      \"email\": \"<email>\",\n      \"firstname\": \"<string>\",\n      \"lastname\": \"<string>\",\n      \"enabled\": \"<boolean>\",\n      \"tenant_id\": \"<uuid>\",\n      \"created_at\": \"<dateTime>\"\n    }\n  ],\n  \"paging\": {\n    \"cursors\": {\n      \"after\": \"<string>\"\n    }\n  }\n}",
+                      "createdAt": "2026-07-28T00:28:10.000Z",
+                      "updatedAt": "2026-07-28T00:28:10.000Z",
+                      "uid": "35240-bd8d9259-04b2-490d-b553-3d0e0967040d"
+                    },
+                    {
+                      "id": "40ff5d7c-df9c-462e-8ee0-7f929ebd40cc",
+                      "name": "Resource not found",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/tenants/:tenant_id/users?limit=100&after=<string>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "tenants",
+                            ":tenant_id",
+                            "users"
+                          ],
+                          "query": [
+                            {
+                              "description": "Maximum number of results",
+                              "key": "limit",
+                              "value": "100"
+                            },
+                            {
+                              "description": "Cursor for pagination",
+                              "key": "after",
+                              "value": "<string>"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "tenant_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                      "createdAt": "2026-07-28T00:28:10.000Z",
+                      "updatedAt": "2026-07-28T00:28:10.000Z",
+                      "uid": "35240-40ff5d7c-df9c-462e-8ee0-7f929ebd40cc"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T00:28:10.000Z",
+                  "updatedAt": "2026-07-28T00:28:10.000Z",
+                  "uid": "35240-8413434f-ac73-4816-b49b-0ff9b8f0ef55"
+                }
+              ],
+              "id": "d9f56c62-7abb-440a-8f38-bbeeab287ca3",
+              "createdAt": "2026-07-28T00:28:10.000Z",
+              "updatedAt": "2026-07-28T00:28:10.000Z",
+              "uid": "35240-d9f56c62-7abb-440a-8f38-bbeeab287ca3"
+            }
+          ],
+          "id": "78a4662b-73c0-4a31-b98b-83c00da262d2",
+          "createdAt": "2026-07-28T00:28:10.000Z",
+          "updatedAt": "2026-07-28T00:28:10.000Z",
+          "uid": "35240-78a4662b-73c0-4a31-b98b-83c00da262d2"
+        }
+      ],
+      "id": "014df73f-9df5-4f83-8be8-418358c3e799",
+      "createdAt": "2026-07-28T00:28:10.000Z",
+      "updatedAt": "2026-07-28T00:28:10.000Z",
+      "uid": "35240-014df73f-9df5-4f83-8be8-418358c3e799"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

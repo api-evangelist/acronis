@@ -1,0 +1,402 @@
+{
+  "info": {
+    "_postman_id": "b58ab6ef-e109-4f37-bb29-8b84e98b82f8",
+    "name": "Acronis Account Management Activities Licensing API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:06.000Z",
+    "updatedAt": "2026-07-28T00:28:06.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-b58ab6ef-e109-4f37-bb29-8b84e98b82f8"
+  },
+  "item": [
+    {
+      "name": "tenants",
+      "item": [
+        {
+          "name": "{tenant_id}",
+          "item": [
+            {
+              "name": "offering_items",
+              "item": [
+                {
+                  "name": "Acronis List Offering Items",
+                  "id": "be053d8e-7e0d-467d-99c7-a8ac9b78b9e9",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id/offering_items?edition=<string>",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id",
+                        "offering_items"
+                      ],
+                      "query": [
+                        {
+                          "description": "Filter by edition name",
+                          "key": "edition",
+                          "value": "<string>"
+                        }
+                      ],
+                      "variable": [
+                        {
+                          "id": "deaa0680-2ba7-426c-9598-35fee17f7984",
+                          "key": "tenant_id",
+                          "value": "<uuid>",
+                          "description": "(Required) Tenant UUID"
+                        }
+                      ]
+                    },
+                    "description": "List all offering items (services and quotas) configured for a tenant."
+                  },
+                  "response": [
+                    {
+                      "id": "bb683d7e-686b-4f19-89be-6255eecb5a84",
+                      "name": "List of offering items",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/tenants/:tenant_id/offering_items?edition=<string>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "tenants",
+                            ":tenant_id",
+                            "offering_items"
+                          ],
+                          "query": [
+                            {
+                              "description": "Filter by edition name",
+                              "key": "edition",
+                              "value": "<string>"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "tenant_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"items\": [\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T00:28:06.000Z",
+                      "updatedAt": "2026-07-28T00:28:06.000Z",
+                      "uid": "35240-bb683d7e-686b-4f19-89be-6255eecb5a84"
+                    },
+                    {
+                      "id": "c2f80195-eefe-493b-ae8a-e3a18b1921de",
+                      "name": "Resource not found",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/tenants/:tenant_id/offering_items?edition=<string>",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "tenants",
+                            ":tenant_id",
+                            "offering_items"
+                          ],
+                          "query": [
+                            {
+                              "description": "Filter by edition name",
+                              "key": "edition",
+                              "value": "<string>"
+                            }
+                          ],
+                          "variable": [
+                            {
+                              "key": "tenant_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                      "createdAt": "2026-07-28T00:28:06.000Z",
+                      "updatedAt": "2026-07-28T00:28:06.000Z",
+                      "uid": "35240-c2f80195-eefe-493b-ae8a-e3a18b1921de"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T00:28:06.000Z",
+                  "updatedAt": "2026-07-28T00:28:06.000Z",
+                  "uid": "35240-be053d8e-7e0d-467d-99c7-a8ac9b78b9e9"
+                },
+                {
+                  "name": "Acronis Update Offering Items",
+                  "id": "4eb6244e-faef-4b9e-aea4-13a7ec4a53e9",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"offering_items\": [\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/tenants/:tenant_id/offering_items",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "tenants",
+                        ":tenant_id",
+                        "offering_items"
+                      ],
+                      "variable": [
+                        {
+                          "id": "ffb59a49-ed9a-40b1-b6f8-51e8c27536c8",
+                          "key": "tenant_id",
+                          "value": "<uuid>",
+                          "description": "(Required) Tenant UUID"
+                        }
+                      ]
+                    },
+                    "description": "Enable, disable, or set quotas for offering items on a tenant."
+                  },
+                  "response": [
+                    {
+                      "id": "6265ebce-610b-497c-a151-95b7ceafeb63",
+                      "name": "Offering items updated",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"offering_items\": [\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/tenants/:tenant_id/offering_items",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "tenants",
+                            ":tenant_id",
+                            "offering_items"
+                          ],
+                          "variable": [
+                            {
+                              "key": "tenant_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"items\": [\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-07-28T00:28:06.000Z",
+                      "updatedAt": "2026-07-28T00:28:06.000Z",
+                      "uid": "35240-6265ebce-610b-497c-a151-95b7ceafeb63"
+                    },
+                    {
+                      "id": "6eaeddd5-4ca4-4e4f-86a7-f2c08553c114",
+                      "name": "Bad request - invalid input",
+                      "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"offering_items\": [\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/tenants/:tenant_id/offering_items",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "tenants",
+                            ":tenant_id",
+                            "offering_items"
+                          ],
+                          "variable": [
+                            {
+                              "key": "tenant_id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                      "createdAt": "2026-07-28T00:28:06.000Z",
+                      "updatedAt": "2026-07-28T00:28:06.000Z",
+                      "uid": "35240-6eaeddd5-4ca4-4e4f-86a7-f2c08553c114"
+                    }
+                  ],
+                  "createdAt": "2026-07-28T00:28:06.000Z",
+                  "updatedAt": "2026-07-28T00:28:06.000Z",
+                  "uid": "35240-4eb6244e-faef-4b9e-aea4-13a7ec4a53e9"
+                }
+              ],
+              "id": "4f35e324-8f19-474b-bcfb-ff7dc8bf323c",
+              "createdAt": "2026-07-28T00:28:06.000Z",
+              "updatedAt": "2026-07-28T00:28:06.000Z",
+              "uid": "35240-4f35e324-8f19-474b-bcfb-ff7dc8bf323c"
+            }
+          ],
+          "id": "dfb74674-7fab-4341-b81a-5f39ace68c0f",
+          "createdAt": "2026-07-28T00:28:06.000Z",
+          "updatedAt": "2026-07-28T00:28:06.000Z",
+          "uid": "35240-dfb74674-7fab-4341-b81a-5f39ace68c0f"
+        }
+      ],
+      "id": "f44a1651-f666-446f-956d-fc404dc3311b",
+      "createdAt": "2026-07-28T00:28:06.000Z",
+      "updatedAt": "2026-07-28T00:28:06.000Z",
+      "uid": "35240-f44a1651-f666-446f-956d-fc404dc3311b"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}

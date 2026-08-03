@@ -1,0 +1,469 @@
+{
+  "info": {
+    "_postman_id": "c9866b7c-8ea1-4c24-ae11-f961e85fcdbc",
+    "name": "Acronis Account Management Activities Authentication API",
+    "description": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-07-28T00:28:03.000Z",
+    "updatedAt": "2026-07-28T00:28:03.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-c9866b7c-8ea1-4c24-ae11-f961e85fcdbc"
+  },
+  "item": [
+    {
+      "name": "idp",
+      "item": [
+        {
+          "name": "token",
+          "item": [
+            {
+              "name": "Acronis Request Access Token",
+              "id": "2a3904d7-8984-46b8-88db-8947efcbb233",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/x-www-form-urlencoded"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "description": "(Required) OAuth2 grant type",
+                      "key": "grant_type",
+                      "value": "authorization_code"
+                    },
+                    {
+                      "description": "OAuth2 client identifier",
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "description": "OAuth2 client secret",
+                      "key": "client_secret",
+                      "value": "<string>"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/idp/token",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "idp",
+                    "token"
+                  ]
+                },
+                "description": "Request an OAuth2 access token using client credentials, authorization code, or other grant types."
+              },
+              "response": [
+                {
+                  "id": "c3a298ae-a2be-49ae-aa9a-4aac9abcdd80",
+                  "name": "Access token issued successfully",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "description": "(Required) OAuth2 grant type",
+                          "key": "grant_type",
+                          "value": "authorization_code"
+                        },
+                        {
+                          "description": "OAuth2 client identifier",
+                          "key": "client_id",
+                          "value": "<string>"
+                        },
+                        {
+                          "description": "OAuth2 client secret",
+                          "key": "client_secret",
+                          "value": "<string>"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/idp/token",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "idp",
+                        "token"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"access_token\": \"<string>\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": \"<integer>\",\n  \"refresh_token\": \"<string>\",\n  \"scope\": \"<string>\"\n}",
+                  "createdAt": "2026-07-28T00:28:03.000Z",
+                  "updatedAt": "2026-07-28T00:28:03.000Z",
+                  "uid": "35240-c3a298ae-a2be-49ae-aa9a-4aac9abcdd80"
+                },
+                {
+                  "id": "4641655e-8003-4edc-9424-1f4ebedbcfbe",
+                  "name": "Bad request - invalid input",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "description": "(Required) OAuth2 grant type",
+                          "key": "grant_type",
+                          "value": "authorization_code"
+                        },
+                        {
+                          "description": "OAuth2 client identifier",
+                          "key": "client_id",
+                          "value": "<string>"
+                        },
+                        {
+                          "description": "OAuth2 client secret",
+                          "key": "client_secret",
+                          "value": "<string>"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/idp/token",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "idp",
+                        "token"
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-07-28T00:28:03.000Z",
+                  "updatedAt": "2026-07-28T00:28:03.000Z",
+                  "uid": "35240-4641655e-8003-4edc-9424-1f4ebedbcfbe"
+                },
+                {
+                  "id": "970c81d5-642d-40db-a8a7-b2ac7a716366",
+                  "name": "Unauthorized - missing or invalid authentication",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "description": "(Required) OAuth2 grant type",
+                          "key": "grant_type",
+                          "value": "authorization_code"
+                        },
+                        {
+                          "description": "OAuth2 client identifier",
+                          "key": "client_id",
+                          "value": "<string>"
+                        },
+                        {
+                          "description": "OAuth2 client secret",
+                          "key": "client_secret",
+                          "value": "<string>"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/idp/token",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "idp",
+                        "token"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-07-28T00:28:03.000Z",
+                  "updatedAt": "2026-07-28T00:28:03.000Z",
+                  "uid": "35240-970c81d5-642d-40db-a8a7-b2ac7a716366"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:03.000Z",
+              "updatedAt": "2026-07-28T00:28:03.000Z",
+              "uid": "35240-2a3904d7-8984-46b8-88db-8947efcbb233"
+            }
+          ],
+          "id": "0870e4da-3d48-4ca8-b899-f3b4252fcf76",
+          "createdAt": "2026-07-28T00:28:03.000Z",
+          "updatedAt": "2026-07-28T00:28:03.000Z",
+          "uid": "35240-0870e4da-3d48-4ca8-b899-f3b4252fcf76"
+        },
+        {
+          "name": "revoke_token",
+          "item": [
+            {
+              "name": "Acronis Revoke Access Token",
+              "id": "44c0cdcc-9d32-41f7-ae1c-1e0ae60965e1",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/x-www-form-urlencoded"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "description": "(Required) Token to revoke",
+                      "key": "token",
+                      "value": "<string>"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/idp/revoke_token",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "idp",
+                    "revoke_token"
+                  ]
+                },
+                "description": "Revoke an OAuth2 access or refresh token."
+              },
+              "response": [
+                {
+                  "id": "cf6eb409-623f-4397-8432-f6626ef8f489",
+                  "name": "Token revoked successfully",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "description": "(Required) Token to revoke",
+                          "key": "token",
+                          "value": "<string>"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/idp/revoke_token",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "idp",
+                        "revoke_token"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-07-28T00:28:03.000Z",
+                  "updatedAt": "2026-07-28T00:28:03.000Z",
+                  "uid": "35240-cf6eb409-623f-4397-8432-f6626ef8f489"
+                },
+                {
+                  "id": "97c5f0f8-131b-40a1-81d1-e3e7f9bbbdbf",
+                  "name": "Unauthorized - missing or invalid authentication",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "urlencoded",
+                      "urlencoded": [
+                        {
+                          "description": "(Required) Token to revoke",
+                          "key": "token",
+                          "value": "<string>"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/idp/revoke_token",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "idp",
+                        "revoke_token"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"details\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "createdAt": "2026-07-28T00:28:03.000Z",
+                  "updatedAt": "2026-07-28T00:28:03.000Z",
+                  "uid": "35240-97c5f0f8-131b-40a1-81d1-e3e7f9bbbdbf"
+                }
+              ],
+              "createdAt": "2026-07-28T00:28:03.000Z",
+              "updatedAt": "2026-07-28T00:28:03.000Z",
+              "uid": "35240-44c0cdcc-9d32-41f7-ae1c-1e0ae60965e1"
+            }
+          ],
+          "id": "6af44bc1-3e6b-4397-89a9-ab45ac942b48",
+          "createdAt": "2026-07-28T00:28:03.000Z",
+          "updatedAt": "2026-07-28T00:28:03.000Z",
+          "uid": "35240-6af44bc1-3e6b-4397-89a9-ab45ac942b48"
+        }
+      ],
+      "id": "22cc335d-d600-4f4f-b87e-70b418873bff",
+      "createdAt": "2026-07-28T00:28:03.000Z",
+      "updatedAt": "2026-07-28T00:28:03.000Z",
+      "uid": "35240-22cc335d-d600-4f4f-b87e-70b418873bff"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "datacenter",
+      "value": "eu2-cloud"
+    },
+    {
+      "key": "baseUrl",
+      "value": "https://{{datacenter}}.acronis.com/api/2"
+    }
+  ]
+}
