@@ -1,0 +1,72 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Acronis Account Management Activities Licensing API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Licensing",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Acronis List Offering Items",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/tenants/:tenant_id/offering_items",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "path",
+                "description": "Tenant UUID"
+              },
+              {
+                "name": "edition",
+                "value": "",
+                "type": "query",
+                "description": "Filter by edition name"
+              }
+            ]
+          },
+          "docs": "List all offering items (services and quotas) configured for a tenant."
+        },
+        {
+          "info": {
+            "name": "Acronis Update Offering Items",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{datacenter}.acronis.com/api/2/tenants/:tenant_id/offering_items",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "path",
+                "description": "Tenant UUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enable, disable, or set quotas for offering items on a tenant."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

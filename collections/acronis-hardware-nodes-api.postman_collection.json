@@ -1,0 +1,320 @@
+{
+  "item": [
+    {
+      "id": "fd03f72d-a1d3-44f8-9c7e-29c41773f286",
+      "name": "Hardware Nodes",
+      "description": {
+        "content": "Hardware node management",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "83b576a0-3e4a-47f1-9648-0f0dafc5b4da",
+          "name": "Acronis List Hardware Nodes",
+          "request": {
+            "name": "Acronis List Hardware Nodes",
+            "description": {
+              "content": "List all hardware nodes visible from a specified tenant.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "hardware_nodes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "tenant_id",
+                  "value": "<uuid>",
+                  "description": "(Required) Tenant UUID to scope listing"
+                }
+              ],
+              "variable": [
+                {
+                  "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                  "type": "any",
+                  "value": "{{datacenter}}",
+                  "key": "datacenter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e7bb0f40-e517-4f66-bdf0-010803f72c56",
+              "name": "List of hardware nodes",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hardware_nodes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tenant_id",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                      "type": "any",
+                      "value": "{{datacenter}}",
+                      "key": "datacenter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"string\",\n      \"hostname\": \"string\",\n      \"type\": \"string\",\n      \"status\": \"string\",\n      \"tenant_id\": \"80c08a1e-81bb-b243-24cc-e1ba068f1c64\"\n    },\n    {\n      \"id\": \"string\",\n      \"hostname\": \"string\",\n      \"type\": \"string\",\n      \"status\": \"string\",\n      \"tenant_id\": \"fcebcb2a-374b-c2e9-d78e-081dc974d474\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6a085edc-c38f-436d-957f-32c5ddc2b572",
+          "name": "Acronis Get Hardware Node",
+          "request": {
+            "name": "Acronis Get Hardware Node",
+            "description": {
+              "content": "Retrieve specific hardware node information including storage configuration.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "hardware_nodes",
+                ":node_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "node_id",
+                  "description": "(Required) Hardware node identifier"
+                },
+                {
+                  "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                  "type": "any",
+                  "value": "{{datacenter}}",
+                  "key": "datacenter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fd161f48-a3d0-4b34-afbd-c325c8116b7c",
+              "name": "Hardware node details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hardware_nodes",
+                    ":node_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "node_id",
+                      "description": "(Required) Hardware node identifier"
+                    },
+                    {
+                      "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                      "type": "any",
+                      "value": "{{datacenter}}",
+                      "key": "datacenter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"hostname\": \"string\",\n  \"type\": \"string\",\n  \"status\": \"string\",\n  \"tenant_id\": \"a7763ac2-625e-7a06-7836-15fc1e733b2a\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "751778b3-fbe3-43af-89f7-a7d0adc7f47c",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "hardware_nodes",
+                    ":node_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "node_id",
+                      "description": "(Required) Hardware node identifier"
+                    },
+                    {
+                      "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                      "type": "any",
+                      "value": "{{datacenter}}",
+                      "key": "datacenter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 5507,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "eu2-cloud",
+      "key": "datacenter"
+    },
+    {
+      "type": "string",
+      "value": "https://{{datacenter}}.acronis.com/api/2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "84b528af-762c-4246-b967-e273f536d95e",
+    "name": "Acronis Account Management Activities Hardware Nodes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+      "type": "text/plain"
+    }
+  }
+}

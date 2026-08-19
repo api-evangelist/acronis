@@ -1,0 +1,168 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Acronis Account Management Activities Tenants API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tenants",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Acronis List Tenants",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/tenants",
+            "params": [
+              {
+                "name": "parent_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter tenants by parent tenant UUID"
+              },
+              {
+                "name": "uuids",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of tenant UUIDs to retrieve"
+              },
+              {
+                "name": "subtree_root_id",
+                "value": "",
+                "type": "query",
+                "description": "Root tenant UUID for subtree traversal"
+              }
+            ]
+          },
+          "docs": "List tenants in the hierarchy. Can filter by parent tenant UUID or retrieve by specific UUIDs."
+        },
+        {
+          "info": {
+            "name": "Acronis Create Tenant",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{datacenter}.acronis.com/api/2/tenants",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new tenant as a child of an existing tenant."
+        },
+        {
+          "info": {
+            "name": "Acronis Get Tenant",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/tenants/:tenant_id",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "path",
+                "description": "Tenant UUID"
+              }
+            ]
+          },
+          "docs": "Retrieve details about a specific tenant by ID."
+        },
+        {
+          "info": {
+            "name": "Acronis Update Tenant",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{datacenter}.acronis.com/api/2/tenants/:tenant_id",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "path",
+                "description": "Tenant UUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update tenant properties including name, contact, and enabled status."
+        },
+        {
+          "info": {
+            "name": "Acronis Delete Tenant",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{datacenter}.acronis.com/api/2/tenants/:tenant_id",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "path",
+                "description": "Tenant UUID"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Tenant version for optimistic concurrency"
+              }
+            ]
+          },
+          "docs": "Delete a tenant. The tenant must have no children or active services."
+        },
+        {
+          "info": {
+            "name": "Acronis Search Tenants and Users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/search",
+            "params": [
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "Search query string"
+              },
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "query",
+                "description": "Scope search to a specific tenant subtree"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum results to return"
+              }
+            ]
+          },
+          "docs": "Search for tenants and users by name, email, or login across the accessible hierarchy."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

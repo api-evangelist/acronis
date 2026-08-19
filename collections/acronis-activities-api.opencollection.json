@@ -1,0 +1,86 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Acronis Account Management Activities API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Activities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Acronis List Activities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/activities",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter activities by tenant UUID"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter activities by parent task ID"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Filter by activity state"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum activities to return"
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor"
+              }
+            ]
+          },
+          "docs": "Fetch a list of task activities with filtering and pagination."
+        },
+        {
+          "info": {
+            "name": "Acronis Get Activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/activities/:activity_id",
+            "params": [
+              {
+                "name": "activity_id",
+                "value": "",
+                "type": "path",
+                "description": "Activity unique identifier"
+              }
+            ]
+          },
+          "docs": "Retrieve details about a specific task activity by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

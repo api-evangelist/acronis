@@ -1,0 +1,434 @@
+{
+  "item": [
+    {
+      "id": "7dbbee26-2318-4deb-9ffa-103f8884ec0d",
+      "name": "Licensing",
+      "description": {
+        "content": "Offering items, quotas, and edition management",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8932b3fe-0495-470d-ab97-086adecf0034",
+          "name": "Acronis List Offering Items",
+          "request": {
+            "name": "Acronis List Offering Items",
+            "description": {
+              "content": "List all offering items (services and quotas) configured for a tenant.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tenants",
+                ":tenant_id",
+                "offering_items"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "edition",
+                  "value": "<string>",
+                  "description": "Filter by edition name"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "tenant_id",
+                  "description": "(Required) Tenant UUID"
+                },
+                {
+                  "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                  "type": "any",
+                  "value": "{{datacenter}}",
+                  "key": "datacenter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "415d1010-e8df-437a-8a0e-2ff03c723350",
+              "name": "List of offering items",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tenants",
+                    ":tenant_id",
+                    "offering_items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "edition",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tenant_id",
+                      "description": "(Required) Tenant UUID"
+                    },
+                    {
+                      "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                      "type": "any",
+                      "value": "{{datacenter}}",
+                      "key": "datacenter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"name\": \"vms\",\n      \"application_id\": \"f450cc59-be0a-2487-04ae-f48558b12ad4\",\n      \"status\": 1,\n      \"quota\": {\n        \"value\": 100,\n        \"overage\": 4020.389764636756,\n        \"version\": 5794\n      },\n      \"edition\": \"standard\"\n    },\n    {\n      \"name\": \"vms\",\n      \"application_id\": \"e6eba312-a542-b9c5-1673-35b9b00f14cb\",\n      \"status\": 1,\n      \"quota\": {\n        \"value\": 100,\n        \"overage\": 2606.102890890408,\n        \"version\": 5845\n      },\n      \"edition\": \"standard\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5b898383-2302-4d24-ae3a-19112987cdae",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tenants",
+                    ":tenant_id",
+                    "offering_items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "edition",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tenant_id",
+                      "description": "(Required) Tenant UUID"
+                    },
+                    {
+                      "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                      "type": "any",
+                      "value": "{{datacenter}}",
+                      "key": "datacenter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Invalid request parameters\",\n  \"details\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e9cfe3bd-8709-4380-a02b-aa905bfb2ea7",
+          "name": "Acronis Update Offering Items",
+          "request": {
+            "name": "Acronis Update Offering Items",
+            "description": {
+              "content": "Enable, disable, or set quotas for offering items on a tenant.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tenants",
+                ":tenant_id",
+                "offering_items"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "tenant_id",
+                  "description": "(Required) Tenant UUID"
+                },
+                {
+                  "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                  "type": "any",
+                  "value": "{{datacenter}}",
+                  "key": "datacenter"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"offering_items\": [\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"application_id\": \"<uuid>\",\n      \"status\": \"<integer>\",\n      \"quota\": {\n        \"value\": \"<number>\",\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "91620319-c909-473f-8faa-3bb2a2caa1ed",
+              "name": "Offering items updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tenants",
+                    ":tenant_id",
+                    "offering_items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tenant_id",
+                      "description": "(Required) Tenant UUID"
+                    },
+                    {
+                      "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                      "type": "any",
+                      "value": "{{datacenter}}",
+                      "key": "datacenter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"offering_items\": [\n    {\n      \"name\": \"vms\",\n      \"application_id\": \"<uuid>\",\n      \"status\": 1,\n      \"quota\": {\n        \"value\": 100,\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"standard\"\n    },\n    {\n      \"name\": \"vms\",\n      \"application_id\": \"<uuid>\",\n      \"status\": 1,\n      \"quota\": {\n        \"value\": 100,\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"standard\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"name\": \"vms\",\n      \"application_id\": \"<uuid>\",\n      \"status\": 1,\n      \"quota\": {\n        \"value\": 100,\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"standard\"\n    },\n    {\n      \"name\": \"vms\",\n      \"application_id\": \"<uuid>\",\n      \"status\": 1,\n      \"quota\": {\n        \"value\": 100,\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"standard\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dadd941d-7a58-4e0d-aaa6-12a746b1fd61",
+              "name": "Bad request - invalid input",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tenants",
+                    ":tenant_id",
+                    "offering_items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tenant_id",
+                      "description": "(Required) Tenant UUID"
+                    },
+                    {
+                      "description": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+                      "type": "any",
+                      "value": "{{datacenter}}",
+                      "key": "datacenter"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"offering_items\": [\n    {\n      \"name\": \"vms\",\n      \"application_id\": \"<uuid>\",\n      \"status\": 1,\n      \"quota\": {\n        \"value\": 100,\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"standard\"\n    },\n    {\n      \"name\": \"vms\",\n      \"application_id\": \"<uuid>\",\n      \"status\": 1,\n      \"quota\": {\n        \"value\": 100,\n        \"overage\": \"<number>\",\n        \"version\": \"<integer>\"\n      },\n      \"edition\": \"standard\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 400,\n  \"message\": \"Invalid request parameters\",\n  \"details\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "eu2-cloud",
+      "key": "datacenter"
+    },
+    {
+      "type": "string",
+      "value": "https://{{datacenter}}.acronis.com/api/2",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "2247d833-ed0d-44e8-a9f1-0a0890bf97b6",
+    "name": "Acronis Account Management Activities Licensing API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.\n\nContact Support:\n Name: Acronis Developer Portal",
+      "type": "text/plain"
+    }
+  }
+}

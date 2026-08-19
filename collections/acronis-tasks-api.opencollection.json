@@ -1,0 +1,104 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Acronis Account Management Activities Tasks API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tasks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Acronis List Tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/tasks",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter tasks by tenant UUID"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Filter by task state"
+              },
+              {
+                "name": "result_code",
+                "value": "",
+                "type": "query",
+                "description": "Filter by task result"
+              },
+              {
+                "name": "policy_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by protection policy ID"
+              },
+              {
+                "name": "resource_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by protected resource ID"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order (e.g., startedAt desc)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum tasks to return"
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor"
+              }
+            ]
+          },
+          "docs": "Fetch a list of backup and protection tasks with filtering, ordering, and pagination support."
+        },
+        {
+          "info": {
+            "name": "Acronis Get Task",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "Task unique identifier"
+              }
+            ]
+          },
+          "docs": "Retrieve details about a specific backup or protection task by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

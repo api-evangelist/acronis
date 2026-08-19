@@ -1,0 +1,73 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Acronis Account Management Activities Agent Updates API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agent Updates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Acronis Force Agent Update",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{datacenter}.acronis.com/api/2/agents/update:force",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Launch a forced agent update bypassing maintenance windows for specified agents."
+        },
+        {
+          "info": {
+            "name": "Acronis Get Agent Update Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/agent_update_settings",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "query",
+                "description": "Tenant UUID to scope settings"
+              }
+            ]
+          },
+          "docs": "Fetch update configuration settings for agents or tenants."
+        },
+        {
+          "info": {
+            "name": "Acronis Update Agent Update Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{datacenter}.acronis.com/api/2/agent_update_settings",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Store or update agent update configuration settings including maintenance windows."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

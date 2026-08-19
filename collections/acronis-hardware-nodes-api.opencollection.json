@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Acronis Account Management Activities Hardware Nodes API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Hardware Nodes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Acronis List Hardware Nodes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/hardware_nodes",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "query",
+                "description": "Tenant UUID to scope listing"
+              }
+            ]
+          },
+          "docs": "List all hardware nodes visible from a specified tenant."
+        },
+        {
+          "info": {
+            "name": "Acronis Get Hardware Node",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/hardware_nodes/:node_id",
+            "params": [
+              {
+                "name": "node_id",
+                "value": "",
+                "type": "path",
+                "description": "Hardware node identifier"
+              }
+            ]
+          },
+          "docs": "Retrieve specific hardware node information including storage configuration."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

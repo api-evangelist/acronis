@@ -1,0 +1,124 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Acronis Account Management Activities Agents API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Acronis List Agents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/agents",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "query",
+                "description": "Tenant UUID to scope agent listing"
+              },
+              {
+                "name": "os_family",
+                "value": "",
+                "type": "query",
+                "description": "Filter by operating system family"
+              },
+              {
+                "name": "os_arch",
+                "value": "",
+                "type": "query",
+                "description": "Filter by OS architecture"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of agents to return"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order (e.g., hostname asc)"
+              }
+            ]
+          },
+          "docs": "List all registered Acronis protection agents visible from a specified tenant."
+        },
+        {
+          "info": {
+            "name": "Acronis Delete Agents",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{datacenter}.acronis.com/api/2/agents",
+            "params": [
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of agent IDs to delete"
+              }
+            ]
+          },
+          "docs": "Cancel registration and delete service accounts for multiple agents."
+        },
+        {
+          "info": {
+            "name": "Acronis Get Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/agents/:agent_id",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "path",
+                "description": "Agent unique identifier"
+              }
+            ]
+          },
+          "docs": "Retrieve details about a specific registered Acronis agent."
+        },
+        {
+          "info": {
+            "name": "Acronis Delete Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{datacenter}.acronis.com/api/2/agents/:agent_id",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "path",
+                "description": "Agent unique identifier"
+              }
+            ]
+          },
+          "docs": "Cancel registration of a specific Acronis agent."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

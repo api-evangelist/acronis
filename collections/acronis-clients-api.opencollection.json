@@ -1,0 +1,96 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Acronis Account Management Activities Clients API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Clients",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Acronis List OAuth Clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/clients",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter clients by tenant UUID"
+              }
+            ]
+          },
+          "docs": "List OAuth2 client credentials registered in the system."
+        },
+        {
+          "info": {
+            "name": "Acronis Create OAuth Client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{datacenter}.acronis.com/api/2/clients",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new OAuth2 client credential for API authentication."
+        },
+        {
+          "info": {
+            "name": "Acronis Get OAuth Client",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/clients/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "OAuth2 client identifier"
+              }
+            ]
+          },
+          "docs": "Retrieve details about a specific OAuth2 client."
+        },
+        {
+          "info": {
+            "name": "Acronis Delete OAuth Client",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{datacenter}.acronis.com/api/2/clients/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "OAuth2 client identifier"
+              }
+            ]
+          },
+          "docs": "Delete an OAuth2 client credential."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

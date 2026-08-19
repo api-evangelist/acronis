@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Acronis Account Management Activities Usage API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Usage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Acronis Get Tenant Usages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{datacenter}.acronis.com/api/2/tenants/:tenant_id/usages",
+            "params": [
+              {
+                "name": "tenant_id",
+                "value": "",
+                "type": "path",
+                "description": "Tenant UUID"
+              },
+              {
+                "name": "edition",
+                "value": "",
+                "type": "query",
+                "description": "Filter by edition"
+              }
+            ]
+          },
+          "docs": "Get current usage metrics for a tenant across all services and resources."
+        },
+        {
+          "info": {
+            "name": "Acronis Create Usage Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{datacenter}.acronis.com/api/2/reports",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a scheduled or on-demand usage report configuration."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
