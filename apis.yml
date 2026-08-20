@@ -62,6 +62,10 @@ apis:
   name: Acronis Event Manager API
   tags:
   - Acronis
+  - Event
+  - Monitoring
+  tags_raw:
+  - Acronis
   - Events
   - Monitoring
   humanURL: https://developer.acronis.com/doc/events/v1/reference/index.html
@@ -240,6 +244,8 @@ apis:
   description: Backup and protection task monitoring
   humanURL: https://developer.acronis.com/doc/account-management/v2/reference/index.html
   tags:
+  - Task
+  tags_raw:
   - Tasks
   properties:
   - type: OpenAPI
@@ -294,6 +300,8 @@ apis:
   description: User account management within tenants
   humanURL: https://developer.acronis.com/doc/account-management/v2/reference/index.html
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
