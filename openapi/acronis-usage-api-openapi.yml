@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Acronis Account Management Activities Usage API
   description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
@@ -93,36 +93,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
-    UsageList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/UsageItem'
-    ReportRequest:
-      type: object
-      properties:
-        schedule:
-          type: object
-          additionalProperties: true
-        parameters:
-          type: object
-          additionalProperties: true
-    Report:
-      type: object
-      description: Usage report configuration
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Report identifier
-        schedule:
-          type: object
-          description: Report schedule configuration
-        parameters:
-          type: object
-          description: Report parameters
     UsageItem:
       type: object
       description: Usage metric for a specific service or resource
@@ -156,6 +126,36 @@ components:
           type: array
           items:
             type: string
+    UsageList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsageItem'
+    Report:
+      type: object
+      description: Usage report configuration
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Report identifier
+        schedule:
+          type: object
+          description: Report schedule configuration
+        parameters:
+          type: object
+          description: Report parameters
+    ReportRequest:
+      type: object
+      properties:
+        schedule:
+          type: object
+          additionalProperties: true
+        parameters:
+          type: object
+          additionalProperties: true
   securitySchemes:
     bearerAuth:
       type: http

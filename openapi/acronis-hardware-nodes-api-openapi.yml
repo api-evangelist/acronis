@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Acronis Account Management Activities Hardware Nodes API
   description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
@@ -74,6 +74,13 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     HardwareNode:
       type: object
       description: Physical or virtual hardware node managed by Acronis
@@ -100,13 +107,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HardwareNode'
-    Error:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
   responses:
     NotFound:
       description: Not found

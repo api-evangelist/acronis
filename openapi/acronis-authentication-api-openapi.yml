@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Acronis Account Management Activities Authentication API
   description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
@@ -107,22 +107,6 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      description: API error response
-      properties:
-        code:
-          type: integer
-          description: Error code
-          example: 400
-        message:
-          type: string
-          description: Human-readable error message
-          example: Invalid request parameters
-        details:
-          type: array
-          items:
-            type: string
     TokenResponse:
       type: object
       description: OAuth2 token response
@@ -146,6 +130,22 @@ components:
         scope:
           type: string
           description: Granted OAuth2 scopes
+    Error:
+      type: object
+      description: API error response
+      properties:
+        code:
+          type: integer
+          description: Error code
+          example: 400
+        message:
+          type: string
+          description: Human-readable error message
+          example: Invalid request parameters
+        details:
+          type: array
+          items:
+            type: string
   securitySchemes:
     bearerAuth:
       type: http

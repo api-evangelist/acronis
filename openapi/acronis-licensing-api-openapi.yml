@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Acronis Account Management Activities Licensing API
   description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
@@ -87,20 +87,20 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
-    OfferingItemList:
+    Quota:
       type: object
+      description: Quota configuration for an offering item
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/OfferingItem'
-    OfferingItemUpdateRequest:
-      type: object
-      properties:
-        offering_items:
-          type: array
-          items:
-            $ref: '#/components/schemas/OfferingItem'
+        value:
+          type: number
+          description: Quota value (null for unlimited)
+          example: 100
+        overage:
+          type: number
+          description: Allowed overage beyond quota
+        version:
+          type: integer
+          description: Quota version for concurrency
     OfferingItem:
       type: object
       description: An Acronis service or feature that can be enabled for a tenant
@@ -123,20 +123,13 @@ components:
           type: string
           description: Edition name this item belongs to
           example: standard
-    Quota:
+    OfferingItemList:
       type: object
-      description: Quota configuration for an offering item
       properties:
-        value:
-          type: number
-          description: Quota value (null for unlimited)
-          example: 100
-        overage:
-          type: number
-          description: Allowed overage beyond quota
-        version:
-          type: integer
-          description: Quota version for concurrency
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OfferingItem'
     Error:
       type: object
       description: API error response
@@ -153,6 +146,13 @@ components:
           type: array
           items:
             type: string
+    OfferingItemUpdateRequest:
+      type: object
+      properties:
+        offering_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OfferingItem'
   responses:
     NotFound:
       description: Resource not found

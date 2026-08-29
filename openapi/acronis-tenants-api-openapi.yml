@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Acronis Account Management Activities Tenants API
   description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
@@ -233,14 +233,20 @@ paths:
         dispatcher: FALLBACK
 components:
   responses:
+    Forbidden:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     NotFound:
       description: Resource not found
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Forbidden - insufficient permissions
+    BadRequest:
+      description: Bad request - invalid input
       content:
         application/json:
           schema:
@@ -257,52 +263,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request - invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Paging:
+    TenantList:
       type: object
       properties:
-        cursors:
-          type: object
-          properties:
-            after:
-              type: string
-              description: Cursor for next page
-    TenantRequest:
-      type: object
-      required:
-      - name
-      - kind
-      - parent_id
-      description: Request body for creating or updating a tenant
-      properties:
-        name:
-          type: string
-          description: Tenant display name
-          example: New Partner
-        kind:
-          type: string
-          enum:
-          - partner
-          - folder
-          - customer
-          - unit
-          description: Tenant type
-        parent_id:
-          type: string
-          format: uuid
-          description: Parent tenant UUID
-        enabled:
-          type: boolean
-          description: Whether the tenant should be enabled
-          example: true
-        contact:
-          $ref: '#/components/schemas/Contact'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tenant'
+        paging:
+          $ref: '#/components/schemas/Paging'
     Tenant:
       type: object
       description: Acronis tenant representing a company, partner, or customer account
@@ -356,6 +326,31 @@ components:
           example: 1
         contact:
           $ref: '#/components/schemas/Contact'
+    Paging:
+      type: object
+      properties:
+        cursors:
+          type: object
+          properties:
+            after:
+              type: string
+              description: Cursor for next page
+    Error:
+      type: object
+      description: API error response
+      properties:
+        code:
+          type: integer
+          description: Error code
+          example: 400
+        message:
+          type: string
+          description: Human-readable error message
+          example: Invalid request parameters
+        details:
+          type: array
+          items:
+            type: string
     Contact:
       type: object
       description: Contact information for a tenant
@@ -382,15 +377,36 @@ components:
         country:
           type: string
           example: US
-    TenantList:
+    TenantRequest:
       type: object
+      required:
+      - name
+      - kind
+      - parent_id
+      description: Request body for creating or updating a tenant
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Tenant'
-        paging:
-          $ref: '#/components/schemas/Paging'
+        name:
+          type: string
+          description: Tenant display name
+          example: New Partner
+        kind:
+          type: string
+          enum:
+          - partner
+          - folder
+          - customer
+          - unit
+          description: Tenant type
+        parent_id:
+          type: string
+          format: uuid
+          description: Parent tenant UUID
+        enabled:
+          type: boolean
+          description: Whether the tenant should be enabled
+          example: true
+        contact:
+          $ref: '#/components/schemas/Contact'
     SearchResults:
       type: object
       description: Search results containing matching tenants and users
@@ -403,22 +419,6 @@ components:
         size:
           type: integer
           description: Total number of results
-    Error:
-      type: object
-      description: API error response
-      properties:
-        code:
-          type: integer
-          description: Error code
-          example: 400
-        message:
-          type: string
-          description: Human-readable error message
-          example: Invalid request parameters
-        details:
-          type: array
-          items:
-            type: string
   securitySchemes:
     bearerAuth:
       type: http
