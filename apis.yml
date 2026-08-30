@@ -367,6 +367,12 @@ apis:
   - Acronis
   - Account Management
   - Tenants
+  - User
+  - Licensing
+  tags_raw:
+  - Acronis
+  - Account Management
+  - Tenants
   - Users
   - Licensing
   properties:
