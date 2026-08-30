@@ -1,0 +1,70 @@
+generated: '2026-08-30'
+method: searched
+source: >-
+  https://github.com/acronis/uikit, https://github.com/acronis/ui-component-library, and the
+  @acronis-platform npm scope (registry metadata read 2026-08-30)
+description: >-
+  Acronis publishes a first-party front-end component system on npm under the @acronis-platform scope,
+  built from the acronis/uikit repository. It is the design system the Acronis console is built from,
+  released publicly under MIT so partners building CyberApps and embedded integrations can match the
+  platform look. These are client-side UI building blocks — they are not API SDKs and they do not call
+  the Cyber Platform API for you.
+families:
+- name: React components
+  packages:
+  - name: '@acronis-platform/ui-react'
+    version: 5.0.0
+    published: '2026-08-28'
+    description: React component library, a Base UI implementation themed by the Acronis design tokens.
+  - name: '@acronis-platform/icons-react'
+    version: 1.0.1
+    published: '2026-08-27'
+    description: React icon components generated from the design assets manifest.
+  - name: '@acronis-platform/shadcn-uikit'
+    version: 0.36.3
+    published: '2026-06-05'
+    description: shadcn-style TypeScript component library.
+- name: Design tokens and theming
+  packages:
+  - name: '@acronis-platform/design-tokens'
+    version: 2.7.0
+    published: '2026-08-24'
+  - name: '@acronis-platform/tokens-pd'
+    version: 2.8.0
+    published: '2026-08-24'
+    description: Per-brand CSS custom properties for the Acronis platform (PD) surface.
+  - name: '@acronis-platform/ui-syntax'
+    version: 1.0.1
+    published: '2025-12-05'
+- name: Assets
+  packages:
+  - name: '@acronis-platform/design-assets'
+    version: 1.0.0
+    published: '2026-08-19'
+    description: Icons and illustrations as JSON manifests plus bundled files.
+  - name: '@acronis-platform/icons-sprite'
+    version: 0.2.0
+    published: '2026-06-23'
+    description: Optimized combined / monocolor / multicolor SVG sprites.
+- name: Legacy
+  packages:
+  - name: '@acronis-platform/ui-component-library'
+    version: 1.35.3
+    published: '2025-11-07'
+    description: The earlier component library, superseded by @acronis-platform/ui-react.
+  - name: '@acronis/ui-kit'
+    version: 20.11.59
+    published: '2021-01-18'
+    description: The original UI Kit scope; abandoned.
+embedded_surfaces:
+- name: CyberApp UI builder
+  description: >-
+    Acronis' vendor portal composes partner-facing screens declaratively from UI fields (Identity,
+    Secret, Connection settings) that are then passed to the partner's callback handler as
+    X-CyberApp-Auth / X-CyberApp-Extra headers. It is a hosted form builder rather than a JavaScript
+    embed, so no loader library is distributed.
+  docs: https://developer.acronis.com/doc/callback-handler/formats/requests.html
+loaders: []
+note: >-
+  No CDN-distributed loader script is published — every package is consumed from npm and bundled by the
+  integrator, so there is no unpinned script tag to record.

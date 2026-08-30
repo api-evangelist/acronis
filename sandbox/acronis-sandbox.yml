@@ -1,0 +1,58 @@
+generated: '2026-08-30'
+method: searched
+source: >-
+  https://developer.acronis.com/doc/account-management/v2/reference/index.html and the other eleven
+  API Console pages, probed 2026-08-30
+console:
+  published: true
+  name: Acronis API Console
+  description: >-
+    Every published Acronis API ships an interactive reference console at
+    developer.acronis.com/doc/<api>/<version>/reference/index.html. Each console renders the same
+    openapi.json this repo harvested, and carries a server-side Try-it proxy
+    (websiteapi.acronis.com/svc/v1/devportal/docs/try-it?url=) so a request can be issued from the
+    browser without a CORS workaround.
+  urls:
+  - https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  - https://developer.acronis.com/doc/agents/v2/reference/index.html
+  - https://developer.acronis.com/doc/alerts/v1/reference/index.html
+  - https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
+  - https://developer.acronis.com/doc/tasks/v2/reference/index.html
+  - https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html
+  - https://developer.acronis.com/doc/events/v1/reference/index.html
+  - https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html
+  - https://developer.acronis.com/doc/mdr/v1/reference/index.html
+  - https://developer.acronis.com/doc/vaultman/v1/reference/index.html
+  - https://developer.acronis.com/doc/pricelist/v1/reference/index.html
+  - https://developer.acronis.com/doc/files/v1/reference/index.html
+  authentication_required: true
+  note: The console renders and composes requests anonymously, but executing one needs a real tenant token.
+test_environment:
+  published: false
+  spec_server_host: dev-cloud.acronis.com
+  note: >-
+    Every published spec declares https://dev-cloud.acronis.com/... as its servers[0]. That is the host
+    the specs are generated against, NOT a self-serve sandbox: Acronis publishes no way to obtain
+    credentials for it, and production callers use their tenant's assigned datacenter
+    (https://{datacenter}.acronis.com). The MCP server's default API_BASE_URL is a third host,
+    https://mc-beta-cloud.acronis.com. None of the three is documented as an open test environment.
+test_credentials:
+  published: false
+  test_key_prefix: null
+  test_mode: false
+  note: >-
+    Acronis publishes no test-mode credential, no key prefix distinguishing test from live, no fixture
+    or trigger tooling and no time simulation. Access to any environment requires a Cyber Protect Cloud
+    tenant, which is obtained through the partner/service-provider or vendor portal rather than a
+    developer signup.
+access_path:
+  route: partner or vendor onboarding
+  contact: https://promo.acronis.com/Platform-Integrations-Contact-Us.html
+  login: https://cloud.acronis.com/login
+  note: >-
+    This is a sales-gated developer surface. The reference documentation, the OpenAPI documents and the
+    console are fully public and anonymous; only credentials are gated.
+gaps:
+- No self-serve developer/test tenant.
+- No published test data, fixtures or simulated clock.
+- The three different hosts across specs, docs and the MCP default are undocumented as environments.

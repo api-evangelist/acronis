@@ -4,44 +4,123 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Acronis
 providerId: acronis
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-05'
-reconciled: false
+modified: '2026-08-30'
+generated: '2026-08-30'
+method: searched
+source: >-
+  openapi/_original/*.json (12 provider OpenAPI documents harvested from developer.acronis.com
+  2026-08-30) and https://developer.acronis.com/doc/outbound/apis/index.html
+reconciled: true
 tags:
   - Cybersecurity
   - Data Protection
   - Backup
   - Endpoint Management
   - Rate Limiting
-description: Acronis Cyber Cloud APIs (Account Management, Tasks, Reports, Search, Notifications, etc.)
-  are exposed to MSPs and ISVs through the Acronis Cyber Platform. Public developer documentation does
-  not surface a fixed RPS / RPM table; throttling is applied per tenant and per API token at the gateway,
-  with 429 returned when quotas are exceeded.
-sources:
-  - https://developer.acronis.com/
-  - https://www.acronis.com/en-us/products/cloud/cyber-protect/
-notes: Acronis does not publish a numeric rate-limit table on the public developer portal. Reconciled
-  flag is false because per-second numbers are not provider-published.
+description: >-
+  Acronis publishes no numeric rate-limit table for the Cyber Platform APIs — no requests-per-second or
+  per-minute figure appears anywhere on the developer portal or in the twelve published OpenAPI
+  documents. What it does publish, contractually, is the runtime signal: fourteen operations across
+  three services declare a 429 response carrying a Retry-After header in seconds, and the response
+  descriptions name the two distinct causes Acronis throttles on (service overload / results quota, and
+  too many requests from one IP). No X-RateLimit-* or RateLimit-* quota headers are declared anywhere,
+  so a client cannot see its remaining budget before it is refused — only how long to wait after.
+limit_count: 0
+notes: >-
+  limit_count is 0 because zero numeric limits are provider-published, not because none are enforced.
+  The honest measurement is: signal yes, numbers no.
 responseCodes:
   throttled: 429
+  gatewayTimeout: 504
   serviceUnavailable: 503
+headers:
+  request: []
+  response:
+    - name: Retry-After
+      units: seconds
+      description: The time the client must wait before the next request.
+      declared_on: 14 operations
+      specs:
+        - openapi/_original/acronis-disaster-recovery-v2-openapi.json
+        - openapi/_original/acronis-events-v1-openapi.json
+        - openapi/_original/acronis-mdr-v1-openapi.json
+  absent:
+    - X-RateLimit-Limit
+    - X-RateLimit-Remaining
+    - X-RateLimit-Reset
+    - RateLimit
+    - RateLimit-Policy
 limits:
-  - name: Cyber Cloud API throttling
-    scope: api-token
-    metric: varies
-    limit: see Acronis Cyber Platform documentation
-    notes: Per-tenant throttling applied at the API gateway; specific numbers are not published publicly.
+  - name: Disaster Recovery service overload
+    scope: service
+    api: Disaster Recovery API (/api/dr/v2)
+    window: not published
+    limit: not published
+    status: 429
+    header: Retry-After
+    operations: 7
+    evidence: openapi/_original/acronis-disaster-recovery-v2-openapi.json
+    description: >-
+      Declared on all seven DR operations, including start/stop failover. Response text: "the service is
+      overloaded and you must wait before the next request."
+  - name: Event Manager poll throttle
+    scope: subscriber
+    api: Event Manager API (/api/event_manager/v1)
+    window: not published
+    limit: not published
+    status: 429
+    header: Retry-After
+    operations: 1
+    evidence: openapi/_original/acronis-events-v1-openapi.json
+    description: >-
+      Declared on GET /events. Two documented causes for the retry, making Retry-After the flow-control
+      mechanism for the whole event stream.
+  - name: EDR results quota
+    scope: query
+    api: Endpoint Detection and Response API (/api/mdr/v1)
+    window: not published
+    limit: not published
+    status: 429
+    header: Retry-After
+    evidence: openapi/_original/acronis-mdr-v1-openapi.json
+    description: 'Response text: "Results quota exceeded."'
+  - name: EDR per-IP throttle
+    scope: ip
+    api: Endpoint Detection and Response API (/api/mdr/v1)
+    window: not published
+    limit: not published
+    status: 429
+    header: Retry-After
+    operations: 5
+    evidence: openapi/_original/acronis-mdr-v1-openapi.json
+    description: >-
+      'Too many requests from the same IP' — the only Acronis limit whose scope is stated, and it is
+      per source IP rather than per token, which matters for any shared-egress integration.
+  - name: All other services
+    scope: unknown
+    api: Account Management, Agents, Alerts, Tasks, Resource & Policy, Vault Manager, PSA, Price List, Files
+    window: not published
+    limit: not published
+    status: not declared
+    evidence: openapi/_original/
+    description: >-
+      Nine of the twelve published specs declare no 429 response at all. Throttling may still occur at
+      the gateway; it is simply not in the contract.
 policies:
   - name: Backoff
-    description: Honor 429 responses with exponential backoff and jitter; respect any Retry-After header.
-  - name: Tenant Isolation
-    description: Limits are scoped per Acronis tenant / partner account; sub-tenants inherit from the
-      parent partner allocation.
-  - name: Webhook Preference
-    description: Acronis encourages event-driven integration via notifications / webhooks rather than
-      polling, to reduce request volume against rate-limited endpoints.
+    description: Honor 429 by waiting the Retry-After value, then retry with exponential backoff and jitter.
+  - name: Poll the task, do not re-issue the write
+    description: >-
+      Long-running writes return an activity or task id. Polling the Task Management API is the
+      supported way to wait; re-issuing the write is not idempotent outside the three EDR endpoints.
+  - name: Prefer the event stream over polling collections
+    description: >-
+      The Event Manager API exists so integrations can consume state changes from a cursor instead of
+      re-listing tenants and resources.
+gaps:
+  - No published numeric limits for any service.
+  - No quota headers, so remaining budget is invisible until a request is refused.
+  - Nine of twelve services declare no throttling response in their contract.
 maintainers:
   - FN: Kin Lane
-    email: info@apievangelist.com
+    email: kin@apievangelist.com

@@ -1,0 +1,81 @@
+generated: '2026-08-30'
+method: searched
+source: >-
+  openapi/_original/acronis-events-v1-openapi.json (Event Manager API, harvested from
+  https://developer.acronis.com/doc/events/v1/reference/openapi.json) and
+  https://developer.acronis.com/doc/callback-handler/index.html
+asyncapi_published: false
+note: >-
+  Acronis publishes no AsyncAPI document, so none is recorded and none is authored here. It does ship
+  two real, separately-contracted event surfaces, captured below: a pull-based pub/sub event stream
+  (Event Manager, contracted in OpenAPI) and a push callback gateway that calls a partner-hosted
+  handler (CyberApps, contracted in prose). Neither is a conventional outbound webhook registration
+  API — there is no endpoint where a customer registers a URL for platform events.
+surfaces:
+- name: Event Manager
+  kind: pub-sub event stream
+  style: pull (cursor-polled)
+  contract: openapi/_original/acronis-events-v1-openapi.json
+  base_url: https://{datacenter}.acronis.com/api/event_manager/v1
+  docs: https://developer.acronis.com/doc/vendor-side/apis/api-library/events/index.html
+  typed_by: CTI (Cross-domain Typed Identifiers)
+  message_types:
+  - cti.a.p.em.event.v1.0
+  - cti.a.p.em.msg.v1.0
+  - cti.a.p.em.topic.v1.0
+  operations:
+  - method: GET
+    path: /topics
+    summary: Fetch topics the client may publish to or subscribe to.
+  - method: GET
+    path: /topics/offsets
+    summary: Fetch the latest offset for a topic — the global stream position.
+  - method: GET
+    path: /types
+    summary: Fetch the event types the client may publish or subscribe to.
+  - method: POST
+    path: /subscriptions
+    summary: Create an event subscription by topic and CTI filter.
+  - method: GET
+    path: /subscriptions/offset
+    summary: Fetch the subscriber's current acknowledged offset.
+  - method: GET
+    path: /events
+    summary: Fetch a batch of events from a cursor position for real-time consumption.
+  scopes:
+  - urn:acronis.com:event_manager:{cti_query}:publisher
+  - urn:acronis.com:event_manager:{cti_query}:subscriber
+  backpressure:
+    status: 429
+    header: Retry-After
+    note: The 429 on GET /events carries Retry-After in seconds and is the documented poll-throttle signal.
+- name: CyberApp callback gateway
+  kind: outbound push (provider calls partner)
+  style: push
+  direction: Acronis -> partner-hosted callback handler
+  docs: https://developer.acronis.com/doc/callback-handler/index.html
+  request_format: https://developer.acronis.com/doc/callback-handler/formats/requests.html
+  authentication:
+    headers:
+    - name: Authorization
+      description: Bearer JWT signed by Acronis; verified by the partner handler.
+    - name: X-CyberApp-Auth
+      description: base64 <identity>:<secrets-json> credentials from the partner's own cloud.
+    - name: X-CyberApp-Extra
+      description: base64 JSON connection settings defined in the CyberApp UI builder.
+  capabilities:
+  - enablement (partner and customer mapping / mirroring)
+  - workload management (fetch, report, delete)
+  - alert management (fetch, report, dismiss)
+  - custom callbacks
+  pagination: https://developer.acronis.com/doc/callback-handler/pagination.html
+  verification: https://developer.acronis.com/doc/callback-handler/request-verification.html
+  sample_code: https://developer.acronis.com/doc/callback-handler/github.html
+  note: >-
+    This is the inverse of a webhook subscription: the partner implements the endpoint and Acronis
+    calls it, with the contract expressed as a documented request/response format rather than a spec
+    file. There is no machine-readable description of the callback payloads.
+gaps:
+- No AsyncAPI document for either surface.
+- No customer-facing webhook registration endpoint — event delivery is either polled or CyberApp-only.
+- The callback payload formats are documented in prose only, with no schema artifact to validate against.

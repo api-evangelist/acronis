@@ -1,0 +1,484 @@
+generated: '2026-08-30'
+method: derived
+source: openapi/_original/*.json — components.schemas of the 12 provider OpenAPI documents harvested from developer.acronis.com
+  2026-08-30
+note: 'Derived mechanically from schema property names: an *_id field is read as belongs_to and an *_ids array as has_many.
+  Acronis publishes no object-reference page with id prefixes, so no prefix table is asserted. The Acronis API Playbook
+  (skills/acronis-api-playbook.md) is the provider text that maps console vocabulary onto these fields.'
+core_entities:
+- name: tenant
+  description: 'The unit of everything. kind is partner | customer | folder | unit; the hierarchy is a tree rooted at
+    the root tenant. Carries two interchangeable ids: a UUID (Account Management) and a numeric string (resource, policy
+    and agent APIs).'
+  api: account-management-v2
+- name: user
+  description: An account inside a tenant. enabled = active/suspended; activated = password set. Every user owns a personal_tenant_id
+    used to scope agent registration.
+  api: account-management-v2
+- name: client
+  description: An OAuth 2.0 API client (machine credential). Not a tenant.
+  api: account-management-v2
+- name: application
+  description: A service/product, identified by application_id, bound to a tenant to enable it.
+  api: account-management-v2
+- name: offering_item
+  description: A licensable feature or quota unit on a tenant — count (devices/storage) or feature flag, with quota.value
+    (soft) and quota.overage (hard).
+  api: account-management-v2
+- name: resource
+  description: A registered device / machine / workload. user_defined_name is the display name; aggregate.status carries
+    protection state.
+  api: resource-policy-management-v4
+- name: policy
+  description: A protection policy. A protection plan is the composite policy.protection.total holding module sub-policies
+    linked by parent_ids.
+  api: resource-policy-management-v4
+- name: agent
+  description: An installed Acronis protection agent; online is the liveness flag.
+  api: agents-v2
+- name: task
+  description: A long-running platform operation, polled after an async write.
+  api: tasks-v2
+- name: activity
+  description: A sub-operation of a task, used to track EDR response actions and agent operations.
+  api: account-management-v2
+- name: alert
+  description: An operational alert, typed by category.
+  api: alerts-v1
+- name: incident
+  description: An EDR-detected threat event with state, verdict and mitigation_state as three independent axes.
+  api: mdr-v1
+- name: event
+  description: An Event Manager event, typed with a CTI identifier and delivered from a topic by cursor.
+  api: events-v1
+- name: vault
+  description: A storage backend (called Storages in the console) within a location.
+  api: vaultman-v1
+- name: cloud_server
+  description: A Disaster Recovery recovery server that can be failed over and back.
+  api: disaster-recovery-v2
+key_relationships:
+- from: tenant
+  to: tenant
+  kind: has_many
+  via: parent_id
+  note: the partner > customer > unit hierarchy
+- from: user
+  to: tenant
+  kind: belongs_to
+  via: tenant_id
+- from: user
+  to: tenant
+  kind: has_one
+  via: personal_tenant_id
+- from: client
+  to: tenant
+  kind: belongs_to
+  via: tenant_id
+- from: offering_item
+  to: tenant
+  kind: belongs_to
+  via: tenant_id
+- from: offering_item
+  to: application
+  kind: belongs_to
+  via: application_id
+- from: resource
+  to: tenant
+  kind: belongs_to
+  via: tenant_id
+  note: takes the NUMERIC tenant id, not the UUID
+- from: resource
+  to: agent
+  kind: has_one
+  via: agent_id
+- from: policy
+  to: policy
+  kind: belongs_to
+  via: parent_ids
+  note: module sub-policies point at the composite plan
+- from: policy_application
+  to: policy
+  kind: belongs_to
+  via: policy_id
+- from: policy_application
+  to: resource
+  kind: belongs_to
+  via: resource_id
+- from: incident
+  to: tenant
+  kind: belongs_to
+  via: customer_id
+- from: activity
+  to: task
+  kind: belongs_to
+  via: task_id
+- from: cloud_server
+  to: resource
+  kind: belongs_to
+  via: resource_id
+schema_inventory:
+  entities_declared: 173
+  largest:
+  - entity: archive
+    api: vaultman-v1
+    fields: 51
+    identifiers:
+    - id
+    - vault_id
+    - legacy_id
+    - tenant_id
+    - agent_id
+    - centralized_plan_id
+    - backup_plan_id
+    - owner_id
+  - entity: item0_28
+    api: vaultman-v1
+    fields: 37
+    identifiers:
+    - vault_id
+    - archive_id
+    - backup_id
+    - tenant_id
+    - resource_ids
+  - entity: Product
+    api: advanced-automation-v1
+    fields: 35
+    identifiers: []
+  - entity: task_1
+    api: tasks-v2
+    fields: 35
+    identifiers:
+    - id
+    - uuid
+  - entity: Policy
+    api: resource-policy-management-v4
+    fields: 31
+    identifiers:
+    - default_name_template_id
+    - parent_ids
+    - id
+    - template_source_id
+    - tenant_id
+    - _link_ids
+  - entity: Policy_3
+    api: resource-policy-management-v4
+    fields: 31
+    identifiers:
+    - default_name_template_id
+    - parent_ids
+    - id
+    - template_source_id
+    - tenant_id
+    - _link_ids
+  - entity: Incident
+    api: mdr-v1
+    fields: 29
+    identifiers:
+    - transferred_to_incident_id
+    - assignee_id
+    - resource_id
+    - ticket_id
+    - incident_id
+    - incident_short_id
+    - customer_id
+  - entity: Resource
+    api: resource-policy-management-v4
+    fields: 29
+    identifiers:
+    - agent_id
+    - external_id
+    - id
+    - client_id
+    - parent_group_ids
+    - aggregate_id
+    - agent_cluster_id
+    - tenant_id
+  - entity: Resource_4
+    api: resource-policy-management-v4
+    fields: 29
+    identifiers:
+    - agent_id
+    - external_id
+    - id
+    - client_id
+    - parent_group_ids
+    - aggregate_id
+    - agent_cluster_id
+    - tenant_id
+  - entity: user
+    api: account-management-v2
+    fields: 28
+    identifiers:
+    - id
+    - tenant_id
+    - idp_id
+    - external_id
+    - origin_id
+    - origin_external_id
+    - personal_tenant_id
+    - brand_id
+  - entity: Invoice
+    api: advanced-automation-v1
+    fields: 28
+    identifiers: []
+  - entity: Application
+    api: resource-policy-management-v4
+    fields: 28
+    identifiers:
+    - agent_id
+    - context_tenant_id
+    - tenant_id
+    - _link_ids
+  - entity: tenant
+    api: account-management-v2
+    fields: 27
+    identifiers:
+    - id
+    - parent_id
+    - customer_id
+    - brand_id
+    - owner_id
+    - default_idp_id
+  - entity: DashboardData
+    api: advanced-automation-v1
+    fields: 27
+    identifiers: []
+  - entity: items_2
+    api: account-management-v2
+    fields: 26
+    identifiers:
+    - id
+    - tenant_id
+    - user_id
+  - entity: ContractPart
+    api: advanced-automation-v1
+    fields: 26
+    identifiers: []
+  - entity: IncidentBrief
+    api: mdr-v1
+    fields: 26
+    identifiers:
+    - transferred_to_incident_id
+    - assignee_id
+    - resource_id
+    - ticket_id
+    - incident_id
+    - incident_short_id
+    - customer_id
+  - entity: vault_full_info
+    api: vaultman-v1
+    fields: 26
+    identifiers:
+    - id
+    - managing_agent_id
+    - storage_id
+    - tenant_id
+    - compacting_plan_id
+  - entity: brand
+    api: account-management-v2
+    fields: 25
+    identifiers:
+    - id
+  - entity: Contract
+    api: advanced-automation-v1
+    fields: 24
+    identifiers: []
+  - entity: Node
+    api: files-v1
+    fields: 23
+    identifiers:
+    - uuid
+  - entity: FileNode
+    api: files-v1
+    fields: 23
+    identifiers:
+    - uuid
+  - entity: item0
+    api: account-management-v2
+    fields: 22
+    identifiers:
+    - id
+    - tenant_id
+    - origin_id
+    - origin_external_id
+    - personal_tenant_id
+    - idp_id
+    - external_id
+  - entity: contactPut
+    api: account-management-v2
+    fields: 21
+    identifiers:
+    - tenant_id
+    - user_id
+  - entity: items
+    api: account-management-v2
+    fields: 20
+    identifiers:
+    - id
+  - entity: activity
+    api: tasks-v2
+    fields: 20
+    identifiers:
+    - id
+    - uuid
+  - entity: activity_2
+    api: tasks-v2
+    fields: 20
+    identifiers:
+    - id
+    - uuid
+  - entity: Agent
+    api: agents-v2
+    fields: 19
+    identifiers:
+    - id
+    - registration_id
+  - entity: User
+    api: files-v1
+    fields: 18
+    identifiers:
+    - uuid
+  - entity: vault
+    api: vaultman-v1
+    fields: 18
+    identifiers:
+    - id
+    - managing_agent_id
+    - storage_id
+    - tenant_id
+    - compacting_plan_id
+  - entity: config
+    api: vaultman-v1
+    fields: 18
+    identifiers:
+    - id
+    - managing_agent_id
+    - storage_id
+    - tenant_id
+    - compacting_plan_id
+  - entity: config_29
+    api: vaultman-v1
+    fields: 18
+    identifiers:
+    - id
+    - managing_agent_id
+    - storage_id
+    - tenant_id
+    - compacting_plan_id
+  - entity: Activity
+    api: mdr-v1
+    fields: 16
+    identifiers:
+    - activity_id
+    - workload_id
+  - entity: tenantPut
+    api: account-management-v2
+    fields: 15
+    identifiers:
+    - parent_id
+    - customer_id
+    - brand_id
+    - default_idp_id
+  - entity: userBasic
+    api: account-management-v2
+    fields: 15
+    identifiers:
+    - id
+    - tenant_id
+    - origin_id
+    - origin_external_id
+    - personal_tenant_id
+  - entity: AlertView
+    api: alerts-v1
+    fields: 14
+    identifiers:
+    - id
+  - entity: Event
+    api: events-v1
+    fields: 14
+    identifiers:
+    - id
+    - tenant_id
+    - client_id
+  - entity: FileLink
+    api: files-v1
+    fields: 14
+    identifiers:
+    - id
+  - entity: clientPostResult
+    api: account-management-v2
+    fields: 13
+    identifiers:
+    - client_id
+    - tenant_id
+    - origin_id
+  - entity: client
+    api: account-management-v2
+    fields: 13
+    identifiers:
+    - client_id
+    - tenant_id
+    - origin_id
+derived_reference_fields:
+- field: tenant
+  referenced_by: 33
+- field: origin
+  referenced_by: 8
+- field: client
+  referenced_by: 7
+- field: external
+  referenced_by: 7
+- field: customer
+  referenced_by: 6
+- field: agent
+  referenced_by: 6
+- field: vault
+  referenced_by: 6
+- field: resource
+  referenced_by: 6
+- field: _link
+  referenced_by: 6
+- field: idp
+  referenced_by: 5
+- field: parent
+  referenced_by: 5
+- field: archive
+  referenced_by: 5
+- field: origin_external
+  referenced_by: 4
+- field: backup
+  referenced_by: 4
+- field: topic
+  referenced_by: 4
+- field: managing_agent
+  referenced_by: 4
+- field: storage
+  referenced_by: 4
+- field: compacting_plan
+  referenced_by: 4
+- field: application
+  referenced_by: 3
+- field: user
+  referenced_by: 3
+- field: personal_tenant
+  referenced_by: 3
+- field: brand
+  referenced_by: 3
+- field: owner_tenant
+  referenced_by: 3
+- field: location
+  referenced_by: 3
+- field: default_idp
+  referenced_by: 3
+- field: assignee
+  referenced_by: 3
+- field: ticket
+  referenced_by: 3
+- field: activity
+  referenced_by: 3
+- field: workload
+  referenced_by: 3
+- field: owner
+  referenced_by: 2
+render: null

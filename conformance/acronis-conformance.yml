@@ -1,0 +1,139 @@
+generated: '2026-08-30'
+method: searched
+source: >-
+  https://www.acronis.com/en/trust-center/compliance.md, https://www.acronis.com/en/trust-center/security.md,
+  https://www.acronis.com/en/compliance.md, https://us-cloud.acronis.com/.well-known/openid-configuration,
+  and openapi/_original/*.json harvested 2026-08-30
+standards:
+- id: oauth2
+  conforms: true
+  evidence: >-
+    oauth2 securityScheme with clientCredentials, authorizationCode and password flows in all twelve
+    published specs; token endpoint /api/2/idp/token, 90 declared scopes.
+- id: oidc
+  conforms: true
+  evidence: >-
+    Live OIDC discovery document at https://{datacenter}.acronis.com/.well-known/openid-configuration
+    (probed 200 on us-cloud and eu2-cloud 2026-08-30) — issuer, authorization/token/jwks/introspection/
+    revocation endpoints, RS256, backchannel_logout_supported.
+- id: rfc7662
+  conforms: true
+  evidence: introspection_endpoint /api/2/idp/introspect_token declared in the OIDC discovery document.
+- id: rfc7009
+  conforms: true
+  evidence: revocation_endpoint /api/2/idp/revoke_token declared in the OIDC discovery document.
+- id: rfc9116
+  conforms: true
+  evidence: https://www.acronis.com/.well-known/security.txt returns 200 with Contact and Hiring fields.
+- id: rfc9457
+  conforms: false
+  evidence: >-
+    No application/problem+json anywhere in the twelve specs; errors use a vendor `error` envelope
+    (code / domain / message / details). See errors/acronis-problem-types.yml.
+- id: idempotency
+  conforms: partial
+  evidence: >-
+    Idempotency-Key declared on three EDR/MDR POSTs only; no idempotency surface on the tenant, user,
+    policy or agent write paths. See conventions/acronis-conventions.yml.
+- id: pagination
+  conforms: true
+  evidence: >-
+    Cursor pagination with limit/after/before and paging.cursors.after in the response, declared across
+    the Account Management, Resource & Policy, Alert Manager and Agent Manager specs.
+- id: rfc8594
+  conforms: false
+  evidence: No Deprecation or Sunset response headers declared in any of the twelve specs.
+- id: openapi-3.0
+  conforms: true
+  evidence: All twelve published contracts are OpenAPI 3.0.0, served as JSON from the developer portal.
+- id: mcp
+  conforms: true
+  evidence: >-
+    First-party MCP server @acronis-platform/mcp v1.0.1 exposing 157 API tools plus dynamic discovery
+    meta-tools. See mcp/acronis-mcp.yml.
+- id: scim
+  conforms: false
+  evidence: >-
+    No SCIM schema URN and no /scim path in any published spec, despite a substantial user/tenant
+    provisioning surface. User provisioning is Acronis-proprietary.
+- id: odata
+  conforms: false
+  evidence: No $metadata surface and no OData query options in any published spec.
+domain_standards:
+- id: cti
+  name: CTI — Cross-domain Typed Identifiers
+  conforms: true
+  origin: Acronis-authored, published as an open specification with a Go reference implementation
+  evidence: >-
+    Declared inside the contracts, not merely claimed in marketing. The Event Manager API types its
+    events and topics with CTI identifiers (cti.a.p.em.event.v1.0, cti.a.p.em.msg.v1.0,
+    cti.a.p.em.topic.v1.0) and both the event_manager and service_plans_manager OAuth scopes are CTI
+    query templates (urn:acronis.com:event_manager:{cti_query}:subscriber,
+    urn:acronis.com::service_plans_manager:|cti.a.p.lic.service_plan.v1.0[type={plan type}]:reader).
+  specification: https://github.com/acronis/go-cti
+  spec_locations:
+  - openapi/_original/acronis-events-v1-openapi.json
+  - openapi/_original/acronis-pricelist-v1-openapi.json
+- id: cve
+  name: CVE Program / CNA
+  conforms: true
+  evidence: >-
+    Acronis is a CVE Numbering Authority and publishes disclosed vulnerabilities as CVE Records at
+    https://security-advisory.acronis.com/advisories (stated on the Trust Center security page).
+- id: mitre-attack
+  conforms: partial
+  evidence: >-
+    The EDR incident detail returns MITRE ATT&CK detection context per Acronis' own API playbook, but
+    no ATT&CK technique identifier appears as a typed field in the published mdr/v1 spec, so this is
+    documented rather than contractually declared.
+  spec_locations:
+  - skills/acronis-api-playbook.md
+- id: stix-taxii
+  conforms: false
+  evidence: >-
+    No STIX bundle or TAXII collection endpoint in the EDR/MDR or Alert Manager specs; threat-feed
+    scopes exist (edr_mgmtsvc::threat_feed_admin) but the feed contract is not published.
+- id: openc2
+  conforms: false
+  evidence: >-
+    EDR response actions are Acronis-proprietary string actions (WORKLOAD_ISOLATE / WORKLOAD_RELEASE),
+    not OpenC2 command bodies.
+certifications:
+  source: https://www.acronis.com/en/trust-center/compliance.md
+  auditor: British Standards Institution (BSI)
+  named:
+  - ISO/IEC 27001:2022
+  - ISO/IEC 27017:2015
+  - ISO/IEC 27018:2019
+  - ISO 9001
+  - SOC 2
+  - PCI DSS
+  - IEC 62443-4-1
+  - IT-Grundschutz
+  - Cyber Essentials
+  - ENS
+  - Cloud Italia
+  - FIPS 140-2
+  - UAE IAR
+  - HIPAA
+  - PHIPA
+  - HDS
+  - NEN 7510
+  - 2G3M
+  - EU-US Data Privacy Framework (DPF)
+  - CSA STAR Level 1
+  attestation_documents:
+  - https://staticfiles.acronis.com/downloads/a01c78e334f7cdaf2cbc320c1640f965
+  - https://staticfiles.acronis.com/downloads/cea2a3de16c59623155a451ae868d778
+  - https://staticfiles.acronis.com/downloads/59e78b51bf45b4a934b7cffcd0c73dd7
+regulatory_programs:
+  source: https://www.acronis.com/en/compliance.md
+  frameworks:
+  - GDPR
+  - HIPAA
+  - NIS 2
+  - DORA
+  - NIST CSF 2.0
+  note: >-
+    Acronis ships a Compliance Navigator product around these regimes; the entries above are the
+    frameworks it publishes guidance and controls for, not additional certifications.

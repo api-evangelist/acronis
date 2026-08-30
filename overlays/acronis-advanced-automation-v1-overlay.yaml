@@ -1,0 +1,44 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements — PSA API
+  version: 1.0.0
+extends: ../openapi/_original/acronis-advanced-automation-v1-openapi.json
+x-generated: '2026-08-30'
+x-method: generated
+x-source: https://developer.acronis.com/doc/advanced-automation/v1/reference/openapi.json
+x-note: Acronis publishes every spec with a single fixed server, https://dev-cloud.acronis.com/... , which is the environment
+  the documents are generated against. A real caller uses the datacenter its tenant was assigned to. This overlay rewrites
+  servers[] into the templated {datacenter} form the Acronis integration guide describes, and records the artifacts this
+  repo derived from the document. It does not add, rename or describe any operation — the underlying contract is left
+  exactly as published.
+actions:
+- target: $.servers
+  description: Replace the fixed dev-cloud host with the templated datacenter host a tenant actually calls.
+  update:
+  - url: https://{datacenter}.acronis.com/api/advanced-automation/v1
+    description: PSA API — {datacenter} is the Acronis Cloud region the tenant is assigned to.
+    variables:
+      datacenter:
+        default: us-cloud
+        examples:
+        - us-cloud
+        - eu2-cloud
+        - au-cloud
+        description: Acronis Cloud datacenter the tenant is assigned to. The examples are the values Acronis' own server-variable
+          description names (us-cloud, eu2-cloud, au-cloud); us-cloud and eu2-cloud were confirmed live on 2026-08-30
+          by their OIDC discovery documents. This is not an exhaustive enum — Acronis publishes no list of datacenter
+          hostnames, so no closed set is asserted here.
+- target: $.info
+  description: Record the API Evangelist artifacts derived from this contract.
+  update:
+    x-apis-io:
+      provider: acronis
+      artifacts:
+        authentication: authentication/acronis-authentication.yml
+        scopes: scopes/acronis-scopes.yml
+        errors: errors/acronis-problem-types.yml
+        conventions: conventions/acronis-conventions.yml
+        lifecycle: lifecycle/acronis-lifecycle.yml
+        data_model: data-model/acronis-data-model.yml
+        mcp: mcp/acronis-mcp.yml
+        crosswalk: mcp/acronis-tool-crosswalk.yml

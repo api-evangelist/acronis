@@ -1,0 +1,199 @@
+generated: '2026-08-30'
+method: searched
+source: >-
+  registry.npmjs.org (@acronis-platform scope), proxy.golang.org (github.com/acronis modules),
+  api.github.com/orgs/acronis/repos — versions and dates read from the registry metadata endpoints
+  on 2026-08-30
+note: >-
+  Acronis publishes no versioned, per-language REST client SDK for the Cyber Platform API. What it does
+  publish, first-party, is: an MCP server package that wraps 157 Cyber Platform operations as agent
+  tools; a React/design-token UI component family; a set of Go service toolkits; and officially
+  maintained Python / PowerShell / Bash example clients for the platform API. Registry currency is
+  recorded as structured version/published fields. The three acronis-cyber-platform-*-examples
+  repositories are source-only (no registry artifact) and have not been pushed since 2023 — that gap
+  against an API whose specs were regenerated in 2026 is the abandonment signal worth recording.
+packages:
+- name: '@acronis-platform/mcp'
+  registry: npm
+  official: true
+  kind: mcp-server
+  language: TypeScript
+  version: 1.0.1
+  published: '2026-07-22'
+  license: MIT
+  url: https://www.npmjs.com/package/@acronis-platform/mcp
+  description: >-
+    MCP server exposing the Acronis Cyber Platform API as tools for AI assistants, with OAuth
+    authentication, stdio/HTTP transports, and dynamic tool discovery.
+  maintainers:
+  - team-rnd-tools-github@acronis.com
+  - Yusuf.Shamir@acronis.com
+- name: '@acronis-platform/ui-react'
+  registry: npm
+  official: true
+  kind: ui-components
+  language: TypeScript
+  version: 5.0.0
+  published: '2026-08-28'
+  license: MIT
+  url: https://www.npmjs.com/package/@acronis-platform/ui-react
+  repository: https://github.com/acronis/uikit
+- name: '@acronis-platform/icons-react'
+  registry: npm
+  official: true
+  kind: ui-components
+  version: 1.0.1
+  published: '2026-08-27'
+  license: MIT
+  repository: https://github.com/acronis/uikit
+- name: '@acronis-platform/design-tokens'
+  registry: npm
+  official: true
+  kind: design-tokens
+  version: 2.7.0
+  published: '2026-08-24'
+  license: MIT
+  repository: https://github.com/acronis/uikit
+- name: '@acronis-platform/tokens-pd'
+  registry: npm
+  official: true
+  kind: design-tokens
+  version: 2.8.0
+  published: '2026-08-24'
+  license: MIT
+  repository: https://github.com/acronis/uikit
+- name: '@acronis-platform/shadcn-uikit'
+  registry: npm
+  official: true
+  kind: ui-components
+  version: 0.36.3
+  published: '2026-06-05'
+  license: MIT
+  repository: https://github.com/acronis/uikit
+- name: '@acronis-platform/design-assets'
+  registry: npm
+  official: true
+  kind: assets
+  version: 1.0.0
+  published: '2026-08-19'
+  license: MIT AND ISC
+  repository: https://github.com/acronis/uikit
+- name: '@acronis-platform/icons-sprite'
+  registry: npm
+  official: true
+  kind: assets
+  version: 0.2.0
+  published: '2026-06-23'
+  license: MIT
+  repository: https://github.com/acronis/uikit
+- name: '@acronis-platform/ui-component-library'
+  registry: npm
+  official: true
+  kind: ui-components
+  version: 1.35.3
+  published: '2025-11-07'
+  url: https://www.npmjs.com/package/@acronis-platform/ui-component-library
+  repository: https://github.com/acronis/ui-component-library
+  note: superseded by @acronis-platform/ui-react; last release 2025-11-07
+- name: github.com/acronis/go-appkit
+  registry: go
+  official: true
+  kind: service-toolkit
+  language: Go
+  version: v1.32.0
+  published: '2026-08-04'
+  url: https://pkg.go.dev/github.com/acronis/go-appkit
+- name: github.com/acronis/go-authkit
+  registry: go
+  official: true
+  kind: auth-toolkit
+  language: Go
+  version: v0.35.0
+  published: '2026-03-19'
+  url: https://pkg.go.dev/github.com/acronis/go-authkit
+  description: Toolkit for authentication and authorization in Go services; speaks the Acronis IDP JWT model.
+- name: github.com/acronis/go-dbkit
+  registry: go
+  official: true
+  kind: service-toolkit
+  language: Go
+  version: v0.15.0
+  published: '2026-04-30'
+  url: https://pkg.go.dev/github.com/acronis/go-dbkit
+- name: github.com/acronis/go-cti
+  registry: go
+  official: true
+  kind: standard-implementation
+  language: Go
+  version: v1.1.0
+  published: '2025-05-15'
+  url: https://pkg.go.dev/github.com/acronis/go-cti
+  description: >-
+    Reference implementation of CTI (Cross-domain Typed Identifiers), the identifier scheme the Event
+    Manager and licensing APIs use in their contracts (cti.a.p.em.event.v1.0, cti_query scopes).
+- name: github.com/acronis/go-raml
+  registry: go
+  official: true
+  kind: tooling
+  language: Go
+  version: v1.23.0
+  published: '2025-05-05'
+  url: https://pkg.go.dev/github.com/acronis/go-raml
+- name: github.com/acronis/go-stacktrace
+  registry: go
+  official: true
+  kind: library
+  language: Go
+  version: v0.7.0
+  published: '2026-06-09'
+  url: https://pkg.go.dev/github.com/acronis/go-stacktrace
+- name: github.com/acronis/perfkit
+  registry: go
+  official: true
+  kind: tooling
+  language: Go
+  version: v1.1.0
+  published: '2024-10-16'
+  url: https://pkg.go.dev/github.com/acronis/perfkit
+- name: acronis-cyber-platform-python-examples
+  registry: source
+  official: true
+  kind: example-client
+  language: Python
+  version: null
+  published: null
+  url: https://github.com/acronis/acronis-cyber-platform-python-examples
+  note: >-
+    No registry artifact — source-only repository. Last push 2023-06-19, checked 2026-08-30; version
+    is null because there is nothing published to read a version from.
+- name: acronis-cyber-platform-powershell-examples
+  registry: source
+  official: true
+  kind: example-client
+  language: PowerShell
+  version: null
+  published: null
+  url: https://github.com/acronis/acronis-cyber-platform-powershell-examples
+  note: No registry artifact — source-only repository. Last push 2023-06-19.
+- name: acronis-cyber-platform-bash-examples
+  registry: source
+  official: true
+  kind: example-client
+  language: Shell
+  version: null
+  published: null
+  url: https://github.com/acronis/acronis-cyber-platform-bash-examples
+  note: No registry artifact — source-only repository. Last push 2023-04-05.
+third_party:
+- name: '@apihawk/acronis-sdk'
+  registry: npm
+  official: false
+  version: 2.0.2
+  published: '2023-01-25'
+  note: Community/vendor package, not published by Acronis.
+- name: '@pipedream/acronis_cyber_protect_cloud'
+  registry: npm
+  official: false
+  version: 0.0.1
+  published: '2025-01-02'
+  note: Pipedream integration components, not published by Acronis.

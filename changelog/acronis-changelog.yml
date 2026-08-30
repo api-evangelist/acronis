@@ -1,0 +1,29 @@
+generated: '2026-08-30'
+method: searched
+source: https://developer.acronis.com/doc/outbound/apis/index.html
+url: https://dl.acronis.com/u/baas/rn/API_change_log/en-US/AcronisCyberCloud_API_change_log.pdf
+scheme: dated document, monthly
+format: PDF
+machine_readable: false
+probed: '2026-08-30'
+status: 200
+content_type: application/pdf
+size_bytes: 890455
+description: >-
+  Acronis publishes one Acronis Cyber Cloud API change log covering changes to the public endpoints of
+  every platform API. The developer portal states it is updated monthly, and offers email notification
+  of changes through a subscription form on the platform APIs page.
+entries: []
+note: >-
+  entries[] is deliberately empty. The change log is distributed only as a PDF — there is no dated HTML
+  changelog, no RSS/Atom feed and no per-release JSON — so there is no structured recent-entries list to
+  record without transcribing a binary document, and none is fabricated here. This is itself the finding:
+  the only machine-consumable signal of what changed in an Acronis API is a 0.9 MB PDF, which no agent
+  and no dependency bot can diff. A dated changelog page, or per-service release notes alongside each
+  openapi.json, would close it.
+subscription:
+  method: email form
+  url: https://developer.acronis.com/doc/outbound/apis/index.html
+related:
+  lifecycle: lifecycle/acronis-lifecycle.yml
+  specs: openapi/_original/

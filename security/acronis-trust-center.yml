@@ -1,0 +1,61 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.acronis.com/en-us/trust-center/
+url: https://www.acronis.com/en-us/trust-center/
+sections:
+- name: Security
+  url: https://www.acronis.com/en-us/trust-center/security/
+- name: Compliance
+  url: https://www.acronis.com/en-us/trust-center/compliance/
+- name: Privacy
+  url: https://www.acronis.com/en-us/trust-center/privacy/
+- name: Data centers
+  url: https://www.acronis.com/en-us/data-centers/
+certifications:
+- ISO/IEC 27001:2022
+- ISO/IEC 27017:2015
+- ISO/IEC 27018:2019
+- ISO 9001
+- SOC 2
+- PCI DSS
+- IEC 62443-4-1
+- IT-Grundschutz
+- Cyber Essentials
+- ENS
+- Cloud Italia
+- FIPS 140-2
+- UAE IAR
+- HIPAA
+- PHIPA
+- HDS
+- NEN 7510
+- 2G3M
+- EU-US Data Privacy Framework
+- CSA STAR Level 1
+auditor: British Standards Institution (BSI)
+programs:
+  bug_bounty:
+    platform: HackerOne
+    url: https://hackerone.com/acronis
+    running_since: 2018
+  cve_numbering_authority: true
+  security_advisory_database: https://security-advisory.acronis.com/advisories
+  penetration_testing: >-
+    At least annual third-party penetration testing of the cloud data centers; the report is available
+    on request through an account manager or support.
+  encryption: AES-256 at rest and in transit, including metadata
+  sdlc: Secure Software Development Life Cycle (S-SDLC)
+memberships:
+- Cloud Security Alliance (CSA STAR Level 1)
+- Microsoft Intelligent Security Association (MISA)
+- Microsoft Virus Initiative
+- Anti-Phishing Working Group
+- M3AAWG
+- AMTSO
+evidence:
+- url: https://www.acronis.com/en-us/trust-center/
+  status: 200
+- url: https://www.acronis.com/en/trust-center/compliance.md
+  status: 200
+- url: https://www.acronis.com/en/trust-center/security.md
+  status: 200

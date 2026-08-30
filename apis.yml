@@ -1,6 +1,5 @@
 aid: acronis
-url: >-
-  https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/apis.yml
+url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/apis.yml
 name: Acronis
 type: Index
 deliveryModel:
@@ -30,17 +29,20 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/acronis.png
 tags:
-  - Cybersecurity
-  - Data Protection
-  - Endpoint Management
-description: >-
-  Acronis is a leading provider of cyber protection solutions that deliver
-  innovative technology to protect data, applications, and systems from the
-  ever-evolving threats of today's digital world. They offer a comprehensive
-  suite of products, including backup and disaster recovery solutions, file sync
-  and share services, and anti-malware protection.
+- Cybersecurity
+- Data Protection
+- Endpoint Management
+- Backup and Recovery
+- Disaster Recovery
+- Managed Service Providers
+- Endpoint Detection and Response
+- Cloud Storage
+description: Acronis is a leading provider of cyber protection solutions that deliver innovative technology
+  to protect data, applications, and systems from the ever-evolving threats of today's digital world.
+  They offer a comprehensive suite of products, including backup and disaster recovery solutions, file
+  sync and share services, and anti-malware protection.
 created: '2025-02-17'
-modified: '2026-04-19'
+modified: '2026-08-30'
 specificationVersion: '0.23'
 apis:
 - aid: acronis:resource-and-policy-management-api
@@ -51,11 +53,15 @@ apis:
   - Resources
   humanURL: https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
   properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-resource-policy-management-v4-openapi.json
   - type: Documentation
     url: https://developer.acronis.com/doc/resource-policy-management/v4/guide/index.html
-  description: >-
-    Acronis Resource and Policy Management API enables organizations to efficiently manage resources and
-    policies within their IT infrastructure.
+  - type: APIReference
+    url: https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
+  description: Acronis Resource and Policy Management API enables organizations to efficiently manage
+    resources and policies within their IT infrastructure.
+  baseURL: https://{datacenter}.acronis.com/api
 - aid: acronis:advanced-automation-api
   name: Acronis Advanced Automation API
   tags:
@@ -64,12 +70,15 @@ apis:
   - PSA
   humanURL: https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html
   properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-advanced-automation-v1-openapi.json
   - type: Documentation
-    url: >-
-      https://developer.acronis.com/doc/outbound/apis/api-library/advanced-automation/index.html
-  description: >-
-    The Acronis Advanced Automation API allows users to automate and streamline their backup and recovery
-    processes with custom scripts and workflows.
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/psa/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html
+  description: The Acronis Advanced Automation API allows users to automate and streamline their backup
+    and recovery processes with custom scripts and workflows.
+  baseURL: https://{datacenter}.acronis.com/api/advanced-automation/v1
 - aid: acronis:event-manager-api
   name: Acronis Event Manager API
   tags:
@@ -82,11 +91,15 @@ apis:
   - Monitoring
   humanURL: https://developer.acronis.com/doc/events/v1/reference/index.html
   properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-events-v1-openapi.json
   - type: Documentation
-    url: https://developer.acronis.com/doc/vendor-side/apis/api-library/events/index.html
-  description: >-
-    The Acronis Event Manager API allows users to monitor and manage events across their entire Acronis
-    ecosystem with real-time access to event data.
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/events/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/events/v1/reference/index.html
+  description: The Acronis Event Manager API allows users to monitor and manage events across their entire
+    Acronis ecosystem with real-time access to event data.
+  baseURL: https://{datacenter}.acronis.com/api/event_manager/v1
 - aid: acronis:disaster-recovery-service-api
   name: Acronis Disaster Recovery Service API
   tags:
@@ -94,11 +107,15 @@ apis:
   - Disaster Recovery
   humanURL: https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html
   properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-disaster-recovery-v2-openapi.json
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/dr/index.html
-  description: >-
-    The Acronis Disaster Recovery Service API allows organizations to automate and streamline their disaster
-    recovery processes.
+  - type: APIReference
+    url: https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html
+  description: The Acronis Disaster Recovery Service API allows organizations to automate and streamline
+    their disaster recovery processes.
+  baseURL: https://{datacenter}.acronis.com/api/dr/v2
 - aid: acronis:endpoint-detection-and-response-api
   name: Acronis Endpoint Detection and Response API
   tags:
@@ -107,11 +124,15 @@ apis:
   - Endpoint Security
   humanURL: https://developer.acronis.com/doc/mdr/v1/reference/index.html
   properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-mdr-v1-openapi.json
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/mdr/index.html
-  description: >-
-    The Acronis Endpoint Detection and Response API is a comprehensive security solution that helps organizations
-    detect and respond to cybersecurity threats in real-time.
+  - type: APIReference
+    url: https://developer.acronis.com/doc/mdr/v1/reference/index.html
+  description: The Acronis Endpoint Detection and Response API is a comprehensive security solution that
+    helps organizations detect and respond to cybersecurity threats in real-time.
+  baseURL: https://{datacenter}.acronis.com/api/mdr/v1
 - aid: acronis:vault-manager-rest-api
   name: Acronis Vault Manager REST API
   tags:
@@ -120,11 +141,15 @@ apis:
   - Vault Management
   humanURL: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
   properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-vaultman-v1-openapi.json
   - type: Documentation
     url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
-  description: >-
-    The Acronis Vault Manager REST API allows users to manage and interact with their Acronis Vault storage
-    solutions programmatically.
+  - type: APIReference
+    url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
+  description: The Acronis Vault Manager REST API allows users to manage and interact with their Acronis
+    Vault storage solutions programmatically.
+  baseURL: https://{datacenter}.acronis.com/api/vault_manager/v1
 - aid: acronis:acronis-activities-api
   name: Acronis Activities API
   description: Task activity and sub-operation tracking
@@ -136,13 +161,13 @@ apis:
     url: openapi/acronis-activities-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
 - aid: acronis:acronis-agent-updates-api
   name: Acronis Agent Updates API
   description: Agent update configuration and execution
@@ -154,13 +179,13 @@ apis:
     url: openapi/acronis-agent-updates-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
 - aid: acronis:acronis-agents-api
   name: Acronis Agents API
   description: Acronis protection agent management
@@ -169,16 +194,18 @@ apis:
   - Agents
   properties:
   - type: OpenAPI
+    url: openapi/_original/acronis-agents-v2-openapi.json
+  - type: OpenAPI
     url: openapi/acronis-agents-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/agents/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/agent_manager/v2
 - aid: acronis:acronis-authentication-api
   name: Acronis Authentication API
   description: Token issuance, revocation, and introspection
@@ -190,13 +217,13 @@ apis:
     url: openapi/acronis-authentication-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
 - aid: acronis:acronis-clients-api
   name: Acronis Clients API
   description: OAuth2 client credential management
@@ -208,13 +235,13 @@ apis:
     url: openapi/acronis-clients-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
 - aid: acronis:acronis-hardware-nodes-api
   name: Acronis Hardware Nodes API
   description: Hardware node management
@@ -226,13 +253,13 @@ apis:
     url: openapi/acronis-hardware-nodes-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
 - aid: acronis:acronis-licensing-api
   name: Acronis Licensing API
   description: Offering items, quotas, and edition management
@@ -244,13 +271,13 @@ apis:
     url: openapi/acronis-licensing-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
 - aid: acronis:acronis-tasks-api
   name: Acronis Tasks API
   description: Backup and protection task monitoring
@@ -261,16 +288,18 @@ apis:
   - Tasks
   properties:
   - type: OpenAPI
+    url: openapi/_original/acronis-tasks-v2-openapi.json
+  - type: OpenAPI
     url: openapi/acronis-tasks-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/tasks/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/task_manager/v2
 - aid: acronis:acronis-tenants-api
   name: Acronis Tenants API
   description: Tenant hierarchy management and configuration
@@ -282,13 +311,13 @@ apis:
     url: openapi/acronis-tenants-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
 - aid: acronis:acronis-usage-api
   name: Acronis Usage API
   description: Usage metrics and reporting
@@ -300,13 +329,13 @@ apis:
     url: openapi/acronis-usage-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
 - aid: acronis:acronis-users-api
   name: Acronis Users API
   description: User account management within tenants
@@ -320,92 +349,243 @@ apis:
     url: openapi/acronis-users-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: X-NaftikoCapability
-    url: >-
-      https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/shared/acronis-account-management.yaml
   - type: Documentation
     url: https://developer.acronis.com/doc/agents/v2/reference/index.html
   - type: Documentation
     url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
+- aid: acronis:account-management-api
+  name: Acronis Account Management API
+  description: The platform spine — tenants, users, OAuth clients, applications, licensing (offering items),
+    usage reporting, infrastructure and branding for Acronis Cyber Protect Cloud. 95 operations in the
+    contract Acronis publishes.
+  humanURL: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
+  tags:
+  - Acronis
+  - Account Management
+  - Tenants
+  - Users
+  - Licensing
+  properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-account-management-v2-openapi.json
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/account-management/v2/reference/llms.txt
+- aid: acronis:alert-manager-api
+  name: Acronis Alert Manager API
+  description: Operational alerting across the Acronis platform — fetch, categorise, register and unregister
+    alert types, and dismiss alerts, so an integration can drive its own monitoring surface from Acronis
+    events.
+  humanURL: https://developer.acronis.com/doc/alerts/v1/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/alert_manager/v1
+  tags:
+  - Acronis
+  - Alerts
+  - Monitoring
+  properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-alerts-v1-openapi.json
+  - type: APIReference
+    url: https://developer.acronis.com/doc/alerts/v1/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/alerts/v1/reference/llms.txt
+- aid: acronis:price-list-api
+  name: Acronis Price List API
+  description: Reads the effective price lists a service-provider tenant is on, so an MSP billing system
+    can reconcile Acronis charges against its own rate cards without scraping the partner portal.
+  humanURL: https://developer.acronis.com/doc/pricelist/v1/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/price_sync/v1
+  tags:
+  - Acronis
+  - Pricing
+  - Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-pricelist-v1-openapi.json
+  - type: APIReference
+    url: https://developer.acronis.com/doc/pricelist/v1/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/pricelist/v1/reference/llms.txt
+- aid: acronis:file-sync-and-share-api
+  name: Acronis File Sync & Share API
+  description: Manages the Acronis Files Cloud surface — devices, sync-and-share nodes, file revisions
+    and restores, audit log — for building file collaboration and retention workflows on the Acronis platform.
+  humanURL: https://developer.acronis.com/doc/files/v1/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/fc/api/v1
+  tags:
+  - Acronis
+  - File Sync and Share
+  - Collaboration
+  properties:
+  - type: OpenAPI
+    url: openapi/_original/acronis-files-v1-openapi.json
+  - type: APIReference
+    url: https://developer.acronis.com/doc/files/v1/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/files/v1/reference/llms.txt
 common:
-  - type: PostmanWorkspace
-    url: https://www.postman.com/kinlaneapi/acronis/overview
-  - type: AgenticAccess
-    url: agentic-access/acronis-agentic-access.yml
-  - type: VulnerabilityDisclosure
-    url: security/acronis-vulnerability-disclosure.yml
-  - type: DomainSecurity
-    url: security/acronis-domain-security.yml
-  - type: Authentication
-    url: authentication/acronis-authentication.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/acronis
-  - type: Portal
-    url: https://developer.acronis.com/
-  - type: GettingStarted
-    url: https://developer.acronis.com/doc/outbound/apis/getting-started/index.html
-  - type: Authentication
-    url: https://developer.acronis.com/doc/outbound/apis/authentication/index.html
-  - type: Blog
-    url: https://www.acronis.com/en-us/blog/
-  - type: Support
-    url: https://www.acronis.com/en-us/support/
-  - type: Pricing
-    url: https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/
-  - type: Partners
-    url: https://www.acronis.com/en-us/partners/
-  - type: CaseStudies
-    url: https://www.acronis.com/en-us/resource-center/category/case-studies/
-  - type: GitHubOrganization
-    url: https://github.com/acronis
-  - type: SpectralRules
-    url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/rules/acronis-spectral-rules.yml
-  - type: X-NaftikoCapability
-    url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/capabilities/cyber-protection-operations.yaml
-  - type: Vocabulary
-    url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/vocabulary/acronis-vocabulary.yaml
-  - type: TermsOfService
-    url: https://www.acronis.com/en-us/legal/
-  - type: ChangeLog
-    url: https://developer.acronis.com/doc/outbound/apis/index.html
-  - type: Features
-    data:
-    - name: Tenant Hierarchy Management
-      description: Multi-tier tenant management for MSPs, partners, and customers with offering item quotas.
-    - name: Agent Management
-      description: Remote management of Acronis backup agents across Windows, Linux, macOS, and cloud workloads.
-    - name: Backup Task Monitoring
-      description: Real-time monitoring of backup and protection tasks with state, result, and activity tracking.
-    - name: Usage Reporting
-      description: Automated usage metrics collection and report generation for billing and capacity planning.
-    - name: Policy Management
-      description: Programmatic creation and application of protection policies to resources.
-    - name: Disaster Recovery API
-      description: Automated failover and recovery orchestration for business continuity.
-    - name: Endpoint Detection and Response
-      description: EDR capabilities for threat detection, investigation, and response via API.
-  - type: UseCases
-    data:
-    - name: MSP Platform Automation
-      description: Automate tenant provisioning, licensing management, and usage reporting for managed service providers.
-    - name: Backup Monitoring Dashboard
-      description: Build custom dashboards tracking backup task status, failures, and completion rates.
-    - name: Agent Health Monitoring
-      description: Monitor agent online status, version compliance, and update management across endpoints.
-    - name: Compliance Reporting
-      description: Generate automated reports on data protection status for compliance and audit requirements.
-    - name: Disaster Recovery Automation
-      description: Trigger and monitor DR failover workflows programmatically for RTO/RPO compliance.
-  - type: Integrations
-    data:
-    - name: PSA Platforms
-      description: Integration with ConnectWise, Autotask, and other PSA platforms for MSP billing and ticketing.
-    - name: SIEM Systems
-      description: Event streaming to SIEM platforms via Event Manager API for security monitoring.
-    - name: RMM Tools
-      description: Integration with RMM platforms for agent deployment and backup policy management.
-    - name: Billing Systems
-      description: Usage data export for automated billing via usage and offering item APIs.
+- type: Website
+  url: https://www.acronis.com/
+- type: PostmanWorkspace
+  url: https://www.postman.com/kinlaneapi/acronis/overview
+- type: AgenticAccess
+  url: agentic-access/acronis-agentic-access.yml
+- type: VulnerabilityDisclosure
+  url: security/acronis-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/acronis-domain-security.yml
+- type: Authentication
+  url: authentication/acronis-authentication.yml
+- type: LinkedIn
+  url: https://www.linkedin.com/company/acronis
+- type: Portal
+  url: https://developer.acronis.com/
+- type: GettingStarted
+  url: https://developer.acronis.com/doc/outbound/apis/getting-started/index.html
+- type: Authentication
+  url: https://developer.acronis.com/doc/outbound/apis/authentication/index.html
+- type: Blog
+  url: https://www.acronis.com/en-us/blog/
+- type: Support
+  url: https://www.acronis.com/en-us/support/
+- type: Pricing
+  url: https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/
+- type: Partners
+  url: https://www.acronis.com/en-us/partners/
+- type: CaseStudies
+  url: https://www.acronis.com/en-us/resource-center/category/case-studies/
+- type: GitHubOrganization
+  url: https://github.com/acronis
+- type: SpectralRules
+  url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/rules/acronis-spectral-rules.yml
+- type: Vocabulary
+  url: https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/vocabulary/acronis-vocabulary.yaml
+- type: TermsOfService
+  url: https://www.acronis.com/en-us/legal/
+- type: ChangeLog
+  url: changelog/acronis-changelog.yml
+- type: Features
+  data:
+  - name: Tenant Hierarchy Management
+    description: Multi-tier tenant management for MSPs, partners, and customers with offering item quotas.
+  - name: Agent Management
+    description: Remote management of Acronis backup agents across Windows, Linux, macOS, and cloud workloads.
+  - name: Backup Task Monitoring
+    description: Real-time monitoring of backup and protection tasks with state, result, and activity
+      tracking.
+  - name: Usage Reporting
+    description: Automated usage metrics collection and report generation for billing and capacity planning.
+  - name: Policy Management
+    description: Programmatic creation and application of protection policies to resources.
+  - name: Disaster Recovery API
+    description: Automated failover and recovery orchestration for business continuity.
+  - name: Endpoint Detection and Response
+    description: EDR capabilities for threat detection, investigation, and response via API.
+- type: UseCases
+  data:
+  - name: MSP Platform Automation
+    description: Automate tenant provisioning, licensing management, and usage reporting for managed service
+      providers.
+  - name: Backup Monitoring Dashboard
+    description: Build custom dashboards tracking backup task status, failures, and completion rates.
+  - name: Agent Health Monitoring
+    description: Monitor agent online status, version compliance, and update management across endpoints.
+  - name: Compliance Reporting
+    description: Generate automated reports on data protection status for compliance and audit requirements.
+  - name: Disaster Recovery Automation
+    description: Trigger and monitor DR failover workflows programmatically for RTO/RPO compliance.
+- type: Integrations
+  data:
+  - name: PSA Platforms
+    description: Integration with ConnectWise, Autotask, and other PSA platforms for MSP billing and ticketing.
+  - name: SIEM Systems
+    description: Event streaming to SIEM platforms via Event Manager API for security monitoring.
+  - name: RMM Tools
+    description: Integration with RMM platforms for agent deployment and backup policy management.
+  - name: Billing Systems
+    description: Usage data export for automated billing via usage and offering item APIs.
+- type: Packages
+  url: packages/acronis-packages.yml
+- type: SDKs
+  url: packages/acronis-packages.yml
+- type: WellKnown
+  url: well-known/acronis-well-known.yml
+- type: SecurityTxt
+  url: well-known/acronis-security.txt
+- type: MCPServer
+  url: mcp/acronis-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/acronis-tool-crosswalk.yml
+- type: LLMsTxt
+  url: llms/acronis-llms.txt
+- type: Overlay
+  url: overlays/acronis-account-management-v2-overlay.yaml
+- type: Conformance
+  url: conformance/acronis-conformance.yml
+- type: Compliance
+  url: conformance/acronis-conformance.yml
+- type: ErrorCatalog
+  url: errors/acronis-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/acronis-lifecycle.yml
+- type: StatusPage
+  url: https://status.acronis.com/
+- type: OAuthScopes
+  url: scopes/acronis-scopes.yml
+- type: TrustCenter
+  url: security/acronis-trust-center.yml
+- type: Security
+  url: security/acronis-vulnerability-disclosure.yml
+- type: Sandbox
+  url: sandbox/acronis-sandbox.yml
+- type: Conventions
+  url: conventions/acronis-conventions.yml
+- type: Idempotency
+  url: conventions/acronis-conventions.yml
+- type: CLI
+  url: cli/acronis-cli.yml
+- type: Components
+  url: components/acronis-components.yml
+- type: DataModel
+  url: data-model/acronis-data-model.yml
+- type: Webhooks
+  url: asyncapi/acronis-events-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: APIReference
+  url: https://developer.acronis.com/doc/outbound/apis/index.html
+- type: Documentation
+  url: https://developer.acronis.com/doc/
+- type: DeveloperPortal
+  url: https://developer.acronis.com/
+- type: PrivacyPolicy
+  url: https://www.acronis.com/en-us/company/privacy/
+- type: SignUp
+  url: https://www.acronis.com/en-us/my/
+- type: Login
+  url: https://cloud.acronis.com/login
+- type: Postman
+  url: https://www.postman.com/kinlaneapi/acronis/overview
+- type: Plans
+  url: plans/acronis-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/acronis-rate-limits.yml
+- type: FinOps
+  url: finops/acronis-finops.yml
+- type: ChangeLog
+  url: https://dl.acronis.com/u/baas/rn/API_change_log/en-US/AcronisCyberCloud_API_change_log.pdf
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-30'
+  status: enriched
+  artifacts_added: 45
+  pass: local-v1

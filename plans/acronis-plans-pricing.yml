@@ -4,152 +4,157 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: Acronis
 providerId: acronis
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-05'
-reconciled: false
+modified: '2026-08-30'
+generated: '2026-08-30'
+method: searched
+source: https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/
+sources:
+  - https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/
+  - https://www.acronis.com/en/products/cloud/cyber-protect/pricing.md
+  - https://www.acronis.com/en/products/cloud/price-calculator/
+  - https://www.acronis.com/en/products/true-image/
+reconciled: true
 tags:
   - Cybersecurity
   - Data Protection
   - Backup
   - Endpoint Management
   - Disaster Recovery
-description: Acronis sells two distinct product lines. (1) Acronis True Image — consumer / SOHO backup
-  with three editions (Essentials, Advanced, Premium) sized by number of devices and cloud storage.
-  (2) Acronis Cyber Protect Cloud — an MSP / service-provider platform with a base agent and per-workload
-  / per-GB add-on packs (Backup, Disaster Recovery, Email Security, EDR, XDR, Management, etc.).
-  Pricing on the public site is region-gated and the per-tier dollar amounts are not consistently published;
-  Cyber Protect Cloud is sold to MSPs via partner portals.
-sources:
-  - https://www.acronis.com/en/products/true-image/
-  - https://www.acronis.com/en/products/true-image/purchasing/
-  - https://www.acronis.com/en-us/products/cloud/cyber-protect/
-notes: Public per-tier dollar prices are not reliably shown on the Acronis pricing pages (they require
-  region selection / sign-in for partners). Plan structure below is reconciled to the products and tiers
-  Acronis publishes; specific dollar amounts must come from a region-specific store front or partner portal.
+plan_count: 4
+description: >-
+  Acronis Cyber Protect Cloud — the product the APIs in this repo drive — is sold only to authorized
+  service-provider partners, under a monthly purchase/resale commitment, and Acronis publishes no dollar
+  figures for it. The pricing page names three licensing MODELS and the quotas attached to each, but
+  routes every price to a Cloud Advisor or the price-calculator tool. There is no API pricing at all:
+  platform API access carries no separate meter, plan or key tier — it comes with the tenant. The
+  consumer True Image line is the only Acronis product with self-serve tiers, and its per-region prices
+  are rendered client-side rather than published in the page source. Every quota below is quoted from
+  the Acronis pricing page; no price is invented.
+notes: >-
+  Prices are recorded as `not published` rather than guessed. The included-storage numbers ARE published
+  and are recorded verbatim, because they are the limits an integrator actually has to plan against.
+api_pricing:
+  metered: false
+  separate_plan: false
+  note: >-
+    The Cyber Platform APIs are included with a Cyber Protect Cloud tenant. No published request quota,
+    no per-call price, no paid API tier.
 plans:
-  - id: acronis-true-image-essentials
-    name: Acronis True Image — Essentials
+  - id: acronis-cpc-solution-based
+    name: Cyber Protect Cloud — Solution-based packages
     type: subscription
-    description: Basic local backup, cloning, and ransomware protection. Sized 1–5 devices, 1-year subscription.
+    audience: service provider
+    description: >-
+      Bundled SKUs combining backup, security and RMM per workload class. A customer tenant must use one
+      licensing model only; an MSP may mix models across customers and switch a tenant at any time.
     entries:
-      - label: Annual subscription
-        name: ti_essentials
+      - label: Monthly package per workload class
+        name: solution_package
         type: subscription
-        metric: device
-        limit: 5
-        timeFrame: year
+        metric: workload
+        limit: -1
+        timeFrame: month
         geo: global
         unit: 1
-        price: see acronis.com region pricing
-        userMultiplied: true
-    elements:
-      - name: Local backup
-      - name: Disk cloning
-      - name: Ransomware protection
-  - id: acronis-true-image-advanced
-    name: Acronis True Image — Advanced
-    type: subscription
-    description: Local + cloud backup with up to 500 GB cloud storage and antimalware. Sized 1–5 devices.
-    entries:
-      - label: Annual subscription
-        name: ti_advanced
-        type: subscription
-        metric: device
-        limit: 5
-        timeFrame: year
-        geo: global
-        unit: 1
-        price: see acronis.com region pricing
-        userMultiplied: true
-      - label: Included cloud storage
-        name: ti_advanced_cloud
-        type: quota
-        metric: storage
-        limit: 500
-        timeFrame: year
-        geo: global
-        unit: 1
-        price: included
+        price: not published
         userMultiplied: false
     elements:
-      - name: Local + cloud backup
-      - name: Antimalware
-      - name: Up to 500 GB Acronis Cloud
-  - id: acronis-true-image-premium
-    name: Acronis True Image — Premium
+      - name: Microsoft 365 — Backup and archiving
+        description: Daily backups, unlimited backup and archiving storage, email archiving.
+      - name: Microsoft 365 — Security + RMM
+        description: Email security, security posture management.
+      - name: Microsoft 365 — Ultimate protection
+        description: Security + RMM and Backup, plus Advanced Backup up to 6 backups/day and collaboration security for OneDrive, SharePoint and Teams.
+      - name: Servers/VMs — Endpoint security + RMM
+        description: Anti-malware, anti-ransomware, EDR/XDR and RMM.
+      - name: Laptops/desktops/workstations — Endpoint security + RMM
+        description: Anti-malware, anti-ransomware, EDR/XDR and RMM.
+      - name: Ultimate (all workloads)
+        description: Adds Data Loss Prevention and advanced backup features.
+    quotas:
+      - workload: Microsoft 365
+        included_storage: unlimited
+        overage: none
+      - workload: Server
+        included_storage: 3 TB per server
+        overage: billed automatically above the pooled allowance
+      - workload: Virtual machine
+        included_storage: 2 TB per VM
+        overage: billed automatically above the pooled allowance
+      - workload: Desktop / laptop
+        included_storage: 300 GB per device
+        overage: billed automatically above the pooled allowance
+    storage_pooling: Storage is pooled at the customer tenant level and shared across workloads in that tenant.
+  - id: acronis-cpc-per-workload
+    name: Cyber Protect Cloud — Per-workload
     type: subscription
-    description: Comprehensive data protection with up to 10 TB cloud storage, antimalware, and blockchain
-      notarization. Sized 1–5 devices.
+    audience: service provider
+    description: >-
+      Each protected device or workload is billed at a single flat monthly price. Acronis positions this
+      for clients with fewer workloads carrying more data each. Disaster Recovery is priced per-GB even
+      under this model.
     entries:
-      - label: Annual subscription
-        name: ti_premium
-        type: subscription
-        metric: device
-        limit: 5
-        timeFrame: year
-        geo: global
-        unit: 1
-        price: see acronis.com region pricing
-        userMultiplied: true
-      - label: Included cloud storage
-        name: ti_premium_cloud
-        type: quota
-        metric: storage
-        limit: 10000
-        timeFrame: year
-        geo: global
-        unit: 1
-        price: included
-        userMultiplied: false
-    elements:
-      - name: Up to 10 TB Acronis Cloud
-      - name: Antimalware
-      - name: Blockchain notarization (Acronis Notary)
-  - id: acronis-cyber-protect-cloud
-    name: Cyber Protect Cloud (Service Provider)
-    type: usage-based
-    description: MSP-targeted platform billed per protected workload and per GB of storage / data, with
-      optional add-on packs (Advanced Backup, Disaster Recovery, Email Security, EDR, XDR, MDR, DLP,
-      Management / RMM, Microsoft 365 protection).
-    entries:
-      - label: Per-workload base
-        name: workload
+      - label: Per protected workload
+        name: per_workload
         type: metered
         metric: workload
         limit: -1
         timeFrame: month
         geo: global
         unit: 1
-        price: see partner portal
+        price: not published
         userMultiplied: false
-      - label: Acronis Cloud storage
-        name: cloud_storage
+  - id: acronis-cpc-per-gb
+    name: Cyber Protect Cloud — Per-GB
+    type: usage-based
+    audience: service provider
+    description: >-
+      Services are purchased on the volume of data protected, measured in GB. Positioned for clients with
+      more workloads carrying less data each.
+    entries:
+      - label: Per GB protected
+        name: per_gb
         type: metered
         metric: storage
         limit: -1
         timeFrame: month
         geo: global
         unit: 1
-        price: see partner portal
+        price: not published
         userMultiplied: false
-      - label: Advanced packs (Backup, DR, Email Security, EDR, XDR, Management)
-        name: advanced_packs
-        type: metered
-        metric: addon
-        limit: -1
-        timeFrame: month
+  - id: acronis-true-image
+    name: Acronis True Image (consumer)
+    type: subscription
+    audience: consumer
+    description: >-
+      The only Acronis line with self-serve tiers — Essentials, Advanced and Premium, sized by device
+      count and included Acronis Cloud storage. Per-region prices are rendered client-side on the
+      purchasing page rather than published in the page source, so no figure is recorded here.
+    entries:
+      - label: Annual subscription
+        name: true_image
+        type: subscription
+        metric: device
+        limit: 5
+        timeFrame: year
         geo: global
         unit: 1
-        price: see partner portal
-        userMultiplied: false
+        price: not published
+        userMultiplied: true
     elements:
-      - name: Single agent / single console
-      - name: Backup, disaster recovery, archival storage
-      - name: EDR, XDR, MDR, email security, DLP
-      - name: RMM and PSA integrations (ConnectWise, Kaseya, Autotask, Atera)
-      - name: Microsoft 365 protection
+      - name: Essentials — local backup, cloning, ransomware protection
+      - name: Advanced — adds cloud backup and antimalware
+      - name: Premium — adds larger cloud storage and Acronis Notary blockchain notarization
+add_ons:
+  - name: MDR (Managed Detection and Response)
+    billing: separately at standard rates, on top of any package
+  - name: Security Awareness Training
+    billing: separately; not included in any solution-based package
+purchase_path:
+  self_serve: false
+  requires: authorized Acronis service-provider partnership with a monthly purchase/resale commitment
+  contact: https://www.acronis.com/en/contact-sales/
+  calculator: https://www.acronis.com/en/products/cloud/price-calculator/
 maintainers:
   - FN: Kin Lane
-    email: info@apievangelist.com
+    email: kin@apievangelist.com

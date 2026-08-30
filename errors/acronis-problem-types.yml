@@ -1,0 +1,221 @@
+generated: '2026-08-30'
+method: derived
+source: openapi/_original/*.json (12 provider OpenAPI 3.0 documents harvested from developer.acronis.com on 2026-08-30)
+format: vendor-envelope
+rfc9457: false
+note: Acronis does not use application/problem+json. Every 4xx/5xx across the twelve published specs is application/json
+  (16 text/plain exceptions in the Vault Manager download paths) carrying the errorScheme envelope below. The OAuth token
+  and revoke endpoints use the RFC 6749 error / error_description shape instead.
+envelope:
+  media_type: application/json
+  schema: components.schemas.errorScheme
+  shape:
+    error:
+      code: string | integer
+      domain: string, nullable
+      message: string
+      details:
+        info: string, nullable
+      context: object
+      data: array of string
+  required:
+  - error.code
+  - error.domain
+  - error.message
+  - error.details
+oauth_envelope:
+  media_type: application/json
+  schema: components.schemas.tokenError / revokeError
+  shape:
+    error: string enum
+    error_description: string
+  token_errors:
+  - totp_setup_required
+  - totp_required
+  - invalid_totp
+  - access_denied
+  - invalid_request
+  revoke_errors:
+  - invalid_client
+  - invalid_request
+  - unsupported_token_type
+problem_types:
+- status: 400
+  occurrences: 124
+  titles:
+  - Invalid request.
+  - Bad request.
+  - Malformed-request-like errors
+  - Validation failed
+  remediation: Validate the request body and query parameters against the operation schema before retrying; the response
+    body carries error.code and error.message.
+  specs:
+  - account-management-v2
+  - agents-v2
+  - alerts-v1
+  - disaster-recovery-v2
+  - files-v1
+  - mdr-v1
+  - pricelist-v1
+  - resource-policy-management-v4
+  - tasks-v2
+  - vaultman-v1
+- status: 401
+  occurrences: 164
+  titles:
+  - Method required an authenticated user.
+  - Request is refused because authentication parameters are invalid.
+  - User authorization failed. There are many reasons for the error.
+  - The request was denied because the bearer access token was invalid or missing.
+  remediation: Obtain a fresh OAuth 2.0 access token from ${datacenter}.acronis.com/api/2/idp/token and retry once.
+  specs:
+  - account-management-v2
+  - agents-v2
+  - alerts-v1
+  - disaster-recovery-v2
+  - events-v1
+  - mdr-v1
+  - pricelist-v1
+  - resource-policy-management-v4
+- status: 403
+  occurrences: 198
+  titles:
+  - Current user is not authorized to access this endpoint or its method.
+  - Node permissions required
+  - 'A security error due to an issue with tenant security claim: invalid tenant in the access token, tenant resolution
+    failed and etc.'
+  - Administrative permissions required
+  remediation: 'The token is valid but the role/scope is insufficient — check the required urn:acronis.com:: scope in
+    scopes/acronis-scopes.yml and the tenant the token is bound to.'
+  specs:
+  - account-management-v2
+  - agents-v2
+  - alerts-v1
+  - disaster-recovery-v2
+  - events-v1
+  - files-v1
+  - mdr-v1
+  - pricelist-v1
+  - resource-policy-management-v4
+- status: 404
+  occurrences: 124
+  titles:
+  - Not Found.
+  - Resource not found.
+  - The requested resource was not found.
+  - Resource was not found
+  remediation: Confirm the UUID and the tenant scope; resource, policy and agent APIs take the tenant NUMERIC id, account
+    management takes the UUID.
+  specs:
+  - account-management-v2
+  - agents-v2
+  - alerts-v1
+  - disaster-recovery-v2
+  - files-v1
+  - mdr-v1
+  - resource-policy-management-v4
+  - tasks-v2
+  - vaultman-v1
+- status: 406
+  occurrences: 1
+  titles:
+  - Provided arguments are not acceptable.
+  remediation: Adjust the request arguments; the server rejected the supplied combination.
+  specs:
+  - account-management-v2
+- status: 409
+  occurrences: 39
+  titles:
+  - Another object of the same type already exists.
+  - The request could not be completed because there was a conflict with the current state of the resource.
+  - Name conflict
+  - Request violates some invariant.
+  remediation: Re-read current state and reconcile; an object of the same type already exists or the resource changed
+    under you.
+  specs:
+  - account-management-v2
+  - agents-v2
+  - disaster-recovery-v2
+  - events-v1
+  - files-v1
+  - resource-policy-management-v4
+  - vaultman-v1
+- status: 410
+  occurrences: 1
+  titles:
+  - '* Incident is obsolete, for example the affected workload was removed.'
+  remediation: The referenced object no longer exists (for example an EDR incident whose workload was removed); drop
+    it from the working set.
+  specs:
+  - mdr-v1
+- status: 414
+  occurrences: 2
+  titles:
+  - Too many scope values.
+  - Too many resource IDs.
+  remediation: Reduce the number of scope values or resource IDs in the request.
+  specs:
+  - alerts-v1
+- status: 415
+  occurrences: 25
+  titles:
+  - Requested type in the `Accept` request header is not supported.
+  remediation: Set an Accept header the operation declares (application/json for all Cyber Platform APIs).
+  specs:
+  - account-management-v2
+- status: 422
+  occurrences: 21
+  titles:
+  - Critical issues (link='') blocked the draft update
+  - There are issues that blocked the resource creation.
+  - Critical or error issues (link='') blocked the policy deletion
+  - Critical or error issues (link='') blocked the policy creation or update.
+  remediation: Semantic validation failed — read the issues list in the body and correct the draft before resubmitting.
+  specs:
+  - resource-policy-management-v4
+- status: 426
+  occurrences: 1
+  titles:
+  - Server refuses to fulfill the request using the current protocol
+  remediation: Upgrade the protocol as instructed by the response.
+  specs:
+  - account-management-v2
+- status: 429
+  occurrences: 14
+  titles:
+  - The response status code indicates that the service is overloaded and you must wait before the next request.
+  - Too many requests from the same IP.
+  - 'This response indicates that the client must retry the request later. There are two possible reasons:'
+  - Results quota exceeded.
+  remediation: Back off for the number of seconds in the Retry-After response header, then retry with jitter.
+  specs:
+  - disaster-recovery-v2
+  - events-v1
+  - mdr-v1
+- status: 500
+  occurrences: 107
+  titles:
+  - Internal error occurred.
+  - Service encountered an unexpected condition that prevented it from fulfilling the request.
+  - An internal server error occurred while processing the request.
+  - Internal service error
+  remediation: Transient server fault — retry with exponential backoff; if it persists, open a support case with the
+    request id.
+  specs:
+  - account-management-v2
+  - agents-v2
+  - disaster-recovery-v2
+  - events-v1
+  - mdr-v1
+  - pricelist-v1
+  - resource-policy-management-v4
+  - tasks-v2
+  - vaultman-v1
+- status: 504
+  occurrences: 7
+  titles:
+  - Gateway time-out.
+  remediation: Upstream gateway timeout — retry with backoff; long-running operations return an activity/task id to poll
+    instead.
+  specs:
+  - disaster-recovery-v2

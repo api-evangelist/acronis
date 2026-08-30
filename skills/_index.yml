@@ -1,0 +1,47 @@
+generated: '2026-08-30'
+method: searched
+source: https://www.npmjs.com/package/@acronis-platform/mcp
+note: >-
+  Acronis publishes its own Agent Skill. The MCP server ships an 17.5 KB API playbook as the
+  get_acronis_skill tool, and its default instructions tell every client to "always call the
+  get_acronis_skill tool first before taking any action". It is captured verbatim rather than
+  regenerated — a provider-authored operating manual outranks anything this pipeline could derive from
+  the specs, and it encodes knowledge the specs do not carry (console-vs-API terminology, the two
+  tenant id formats, which policy modules depend on which).
+skills:
+- file: acronis-api-playbook.md
+  name: acronis-api-playbook
+  authored_by: Acronis International GmbH
+  method: searched
+  api: Acronis Cyber Platform API
+  mcp_tool: get_acronis_skill
+  workflows:
+  - name: Terminology Reference
+    description: Maps console/doc vocabulary onto API fields — partner/customer/folder to tenant kind, protection plan to policy.protection.total, and so on.
+  - name: Offering Item Editions
+    description: Which offering-item name prefixes are valid for each Cyber Protection edition.
+  - name: Finding a Tenant or User by Name
+    description: Resolve a human-supplied name to a UUID through the search endpoint before acting.
+  - name: Tenant ID Formats
+    description: Convert between the tenant UUID and its numeric string id with resolve_tenant_ids, and retry.
+  - name: Create a Customer Tenant and Assign Offering Items
+    description: End-to-end customer provisioning including managed vs self-service mode and trial vs production billing.
+  - name: Register an Agent and Protect a Device
+    description: Registration-token and personal-tenant paths for bringing a workload under protection.
+  - name: Create a Protection Plan
+    description: Build the composite policy.protection.total and attach module sub-policies by parent_ids.
+  - name: Check Protection Status and Protect Unprotected Workloads
+    description: Read aggregate.status per resource and apply a policy to everything not_protected.
+  - name: List and Investigate EDR Incidents
+    description: Triage incidents, isolate a workload (with explicit confirmation) and release it after remediation.
+  - name: Generate a Usage Report
+    description: Produce and download a stored usage report for billing and capacity planning.
+  safety_notes:
+  - Requires the operator to identify the working tenant before any action.
+  - Distinguishes personal_tenant_id from a customer/partner tenant id and warns they are not interchangeable.
+  - Requires explicit user confirmation before a WORKLOAD_ISOLATE response action.
+  - Tells the agent to stop and notify rather than invent backup settings when a policy call fails.
+related:
+  mcp: mcp/acronis-mcp.yml
+  crosswalk: mcp/acronis-tool-crosswalk.yml
+  conventions: conventions/acronis-conventions.yml

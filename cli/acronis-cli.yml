@@ -1,0 +1,56 @@
+generated: '2026-08-30'
+method: searched
+source: https://github.com/acronis/vinfra, https://www.npmjs.com/package/@acronis-platform/mcp
+note: >-
+  Acronis ships no CLI for the Cyber Protect Cloud platform APIs — there is no `acronis` binary that
+  wraps the tenant, policy, agent or EDR endpoints. What it does publish are two narrower first-party
+  command-line tools, recorded below, plus the officially maintained bash example scripts. An agent or
+  operator automating Cyber Protect Cloud calls the REST API or runs the MCP server; there is no
+  command-line path.
+clis:
+- name: vinfra
+  official: true
+  product: Acronis Cyber Infrastructure (ACI) / Virtuozzo Hybrid Infrastructure
+  scope: infrastructure
+  language: Python (2 and 3)
+  repository: https://github.com/acronis/vinfra
+  install:
+  - pip install .
+  - yum install vstorage-ui-client (installed automatically on HCI nodes)
+  configuration:
+    env:
+    - VINFRA_PORTAL
+    - VINFRA_USERNAME
+    - VINFRA_PASSWORD
+  command_groups:
+  - name: node
+    description: List and manage infrastructure nodes.
+  - name: task
+    description: List and inspect long-running infrastructure tasks.
+  note: >-
+    Manages the on-premises storage/compute infrastructure product, not the Cyber Protect Cloud
+    multi-tenant APIs this repo profiles. Command groups above are only those the published README
+    demonstrates; the full surface is not documented in the repository.
+- name: acronis-mcp
+  official: true
+  product: Acronis Cyber Platform API
+  scope: agent tooling
+  language: TypeScript
+  install: npx -y @acronis-platform/mcp
+  package: https://www.npmjs.com/package/@acronis-platform/mcp
+  bin: acronis-mcp
+  note: >-
+    A binary, but not a general-purpose CLI — it starts the MCP server over stdio or HTTP. Listed here
+    because it is the only installable Acronis command that speaks the Cyber Platform API.
+- name: notary-verifyhash
+  official: true
+  product: Acronis Notary
+  scope: verification
+  language: Go
+  repository: https://github.com/acronis/notary-verifyhash
+  description: Verifies a hash in the Merkle Patricia Tree root/proof produced by Acronis Notary.
+example_scripts:
+  repository: https://github.com/acronis/acronis-cyber-platform-bash-examples
+  language: Shell
+  official: true
+  note: Officially maintained curl-based examples for the platform API; last pushed 2023-04-05.

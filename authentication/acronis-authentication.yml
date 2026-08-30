@@ -1,23 +1,100 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/acronis-account-management-openapi.yaml, openapi/acronis-agent-management-openapi.yaml,
-  openapi/acronis-task-manager-openapi.yaml
+generated: '2026-08-30'
+method: searched
+source: >-
+  https://developer.acronis.com/doc/outbound/apis/authentication/index.html plus the
+  securitySchemes of the 12 provider OpenAPI documents harvested to openapi/_original/ on 2026-08-30,
+  and the live OIDC discovery document at https://us-cloud.acronis.com/.well-known/openid-configuration
+docs: https://developer.acronis.com/doc/outbound/apis/authentication/index.html
 summary:
   types:
+  - oauth2
+  - openIdConnect
   - http
+  primary: oauth2
+  token_endpoint: https://{datacenter}.acronis.com/api/2/idp/token
+  discovery: https://{datacenter}.acronis.com/.well-known/openid-configuration
+  scope_reference: scopes/acronis-scopes.yml
 schemes:
+- name: oauth2
+  type: oauth2
+  flows:
+  - clientCredentials
+  - authorizationCode
+  - password
+  token_url: https://{datacenter}.acronis.com/api/2/idp/token
+  authorization_url: https://{datacenter}.acronis.com/api/2/idp/authorize
+  scopes: 90
+  description: >-
+    The Cyber Platform standard. An API client (client_id / client_secret) is created per tenant in the
+    management console or through the Clients API, then exchanged for a bearer JWT at /api/2/idp/token.
+    Scopes are URN-shaped role identifiers (urn:acronis.com::account-server::partner_admin and so on).
+  declared_in:
+  - openapi/_original/acronis-account-management-v2-openapi.json
+  - openapi/_original/acronis-advanced-automation-v1-openapi.json
+  - openapi/_original/acronis-agents-v2-openapi.json
+  - openapi/_original/acronis-alerts-v1-openapi.json
+  - openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  - openapi/_original/acronis-events-v1-openapi.json
+  - openapi/_original/acronis-files-v1-openapi.json
+  - openapi/_original/acronis-mdr-v1-openapi.json
+  - openapi/_original/acronis-pricelist-v1-openapi.json
+  - openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  - openapi/_original/acronis-tasks-v2-openapi.json
+  - openapi/_original/acronis-vaultman-v1-openapi.json
+  scheme_names_in_specs:
+  - oauth2
+  - oauth_2_0
+  - oauth_2_0_user
+  - security_schemes.oauth2
+- name: openIdConnect
+  type: openIdConnect
+  discovery_url: https://{datacenter}.acronis.com/.well-known/openid-configuration
+  probed: '2026-08-30'
+  status: 200
+  description: >-
+    Each Acronis Cloud datacenter serves a real OIDC discovery document for its IDP. Confirmed on
+    us-cloud.acronis.com and eu2-cloud.acronis.com; the issuer is the datacenter host itself.
+  id_token_signing_alg_values_supported:
+  - RS256
+  response_types_supported:
+  - code
+  endpoints:
+    authorization: /api/2/idp/authorize
+    token: /api/2/idp/token
+    jwks: /api/2/idp/keys
+    introspection: /api/2/idp/introspect_token
+    revocation: /api/2/idp/revoke_token
+  backchannel_logout_supported: true
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: >-
+    Base64-encoded client_id:client_secret, accepted only on the IDP token/revoke/introspect endpoints
+    of the Account Management API to exchange credentials for a bearer token.
+  declared_in:
+  - openapi/_original/acronis-account-management-v2-openapi.json
 - name: bearerAuth
   type: http
   scheme: bearer
   bearerFormat: JWT
-  description: OAuth2 bearer token obtained from /idp/token
-  sources:
-  - openapi/acronis-account-management-openapi.yaml
-  - openapi/acronis-agent-management-openapi.yaml
-  - openapi/acronis-task-manager-openapi.yaml
-- name: basicAuth
-  type: http
-  scheme: basic
-  description: Base64-encoded client_id:client_secret
-  sources:
-  - openapi/acronis-account-management-openapi.yaml
+  description: >-
+    The issued access token, sent as an `Authorization` request header with the value `Bearer <jwt>`
+    on every subsequent call.
+  pattern: '^Bearer [0-9a-zA-Z\-\._~+/]*=*$'
+callback_authentication:
+  description: >-
+    CyberApp callback handlers (Acronis calling YOUR service) authenticate in the other direction.
+    Acronis signs each callback with a JWT in Authorization, and passes the partner credentials in a
+    base64 X-CyberApp-Auth header plus connection settings in X-CyberApp-Extra.
+  docs: https://developer.acronis.com/doc/callback-handler/formats/requests.html
+  headers:
+  - Authorization
+  - X-CyberApp-Auth
+  - X-CyberApp-Extra
+notes:
+- >-
+  There is no API-key auth surface. The `x-api-key` heading that appears in the generated reference
+  markdown is a session-cookie scheme used by the console, not a published developer credential.
+- >-
+  Tokens are datacenter-scoped. A client created in us-cloud will not authenticate against eu2-cloud;
+  the {datacenter} server variable in every spec is the tenant's assigned region.

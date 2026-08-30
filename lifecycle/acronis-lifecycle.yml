@@ -1,0 +1,87 @@
+generated: '2026-08-30'
+method: searched
+source: >-
+  https://developer.acronis.com/doc/outbound/apis/index.html,
+  https://dl.acronis.com/u/baas/rn/API_change_log/en-US/AcronisCyberCloud_API_change_log.pdf,
+  https://status.acronis.com/, and openapi/_original/*.json harvested 2026-08-30
+versioning:
+  style: path
+  scheme: independent per service
+  current:
+  - api: Account Management
+    version: '2'
+    base: /api/2
+  - api: Agents
+    version: v2
+    base: /api/agent_manager/v2
+  - api: Alert Manager
+    version: v1
+    base: /api/alert_manager/v1
+  - api: Task Management
+    version: v2
+    base: /api/task_manager/v2
+  - api: Resource and Policy Management
+    version: v4
+    base: /api/policy_management/v4 and /api/resource_management/v4
+  - api: Disaster Recovery
+    version: v2
+    base: /api/dr/v2
+  - api: Endpoint Detection and Response (EDR)
+    version: v1
+    base: /api/mdr/v1
+  - api: Event Manager
+    version: v1
+    base: /api/event_manager/v1
+  - api: Vault Manager
+    version: v1
+    base: /api/vault_manager/v1
+  - api: PSA / Advanced Automation
+    version: v1
+    base: /api/advanced-automation/v1
+  - api: Price List
+    version: v1
+    base: /api/price_sync/v1
+  - api: File Sync & Share
+    version: v1
+    base: /fc/api/v1
+  note: >-
+    There is no platform-wide version and no version request header — each service carries its major
+    version in the URL path and moves independently.
+deprecation:
+  policy_published: false
+  sunset_headers: false
+  deprecated_operations: 0
+  note: >-
+    Acronis publishes no deprecation or sunset policy for the Cyber Platform APIs. Across all 317
+    operations in the twelve published specs, zero carry `deprecated: true`, and no operation declares
+    a Deprecation or Sunset response header (RFC 8594). Removals are announced only in the monthly
+    API change log PDF, which is a document rather than a policy — a consumer has no contractual
+    notice period.
+  evidence:
+  - url: https://dl.acronis.com/u/baas/rn/API_change_log/en-US/AcronisCyberCloud_API_change_log.pdf
+    status: 200
+change_log:
+  published: true
+  cadence: monthly
+  format: PDF
+  url: https://dl.acronis.com/u/baas/rn/API_change_log/en-US/AcronisCyberCloud_API_change_log.pdf
+  index: https://developer.acronis.com/doc/outbound/apis/index.html
+  subscription: >-
+    The developer portal offers email notification of API changes via a form on the platform APIs page.
+  detail: changelog/acronis-changelog.yml
+status_page:
+  published: true
+  url: https://status.acronis.com/
+  probed: '2026-08-30'
+  status: 200
+  note: >-
+    Per-datacenter and per-service status for the Acronis Cloud. This is the operational signal an
+    agent should read before concluding a 5xx is its own fault.
+sla:
+  published: false
+  note: >-
+    No public API SLA. Availability commitments live in the partner/service-provider agreement rather
+    than on the developer portal.
+support:
+  url: https://www.acronis.com/en-us/support/
+  developer_contact: https://promo.acronis.com/Platform-Integrations-Contact-Us.html

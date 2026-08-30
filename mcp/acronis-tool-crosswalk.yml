@@ -1,0 +1,1779 @@
+generated: '2026-08-30'
+method: derived
+source: mcp/acronis-mcp.yml (@acronis-platform/mcp v1.0.1) bound to openapi/_original/*.json harvested from developer.acronis.com
+note: 'Every binding is exact: the published MCP server forwards each tool to a literal HTTP method + path, which was
+  matched against the servers[] base path and paths[] of the harvested provider specs. No tool was mapped by name or
+  semantics.'
+surfaces:
+  openapi:
+  - openapi/_original/acronis-account-management-v2-openapi.json
+  - openapi/_original/acronis-agents-v2-openapi.json
+  - openapi/_original/acronis-alerts-v1-openapi.json
+  - openapi/_original/acronis-mdr-v1-openapi.json
+  - openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  - openapi/_original/acronis-advanced-automation-v1-openapi.json
+  - openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  - openapi/_original/acronis-events-v1-openapi.json
+  - openapi/_original/acronis-files-v1-openapi.json
+  - openapi/_original/acronis-pricelist-v1-openapi.json
+  - openapi/_original/acronis-tasks-v2-openapi.json
+  - openapi/_original/acronis-vaultman-v1-openapi.json
+  graphql: null
+  mcp:
+    mode: local-stdio
+    install: npx -y @acronis-platform/mcp
+    gated: requires an Acronis tenant OAuth client; tool list read from the published package, not from a live tools/list
+coverage:
+  mcp_tools: 157
+  bound_to_rest: 156
+  mcp_only: 1
+  rest_operations_total: 317
+  rest_only: 161
+  by_api:
+  - spec: acronis-account-management-v2-openapi.json
+    tools: 95
+  - spec: acronis-resource-policy-management-v4-openapi.json
+    tools: 36
+  - spec: acronis-alerts-v1-openapi.json
+    tools: 16
+  - spec: acronis-mdr-v1-openapi.json
+    tools: 6
+  - spec: acronis-agents-v2-openapi.json
+    tools: 3
+crosswalk:
+- tool: fetch_open_idconfiguration
+  category: Account Management API 2
+  rest:
+  - FetchOpenIDConfiguration
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /.well-known/openid-configuration
+  binding: '1:1'
+  confidence: high
+- tool: get_forgot_link
+  category: Account Management API 2
+  rest:
+  - GetForgotLink
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /accounts/forgot_link
+  binding: '1:1'
+  confidence: high
+- tool: fetch_applications
+  category: Account Management API 2
+  rest:
+  - FetchApplications
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /applications
+  binding: '1:1'
+  confidence: high
+- tool: fetch_application
+  category: Account Management API 2
+  rest:
+  - FetchApplication
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /applications/{application_id}
+  binding: '1:1'
+  confidence: high
+- tool: turn_on_tenant_application
+  category: Account Management API 2
+  rest:
+  - TurnOnTenantApplication
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /applications/{application_id}/bindings/tenants/{tenant_id}
+  binding: '1:1'
+  confidence: high
+- tool: turn_off_tenant_application
+  category: Account Management API 2
+  rest:
+  - TurnOffTenantApplication
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /applications/{application_id}/bindings/tenants/{tenant_id}
+  binding: '1:1'
+  confidence: high
+- tool: delete_tenant_application_setting
+  category: Account Management API 2
+  rest:
+  - DeleteTenantApplicationSetting
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /applications/{application_id}/settings/tenants/{tenant_id}/{setting_name}
+  binding: '1:1'
+  confidence: high
+- tool: update_tenant_application_setting
+  category: Account Management API 2
+  rest:
+  - UpdateTenantApplicationSetting
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /applications/{application_id}/settings/tenants/{tenant_id}/{setting_name}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_application_setting
+  category: Account Management API 2
+  rest:
+  - FetchTenantApplicationSetting
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /applications/{application_id}/settings/tenants/{tenant_id}/{setting_name}
+  binding: '1:1'
+  confidence: high
+- tool: create_client
+  category: Account Management API 2
+  rest:
+  - CreateClient
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /clients
+  binding: '1:1'
+  confidence: high
+- tool: fetch_clients_batch
+  category: Account Management API 2
+  rest:
+  - FetchClientsBatch
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /clients
+  binding: '1:1'
+  confidence: high
+- tool: delete_client
+  category: Account Management API 2
+  rest:
+  - DeleteClient
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /clients/{client_id}
+  binding: '1:1'
+  confidence: high
+- tool: update_client
+  category: Account Management API 2
+  rest:
+  - UpdateClient
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /clients/{client_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_client
+  category: Account Management API 2
+  rest:
+  - FetchClient
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /clients/{client_id}
+  binding: '1:1'
+  confidence: high
+- tool: request_tokens
+  category: Account Management API 2
+  rest:
+  - RequestTokens
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /idp/token
+  binding: '1:1'
+  confidence: high
+- tool: revoke_token
+  category: Account Management API 2
+  rest:
+  - RevokeToken
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /idp/revoke_token
+  binding: '1:1'
+  confidence: high
+- tool: introspect_token
+  category: Account Management API 2
+  rest:
+  - IntrospectToken
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /idp/introspect_token
+  binding: '1:1'
+  confidence: high
+- tool: request_one_time_token
+  category: Account Management API 2
+  rest:
+  - RequestOneTimeToken
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /idp/ott
+  binding: '1:1'
+  confidence: high
+- tool: log_in_with_one_time_token
+  category: Account Management API 2
+  rest:
+  - LogInWithOneTimeToken
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /idp/ott/login
+  binding: '1:1'
+  confidence: high
+- tool: logout
+  category: Account Management API 2
+  rest:
+  - Logout
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /idp/logout
+  binding: '1:1'
+  confidence: high
+- tool: post_idp_device_authorization
+  category: Account Management API 2
+  rest: []
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /idp/device_authorization
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: device_authorization_approval
+  category: Account Management API 2
+  rest:
+  - DeviceAuthorizationApproval_0
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /idp/device_authorization/approval
+  binding: '1:1'
+  confidence: high
+- tool: device_authorization_approval
+  category: Account Management API 2
+  rest:
+  - DeviceAuthorizationApproval_1
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /idp/device_authorization/approval
+  binding: '1:1'
+  confidence: high
+- tool: fetch_one_time_token_login_page
+  category: Account Management API 2
+  rest:
+  - FetchOneTimeTokenLoginPage
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /idp/external-login
+  binding: '1:1'
+  confidence: high
+- tool: fetch_infrastructures_batch
+  category: Account Management API 2
+  rest:
+  - FetchInfrastructuresBatch
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /infra
+  binding: '1:1'
+  confidence: high
+- tool: register_infrastructure
+  category: Account Management API 2
+  rest:
+  - RegisterInfrastructure
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /infra
+  binding: '1:1'
+  confidence: high
+- tool: unregister_infrastructure
+  category: Account Management API 2
+  rest:
+  - UnregisterInfrastructure
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /infra/{infra_id}
+  binding: '1:1'
+  confidence: high
+- tool: update_infrastructure
+  category: Account Management API 2
+  rest:
+  - UpdateInfrastructure
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /infra/{infra_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_infrastructure
+  category: Account Management API 2
+  rest:
+  - FetchInfrastructure
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /infra/{infra_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_infrastructures_locations_batch
+  category: Account Management API 2
+  rest:
+  - FetchInfrastructuresLocationsBatch
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /locations
+  binding: '1:1'
+  confidence: high
+- tool: create_infrastructures_location
+  category: Account Management API 2
+  rest:
+  - CreateInfrastructuresLocation
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /locations
+  binding: '1:1'
+  confidence: high
+- tool: delete_infrastructures_location
+  category: Account Management API 2
+  rest:
+  - DeleteInfrastructuresLocation
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /locations/{location_id}
+  binding: '1:1'
+  confidence: high
+- tool: update_infrastructures_location
+  category: Account Management API 2
+  rest:
+  - UpdateInfrastructuresLocation
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /locations/{location_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_infrastructures_location
+  category: Account Management API 2
+  rest:
+  - FetchInfrastructuresLocation
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /locations/{location_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_location_infrastructures
+  category: Account Management API 2
+  rest:
+  - FetchLocationInfrastructures
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /locations/{location_id}/infra
+  binding: '1:1'
+  confidence: high
+- tool: fetch_registration_tokens
+  category: Account Management API 2
+  rest:
+  - FetchRegistrationTokens_0
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /registration_tokens
+  binding: '1:1'
+  confidence: high
+- tool: create_registration_token
+  category: Account Management API 2
+  rest:
+  - CreateRegistrationToken_0
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /registration_tokens
+  binding: '1:1'
+  confidence: high
+- tool: delete_registration_token
+  category: Account Management API 2
+  rest:
+  - DeleteRegistrationToken
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /registration_tokens/{token_id}
+  binding: '1:1'
+  confidence: high
+- tool: create_report
+  category: Account Management API 2
+  rest:
+  - CreateReport
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /reports
+  binding: '1:1'
+  confidence: high
+- tool: delete_report
+  category: Account Management API 2
+  rest:
+  - DeleteReport
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /reports/{report_id}
+  binding: '1:1'
+  confidence: high
+- tool: update_report
+  category: Account Management API 2
+  rest:
+  - UpdateReport
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /reports/{report_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_report
+  category: Account Management API 2
+  rest:
+  - FetchReport
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /reports/{report_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_stored_reports
+  category: Account Management API 2
+  rest:
+  - FetchStoredReports
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /reports/{report_id}/stored
+  binding: '1:1'
+  confidence: high
+- tool: download_stored_report
+  category: Account Management API 2
+  rest:
+  - DownloadStoredReport
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /reports/{report_id}/stored/{stored_report_id}
+  binding: '1:1'
+  confidence: high
+- tool: search
+  category: Account Management API 2
+  rest:
+  - Search
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /search
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenants_batch
+  category: Account Management API 2
+  rest:
+  - FetchTenantsBatch
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants
+  binding: '1:1'
+  confidence: high
+- tool: create_tenant
+  category: Account Management API 2
+  rest:
+  - CreateTenant
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /tenants
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenants_applications_batch
+  category: Account Management API 2
+  rest:
+  - FetchTenantsApplicationsBatch
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/applications
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_offering_items_batch
+  category: Account Management API 2
+  rest:
+  - FetchTenantOfferingItemsBatch
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/offering_items
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenants_usages_batch
+  category: Account Management API 2
+  rest:
+  - FetchTenantsUsagesBatch
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/usages
+  binding: '1:1'
+  confidence: high
+- tool: update_tenants_usages
+  category: Account Management API 2
+  rest:
+  - UpdateTenantsUsages
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /tenants/usages
+  binding: '1:1'
+  confidence: high
+- tool: delete_tenant
+  category: Account Management API 2
+  rest:
+  - DeleteTenant
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /tenants/{tenant_id}
+  binding: '1:1'
+  confidence: high
+- tool: update_tenant
+  category: Account Management API 2
+  rest:
+  - UpdateTenant
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /tenants/{tenant_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant
+  category: Account Management API 2
+  rest:
+  - FetchTenant
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_offering_items
+  category: Account Management API 2
+  rest:
+  - FetchTenantOfferingItems
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/offering_items
+  binding: '1:1'
+  confidence: high
+- tool: set_tenant_offering_items
+  category: Account Management API 2
+  rest:
+  - SetTenantOfferingItems
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /tenants/{tenant_id}/offering_items
+  binding: '1:1'
+  confidence: high
+- tool: fetch_offering_items_available_for_tenant_child
+  category: Account Management API 2
+  rest:
+  - FetchOfferingItemsAvailableForTenantChild
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/offering_items/available_for_child
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_offering_items_prices
+  category: Account Management API 2
+  rest:
+  - FetchTenantOfferingItemsPrices
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/offering_items/pricing
+  binding: '1:1'
+  confidence: high
+- tool: update_tenant_offering_items_prices
+  category: Account Management API 2
+  rest:
+  - UpdateTenantOfferingItemsPrices
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /tenants/{tenant_id}/offering_items/pricing
+  binding: '1:1'
+  confidence: high
+- tool: perform_tenant_edition_switch_check
+  category: Account Management API 2
+  rest:
+  - PerformTenantEditionSwitchCheck
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/edition
+  binding: '1:1'
+  confidence: high
+- tool: switch_tenant_edition
+  category: Account Management API 2
+  rest:
+  - SwitchTenantEdition
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /tenants/{tenant_id}/edition
+  binding: '1:1'
+  confidence: high
+- tool: fetch_registration_tokens
+  category: Account Management API 2
+  rest:
+  - FetchRegistrationTokens_1
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/registration_tokens
+  binding: '1:1'
+  confidence: high
+- tool: create_registration_token
+  category: Account Management API 2
+  rest:
+  - CreateRegistrationToken_1
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /tenants/{tenant_id}/registration_tokens
+  binding: '1:1'
+  confidence: high
+- tool: fetch_available_tenant_applications
+  category: Account Management API 2
+  rest:
+  - FetchAvailableTenantApplications
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/applications
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_users
+  category: Account Management API 2
+  rest:
+  - FetchTenantUsers
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/users
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_children
+  category: Account Management API 2
+  rest:
+  - FetchTenantChildren
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/children
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_reports
+  category: Account Management API 2
+  rest:
+  - FetchTenantReports
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/reports
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_infrastructure_locations
+  category: Account Management API 2
+  rest:
+  - FetchTenantInfrastructureLocations
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/locations
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_usages
+  category: Account Management API 2
+  rest:
+  - FetchTenantUsages
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/usages
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_pricing_settings
+  category: Account Management API 2
+  rest:
+  - FetchTenantPricingSettings
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/pricing
+  binding: '1:1'
+  confidence: high
+- tool: update_tenant_pricing_settings
+  category: Account Management API 2
+  rest:
+  - UpdateTenantPricingSettings
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /tenants/{tenant_id}/pricing
+  binding: '1:1'
+  confidence: high
+- tool: disable_custom_branding
+  category: Account Management API 2
+  rest:
+  - DisableCustomBranding
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /tenants/{tenant_id}/brand
+  binding: '1:1'
+  confidence: high
+- tool: fetch_custom_branding_options
+  category: Account Management API 2
+  rest:
+  - FetchCustomBrandingOptions
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/brand
+  binding: '1:1'
+  confidence: high
+- tool: enable_custom_branding
+  category: Account Management API 2
+  rest:
+  - EnableCustomBranding
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /tenants/{tenant_id}/brand
+  binding: '1:1'
+  confidence: high
+- tool: modify_custom_branding
+  category: Account Management API 2
+  rest:
+  - ModifyCustomBranding
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /tenants/{tenant_id}/brand
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_brand_logo
+  category: Account Management API 2
+  rest:
+  - FetchTenantBrandLogo
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/brand/logo
+  binding: '1:1'
+  confidence: high
+- tool: upload_tenant_brand_logo
+  category: Account Management API 2
+  rest:
+  - UploadTenantBrandLogo
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /tenants/{tenant_id}/brand/logo
+  binding: '1:1'
+  confidence: high
+- tool: manage_tenant_mfastatus
+  category: Account Management API 2
+  rest:
+  - ManageTenantMFAStatus
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /tenants/{tenant_id}/mfa/status
+  binding: '1:1'
+  confidence: high
+- tool: fetch_tenant_mfastatus
+  category: Account Management API 2
+  rest:
+  - FetchTenantMFAStatus
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /tenants/{tenant_id}/mfa/status
+  binding: '1:1'
+  confidence: high
+- tool: update_tenant_default_idp_id
+  category: Account Management API 2
+  rest:
+  - UpdateTenantDefaultIdpId
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /tenants/{tenant_id}/default_idp
+  binding: '1:1'
+  confidence: high
+- tool: restore_deleted_tenant
+  category: Account Management API 2
+  rest:
+  - RestoreDeletedTenant
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /tenants/{tenant_id}/restore
+  binding: '1:1'
+  confidence: high
+- tool: fetch_users_batch
+  category: Account Management API 2
+  rest:
+  - FetchUsersBatch
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /users
+  binding: '1:1'
+  confidence: high
+- tool: create_user
+  category: Account Management API 2
+  rest:
+  - CreateUser
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /users
+  binding: '1:1'
+  confidence: high
+- tool: check_login_name_availability
+  category: Account Management API 2
+  rest:
+  - CheckLoginNameAvailability
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /users/check_login
+  binding: '1:1'
+  confidence: high
+- tool: check_password
+  category: Account Management API 2
+  rest:
+  - CheckPassword
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /users/check_password
+  binding: '1:1'
+  confidence: high
+- tool: fetch_current_user_info
+  category: Account Management API 2
+  rest:
+  - FetchCurrentUserInfo
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /users/me
+  binding: '1:1'
+  confidence: high
+- tool: delete_user
+  category: Account Management API 2
+  rest:
+  - DeleteUser
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: DELETE /users/{user_id}
+  binding: '1:1'
+  confidence: high
+- tool: update_user
+  category: Account Management API 2
+  rest:
+  - UpdateUser
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /users/{user_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_user
+  category: Account Management API 2
+  rest:
+  - FetchUser
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /users/{user_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_user_access_policies
+  category: Account Management API 2
+  rest:
+  - FetchUserAccessPolicies
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: GET /users/{user_id}/access_policies
+  binding: '1:1'
+  confidence: high
+- tool: update_user_access_policies
+  category: Account Management API 2
+  rest:
+  - UpdateUserAccessPolicies
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /users/{user_id}/access_policies
+  binding: '1:1'
+  confidence: high
+- tool: manage_user_mfastatus
+  category: Account Management API 2
+  rest:
+  - ManageUserMFAStatus
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: PUT /users/{user_id}/mfa/status
+  binding: '1:1'
+  confidence: high
+- tool: set_user_password
+  category: Account Management API 2
+  rest:
+  - SetUserPassword
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /users/{user_id}/password
+  binding: '1:1'
+  confidence: high
+- tool: send_activation_email
+  category: Account Management API 2
+  rest:
+  - SendActivationEmail
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /users/{user_id}/send-activation-email
+  binding: '1:1'
+  confidence: high
+- tool: restore_deleted_user
+  category: Account Management API 2
+  rest:
+  - RestoreDeletedUser
+  spec: openapi/_original/acronis-account-management-v2-openapi.json
+  operation: POST /users/{user_id}/restore
+  binding: '1:1'
+  confidence: high
+- tool: create_an_alert
+  category: Alert Manager 1.0
+  rest:
+  - Create an alert
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: POST /alerts
+  binding: '1:1'
+  confidence: high
+- tool: fetch_all_alerts
+  category: Alert Manager 1.0
+  rest:
+  - Fetch all alerts
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /alerts
+  binding: '1:1'
+  confidence: high
+- tool: dismiss_the_alerts_by_filter
+  category: Alert Manager 1.0
+  rest:
+  - Dismiss the alerts by filter
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: DELETE /alerts
+  binding: '1:1'
+  confidence: high
+- tool: fetch_an_alert_by_id
+  category: Alert Manager 1.0
+  rest:
+  - Fetch an alert by ID
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /alerts/{id}
+  binding: '1:1'
+  confidence: high
+- tool: dismiss_an_alert_by_id
+  category: Alert Manager 1.0
+  rest:
+  - Dismiss an alert by ID
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: DELETE /alerts/{id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_categories
+  category: Alert Manager 1.0
+  rest:
+  - Fetch categories
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /categories
+  binding: '1:1'
+  confidence: high
+- tool: fetch_alert_counters
+  category: Alert Manager 1.0
+  rest:
+  - Fetch alert counters
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /count
+  binding: '1:1'
+  confidence: high
+- tool: fetch_alerts_grouped_by_scope
+  category: Alert Manager 1.0
+  rest:
+  - Fetch alerts grouped by scope
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /status
+  binding: '1:1'
+  confidence: high
+- tool: fetch_all_alert_types
+  category: Alert Manager 1.0
+  rest:
+  - Fetch all alert types
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /types
+  binding: '1:1'
+  confidence: high
+- tool: register_new_alert_type
+  category: Alert Manager 1.0
+  rest:
+  - Register new alert type
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: POST /types
+  binding: '1:1'
+  confidence: high
+- tool: fetch_an_alert_type_by_id
+  category: Alert Manager 1.0
+  rest:
+  - Fetch an alert type by ID
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /types/{id}
+  binding: '1:1'
+  confidence: high
+- tool: unregister_an_alert_type_by_id
+  category: Alert Manager 1.0
+  rest:
+  - Unregister an alert type by ID
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: DELETE /types/{id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_partner_s_customer_alerts_count
+  category: Alert Manager 1.0
+  rest:
+  - Fetch partner's customer alerts count
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /customer_alerts_count
+  binding: '1:1'
+  confidence: high
+- tool: fetch_alerts_grouped_per_customer
+  category: Alert Manager 1.0
+  rest:
+  - Fetch alerts grouped per customer
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /customer_alerts
+  binding: '1:1'
+  confidence: high
+- tool: get_count_of_active_alerts_and_last_modification_time
+  category: Alert Manager 1.0
+  rest:
+  - Get count of active alerts and last modification time
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /stats
+  binding: '1:1'
+  confidence: high
+- tool: mark_alert_as_false_positive
+  category: Alert Manager 1.0
+  rest:
+  - Mark alert as false positive
+  spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: PATCH /alerts/{id}/false_positive
+  binding: '1:1'
+  confidence: high
+- tool: fetch_a_list_of_policies
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch a list of policies
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /policy_management/v4/policies
+  binding: '1:1'
+  confidence: high
+- tool: create_a_policy
+  category: Resource and Policy Management API v4
+  rest:
+  - Create a policy
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: POST /policy_management/v4/policies
+  binding: '1:1'
+  confidence: high
+- tool: delete_policies
+  category: Resource and Policy Management API v4
+  rest:
+  - Delete policies
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: DELETE /policy_management/v4/policies
+  binding: '1:1'
+  confidence: high
+- tool: modify_policies_favorite_order_and_properties
+  category: Resource and Policy Management API v4
+  rest:
+  - Modify policies favorite order and properties
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PATCH /policy_management/v4/policies/favorite
+  binding: '1:1'
+  confidence: high
+- tool: fetch_a_policy
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch a policy
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /policy_management/v4/policies/{policy_id}
+  binding: '1:1'
+  confidence: high
+- tool: delete_a_policy
+  category: Resource and Policy Management API v4
+  rest:
+  - Delete a policy
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: DELETE /policy_management/v4/policies/{policy_id}
+  binding: '1:1'
+  confidence: high
+- tool: update_a_policy
+  category: Resource and Policy Management API v4
+  rest:
+  - Update a policy
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PATCH /policy_management/v4/policies/{policy_id}
+  binding: '1:1'
+  confidence: high
+- tool: create_a_protection_policy_draft
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: POST /policy_management/v4/drafts
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: fetch_a_protection_policy_draft
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /policy_management/v4/drafts/{draft_id}
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: cancel_a_protection_policy_draft
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: DELETE /policy_management/v4/drafts/{draft_id}
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: commit_or_cancel_a_protection_policy_draft
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/state
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: set_a_protection_policy_draft_s_name
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/name
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: set_a_draft_s_resource_context
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/context
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: enable_or_disable_policies_in_a_draft
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/enabled_policies
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: set_a_draft_s_disabled_applications_context
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/disabled_applications_context
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: add_or_update_a_policy_in_a_draft
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: POST /policy_management/v4/drafts/{draft_id}/policies
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: remove_a_policy_from_a_draft
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: DELETE /policy_management/v4/drafts/{draft_id}/policies/{policy_id}
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: enable_or_disable_a_policy_in_a_draft
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/policies/{policy_id}/enabled
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: set_a_draft_policy_s_name
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/policies/{policy_id}/name
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: set_a_draft_policy_s_type
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/policies/{policy_id}/type
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: set_a_draft_policy_s_comment
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/policies/{policy_id}/comment
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: update_a_draft_policy_s_settings
+  category: Resource and Policy Management API v4
+  rest: []
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/drafts/{draft_id}/policies/{policy_id}/settings
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: apply_a_policy
+  category: Resource and Policy Management API v4
+  rest:
+  - Create an application
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: POST /policy_management/v4/applications
+  binding: '1:1'
+  confidence: high
+- tool: fetch_a_list_of_policy_applications
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch a list of applications
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /policy_management/v4/applications
+  binding: '1:1'
+  confidence: high
+- tool: remove_policy_applications
+  category: Resource and Policy Management API v4
+  rest:
+  - Revoke applications
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: DELETE /policy_management/v4/applications
+  binding: '1:1'
+  confidence: high
+- tool: fetch_applications_issue_statistics
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch applications' issue statistics
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /policy_management/v4/applications/issues/statistics
+  binding: '1:1'
+  confidence: high
+- tool: execute_a_protection_policy
+  category: Resource and Policy Management API v4
+  rest:
+  - Start policy execution
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: PUT /policy_management/v4/applications/run
+  binding: '1:1'
+  confidence: high
+- tool: fetch_application_statuses_by_policy
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch application statuses by policy
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /policy_management/v4/policy_statuses
+  binding: '1:1'
+  confidence: high
+- tool: fetch_a_list_of_all_resources
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch a list of all resources
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /resource_management/v4/resources
+  binding: '1:1'
+  confidence: high
+- tool: delete_resources
+  category: Resource and Policy Management API v4
+  rest:
+  - Delete resources
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: DELETE /resource_management/v4/resources
+  binding: '1:1'
+  confidence: high
+- tool: create_a_resource
+  category: Resource and Policy Management API v4
+  rest:
+  - Create a resource
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: POST /resource_management/v4/resources
+  binding: '1:1'
+  confidence: high
+- tool: post_multiple_resources_in_one_request_from_a_single_agent
+  category: Resource and Policy Management API v4
+  rest:
+  - Post multiple resources in one request from a single agent
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: POST /resource_management/v4/resources/batch
+  binding: '1:1'
+  confidence: high
+- tool: fetch_a_count_of_all_resources_that_match_filter_parameters
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch a count of all resources that match filter parameters
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /resource_management/v4/resources/count
+  binding: '1:1'
+  confidence: high
+- tool: fetch_a_resource_by_id
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch a resource by ID
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /resource_management/v4/resources/{resource_internal_or_external_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_a_list_of_resource_s_attributes
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch a list of resource's attributes
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /resource_management/v4/resources/{resource_internal_or_external_id}/attributes
+  binding: '1:1'
+  confidence: high
+- tool: fetch_the_protection_status_of_resources
+  category: Resource and Policy Management API v4
+  rest:
+  - Fetch the protection status of resources
+  spec: openapi/_original/acronis-resource-policy-management-v4-openapi.json
+  operation: GET /resource_management/v4/resource_statuses
+  binding: '1:1'
+  confidence: high
+- tool: fetch_agents
+  category: Agent Management REST API 2
+  rest:
+  - FetchAgents
+  spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: GET /agents
+  binding: '1:1'
+  confidence: high
+- tool: delete_agents
+  category: Agent Management REST API 2
+  rest:
+  - DeleteAgents
+  spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: DELETE /agents
+  binding: '1:1'
+  confidence: high
+- tool: fetch_agent
+  category: Agent Management REST API 2
+  rest:
+  - FetchAgent
+  spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: GET /agents/{agent_id}
+  binding: '1:1'
+  confidence: high
+- tool: fetch_incidents
+  category: Endpoint Detection and Response API 1.0
+  rest: []
+  spec: openapi/_original/acronis-mdr-v1-openapi.json
+  operation: GET /incidents
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: bulk_update_investigation_state
+  category: Endpoint Detection and Response API 1.0
+  rest: []
+  spec: openapi/_original/acronis-mdr-v1-openapi.json
+  operation: POST /incidents/investigation_state
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: fetch_incident
+  category: Endpoint Detection and Response API 1.0
+  rest: []
+  spec: openapi/_original/acronis-mdr-v1-openapi.json
+  operation: GET /incidents/{incident_id}
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: update_investigation_state
+  category: Endpoint Detection and Response API 1.0
+  rest: []
+  spec: openapi/_original/acronis-mdr-v1-openapi.json
+  operation: POST /incidents/{incident_id}/investigation_state
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: initiate_response_action
+  category: Endpoint Detection and Response API 1.0
+  rest: []
+  spec: openapi/_original/acronis-mdr-v1-openapi.json
+  operation: POST /incidents/{incident_id}/response_action
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+- tool: fetch_response_action_status
+  category: Endpoint Detection and Response API 1.0
+  rest: []
+  spec: openapi/_original/acronis-mdr-v1-openapi.json
+  operation: GET /incidents/{incident_id}/response_action
+  binding: '1:1'
+  confidence: medium
+  note: published spec declares no operationId for this operation; bound by method+path
+mcp_only:
+- tool: resolve_tenant_ids
+  reason: No matching operation in any published Acronis OpenAPI; POST /api/2/tenants:resolve_ids is documented only
+    in the MCP tool set and the Acronis API Playbook.
+rest_only:
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: PUT /Product
+  operationId: Create product
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /Product
+  operationId: Fetch products
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: PUT /Ledger
+  operationId: Create ledger
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /Ledger
+  operationId: Fetch ledger
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /Ledgers
+  operationId: Fetch ledgers
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /SalesItems
+  operationId: Fetch Sales items
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: PUT /SalesItems
+  operationId: Create Sales item
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: DELETE /SalesItems
+  operationId: Delete Sales item
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: PUT /Contracts
+  operationId: Create or update Contract
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /Contracts
+  operationId: Fetches Contracts by customer ID
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: PUT /ContractPart
+  operationId: Create or update a Contract Part
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /ContractPart
+  operationId: Fetch Contract Part
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: DELETE /ContractPart
+  operationId: Delete Contract Part
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: PUT /Call
+  operationId: Create ticket
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /Call
+  operationId: Fetch ticket
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: PUT /SchedulerTickets
+  operationId: Update Ticket
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /SchedulerTickets
+  operationId: Fetch Ticket updates
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /UploadedFiles
+  operationId: Fetch helpdesk attachment
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /EmailUpdates
+  operationId: Fetch email attachment
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: POST /InvoiceOverview
+  operationId: Update invoice
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /InvoiceOverview
+  operationId: Fetch invoice
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /DownloadInvoice
+  operationId: Download invoice
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: POST /ExportInvoice
+  operationId: Export invoices
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /DashboardData
+  operationId: Fetch dashboard data
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /Priorities
+  operationId: Fetch ticket priorities
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /Statuses
+  operationId: Fetch statuses
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /SLA
+  operationId: Fetch Service Level Agreements (SLA)
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: PUT /Taxes
+  operationId: Create tax
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: POST /Taxes
+  operationId: Create taxes
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: GET /Taxes
+  operationId: Fetch tax
+- spec: openapi/_original/acronis-advanced-automation-v1-openapi.json
+  operation: DELETE /Taxes
+  operationId: Delete tax
+- spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: POST /agents/update:force
+  operationId: RunAgentUpdateNow
+- spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: DELETE /agents/{agent_id}
+  operationId: DeleteAgent
+- spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: GET /agent_update_references
+  operationId: FetchAgentUpdateReferenceByAttributes
+- spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: PUT /agent_update_settings
+  operationId: UploadAgentUpdateSettings
+- spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: DELETE /agent_update_settings
+  operationId: DeleteAgentUpdateSettingsCollection
+- spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: GET /agent_update_settings/{id}
+  operationId: FetchAgentUpdateSettings
+- spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: DELETE /agent_update_settings/{id}
+  operationId: DeleteAgentUpdateSettings
+- spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: GET /hardware_nodes
+  operationId: FetchHardwareNodes
+- spec: openapi/_original/acronis-agents-v2-openapi.json
+  operation: GET /hardware_nodes/{node_id}
+  operationId: FetchHardwareNode
+- spec: openapi/_original/acronis-alerts-v1-openapi.json
+  operation: GET /resource_status
+  operationId: Fetch resources containing the highest severity alerts
+- spec: openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  operation: GET /servers
+  operationId: Fetch cloud servers
+- spec: openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  operation: GET /servers/{uuid}
+  operationId: Fetch cloud server by UUID
+- spec: openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  operation: POST /servers/{uuid}:start_failover_prod
+  operationId: Start production failover on cloud server
+- spec: openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  operation: POST /servers/{uuid}:start_failover_test
+  operationId: Start test failover on cloud server
+- spec: openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  operation: POST /servers/{uuid}:stop_failover
+  operationId: Stop failover on cloud server
+- spec: openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  operation: GET /sites
+  operationId: Fetch disaster recovery sites
+- spec: openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  operation: GET /sites/{uuid}
+  operationId: Fetch disaster recovery site by UUID
+- spec: openapi/_original/acronis-events-v1-openapi.json
+  operation: GET /topics
+  operationId: Fetch topics
+- spec: openapi/_original/acronis-events-v1-openapi.json
+  operation: GET /topics/offsets
+  operationId: Fetch topic offsets
+- spec: openapi/_original/acronis-events-v1-openapi.json
+  operation: GET /types
+  operationId: Fetch event types
+- spec: openapi/_original/acronis-events-v1-openapi.json
+  operation: POST /subscriptions
+  operationId: Create event subscription
+- spec: openapi/_original/acronis-events-v1-openapi.json
+  operation: GET /subscriptions/offset
+  operationId: Fetch subscription offset
+- spec: openapi/_original/acronis-events-v1-openapi.json
+  operation: GET /events
+  operationId: Fetch events
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /audit_log
+  operationId: Get audit log entries list
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /devices
+  operationId: Get devices list
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /devices/{device_uuid}
+  operationId: Get device information
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: PUT /devices/{device_uuid}
+  operationId: Update device
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: DELETE /devices/{device_uuid}
+  operationId: Delete device
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: POST /sync_and_share_nodes
+  operationId: Create folder
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /sync_and_share_nodes/{node_uuid}
+  operationId: Get file or folder information
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: PUT /sync_and_share_nodes/{node_uuid}
+  operationId: Update file or folder
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: DELETE /sync_and_share_nodes/{node_uuid}
+  operationId: Delete file or folder
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /sync_and_share_nodes/{node_uuid}/contents
+  operationId: Get files and folders list
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /sync_and_share_nodes/{node_uuid}/revisions
+  operationId: Get file or folder revisions list
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: POST /sync_and_share_nodes/{node_uuid}/revisions/{revision_number}
+  operationId: Restore file revision
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /sync_and_share_nodes/{node_uuid}/download
+  operationId: Get file or folder contents
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: POST /sync_and_share_nodes/{node_uuid}/upload
+  operationId: Upload file
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: POST /sync_and_share_nodes/{node_uuid}/copy
+  operationId: Copy file or folder
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: POST /sync_and_share_nodes/{node_uuid}/move
+  operationId: Move file or folder
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: POST /sync_and_share_nodes/{node_uuid}/links
+  operationId: Create file link
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: PUT /sync_and_share_nodes/{node_uuid}/links/{link_id}
+  operationId: Update file link
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /sync_and_share_nodes/{node_uuid}/members
+  operationId: Get members list
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: POST /sync_and_share_nodes/{node_uuid}/members
+  operationId: Create folder member
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: DELETE /sync_and_share_nodes/{node_uuid}/members
+  operationId: Delete all members
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /sync_and_share_nodes/{node_uuid}/members/{member_id}
+  operationId: Get member information
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: PUT /sync_and_share_nodes/{node_uuid}/members/{member_id}
+  operationId: Update member
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: DELETE /sync_and_share_nodes/{node_uuid}/members/{member_id}
+  operationId: Delete member
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: POST /sync_and_share_nodes/{node_uuid}/sync_status
+  operationId: Create sync status
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: DELETE /sync_and_share_nodes/{node_uuid}/sync_status
+  operationId: Delete sync status
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /settings/purging_policies
+  operationId: Get purging policies settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: PUT /settings/purging_policies
+  operationId: Update purging policies settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /settings/server
+  operationId: Get server settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: PUT /settings/server
+  operationId: Update server settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /settings/audit_log
+  operationId: Get audit log settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: PUT /settings/audit_log
+  operationId: Update audit log settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /settings/security
+  operationId: Get security settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: PUT /settings/security
+  operationId: Update security settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /settings/web_preview
+  operationId: Get web preview settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: PUT /settings/web_preview
+  operationId: Update web preview settings
+- spec: openapi/_original/acronis-files-v1-openapi.json
+  operation: GET /users/{user_uuid}
+  operationId: Get user information
+- spec: openapi/_original/acronis-pricelist-v1-openapi.json
+  operation: GET /effective_price_lists
+  operationId: Fetch tenant's price lists
+- spec: openapi/_original/acronis-tasks-v2-openapi.json
+  operation: GET /tasks
+  operationId: Fetch a list of tasks
+- spec: openapi/_original/acronis-tasks-v2-openapi.json
+  operation: GET /tasks/{task-id}
+  operationId: Fetch a task
+- spec: openapi/_original/acronis-tasks-v2-openapi.json
+  operation: GET /activities
+  operationId: Fetch a list of activities
+- spec: openapi/_original/acronis-tasks-v2-openapi.json
+  operation: GET /activities/{activity-id}
+  operationId: Fetch an activity
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /backups
+  operationId: Fetch backups
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /backups
+  operationId: Delete backups
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /backed_up_resources
+  operationId: Fetch backed up resources
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /archives
+  operationId: Fetch archives
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /archives
+  operationId: Delete archives
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /archives/{archiveID}/backups
+  operationId: Fetch archive backups
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults
+  operationId: Fetch vaults
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /vaults
+  operationId: Create or attach vault
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /vaults/refresh
+  operationId: Refresh vaults
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}
+  operationId: Fetch vault
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /vaults/{vaultID}
+  operationId: Delete vault
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/archives
+  operationId: Fetch vault archives
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /vaults/{vaultID}/archives
+  operationId: Delete vault archives
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /vaults/{vaultID}/archives/refresh
+  operationId: Refresh vault archives
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/archives/{archiveID}/backups/{backupID}
+  operationId: Fetch vault archive backup
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: PUT /vaults/{vaultID}/archives/{archiveID}/backups/{backupID}/validation_status
+  operationId: Set vault archive backup validation status
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/archives/{archiveID}/backups/{backupID}/validation_status/screenshot_full
+  operationId: Fetch full vault archive backup screenshot
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/archives/{archiveID}/backups/{backupID}/validation_status/screenshot_preview
+  operationId: Fetch vault archive backup screenshot preview
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: PUT /vaults/{vaultID}/archives/{archiveID}/backups/{backupID}/automated_test_failover_validation_status
+  operationId: Add ATF validation status
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/archives/{archiveID}/backups/{backupID}/automated_test_failover_validation_status/screenshot_full
+  operationId: Fetch full screenshot
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/archives/{archiveID}/backups/{backupID}/automated_test_failover_validation_status/screenshot_preview
+  operationId: Fetch screenshot preview
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/archives/{archiveID}/backup_timestamps
+  operationId: Fetch vault archive backup timestamps
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/archives/{archiveID}/backups
+  operationId: Fetch vault archive backups
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /vaults/{vaultID}/archives/{archiveID}/backups
+  operationId: Delete vault archive backups_0
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /vaults/{vaultID}/archives/{archiveID}/backups/delete
+  operationId: Delete vault archive backups_1
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/archives/{archiveID}/replication_status
+  operationId: Fetch archive geo-replication status
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/config
+  operationId: Fetch vault configuration
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: PATCH /vaults/{vaultID}/config
+  operationId: Update vault configuration
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/stats
+  operationId: Fetch vault statistics
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /vaults/{vaultID}/stats
+  operationId: Update vault statistics
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /vaults/{vaultID}/agents
+  operationId: Fetch vault agents
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /vaults/{vaultID}/change_password
+  operationId: Change encrypted vault password
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /vaults/{vaultID}/change_credentials
+  operationId: Change vault credentials
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /vaults/{vaultID}/replace_vault_password
+  operationId: Replace encrypted vault password
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /sync/archives
+  operationId: Fetch archives sync info
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /sync/archives
+  operationId: Update archives batch
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /sync/backups
+  operationId: Fetch backups sync info
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /sync/backups
+  operationId: Update backups batch
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /sync/vaults
+  operationId: Fetch vaults sync info
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /sync/vaults
+  operationId: Add vaults batch
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: PUT /sync/vaults/{vaultID}
+  operationId: Register or update vault
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /sync/vaults/{vaultID}
+  operationId: Soft delete vault
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /sync/vaults/{vaultID}/agents
+  operationId: Bind agents to vault
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /sync/vaults/{vaultID}/index_catalog_status
+  operationId: Update vault index catalog status
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: PATCH /sync/vaults/{vaultID}/stats
+  operationId: Update vault stats
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: PUT /sync/vaults/{vaultID}/archives/{archiveID}
+  operationId: Add archive to vault
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: PATCH /sync/vaults/{vaultID}/archives/{archiveID}
+  operationId: Update archive
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /sync/vaults/{vaultID}/archives/{archiveID}
+  operationId: Soft delete archive
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: PUT /sync/vaults/{vaultID}/archives/{archiveID}/backups/{backupID}
+  operationId: Add backup
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: PATCH /sync/vaults/{vaultID}/archives/{archiveID}/backups/{backupID}
+  operationId: Update backup
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /sync/vaults/{vaultID}/archives/{archiveID}/backups/{backupID}
+  operationId: Soft delete backup
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /sync/agents/{agentID}
+  operationId: Delete agent
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /sync/storage_nodes
+  operationId: Register storage node_0
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /stats
+  operationId: Fetch archive stats
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /storage_nodes
+  operationId: Fetch registered storage nodes
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /storage_nodes
+  operationId: Register storage node_1
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /storage_nodes/{storageNodeID}/checkuser
+  operationId: Check user access
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: POST /storage_nodes/{storageNodeID}/check_location
+  operationId: Find vault by path
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: DELETE /abgw_storages/{storageID}
+  operationId: Unregister storage
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /storage_dirs/{storageID}
+  operationId: Fetch storage folders
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /storage_dirs/{storageID}/{path}
+  operationId: Fetch storage folders in path
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /healthcheck
+  operationId: Health check
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /search_index_size_stats/{tenantID}
+  operationId: Fetch archive search index size stats
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /storage_usage_stats
+  operationId: Fetch storage usage stats
+- spec: openapi/_original/acronis-vaultman-v1-openapi.json
+  operation: GET /antimalware_scan_stats
+  operationId: Fetch antimalware scan stats

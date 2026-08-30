@@ -1,0 +1,160 @@
+generated: '2026-08-30'
+method: derived
+source: >-
+  openapi/_original/*.json (12 provider OpenAPI 3.0 documents harvested from developer.acronis.com
+  2026-08-30), https://developer.acronis.com/doc/account-management/v2/reference/llms.txt, and
+  skills/acronis-api-playbook.md (Acronis' own API playbook, shipped in @acronis-platform/mcp)
+authentication:
+  style: OAuth 2.0 bearer JWT
+  header: 'Authorization: Bearer <jwt>'
+  token_endpoint: https://{datacenter}.acronis.com/api/2/idp/token
+  detail: authentication/acronis-authentication.yml
+  scopes: scopes/acronis-scopes.yml
+  note: >-
+    Tokens are datacenter-scoped. The {datacenter} server variable (us-cloud, eu2-cloud, au-cloud …)
+    is the tenant's assigned region and is not interchangeable.
+idempotency:
+  supported: true
+  header: Idempotency-Key
+  scope: per-operation
+  declared_on:
+  - POST /api/mdr/v1/incidents/investigation_state
+  - POST /api/mdr/v1/incidents/{incident_id}/investigation_state
+  - POST /api/mdr/v1/incidents/{incident_id}/response_action
+  source: openapi/_original/acronis-mdr-v1-openapi.json
+  retention: not published
+  note: >-
+    Real but narrow. Only the EDR/MDR API declares Idempotency-Key, on its three state-changing POSTs;
+    the spec text says a client "can safely retry an idempotent operation" without side effects. The
+    other eleven published Acronis APIs — including every tenant, user, policy and agent write — declare
+    no idempotency key, so a retried create there can duplicate. Acronis publishes no retention window
+    for a replayed key.
+  safe_alternative: >-
+    Long-running operations (agent registration, failover, policy application) return an activity or
+    task id; poll the Task Management API rather than re-issuing the write.
+pagination:
+  style: cursor
+  request_params:
+  - limit
+  - after
+  - before
+  - order
+  response_fields:
+  - paging.cursors.after
+  - paging.cursors.before
+  note: >-
+    The cursor encodes the filtering and sorting arguments, so a follow-up page needs only the cursor.
+    A minority of endpoints (Advanced Automation / PSA, Vault Manager) use offset + count instead.
+  offset_params:
+  - offset
+  - count
+  content_range_header: Content-Range (Vault Manager range downloads)
+filtering:
+  common_params:
+  - tenant_id
+  - uuids
+  - updated_since
+  - allow_deleted
+  - lod
+  note: >-
+    `lod` (level of detail) controls response verbosity on the Account Management collections;
+    `allow_deleted` opts soft-deleted rows back into a listing.
+identifiers:
+  formats:
+  - uuid
+  - numeric-string
+  note: >-
+    A tenant has two interchangeable ids. Account Management takes the UUID; the resource, policy and
+    agent APIs take the tenant's NUMERIC string id. Acronis ships a converter — POST
+    /api/2/tenants:resolve_ids — and its own playbook tells agents to convert and retry when an id is
+    rejected. This is the single largest integration trap in the platform.
+  typed_identifiers:
+    scheme: CTI (Cross-domain Typed Identifiers)
+    examples:
+    - cti.a.p.em.event.v1.0
+    - cti.a.p.em.topic.v1.0
+    - cti.a.p.lic.service_plan.v1.0
+    reference_implementation: https://github.com/acronis/go-cti
+versioning:
+  style: path
+  note: >-
+    The major version is in the path segment of the service base (/api/2, /api/agent_manager/v2,
+    /api/policy_management/v4, /api/mdr/v1 …). Each service versions independently; there is no
+    global platform version and no version request header.
+  detail: lifecycle/acronis-lifecycle.yml
+errors:
+  envelope: '{ "error": { "code, domain, message, details, context, data" } }'
+  media_type: application/json
+  rfc9457: false
+  detail: errors/acronis-problem-types.yml
+rate_limit_signaling:
+  headers:
+  - Retry-After
+  status: 429
+  note: >-
+    Retry-After (seconds) is declared on every 429 in the Disaster Recovery, Event Manager and EDR
+    specs. No X-RateLimit-* / RateLimit-* quota headers are published anywhere in the twelve specs.
+  detail: rate-limits/acronis-rate-limits.yml
+async_operations:
+  pattern: activity / task id + poll
+  apis:
+  - Task Management API (/api/task_manager/v2)
+  - Activities (Account Management)
+  note: >-
+    Writes that take time (agent registration, DR failover, policy application, EDR response actions)
+    return an id to poll rather than blocking.
+dry_run_mode:
+  supported: false
+  note: No published preview/validate-only mode on any write operation in the twelve specs.
+reversibility:
+  grade: documented
+  note: >-
+    Acronis publishes real reversal paths for its most destructive writes, but states no window for any
+    of them. Deletion of a tenant or user is a SOFT delete carrying a `deleted_at` timestamp, and a
+    restore operation exists — but neither the specs nor the reference docs say how long the soft-deleted
+    object survives before it is purged, so an agent cannot know whether a restore will still work. No
+    window is asserted here because none is published.
+  surfaces:
+  - write: DELETE /api/2/tenants/{tenant_id}
+    operationId: DeleteTenant
+    reversal: POST /api/2/tenants/{tenant_id}/restore
+    reversal_operationId: RestoreDeletedTenant
+    window: not published
+    evidence: openapi/_original/acronis-account-management-v2-openapi.json
+  - write: DELETE /api/2/users/{user_id}
+    operationId: DeleteUser
+    reversal: POST /api/2/users/{user_id}/restore
+    reversal_operationId: RestoreDeletedUser
+    window: not published
+    evidence: openapi/_original/acronis-account-management-v2-openapi.json
+  - write: POST /api/dr/v2/servers/{uuid}:start_failover_prod
+    reversal: POST /api/dr/v2/servers/{uuid}:stop_failover
+    reversal_operationId: Stop failover on cloud server
+    window: not published
+    evidence: openapi/_original/acronis-disaster-recovery-v2-openapi.json
+  - write: POST /api/mdr/v1/incidents/{incident_id}/response_action (WORKLOAD_ISOLATE)
+    reversal: POST /api/mdr/v1/incidents/{incident_id}/response_action (WORKLOAD_RELEASE)
+    window: not published
+    evidence: skills/acronis-api-playbook.md
+    note: >-
+      Acronis' own playbook requires explicit user confirmation before isolating a workload, and names
+      the release action as the reversal.
+  - write: file mutation via /fc/api/v1/sync_and_share_nodes
+    reversal: POST /fc/api/v1/sync_and_share_nodes/{node_uuid}/revisions/{revision_number}
+    reversal_operationId: Restore file revision
+    window: not published
+    evidence: openapi/_original/acronis-files-v1-openapi.json
+  - write: POST /api/2/idp/token
+    reversal: POST /api/2/idp/revoke_token
+    reversal_operationId: RevokeToken
+    window: not published
+    evidence: openapi/_original/acronis-account-management-v2-openapi.json
+  irreversible:
+  - DELETE /api/2/infra/{infra_id} (UnregisterInfrastructure) — no restore operation published
+  - DELETE /api/vault_manager/v1/abgw_storages/{storageID} (Unregister storage) — no restore operation published
+cross_references:
+  errors: errors/acronis-problem-types.yml
+  lifecycle: lifecycle/acronis-lifecycle.yml
+  authentication: authentication/acronis-authentication.yml
+  scopes: scopes/acronis-scopes.yml
+  rate_limits: rate-limits/acronis-rate-limits.yml
