@@ -1206,62 +1206,6 @@ apis:
     url: https://developer.acronis.com/doc/files/v1/reference/index.html
   - type: LLMsTxt
     url: https://developer.acronis.com/doc/files/v1/reference/llms.txt
-- aid: acronis:acronis-dashboarddata-api
-  name: Acronis Dashboard Data API
-  description: The DashboardData API from Acronis — 1 operation(s) for dashboarddata.
-  humanURL: https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
-  baseURL: https://{datacenter}.acronis.com/api
-  tags:
-  - DashboardData
-  properties:
-  - type: OpenAPI
-    url: openapi/acronis-dashboarddata-api-openapi.yml
-  - type: Documentation
-    url: https://developer.acronis.com/doc/resource-policy-management/v4/guide/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/psa/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/events/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/events/v1/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/dr/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/mdr/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/mdr/v1/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/agents/v2/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
-  - type: LLMsTxt
-    url: https://developer.acronis.com/doc/account-management/v2/reference/llms.txt
-  - type: APIReference
-    url: https://developer.acronis.com/doc/alerts/v1/reference/index.html
-  - type: LLMsTxt
-    url: https://developer.acronis.com/doc/alerts/v1/reference/llms.txt
-  - type: APIReference
-    url: https://developer.acronis.com/doc/pricelist/v1/reference/index.html
-  - type: LLMsTxt
-    url: https://developer.acronis.com/doc/pricelist/v1/reference/llms.txt
-  - type: APIReference
-    url: https://developer.acronis.com/doc/files/v1/reference/index.html
-  - type: LLMsTxt
-    url: https://developer.acronis.com/doc/files/v1/reference/llms.txt
 - aid: acronis:acronis-devices-api
   name: Acronis Devices API
   description: The Devices API from Acronis — 2 operation(s) for devices.
@@ -1552,62 +1496,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/acronis-exportinvoice-api-openapi.yml
-  - type: Documentation
-    url: https://developer.acronis.com/doc/resource-policy-management/v4/guide/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/psa/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/events/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/events/v1/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/dr/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/mdr/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/mdr/v1/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/agents/v2/reference/index.html
-  - type: Documentation
-    url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
-  - type: APIReference
-    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
-  - type: LLMsTxt
-    url: https://developer.acronis.com/doc/account-management/v2/reference/llms.txt
-  - type: APIReference
-    url: https://developer.acronis.com/doc/alerts/v1/reference/index.html
-  - type: LLMsTxt
-    url: https://developer.acronis.com/doc/alerts/v1/reference/llms.txt
-  - type: APIReference
-    url: https://developer.acronis.com/doc/pricelist/v1/reference/index.html
-  - type: LLMsTxt
-    url: https://developer.acronis.com/doc/pricelist/v1/reference/llms.txt
-  - type: APIReference
-    url: https://developer.acronis.com/doc/files/v1/reference/index.html
-  - type: LLMsTxt
-    url: https://developer.acronis.com/doc/files/v1/reference/llms.txt
-- aid: acronis:acronis-healthcheck-api
-  name: Acronis Healthcheck API
-  description: The Healthcheck API from Acronis — 1 operation(s) for healthcheck.
-  humanURL: https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
-  baseURL: https://{datacenter}.acronis.com/api
-  tags:
-  - Healthcheck
-  properties:
-  - type: OpenAPI
-    url: openapi/acronis-healthcheck-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/resource-policy-management/v4/guide/index.html
   - type: APIReference
@@ -3681,6 +3569,118 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/acronis-well-known-api-openapi.yml
+  - type: Documentation
+    url: https://developer.acronis.com/doc/resource-policy-management/v4/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/psa/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/events/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/events/v1/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/dr/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/mdr/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/mdr/v1/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/agents/v2/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/account-management/v2/reference/llms.txt
+  - type: APIReference
+    url: https://developer.acronis.com/doc/alerts/v1/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/alerts/v1/reference/llms.txt
+  - type: APIReference
+    url: https://developer.acronis.com/doc/pricelist/v1/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/pricelist/v1/reference/llms.txt
+  - type: APIReference
+    url: https://developer.acronis.com/doc/files/v1/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/files/v1/reference/llms.txt
+- aid: acronis:acronis-dashboard-data-api
+  name: Acronis Dashboard Data API
+  description: The Dashboard Data API from Acronis — 1 operation(s) for dashboard data.
+  humanURL: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
+  tags:
+  - Dashboard Data
+  properties:
+  - type: OpenAPI
+    url: openapi/acronis-dashboard-data-api-openapi.yml
+  - type: Documentation
+    url: https://developer.acronis.com/doc/resource-policy-management/v4/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/psa/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/events/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/events/v1/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/dr/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/mdr/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/mdr/v1/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/vaultman/v1/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/agents/v2/reference/index.html
+  - type: Documentation
+    url: https://developer.acronis.com/doc/tasks/v2/guide/index.html
+  - type: APIReference
+    url: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/account-management/v2/reference/llms.txt
+  - type: APIReference
+    url: https://developer.acronis.com/doc/alerts/v1/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/alerts/v1/reference/llms.txt
+  - type: APIReference
+    url: https://developer.acronis.com/doc/pricelist/v1/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/pricelist/v1/reference/llms.txt
+  - type: APIReference
+    url: https://developer.acronis.com/doc/files/v1/reference/index.html
+  - type: LLMsTxt
+    url: https://developer.acronis.com/doc/files/v1/reference/llms.txt
+- aid: acronis:acronis-health-check-api
+  name: Acronis Health Check API
+  description: The Health Check API from Acronis — 1 operation(s) for health check.
+  humanURL: https://developer.acronis.com/doc/account-management/v2/reference/index.html
+  baseURL: https://{datacenter}.acronis.com/api/2
+  tags:
+  - Health Check
+  properties:
+  - type: OpenAPI
+    url: openapi/acronis-health-check-api-openapi.yml
   - type: Documentation
     url: https://developer.acronis.com/doc/resource-policy-management/v4/guide/index.html
   - type: APIReference
