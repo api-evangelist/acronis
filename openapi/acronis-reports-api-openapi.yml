@@ -1,0 +1,818 @@
+openapi: 3.2.0
+info:
+  title: Account Management Reports API
+  version: '2'
+servers:
+- url: https://dev-cloud.acronis.com/api/2
+  variables: {}
+tags:
+- name: Reports
+paths:
+  /reports:
+    post:
+      operationId: CreateReport
+      description: Creates a new usage report.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reportPost'
+      responses:
+        '200':
+          description: Usage report was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/report'
+        '400':
+          description: Usage history is not ready and shouldn't be ready yet (from 1 to 6 am).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '500':
+          description: Usage history is not ready but should be available already (after 6 am).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+      tags:
+      - Reports
+      summary: Create report
+      x-summary-source: derived
+  /reports/{report_id}:
+    delete:
+      operationId: DeleteReport
+      description: Deletes a usage report by ID.
+      parameters:
+      - name: version
+        description: Growing number of object internal version.
+        required: true
+        in: query
+        schema:
+          description: Growing number of object internal version.
+          example: 1559561146223
+          type: integer
+      - name: report_id
+        description: Report ID (UUID)
+        required: true
+        in: path
+        schema:
+          description: Report ID (UUID)
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: Usage report was successfully deleted.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+      tags:
+      - Reports
+      summary: Delete report
+      x-summary-source: derived
+    put:
+      operationId: UpdateReport
+      description: Updates a usage report configuration. Only scheduled reports can be updated.
+      parameters:
+      - name: report_id
+        description: Report ID (UUID)
+        required: true
+        in: path
+        schema:
+          description: Report ID (UUID)
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reportPut'
+      responses:
+        '200':
+          description: Usage report was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/report'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+      tags:
+      - Reports
+      summary: Update report
+      x-summary-source: derived
+    get:
+      operationId: FetchReport
+      description: Fetches a usage report configuration.
+      parameters:
+      - name: report_id
+        description: Report ID (UUID)
+        required: true
+        in: path
+        schema:
+          description: Report ID (UUID)
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/report'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+        - urn:acronis.com::account-server::readonly_admin
+      tags:
+      - Reports
+      summary: Fetch report
+      x-summary-source: derived
+  /reports/{report_id}/stored:
+    get:
+      operationId: FetchStoredReports
+      description: Fetches all stored reports related to the usage report.
+      parameters:
+      - name: report_id
+        description: Report ID (UUID)
+        required: true
+        in: path
+        schema:
+          description: Report ID (UUID)
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/storedReportParams'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+        - urn:acronis.com::account-server::readonly_admin
+      tags:
+      - Reports
+      summary: Fetch stored reports
+      x-summary-source: derived
+  /reports/{report_id}/stored/{stored_report_id}:
+    get:
+      operationId: DownloadStoredReport
+      description: Downloads stored report data.
+      parameters:
+      - name: report_id
+        description: Report ID (UUID)
+        required: true
+        in: path
+        schema:
+          description: Report ID (UUID)
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: stored_report_id
+        description: Stored usage report ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Stored usage report ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: A file in the format that was used to generate the stored report.
+          content:
+            application/octet-stream:
+              schema: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+        - urn:acronis.com::account-server::readonly_admin
+      tags:
+      - Reports
+      summary: Download stored report
+      x-summary-source: derived
+components:
+  schemas:
+    document_version:
+      description: 'Formatted date: YYYY-MM-DD.'
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}
+      minLength: 10
+      maxLength: 10
+    reportPost:
+      example:
+        recipients:
+        - ca451758-b48a-45d9-9ae6-8f1059f67619
+        - ab00e527-219b-481b-b01b-311b5be0ed3c
+        parameters:
+          kind: usage_summary
+          tenant_id: 2a91a14d-ffd3-4ac1-9b4d-3990162c5acc
+          level: accounts
+          period:
+            start: '2017-05-01'
+            end: '2017-05-07'
+          formats:
+          - csv
+          - json_v1
+          - csv_v2_0
+          - json_v2_0
+          hide_zero_usage: true
+          show_skus: false
+        schedule:
+          type: once
+        generation_date: '2017-05-08'
+        result_action: send
+      type: object
+      additionalProperties: false
+      required:
+      - recipients
+      - result_action
+      - parameters
+      - schedule
+      properties:
+        recipients:
+          description: IDs of subscribed users.
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid'
+        result_action:
+          description: What to do with report.
+          enum:
+          - save
+          - send
+          type: string
+        parameters:
+          type: object
+          required:
+          - tenant_id
+          - level
+          - kind
+          properties:
+            tenant_id:
+              $ref: '#/components/schemas/uuid'
+            level:
+              description: Level of report detail.
+              enum:
+              - itself
+              - direct_partners
+              - all_partners
+              - all_customers
+              - accounts
+              type: string
+            kind:
+              description: Kind of report.
+              enum:
+              - usage_daily
+              - usage_summary
+              - usage_current
+              - usage_breakdown
+              type: string
+            formats:
+              description: Report formats.
+              type: array
+              items:
+                enum:
+                - csv
+                - html
+                - json_v1
+                - csv_v2_0
+                - json_v2_0
+                type: string
+            period:
+              description: Report period.
+              type: object
+              required:
+              - start
+              - end
+              properties:
+                start:
+                  $ref: '#/components/schemas/document_version'
+                end:
+                  $ref: '#/components/schemas/document_version'
+            hide_zero_usage:
+              description: Hide metrics with zero usage in report.
+              type: boolean
+            show_skus:
+              description: Show SKU-related fields in report.
+              type: boolean
+        schedule:
+          type: object
+          required:
+          - type
+          properties:
+            enabled:
+              description: Flag indicating whether the report is enabled (scheduled reports only).
+              type: boolean
+            type:
+              description: Type of report schedule.
+              enum:
+              - once
+              - monthly
+              type: string
+        generation_date:
+          $ref: '#/components/schemas/document_version'
+    report:
+      example:
+        id: 20dffb36-d77b-45c6-b2fa-39276e98d5fc
+        recipients:
+        - ca451758-b48a-45d9-9ae6-8f1059f67619
+        - ab00e527-219b-481b-b01b-311b5be0ed3c
+        version: 2
+        parameters:
+          kind: usage_summary
+          tenant_id: 2a91a14d-ffd3-4ac1-9b4d-3990162c5acc
+          level: accounts
+          period:
+            start: '2017-05-01'
+            end: '2017-05-07'
+          formats:
+          - csv
+          hide_zero_usage: true
+          show_skus: false
+        schedule:
+          type: once
+          enabled: true
+        result_action: send
+        generation_date: '2017-05-08'
+      type: object
+      required:
+      - id
+      - version
+      - result_action
+      - recipients
+      - parameters
+      - schedule
+      - generation_date
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        result_action:
+          description: What to do with report.
+          enum:
+          - save
+          - send
+          type: string
+        recipients:
+          description: IDs of subscribed users.
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid'
+        parameters:
+          type: object
+          required:
+          - tenant_id
+          - level
+          - formats
+          - kind
+          - period
+          properties:
+            tenant_id:
+              $ref: '#/components/schemas/uuid'
+            level:
+              description: Level of report detail.
+              enum:
+              - itself
+              - direct_partners
+              - all_partners
+              - all_customers
+              - accounts
+              type: string
+            formats:
+              description: Report formats.
+              type: array
+              items:
+                enum:
+                - csv
+                - html
+                - json_v1
+                - csv_v2_0
+                type: string
+            kind:
+              description: Kind of report.
+              enum:
+              - usage_daily
+              - usage_summary
+              - usage_current
+              - usage_breakdown
+              type: string
+            period:
+              description: Report period.
+              type: object
+              required:
+              - start
+              - end
+              properties:
+                start:
+                  $ref: '#/components/schemas/document_version'
+                end:
+                  $ref: '#/components/schemas/document_version'
+            hide_zero_usage:
+              description: Hide metrics with zero usage in report.
+              type: boolean
+            show_skus:
+              description: Show SKU-related fields in report.
+              type: boolean
+        schedule:
+          type: object
+          required:
+          - enabled
+          - type
+          properties:
+            enabled:
+              description: Flag indicating whether the report is enabled (scheduled reports only).
+              type: boolean
+            type:
+              description: Type of report schedule.
+              enum:
+              - once
+              - monthly
+              type: string
+        generation_date:
+          $ref: '#/components/schemas/document_version'
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    storedReportParams:
+      example:
+        items:
+        - id: d6bc3e2e-2378-4099-bb33-6a2603aca94d
+          report_format: json_v1
+          created_at: '2017-01-01T12:07:53'
+          size: 128
+          status: saved
+        - id: db3acd0d-272e-4860-beca-fb2c2c4edd3e
+          report_format: json_v1
+          created_at: '2017-01-01T12:07:53'
+          size: 128
+          status: saved
+        - id: e3f50d66-896c-4699-970f-0a8706fa5920
+          report_format: json_v1
+          created_at: '2017-01-01T12:07:53'
+          size: 128
+          status: saved
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - report_format
+            - created_at
+            - status
+            properties:
+              id:
+                $ref: '#/components/schemas/uuid'
+              report_format:
+                description: Stored report data format.
+                enum:
+                - json_v1
+                - csv_v2_0
+                - csv
+                - html
+                type: string
+              size:
+                description: Stored report compressed size in bytes.
+                type: integer
+              created_at:
+                $ref: '#/components/schemas/item1'
+              status:
+                description: Report generation status.
+                enum:
+                - in_progress
+                - saved
+                - failed
+                type: string
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    reportPut:
+      example:
+        recipients:
+        - ca451758-b48a-45d9-9ae6-8f1059f67619
+        parameters:
+          kind: usage_current
+          tenant_id: 2a91a14d-ffd3-4ac1-9b4d-3990162c5acc
+          level: direct_partners
+          hide_zero_usage: true
+          show_skus: false
+      type: object
+      additionalProperties: false
+      properties:
+        recipients:
+          description: IDs of subscribed users.
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid'
+        parameters:
+          type: object
+          properties:
+            level:
+              description: Level of report detail.
+              enum:
+              - itself
+              - direct_partners
+              - all_partners
+              - all_customers
+              - accounts
+              type: string
+            kind:
+              description: Kind of report.
+              enum:
+              - usage_daily
+              - usage_summary
+              - usage_current
+              - usage_breakdown
+              type: string
+            hide_zero_usage:
+              description: Hide metrics with zero usage in report.
+              type: boolean
+            show_skus:
+              description: Show SKU-related fields in report.
+              type: boolean
+        schedule:
+          type: object
+          required:
+          - enabled
+          properties:
+            enabled:
+              description: Flag indicating whether the report is enabled.
+              type: boolean
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

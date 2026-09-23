@@ -1,0 +1,381 @@
+openapi: 3.2.0
+info:
+  title: File Sync & Share Devices API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/fc/api/v1
+  variables: {}
+tags:
+- name: Devices
+paths:
+  /devices:
+    get:
+      operationId: Get devices list
+      description: Gets a list of devices
+      parameters:
+      - name: per_page
+        description: The number of items to be retrieved
+        required: false
+        in: query
+        schema:
+          description: The number of items to be retrieved
+          type: integer
+      - name: page
+        description: 'The page to return
+
+
+          Starts from 1'
+        required: false
+        in: query
+        schema:
+          description: 'The page to return
+
+
+            Starts from 1'
+          type: integer
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '200':
+          description: Successfully retrieved the list of devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        '206':
+          description: Successfully retrieved part of the list
+          headers:
+            Content-Range:
+              description: The range of returned items relative to the whole collection
+              required: true
+              schema:
+                description: The range of returned items relative to the whole collection
+                example: items 1-3/10
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Devices
+      summary: Get devices list
+      x-summary-source: derived
+  /devices/{device_uuid}:
+    get:
+      operationId: Get device information
+      description: Gets information about a device
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: device_uuid
+        description: Unique identifier of the device
+        required: true
+        in: path
+        schema:
+          description: Unique identifier of the device
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '200':
+          description: Successfully retrieved the device
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Devices
+      summary: Get device information
+      x-summary-source: derived
+    put:
+      operationId: Update device
+      description: Updates a device
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: device_uuid
+        description: Unique identifier of the device
+        required: true
+        in: path
+        schema:
+          description: Unique identifier of the device
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                device:
+                  notes: Example notes
+              type: object
+              required:
+              - device
+              properties:
+                device:
+                  type: object
+                  properties:
+                    notes:
+                      description: Notes about the device
+                      type: string
+      responses:
+        '204':
+          description: Successfully updated the device
+          content: {}
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Devices
+      summary: Update device
+      x-summary-source: derived
+    delete:
+      operationId: Delete device
+      description: Deletes a device
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: device_uuid
+        description: Unique identifier of the device
+        required: true
+        in: path
+        schema:
+          description: Unique identifier of the device
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: Successfully deleted the device
+          content: {}
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Devices
+      summary: Delete device
+      x-summary-source: derived
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
+    Device:
+      description: Device used by users to access the service
+      type: object
+      required:
+      - uuid
+      - app_version
+      - filesystem
+      - last_contact_time
+      - name
+      - system_platform
+      - system_version
+      - client_type
+      - user_uuid
+      - user_name
+      - actions
+      properties:
+        uuid:
+          description: Unique identifier of the device
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        app_version:
+          description: Version of the app that the device is using
+          type: string
+        filesystem:
+          description: 'Type of file system that the device is using
+
+
+            - `0` - any non-iOS device and iOS devices using the standard (non-MDM managed) app
+
+            - `1` - iOS device using the BlackBerry Dynamics app'
+          enum:
+          - 0
+          - 1
+          type: integer
+        last_contact_time:
+          description: Time of last device connection to the server
+          type: string
+          format: date-time
+        model:
+          description: Model of the device
+          type: string
+        name:
+          description: Name of the device
+          type: string
+        notes:
+          description: Notes about the device
+          type: string
+        system_platform:
+          description: Platform of the device
+          type: string
+        system_version:
+          description: Version of the device's platform
+          type: string
+        client_type:
+          description: Type of the device
+          enum:
+          - mobile
+          - desktop
+          type: string
+        user_uuid:
+          description: Unique identifier of the user of the device
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        user_name:
+          description: Name of the user of the device
+          type: string
+        actions:
+          description: Relative URLs to actions that can be performed on the device
+          type: object
+          required:
+          - remove
+          properties:
+            remove:
+              description: Remove URL
+              type: string
+  securitySchemes:
+    oauth_2_0:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes: {}
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

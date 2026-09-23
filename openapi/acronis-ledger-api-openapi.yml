@@ -1,0 +1,277 @@
+openapi: 3.2.0
+info:
+  title: PSA Ledger API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: Ledger
+paths:
+  /Ledger:
+    put:
+      operationId: Create ledger
+      description: Creates a ledger.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                Active: true
+                Description: Api documentation ledger
+                Number: API-Doc-LG
+              type: object
+              additionalProperties: false
+              required:
+              - Description
+              - Number
+              properties:
+                Active:
+                  description: Ledger's status.
+                  default: false
+                  type: boolean
+                AllowInactive:
+                  description: ''
+                  default: false
+                  type: boolean
+                Description:
+                  type:
+                  - string
+                  - 'null'
+                Externalid:
+                  type:
+                  - string
+                  - 'null'
+                Number:
+                  type:
+                  - string
+                  - 'null'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ledger'
+      security:
+      - oauth2: []
+      tags:
+      - Ledger
+      summary: Create ledger
+      x-summary-source: derived
+    get:
+      operationId: Fetch ledger
+      description: Fetches information about the ledgers either by GUID or by filtering parameters.
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/Ledger'
+                - $ref: '#/components/schemas/GetLedgersSearchResponse'
+      security:
+      - oauth2: []
+      tags:
+      - Ledger
+      summary: Fetch ledger
+      x-summary-source: derived
+components:
+  schemas:
+    GetLedgersSearchResponse:
+      example:
+        Ledgers:
+        - Id: 00000000-0000-0000-0000-000000000000
+          Number: ''
+          Description: ''
+          Active: true
+          CreationDate: '0001-01-01T00:00:00Z'
+          ExternalId: ''
+        - Id: 00000000-0000-0000-0000-000000000000
+          Number: ''
+          Description: ''
+          Active: true
+          CreationDate: '0001-01-01T00:00:00Z'
+          ExternalId: ''
+        Paging:
+          AmountTotalItems: 0
+          AmountRecordsFound: 0
+          AmountOfPages: 0
+      type: object
+      additionalProperties: false
+      required:
+      - Ledgers
+      - Paging
+      properties:
+        Ledgers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LedgerPartial'
+        Paging:
+          $ref: '#/components/schemas/Paging'
+    Ledger:
+      example:
+        Id: 65ea810d-7059-4199-8b01-813e9255bc86
+        Tenant: 10f7e7cf-0aef-48d0-9ef6-abe96e18e70c
+        Active: true
+        Number: Number
+        Description: null
+        ExternalId: null
+        CreationDate: '2024-07-22T05:34:40.1968856'
+        AllowInactive: true
+        LastChangeDate: null
+      type: object
+      additionalProperties: false
+      required:
+      - LastChangeDate
+      - Description
+      - Id
+      - ExternalId
+      - CreationDate
+      - Tenant
+      - Number
+      - Active
+      - AllowInactive
+      properties:
+        LastChangeDate:
+          description: RFC3339-like date and time without timezone.
+          type:
+          - string
+          - 'null'
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        Description:
+          type:
+          - string
+          - 'null'
+        Id:
+          description: ''
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        ExternalId:
+          type:
+          - string
+          - 'null'
+        CreationDate:
+          description: ''
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        Tenant:
+          description: ''
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        Number:
+          description: ''
+          type: string
+        Active:
+          description: ''
+          type: boolean
+        AllowInactive:
+          description: ''
+          type: boolean
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
+    LedgerPartial:
+      type: object
+      additionalProperties: false
+      required:
+      - Active
+      - CreationDate
+      - Description
+      - ExternalId
+      - Id
+      - Number
+      properties:
+        Active:
+          description: ''
+          type: boolean
+        CreationDate:
+          description: ''
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        Description:
+          type:
+          - string
+          - 'null'
+        ExternalId:
+          type:
+          - string
+          - 'null'
+        Id:
+          description: ''
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        Number:
+          description: ''
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

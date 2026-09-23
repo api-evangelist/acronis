@@ -1,243 +1,1940 @@
 openapi: 3.2.0
 info:
-  title: Acronis Account Management Activities Agents API
-  description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
-  version: '2.0'
-  contact:
-    name: Acronis Developer Portal
-    url: https://developer.acronis.com
-  x-generated-from: documentation
-  x-last-validated: '2026-04-19'
+  title: Acronis Agents API
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  - x-last-validated differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Agents across 2 of this provider''s published API definitions: acronis-agents-v2-openapi.json, acronis-agent-management-openapi.yaml. Each path carries the servers of the definition it was published in.'
 servers:
-- url: https://{datacenter}.acronis.com/api/2
-  description: Acronis Cloud API - Account Management
+- url: https://dev-cloud.acronis.com/api/agent_manager/v2
+  variables: {}
+- url: https://{datacenter}.acronis.com/api/agent_manager/v2
+  description: Acronis Agent Management API
   variables:
     datacenter:
       default: eu2-cloud
-      description: Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)
-security:
-- bearerAuth: []
+      description: Acronis datacenter region
 tags:
 - name: Agents
-  description: Acronis protection agent management
 paths:
   /agents:
     get:
-      operationId: listAgents
-      summary: Acronis List Agents
-      description: List all registered Acronis protection agents visible from a specified tenant.
-      tags:
-      - Agents
+      operationId: FetchAgents
+      description: 'Fetches all registered agents seen from specified tenant.
+
+
+        Result includes all agents registered in this tenant and in all its child tenants that don''t
+
+        block parent access using visibility barrier.'
       parameters:
-      - name: tenant_id
+      - name: after
+        description: 'Cursor that designates the last element of a previously returned registered agent subset
+
+          (page). If this parameter is provided, the next agent page will be returned in the response
+
+          (according to ordering requirements that were specified in the first request).
+
+          This parameter is mutually exclusive with all other but limit query parameters.
+
+          Client must treat it as opaque string.
+
+          '
         in: query
-        required: true
         schema:
+          description: 'Cursor that designates the last element of a previously returned registered agent subset
+
+            (page). If this parameter is provided, the next agent page will be returned in the response
+
+            (according to ordering requirements that were specified in the first request).
+
+            This parameter is mutually exclusive with all other but limit query parameters.
+
+            Client must treat it as opaque string.
+
+            '
+          example: aGVhbHRoY2hlY2s6C
           type: string
-          format: uuid
-        description: Tenant UUID to scope agent listing
+      - name: before
+        description: 'Cursor that designates the first element of a previously returned registered agent subset
+
+          (page). If this parameter is provided, the previous agent page will be returned in the response
+
+          (according to ordering requirements that were specified in the first request).
+
+          This parameter is mutually exclusive with all other but limit query parameters.
+
+          Client must treat it as opaque string.
+
+          '
+        in: query
+        schema:
+          description: 'Cursor that designates the first element of a previously returned registered agent subset
+
+            (page). If this parameter is provided, the previous agent page will be returned in the response
+
+            (according to ordering requirements that were specified in the first request).
+
+            This parameter is mutually exclusive with all other but limit query parameters.
+
+            Client must treat it as opaque string.
+
+            '
+          example: aGVhbHRoY2hlY2s6C
+          type: string
+      - name: hostname
+        description: 'Either a full name or a name segment (name mask) of a host where registered agent
+
+          is installed. If this parameter is provided, only agents which host names match the parameter
+
+          value are returned. Name mask is specified using one of match-like functions:
+
+          - `hlike` - host name starts with specified string.
+
+          - `like` - host name contains specified string in any position.
+
+          - `tlike` - host name ends with specified string.
+
+          '
+        in: query
+        schema:
+          description: 'Either a full name or a name segment (name mask) of a host where registered agent
+
+            is installed. If this parameter is provided, only agents which host names match the parameter
+
+            value are returned. Name mask is specified using one of match-like functions:
+
+            - `hlike` - host name starts with specified string.
+
+            - `like` - host name contains specified string in any position.
+
+            - `tlike` - host name ends with specified string.
+
+            '
+          example: hlike(server1)
+          type: string
+      - name: limit
+        description: 'Maximum number of registered agents to return in the response. If this parameter is not provided or
+
+          set to zero, there is no limit on number of returned agents.
+
+          '
+        in: query
+        schema:
+          description: 'Maximum number of registered agents to return in the response. If this parameter is not provided or
+
+            set to zero, there is no limit on number of returned agents.
+
+            '
+          example: 100
+          type: integer
+      - name: online
+        description: 'Flag that filters returned registered agents by their current responsiveness.
+
+          If true, only responsive agents will be returned. If false, only irresponsive agents will be returned.
+
+          '
+        in: query
+        schema:
+          description: 'Flag that filters returned registered agents by their current responsiveness.
+
+            If true, only responsive agents will be returned. If false, only irresponsive agents will be returned.
+
+            '
+          example: true
+          type: boolean
+      - name: order
+        description: 'Ordering requirements on returned sequence of registered agents. They are specified as
+
+          a comma-separated list of order specifications for agent attributes. Each attribute order
+
+          specification is either asc (non-descending order) or desc (non-ascending order) function
+
+          applied to an attribute name.
+
+          Currently ordering by the following attributes is supported:
+
+          - `hostname` - agents with same host names are further ordered in non-descending order by
+
+          their agent identifiers
+
+          '
+        in: query
+        schema:
+          description: 'Ordering requirements on returned sequence of registered agents. They are specified as
+
+            a comma-separated list of order specifications for agent attributes. Each attribute order
+
+            specification is either asc (non-descending order) or desc (non-ascending order) function
+
+            applied to an attribute name.
+
+            Currently ordering by the following attributes is supported:
+
+            - `hostname` - agents with same host names are further ordered in non-descending order by
+
+            their agent identifiers
+
+            '
+          example: desc(hostname)
+          type: string
       - name: os_family
+        description: 'Parameter that filters registered agents by OS family name they were built for. OS family name is case-insensitive.
+
+          '
         in: query
         schema:
-          type: string
+          description: 'Parameter that filters registered agents by OS family name they were built for. OS family name is case-insensitive.
+
+            '
           enum:
+          - UNKNOWN
           - WINDOWS
           - LINUX
           - MACOSX
           - SOLARIS
-        description: Filter by operating system family
-      - name: os_arch
-        in: query
-        schema:
+          example: SOLARIS
           type: string
-          enum:
-          - X86
-          - X64
-          - ARM
-          - ARM64
-        description: Filter by OS architecture
-      - name: limit
+      - name: tenant_id
+        description: 'Identifier of a tenant subtree root. Only agents that belong to tenants of this subtree
+
+          are returned. If this parameter is missing, value from `X-Apigw-Tenant-Id` header is used.
+
+          If this header is also missing, tenant identifiers from relevant elements of scope
+
+          collection of access token are used.
+
+          '
         in: query
         schema:
-          type: integer
-          default: 100
-        description: Maximum number of agents to return
-      - name: order
-        in: query
-        schema:
+          description: 'Identifier of a tenant subtree root. Only agents that belong to tenants of this subtree
+
+            are returned. If this parameter is missing, value from `X-Apigw-Tenant-Id` header is used.
+
+            If this header is also missing, tenant identifiers from relevant elements of scope
+
+            collection of access token are used.
+
+            '
+          example: '62'
           type: string
-        description: Sort order (e.g., hostname asc)
+      - name: unit
+        description: 'Name of registered agent unit. If this parameter is provided, only agents that have at
+
+          least one of specified units are returned.
+
+          '
+        in: query
+        schema:
+          description: 'Name of registered agent unit. If this parameter is provided, only agents that have at
+
+            least one of specified units are returned.
+
+            '
+          example: atp-agent
+          type: string
+      - name: up_to_date
+        description: 'Flag specifying whether agents with current or outdated software should only be returned.
+
+          '
+        in: query
+        schema:
+          description: 'Flag specifying whether agents with current or outdated software should only be returned.
+
+            '
+          example: false
+          type: boolean
       responses:
         '200':
-          description: List of registered agents
+          description: Collection of registered agents was successfully retrieved.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AgentList'
-              examples:
-                ListAgents200Example:
-                  summary: Default listAgents 200 response
-                  x-microcks-default: true
-                  value:
-                    items:
-                    - id: agent-uuid-001
-                      hostname: workstation-01
-                      os:
-                        family: WINDOWS
-                        arch: X64
-                      status: online
-                      tenant_id: tenant-uuid-001
+                $ref: '#/components/schemas/AgentCollection'
+        '400':
+          description: Request is malformed.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - BAD_REQUEST
+                    - BAD_UNATTENDED_AGENT_UPDATE_SETTINGS
+                    - UNMARSHALLING_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
         '403':
-          $ref: '#/components/responses/Forbidden'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-    delete:
-      operationId: deleteAgents
-      summary: Acronis Delete Agents
-      description: Cancel registration and delete service accounts for multiple agents.
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_viewer
+        - urn:acronis.com::agent_manager::admin
       tags:
       - Agents
+      summary: Fetch agents
+      x-summary-source: derived
+    delete:
+      operationId: DeleteAgents
+      description: Cancels registration of the agents with Platform and deletes their service accounts.
       parameters:
-      - name: ids
-        in: query
+      - name: id
+        description: Identifier of agent to be deleted.
         required: true
+        in: query
         schema:
+          description: Identifier of agent to be deleted.
+          example: 32b9375f-6400-4928-ae4f-5156e8aab21a
           type: string
-        description: Comma-separated list of agent IDs to delete
+      - name: force
+        description: 'Flag specifying whether agent registration should be cancelled even if this is the
+
+          last agent instance associated with a resource it manages. This flag is only respected
+
+          for agents that have MMS unit. Other agents are deleted unconditionally.
+
+          '
+        in: query
+        schema:
+          description: 'Flag specifying whether agent registration should be cancelled even if this is the
+
+            last agent instance associated with a resource it manages. This flag is only respected
+
+            for agents that have MMS unit. Other agents are deleted unconditionally.
+
+            '
+          default: false
+          example: true
+          type: boolean
       responses:
         '204':
-          description: Agents deleted
+          description: Registration of specified agents with Platform was either successfully cancelled or didn't exist.
+          content: {}
         '401':
-          $ref: '#/components/responses/Unauthorized'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '409':
+          description: Request violates some invariant.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - AGENT_UPDATE_NOT_SUSPENDED
+                    - CLUSTER_ALREADY_EXISTS
+                    - CLUSTER_IS_NOT_EMPTY
+                    - HARDWARE_NODE_ALREADY_EXISTS
+                    - HARDWARE_NODE_IS_OCCUPIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_unregistrar
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Agents
+      summary: Delete agents
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/agent_manager/v2
+      variables: {}
+  /agents/update:force:
+    post:
+      operationId: RunAgentUpdateNow
+      description: 'Launches agent(s) update operation disregarding maintenance window settings, if any.
+
+        Note that if an empty agent ID collection is passed with the request, all tenant''s agents
+
+        become potential subject of update.
+
+
+        Maximum number of agents being updated simultaneously is limited.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: IDs of agents to update.
+              type: object
+              properties:
+                agent_ids:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '202':
+          description: Agent(s) update request was accepted.
+          content: {}
+        '400':
+          description: Request is malformed.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - BAD_REQUEST
+                    - BAD_UNATTENDED_AGENT_UPDATE_SETTINGS
+                    - UNMARSHALLING_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_registrar
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Agents
+      summary: Run agent update now
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/agent_manager/v2
+      variables: {}
   /agents/{agent_id}:
     get:
-      operationId: getAgent
-      summary: Acronis Get Agent
-      description: Retrieve details about a specific registered Acronis agent.
-      tags:
-      - Agents
+      operationId: FetchAgent
+      description: Fetches the specific agent.
       parameters:
       - name: agent_id
-        in: path
+        description: The registered agent ID.
         required: true
+        in: path
         schema:
+          description: The registered agent ID.
           type: string
-        description: Agent unique identifier
       responses:
         '200':
-          description: Agent details
+          description: Agent description was successfully retrieved.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Agent'
-              examples:
-                GetAgent200Example:
-                  summary: Default getAgent 200 response
-                  x-microcks-default: true
-                  value:
-                    id: agent-uuid-001
-                    hostname: workstation-01
-                    status: online
-                    version: 21.12.30
+                description: Agent description.
+                type: object
+                required:
+                - online
+                - enabled
+                - installer_version
+                - meta
+                - units
+                - name
+                - tenant
+                - platform
+                - registration_date
+                - core_version
+                - id
+                - timezone
+                - auto_update
+                - registration_id
+                - hostname
+                properties:
+                  online:
+                    description: Flag designating if the agent is currently online.
+                    type: boolean
+                  network:
+                    description: Agent host's network configuration.
+                    type: object
+                    required:
+                    - network_interfaces
+                    properties:
+                      gateway:
+                        description: IP address or host name of the gateway.
+                        type: string
+                      network_interfaces:
+                        description: Network interfaces at agent's host.
+                        type: array
+                        minItems: 1
+                        items:
+                          $ref: '#/components/schemas/NetworkInterface'
+                      dns_server_ip_addresses:
+                        description: IP addresses of DNS servers. This collection may include addresses of both IPv4 and IPv6 servers.
+                        type: array
+                        items:
+                          type: string
+                  enabled:
+                    description: Flag designating if the agent is currently enabled.
+                    type: boolean
+                  comment:
+                    description: User-added comment on the agent.
+                    type: string
+                  installer_version:
+                    description: Agent installer versions.
+                    type: object
+                    required:
+                    - current
+                    properties:
+                      current:
+                        description: The currently installed version.
+                        type: object
+                        required:
+                        - minor
+                        - build_number
+                        - major
+                        properties:
+                          minor:
+                            description: Minor version number.
+                            type: integer
+                            minimum: 0
+                          build_number:
+                            description: Build number.
+                            type: integer
+                            minimum: 0
+                          major:
+                            description: Major version number.
+                            type: integer
+                            minimum: 0
+                      latest:
+                        description: The latest available version. It is only present if the latest version is newer than the current one.
+                        type: object
+                        required:
+                        - minor
+                        - build_number
+                        - major
+                        properties:
+                          minor:
+                            description: Minor version number.
+                            type: integer
+                            minimum: 0
+                          build_number:
+                            description: Build number.
+                            type: integer
+                            minimum: 0
+                          major:
+                            description: Major version number.
+                            type: integer
+                            minimum: 0
+                  unattended_update:
+                    description: Details of unattended agent update. If the agent does not support unattended update, the value is absent.
+                    type: object
+                    required:
+                    - automatic
+                    - update_channel
+                    - status
+                    properties:
+                      automatic:
+                        description: Boolean flag specifying whether agent should be automatically updated to the latest version available in its update channel.
+                        default: false
+                        type: boolean
+                      inherited_from_tenant_id:
+                        description: If the update details were inherited from a parent tenant, this is the tenant ID. Otherwise, the value is absent.
+                        example: '50'
+                        type: string
+                      maintenance_window:
+                        description: Time intervals when agent update is allowed. If the window is not specified, this means that agent can be updated at any time. The window should be ignored if automatic update is disabled.
+                        type: object
+                        required:
+                        - time_from
+                        - days_of_week
+                        - time_to
+                        properties:
+                          time_from:
+                            description: Time of day when agent maintenance may start. It is agent local time.
+                            example: 08:33:19
+                            type: string
+                            pattern: ^(?:[0-1][0-9]|2[0-3])(?::[0-5][0-9]){2}$
+                            minLength: 8
+                            maxLength: 8
+                          days_of_week:
+                            description: Days of week when agent maintenance may start (window's start time belongs to these days). They can be given in any order but duplicates are not allowed.
+                            type: array
+                            maxItems: 7
+                            minItems: 1
+                            uniqueItems: true
+                            items:
+                              $ref: '#/components/schemas/DayOfWeek'
+                          time_to:
+                            description: Time of day agent maintenance must complete before. It is agent local time. If this time is less than or equal to maintenance start time, this means the maintenance may proceed until this time next day.
+                            example: 08:33:19
+                            type: string
+                            pattern: ^(?:[0-1][0-9]|2[0-3])(?::[0-5][0-9]){2}$
+                            minLength: 8
+                            maxLength: 8
+                      update_channel:
+                        $ref: '#/components/schemas/AgentUpdateChannel'
+                      status:
+                        description: Current status of unattended update of particular agent.
+                        enum:
+                        - OK
+                        - SUSPENDED_ON_FAILURES
+                        type: string
+                  meta:
+                    description: The agent metadata.
+                    type: object
+                  units:
+                    description: Components the agent consists of. This can be an empty list if the agent has only Agent Core component installed.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SoftwareUnit'
+                  name:
+                    description: Agent name as seen by a user.
+                    example: My Appliance 6490-78
+                    type: string
+                  tenant:
+                    description: Tenant descriptor of the agent owner.
+                    type: object
+                    required:
+                    - id
+                    - name
+                    properties:
+                      id:
+                        description: The tenant identifier.
+                        type: string
+                      name:
+                        description: The tenant name.
+                        type: string
+                  platform:
+                    description: Descriptor of operating system the agent is running on.
+                    type: object
+                    required:
+                    - name
+                    - version_minor
+                    - family
+                    - arch
+                    - version_major
+                    properties:
+                      service_pack:
+                        description: OS service pack number if applicable.
+                        type: integer
+                        format: int32
+                      name:
+                        description: Full Operating System name.
+                        type: string
+                      version_minor:
+                        description: OS minor version number.
+                        type: integer
+                        format: int32
+                      sku:
+                        description: OS stock keeping unit ID.
+                        type: integer
+                        format: int32
+                      product_type:
+                        description: OS product type if applicable.
+                        type: integer
+                        format: int32
+                      family:
+                        description: Operating System family.
+                        enum:
+                        - UNKNOWN
+                        - WINDOWS
+                        - LINUX
+                        - MACOSX
+                        - SOLARIS
+                        type: string
+                      arch:
+                        description: Operating System target hardware architecture.
+                        enum:
+                        - X86
+                        - X64
+                        - ARM
+                        - ARM64
+                        type: string
+                      version_major:
+                        description: OS major version number.
+                        type: integer
+                        format: int32
+                      caps:
+                        description: OS capability mask if applicable.
+                        type: integer
+                        format: int32
+                      suite_mask:
+                        description: OS suite mask if applicable.
+                        type: integer
+                        format: int32
+                  registration_date:
+                    description: Agent registration date in RFC 1123 format with numeric time zone.
+                    example: Tue, 04 Jun 2019 18:32:26 +0300
+                    type: string
+                  core_version:
+                    description: Agent Core version.
+                    type: object
+                    required:
+                    - current
+                    properties:
+                      current:
+                        description: The currently installed version.
+                        type: object
+                        required:
+                        - build
+                        - release_id
+                        properties:
+                          build:
+                            description: Build number.
+                            example: '42'
+                            type: string
+                          release_id:
+                            description: Release identifier.
+                            example: 1.0.0
+                            type: string
+                          release_name:
+                            description: Human-readable release name.
+                            type: string
+                      latest:
+                        description: The latest available version. It is only present if the latest version is newer than the current one.
+                        type: object
+                        required:
+                        - build
+                        - release_id
+                        properties:
+                          build:
+                            description: Build number.
+                            example: '42'
+                            type: string
+                          release_id:
+                            description: Release identifier.
+                            example: 1.0.0
+                            type: string
+                          release_name:
+                            description: Human-readable release name.
+                            type: string
+                  id:
+                    description: Unique agent ID. This must be valid string representation of a UUID. The ID is used for client ID construction of the agent service account.
+                    example: 3953e625-d0a2-420c-86a6-afb9d91aca3e
+                    type: string
+                  timezone:
+                    $ref: '#/components/schemas/TimeZoneOffset'
+                  auto_update:
+                    description: 'Flag specifying whether the agent is configured to update in automatic unattended mode.
+
+                      Deprecated. Use ''unattended_update'' property instead: if it is absent, the agent cannot
+
+                      update automatically; otherwise, check value of ''unattended_update.automatic'' property.
+
+                      '
+                    type: boolean
+                  distribution_type:
+                    description: Software distribution type.
+                    example: SPLA_INFRASTRUCTURE
+                    type: string
+                  registration_id:
+                    description: Agent registration ID.
+                    example: eO2uM8QwSIC3nh0FxiZmjArpW-U
+                    type: string
+                  hostname:
+                    description: Host name.
+                    example: server1.acme.local
+                    type: string
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
         '404':
-          $ref: '#/components/responses/NotFound'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-    delete:
-      operationId: deleteAgent
-      summary: Acronis Delete Agent
-      description: Cancel registration of a specific Acronis agent.
+          description: The requested entity cannot be found.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - AGENT_NOT_FOUND
+                    - AGENT_UNIT_NOT_FOUND
+                    - TENANT_NOT_FOUND
+                    - HARDWARE_NODE_NOT_FOUND
+                    - NOT_FOUND
+                    - UNATTENDED_AGENT_UPDATE_SETTINGS_NOT_FOUND
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_viewer
+        - urn:acronis.com::agent_manager::admin
       tags:
       - Agents
+      summary: Fetch agent
+      x-summary-source: derived
+    delete:
+      operationId: DeleteAgent
+      description: Cancels the agent registration with Platform and deletes agent service account.
       parameters:
-      - name: agent_id
-        in: path
-        required: true
+      - name: force
+        description: 'Flag specifying whether agent registration should be cancelled even if
+
+          this is the last agent instance associated with a resource it manages.
+
+          This flag is only respected for an agent that has MMS unit. Any other agent is deleted unconditionally.
+
+          '
+        in: query
         schema:
+          description: 'Flag specifying whether agent registration should be cancelled even if
+
+            this is the last agent instance associated with a resource it manages.
+
+            This flag is only respected for an agent that has MMS unit. Any other agent is deleted unconditionally.
+
+            '
+          default: false
+          example: true
+          type: boolean
+      - name: agent_id
+        description: The registered agent ID.
+        required: true
+        in: path
+        schema:
+          description: The registered agent ID.
           type: string
-        description: Agent unique identifier
       responses:
         '204':
-          description: Agent deleted
-        '404':
-          $ref: '#/components/responses/NotFound'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
+          description: Registration of specified agent with Platform was either successfully cancelled or didn't exist.
+          content: {}
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '409':
+          description: Request violates some invariant.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - AGENT_UPDATE_NOT_SUSPENDED
+                    - CLUSTER_ALREADY_EXISTS
+                    - CLUSTER_IS_NOT_EMPTY
+                    - HARDWARE_NODE_ALREADY_EXISTS
+                    - HARDWARE_NODE_IS_OCCUPIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_unregistrar
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Agents
+      summary: Delete agent
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/agent_manager/v2
+      variables: {}
 components:
-  responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    AgentList:
+    AgentUpdateChannel:
+      description: Source of new agent versions.
+      enum:
+      - CURRENT
+      - STABLE
+      type: string
+    SoftwareUnit:
+      description: Unit name. This must be specified in Agent Manager configuration and there must be corresponding client role in Backup Account Server configuration.
       type: object
+      required:
+      - name
+      - version
+      properties:
+        name:
+          description: Unit name.
+          type: string
+        version:
+          description: Unit version.
+          type: object
+          required:
+          - current
+          properties:
+            current:
+              description: The currently installed version.
+              type: object
+              required:
+              - build
+              - release_id
+              properties:
+                build:
+                  description: Build number.
+                  example: '42'
+                  type: string
+                release_id:
+                  description: Release identifier.
+                  example: 1.0.0
+                  type: string
+                release_name:
+                  description: Human-readable release name.
+                  type: string
+            latest:
+              description: The latest available version. It is only present if the latest version is newer than the current one.
+              type: object
+              required:
+              - build
+              - release_id
+              properties:
+                build:
+                  description: Build number.
+                  example: '42'
+                  type: string
+                release_id:
+                  description: Release identifier.
+                  example: 1.0.0
+                  type: string
+                release_name:
+                  description: Human-readable release name.
+                  type: string
+    DayOfWeek:
+      description: Day of week specifier.
+      enum:
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+      - SUNDAY
+      type: string
+    AgentCollection:
+      description: Collection of registered agents.
+      example:
+        items:
+        - id: 8f27a66f-71ff-4b5c-b665-75ec0f42b849
+          core_version:
+            current:
+              release_id: 1.0.0
+              build: '42'
+          units:
+          - name: atp
+            version:
+              current:
+                release_id: 1.0.0
+                build: '42'
+              latest:
+                release_id: 1.0.1
+                build: '57'
+          - name: backup
+            version:
+              current:
+                release_id: 1.0.0
+                build: '42'
+          auto_update: true
+          meta: {}
+          hostname: server1.acme.local
+          platform:
+            family: WINDOWS
+            arch: X64
+            name: Windows 2019
+            version_major: 10
+            version_minor: 0
+          tenant:
+            id: '64'
+            name: ACME
+          name: My Appliance 6490-78
+          online: true
+          enabled: true
+          registration_date: Tue, 04 Jun 2019 18:32:26 +0300
+          registration_id: eO2uM8QwSIC3nh0FxiZmjArpW-U
+          installer_version:
+            current:
+              major: 15
+              minor: 0
+              build_number: 27714
+          timezone: '+0300'
+        paging:
+          cursors:
+            after: aGVhbHRoY2hlY2s6C
+            before: CiAgdGltZW91dDogMTBzCi
+      type: object
+      required:
+      - items
+      - paging
       properties:
         items:
+          description: Collection of registered agents.
           type: array
           items:
             $ref: '#/components/schemas/Agent'
         paging:
+          description: 'Position descriptor of returned collection in entire sequence of agents that satisfy the
+
+            same filter and ordering requirements as returned agents do.
+
+            '
           type: object
+          required:
+          - cursors
           properties:
             cursors:
+              description: ''
               type: object
-    Error:
+              properties:
+                after:
+                  description: 'Opaque string that designates the last element of a resource page. If this parameter is
+
+                    missing this means that the page is the last one in associated resource sequence.
+
+                    '
+                  example: aGVhbHRoY2hlY2s6C
+                  type: string
+                before:
+                  description: 'Opaque string that designates the first element of a resource page. If this parameter is
+
+                    missing this means that the page is the first one in associated resource sequence.
+
+                    '
+                  example: aGVhbHRoY2hlY2s6C
+                  type: string
+    NetworkInterface:
+      description: A network interface of a host.
+      example:
+        cidr_notations:
+        - 10.110.64.0/27
+        - 2a00:1370:8127:c109:0812:d5c0:1800:0000/102
+        mac_address: 44-AF-28-1E-54-8C
       type: object
+      required:
+      - cidr_notations
       properties:
-        code:
-          type: integer
-        message:
+        cidr_notations:
+          description: Network IP addresses and their associated network masks in CIDR notation. This collection may include items for both IPv4 and IPv6 protocol versions.
+          type: array
+          minItems: 1
+          items:
+            type: string
+        mac_address:
+          description: MAC address of the network interface.
           type: string
-    AgentOS:
-      type: object
-      description: Operating system information for an agent
-      properties:
-        family:
-          type: string
-          enum:
-          - WINDOWS
-          - LINUX
-          - MACOSX
-          - SOLARIS
-          example: WINDOWS
-        arch:
-          type: string
-          enum:
-          - X86
-          - X64
-          - ARM
-          - ARM64
-          example: X64
-        name:
-          type: string
-          example: Windows 11 Pro
-        version:
-          type: string
-          example: 10.0.22621
     Agent:
+      description: An agent registered with Platform.
+      example:
+        id: 8f27a66f-71ff-4b5c-b665-75ec0f42b849
+        core_version:
+          current:
+            release_id: 1.0.0
+            build: '42'
+        units:
+        - name: atp
+          version:
+            current:
+              release_id: 1.0.0
+              build: '42'
+            latest:
+              release_id: 1.0.1
+              build: '57'
+        - name: backup
+          version:
+            current:
+              release_id: 1.0.0
+              build: '42'
+        auto_update: true
+        unattended_update:
+          inherited_from_tenant_id: '50'
+          update_channel: CURRENT
+          automatic: true
+          maintenance_window:
+            time_from: '22:15:00'
+            time_to: 05:00:00
+            days_of_week:
+            - MONDAY
+            - WEDNESDAY
+            - SATURDAY
+          status: OK
+        meta: {}
+        hostname: server1.acme.local
+        platform:
+          family: WINDOWS
+          arch: X64
+          name: Windows 2019
+          version_major: 10
+          version_minor: 0
+        tenant:
+          id: '64'
+          name: ACME
+        name: My Appliance 6490-78
+        online: true
+        enabled: true
+        registration_date: Tue, 04 Jun 2019 18:32:26 -0700
+        registration_id: eO2uM8QwSIC3nh0FxiZmjArpW-U
+        network:
+          network_interfaces:
+          - cidr_notations:
+            - 10.110.64.0/27
+            mac_address: 44-AF-28-1E-54-8C
+          gateway: 10.110.64.1
+          dns_server_ip_addresses:
+          - 10.110.64.2
+        installer_version:
+          current:
+            major: 15
+            minor: 0
+            build_number: 26822
+          latest:
+            major: 15
+            minor: 0
+            build_number: 27714
+        timezone: '-0700'
+      type: object
+      required:
+      - online
+      - enabled
+      - installer_version
+      - meta
+      - units
+      - name
+      - tenant
+      - platform
+      - registration_date
+      - core_version
+      - id
+      - timezone
+      - auto_update
+      - hostname
+      - registration_id
+      properties:
+        online:
+          description: Flag designating if the agent is currently online.
+          type: boolean
+        network:
+          description: Agent host's network configuration.
+          type: object
+          required:
+          - network_interfaces
+          properties:
+            gateway:
+              description: IP address or host name of the gateway.
+              type: string
+            network_interfaces:
+              description: Network interfaces at agent's host.
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/NetworkInterface'
+            dns_server_ip_addresses:
+              description: IP addresses of DNS servers. This collection may include addresses of both IPv4 and IPv6 servers.
+              type: array
+              items:
+                type: string
+        enabled:
+          description: Flag designating if the agent is currently enabled.
+          type: boolean
+        comment:
+          description: User-added comment on the agent.
+          type: string
+        installer_version:
+          description: Agent installer versions.
+          type: object
+          required:
+          - current
+          properties:
+            current:
+              description: The currently installed version.
+              type: object
+              required:
+              - minor
+              - build_number
+              - major
+              properties:
+                minor:
+                  description: Minor version number.
+                  type: integer
+                  minimum: 0
+                build_number:
+                  description: Build number.
+                  type: integer
+                  minimum: 0
+                major:
+                  description: Major version number.
+                  type: integer
+                  minimum: 0
+            latest:
+              description: The latest available version. It is only present if the latest version is newer than the current one.
+              type: object
+              required:
+              - minor
+              - build_number
+              - major
+              properties:
+                minor:
+                  description: Minor version number.
+                  type: integer
+                  minimum: 0
+                build_number:
+                  description: Build number.
+                  type: integer
+                  minimum: 0
+                major:
+                  description: Major version number.
+                  type: integer
+                  minimum: 0
+        unattended_update:
+          description: Details of unattended agent update. If the agent does not support unattended update, the value is absent.
+          type: object
+          required:
+          - automatic
+          - update_channel
+          - status
+          properties:
+            automatic:
+              description: Boolean flag specifying whether agent should be automatically updated to the latest version available in its update channel.
+              default: false
+              type: boolean
+            inherited_from_tenant_id:
+              description: If the update details were inherited from a parent tenant, this is the tenant ID. Otherwise, the value is absent.
+              example: '50'
+              type: string
+            maintenance_window:
+              description: Time intervals when agent update is allowed. If the window is not specified, this means that agent can be updated at any time. The window should be ignored if automatic update is disabled.
+              type: object
+              required:
+              - time_from
+              - days_of_week
+              - time_to
+              properties:
+                time_from:
+                  description: Time of day when agent maintenance may start. It is agent local time.
+                  example: 08:33:19
+                  type: string
+                  pattern: ^(?:[0-1][0-9]|2[0-3])(?::[0-5][0-9]){2}$
+                  minLength: 8
+                  maxLength: 8
+                days_of_week:
+                  description: Days of week when agent maintenance may start (window's start time belongs to these days). They can be given in any order but duplicates are not allowed.
+                  type: array
+                  maxItems: 7
+                  minItems: 1
+                  uniqueItems: true
+                  items:
+                    $ref: '#/components/schemas/DayOfWeek'
+                time_to:
+                  description: Time of day agent maintenance must complete before. It is agent local time. If this time is less than or equal to maintenance start time, this means the maintenance may proceed until this time next day.
+                  example: 08:33:19
+                  type: string
+                  pattern: ^(?:[0-1][0-9]|2[0-3])(?::[0-5][0-9]){2}$
+                  minLength: 8
+                  maxLength: 8
+            update_channel:
+              $ref: '#/components/schemas/AgentUpdateChannel'
+            status:
+              description: Current status of unattended update of particular agent.
+              enum:
+              - OK
+              - SUSPENDED_ON_FAILURES
+              type: string
+        meta:
+          description: The agent metadata.
+          type: object
+        units:
+          description: Components the agent consists of. This can be an empty list if the agent has only Agent Core component installed.
+          type: array
+          items:
+            $ref: '#/components/schemas/SoftwareUnit'
+        name:
+          description: Agent name as seen by a user.
+          example: My Appliance 6490-78
+          type: string
+        tenant:
+          description: Tenant descriptor of the agent owner.
+          type: object
+          required:
+          - id
+          - name
+          properties:
+            id:
+              description: The tenant identifier.
+              type: string
+            name:
+              description: The tenant name.
+              type: string
+        platform:
+          description: Descriptor of operating system the agent is running on.
+          type: object
+          required:
+          - name
+          - version_minor
+          - family
+          - arch
+          - version_major
+          properties:
+            service_pack:
+              description: OS service pack number if applicable.
+              type: integer
+              format: int32
+            name:
+              description: Full Operating System name.
+              type: string
+            version_minor:
+              description: OS minor version number.
+              type: integer
+              format: int32
+            sku:
+              description: OS stock keeping unit ID.
+              type: integer
+              format: int32
+            product_type:
+              description: OS product type if applicable.
+              type: integer
+              format: int32
+            family:
+              description: Operating System family.
+              enum:
+              - UNKNOWN
+              - WINDOWS
+              - LINUX
+              - MACOSX
+              - SOLARIS
+              type: string
+            arch:
+              description: Operating System target hardware architecture.
+              enum:
+              - X86
+              - X64
+              - ARM
+              - ARM64
+              type: string
+            version_major:
+              description: OS major version number.
+              type: integer
+              format: int32
+            caps:
+              description: OS capability mask if applicable.
+              type: integer
+              format: int32
+            suite_mask:
+              description: OS suite mask if applicable.
+              type: integer
+              format: int32
+        registration_date:
+          description: Agent registration date in RFC 1123 format with numeric time zone.
+          example: Tue, 04 Jun 2019 18:32:26 +0300
+          type: string
+        core_version:
+          description: Agent Core version.
+          type: object
+          required:
+          - current
+          properties:
+            current:
+              description: The currently installed version.
+              type: object
+              required:
+              - build
+              - release_id
+              properties:
+                build:
+                  description: Build number.
+                  example: '42'
+                  type: string
+                release_id:
+                  description: Release identifier.
+                  example: 1.0.0
+                  type: string
+                release_name:
+                  description: Human-readable release name.
+                  type: string
+            latest:
+              description: The latest available version. It is only present if the latest version is newer than the current one.
+              type: object
+              required:
+              - build
+              - release_id
+              properties:
+                build:
+                  description: Build number.
+                  example: '42'
+                  type: string
+                release_id:
+                  description: Release identifier.
+                  example: 1.0.0
+                  type: string
+                release_name:
+                  description: Human-readable release name.
+                  type: string
+        id:
+          description: Unique agent ID. This must be valid string representation of a UUID. The ID is used for client ID construction of the agent service account.
+          example: 3953e625-d0a2-420c-86a6-afb9d91aca3e
+          type: string
+        timezone:
+          $ref: '#/components/schemas/TimeZoneOffset'
+        distribution_type:
+          description: Software distribution type.
+          example: SPLA_INFRASTRUCTURE
+          type: string
+        auto_update:
+          description: 'Flag specifying whether the agent is configured to update in automatic unattended mode.
+
+            Deprecated. Use ''unattended_update'' property instead: if it is absent, the agent cannot
+
+            update automatically; otherwise, check value of ''unattended_update.automatic'' property.
+
+            '
+          type: boolean
+        hostname:
+          description: Host name.
+          example: server1.acme.local
+          type: string
+        registration_id:
+          description: Agent registration ID.
+          example: eO2uM8QwSIC3nh0FxiZmjArpW-U
+          type: string
+    TimeZoneOffset:
+      description: "Agent's time zone offset from UTC time zone in SHHMM format, where:\n  \n  - S is either '+' or '-'\n  - HH is number of hours [00,23]\n  - MM is number of minutes [00,59]\n\nFor zero offset, 'UTC' string can be used.\n"
+      example: '+0300'
+      type: string
+      pattern: ^UTC|(?:\+|-)(?:[0-1][0-9]|2[0-3])[0-5][0-9]$
+    Agent_2:
       type: object
       description: Acronis protection agent registered on an endpoint
       properties:
@@ -274,13 +1971,121 @@ components:
         registration_time:
           type: string
           format: date-time
+    AgentOS:
+      type: object
+      description: Operating system information for an agent
+      properties:
+        family:
+          type: string
+          enum:
+          - WINDOWS
+          - LINUX
+          - MACOSX
+          - SOLARIS
+          example: WINDOWS
+        arch:
+          type: string
+          enum:
+          - X86
+          - X64
+          - ARM
+          - ARM64
+          example: X64
+        name:
+          type: string
+          example: Windows 11 Pro
+        version:
+          type: string
+          example: 10.0.22621
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    AgentList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agent_2'
+        paging:
+          type: object
+          properties:
+            cursors:
+              type: object
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
+    oauth_2_0_user:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization.
+      flows:
+        password:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          tokenUrl: /api/2/idp/token
+        clientCredentials:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: OAuth2 bearer token obtained from /idp/token
-    basicAuth:
-      type: http
-      scheme: basic
-      description: Base64-encoded client_id:client_secret
+x-refined-from:
+- acronis-agents-v2-openapi.json
+- acronis-agent-management-openapi.yaml
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

@@ -1,0 +1,428 @@
+openapi: 3.2.0
+info:
+  title: PSA Sales Items API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: SalesItems
+paths:
+  /SalesItems:
+    get:
+      operationId: Fetch Sales items
+      description: Fetches a list of Sales items.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - FullTextSearchInQuotes
+              - FullTextSearch
+              - Customer
+              - InvoiceDate
+              - ProductName
+              - SendByEmail
+              - HasBeenBilled
+              - SortColumn
+              - InsertedSaleId
+              properties:
+                FullTextSearchInQuotes:
+                  type: string
+                FullTextSearch:
+                  type: string
+                Customer:
+                  type: string
+                InvoiceDate:
+                  description: RFC3339-like date and time without timezone.
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+                ProductName:
+                  type: string
+                SendByEmail:
+                  type:
+                  - boolean
+                  - 'null'
+                HasBeenBilled:
+                  type:
+                  - boolean
+                  - 'null'
+                SortColumn:
+                  enum:
+                  - InvoiceDate
+                  - Total
+                  - Age
+                  - Status
+                  - Customer
+                  type: string
+                SortDirection:
+                  description: Invoice sorting direction ascending or descending
+                  default: Asc
+                  enum:
+                  - Asc
+                  - Desc
+                  type: string
+                InsertedSaleId:
+                  type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                - AmountOfPages
+                - AmountRecordsFound
+                - SalesItems
+                - AmountTotalItems
+                properties:
+                  AmountOfPages:
+                    type: integer
+                  AmountRecordsFound:
+                    type: integer
+                  SalesItems:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: false
+                      required:
+                      - Guid
+                      - Customer
+                      - InvoiceDate
+                      - HasBeenBilled
+                      - TotalAmount
+                      - Age
+                      properties:
+                        Guid:
+                          $ref: '#/components/schemas/Guid'
+                        Customer:
+                          type: string
+                        InvoiceDate:
+                          type: string
+                          format: date-time
+                        HasBeenBilled:
+                          type: boolean
+                        TotalAmount:
+                          type: number
+                        Age:
+                          type:
+                          - integer
+                          - 'null'
+                  AmountTotalItems:
+                    type: integer
+      security:
+      - oauth2: []
+      tags:
+      - SalesItems
+      summary: Fetch sales items
+      x-summary-source: derived
+    put:
+      operationId: Create Sales item
+      description: Creates a Sales Item.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                StartDate: '2024-06-28'
+                Incasso: false
+                SalesItemProducts:
+                - Discount: 5
+                  IsItemNote: false
+                  Quantity: 1
+                  Product: deffa51b-207c-4e73-972d-0343736bb9f4
+                  ProductName: Test Product
+                  Description: null
+                  Price: 10
+                - Discount: 0
+                  IsItemNote: true
+                  Quantity: 0
+                  Price: 0
+                  Description: Some Line item note
+                  Product: deffa51b-207c-4e73-972d-0343736bb9f4
+                BillingEntity: d84f5018-c38f-4e3b-af36-0849119b41af
+                IsSalesOrContract: true
+                CustomerAddresses: []
+                Address:
+                  Street: ''
+                  HouseNo: ''
+                  HouseNoAdd: ''
+                  Zipcode: ''
+                  City: ''
+                  Country: ''
+                  StateCountry: ''
+                Customer: 9e145169-059d-422d-80eb-07356e9611a8
+                CustomerName: =CUstomer Sync=
+                Country: d46c54bd-1704-4a55-bb76-fc03073669a0
+                StateCountry: b4c87080-7c8c-45e0-8867-a714ffc79b7d
+                EmailAddress: customer.sync@gmail.com
+                SendByEmail: false
+                SelectedAddress: {}
+                Street: '1'
+                HouseNo: '1'
+                HouseNoAdd: null
+                Zipcode: '1'
+                City: '1'
+                BuildingName: null
+              type: object
+              additionalProperties: false
+              required:
+              - City
+              - Customer
+              properties:
+                BillingEntity:
+                  description: Defines a partner's billing entity used for invoicing.
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                BuildingName:
+                  type:
+                  - string
+                  - 'null'
+                City:
+                  description: 'Defines customer''s address information to be used on the invoice:  city.'
+                  type: string
+                Customer:
+                  description: Defines a customer tenant who received products or services.
+                  example: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                EmailAddress:
+                  description: Defines a customer's email address.
+                  type: string
+                HouseNo:
+                  type:
+                  - string
+                  - 'null'
+                HouseNoAdd:
+                  type:
+                  - string
+                  - 'null'
+                SalesItemProducts:
+                  description: List of SalesItemProducts
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SalesItemProductsPartial'
+                Address:
+                  $ref: '#/components/schemas/Address'
+                SendByEmail:
+                  description: Defines whether the resulting invoice's delivery method will be "By email" (1) or "Mail" (0).
+                  default: false
+                  type: boolean
+                StateCountry:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                Street:
+                  type:
+                  - string
+                  - 'null'
+                Ticket:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                Zipcode:
+                  type:
+                  - string
+                  - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  sales:
+                    SalesItems:
+                    - Id: 00000000-0000-0000-0000-000000000000
+                      Customer: ''
+                      InvoiceDate: '0001-01-01T00:00:00Z'
+                      HasBeenBilled: false
+                      TotalAmount: 0
+                      Age: null
+                    AmountRecordsFound: 0
+                    AmountOfPages: 0
+                    AmountTotalItems: 0
+                type: object
+                additionalProperties: false
+                required:
+                - Id
+                - AmountOfPages
+                - AmountRecordsFound
+                - Age
+                - InvoiceDate
+                - AmountTotalItems
+                - Customer
+                - TotalAmount
+                - HasBeenBilled
+                properties:
+                  Id:
+                    $ref: '#/components/schemas/Guid'
+                  AmountOfPages:
+                    type: integer
+                  AmountRecordsFound:
+                    type: integer
+                  Age:
+                    type:
+                    - integer
+                    - 'null'
+                  InvoiceDate:
+                    $ref: '#/components/schemas/DatetimeNoTZ'
+                  AmountTotalItems:
+                    type: integer
+                  Customer:
+                    type: string
+                  TotalAmount:
+                    type: number
+                  HasBeenBilled:
+                    type: boolean
+      security:
+      - oauth2: []
+      tags:
+      - SalesItems
+      summary: Create sales item
+      x-summary-source: derived
+    delete:
+      operationId: Delete Sales item
+      description: Deletes a Sales Item.
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth2: []
+      tags:
+      - SalesItems
+      summary: Delete sales item
+      x-summary-source: derived
+components:
+  schemas:
+    SalesItemProductsPartial:
+      type: object
+      additionalProperties: false
+      required:
+      - Discount
+      - IsItemNote
+      - Quantity
+      - Product
+      - Description
+      - Price
+      properties:
+        Discount:
+          type: number
+        IsItemNote:
+          type: boolean
+        Quantity:
+          type: integer
+        Product:
+          $ref: '#/components/schemas/Guid'
+        ProductName:
+          type: string
+        Description:
+          type:
+          - string
+          - 'null'
+        Price:
+          type: number
+    DatetimeNoTZ:
+      description: RFC3339-like date and time without timezone.
+      type: string
+      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    Address:
+      type: object
+      additionalProperties: false
+      required:
+      - Street
+      - HouseNo
+      - HouseNoAdd
+      - Zipcode
+      - City
+      - Country
+      - StateCountry
+      properties:
+        Street:
+          type: string
+        HouseNo:
+          type: string
+        HouseNoAdd:
+          type: string
+        Zipcode:
+          type: string
+        City:
+          type: string
+        Country:
+          type: string
+        StateCountry:
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

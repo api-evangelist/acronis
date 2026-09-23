@@ -1,0 +1,110 @@
+openapi: 3.2.0
+info:
+  title: Vault Manager Abgw Storages API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/vault_manager/v1
+  variables: {}
+tags:
+- name: Abgw Storages
+paths:
+  /abgw_storages/{storageID}:
+    delete:
+      operationId: Unregister storage
+      description: 'Available in on-premises version only.
+
+
+        Unregisters the storage from account server and detach all its vaults.'
+      x-ExtJS: VaultManager.UnregisterStorage
+      parameters:
+      - name: last_seen_at
+        description: Date and time in RFC 3339 when the storage was last seen.
+        required: false
+        in: query
+        schema:
+          description: Date and time in RFC 3339 when the storage was last seen.
+          type: string
+          format: date-time
+      - name: tenantID
+        description: Tenant ID (where the vault will be removed from) to separate the target tenant from the effective one
+        required: false
+        in: query
+        schema:
+          description: Tenant ID (where the vault will be removed from) to separate the target tenant from the effective one
+          oneOf:
+          - $ref: '#/components/schemas/id'
+          - $ref: '#/components/schemas/item1'
+      - name: storageID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth2:
+        - infra_admin
+      tags:
+      - Abgw Storages
+      summary: Unregister storage
+      x-summary-source: derived
+components:
+  schemas:
+    item1:
+      description: Numeric identifier.
+      type: string
+      pattern: ^\d+$
+    id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    uuid:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

@@ -1,0 +1,895 @@
+openapi: 3.2.0
+info:
+  title: Agents Agent Update Settings API
+  version: '2'
+servers:
+- url: https://dev-cloud.acronis.com/api/agent_manager/v2
+  variables: {}
+tags:
+- name: Agent Update Settings
+paths:
+  /agent_update_settings:
+    put:
+      operationId: UploadAgentUpdateSettings
+      description: 'Stores new or updates existing agent-specific or/and master agent update settings. The agent must be
+
+        registered to have its specific settings stored.
+
+
+        Each settings object is considered to be agent-specific if it has agent ID field. Otherwise, it is treated
+
+        as master settings. The collection must contain single item for each agent or/and tenant.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The collection of settings to store.
+              type: object
+              required:
+              - items
+              properties:
+                items:
+                  description: Collection of unattended agent update settings to be stored by Agent Manager.
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AgentUpdateSettingsIn'
+      responses:
+        '204':
+          description: Unattended agent update settings were successfully stored.
+          content: {}
+        '400':
+          description: Request is malformed.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - BAD_REQUEST
+                    - BAD_UNATTENDED_AGENT_UPDATE_SETTINGS
+                    - UNMARSHALLING_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_update_settings_modifier
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Agent Update Settings
+      summary: Upload agent update settings
+      x-summary-source: derived
+    delete:
+      operationId: DeleteAgentUpdateSettingsCollection
+      description: Deletes collection of existing agent-specific or master unattended agent update settings.
+      parameters:
+      - name: id
+        description: Identifier of agent or tenant which unattended agent update settings to be deleted.
+        required: true
+        in: query
+        schema:
+          description: Identifier of agent or tenant which unattended agent update settings to be deleted.
+          example: 32b9375f-6400-4928-ae4f-5156e8aab21a
+          type: string
+      - name: master
+        description: Boolean flag specifying whether master unattended agent update settings are to be deleted. If the value is true then `id` query parameter is interpreted as ID of tenant the settings belong to. Otherwise, the `id` is interpreted as agent ID.
+        in: query
+        schema:
+          description: Boolean flag specifying whether master unattended agent update settings are to be deleted. If the value is true then `id` query parameter is interpreted as ID of tenant the settings belong to. Otherwise, the `id` is interpreted as agent ID.
+          default: false
+          type: boolean
+      responses:
+        '204':
+          description: Specified agent-specific or master unattended agent update settings were successfully deleted, did not exist or the caller does not have access to them.
+          content: {}
+        '400':
+          description: Request is malformed.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - BAD_REQUEST
+                    - BAD_UNATTENDED_AGENT_UPDATE_SETTINGS
+                    - UNMARSHALLING_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_update_settings_modifier
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Agent Update Settings
+      summary: Delete agent update settings collection
+      x-summary-source: derived
+  /agent_update_settings/{id}:
+    get:
+      operationId: FetchAgentUpdateSettings
+      description: 'Fetches agent-specific or master unattended agent update settings.
+
+
+        If agent-specific settings are requested and the caller has access to tenant that the agent belongs to
+
+        according to usual tenant accessibility rules, Agent Manager checks if settings stored specifically for
+
+        this agent exist. If they do, they are returned. Otherwise, Agent Manager returns settings it would
+
+        return in response to request for master settings of agent''s tenant, with the only difference being that
+
+        if the master settings are found, they have agent identifier of the agent and do not have tenant
+
+        identifier on output.
+
+
+        If master settings of a tenant are requested, Agent Manager behaves differently depending on whether the
+
+        caller has access to specified tenant according to usual tenant accessibility rules. If access is
+
+        granted but tenant-specific settings are absent, Agent Manager searches for their substitute among
+
+        tenants up tenant hierarchy along locator of specified tenant. This locator omits all tenants between
+
+        the hierarchy root (as it is seen to Agent Manager) and a tenant with visibility barrier set nearest to
+
+        specified tenant. This way the caller may retrieve master settings from a tenant beyond its usual
+
+        access scope.
+
+
+        If specified tenant is inaccessible to the caller, search for a substitute is not performed.
+
+        Settings of the tenant are only returned to the caller if there is a tenant from caller''s access scope
+
+        they would be returned for.
+
+
+        If a substitute for master settings is found, it has tenant identifier of the specified tenant on output.'
+      parameters:
+      - name: master
+        description: Boolean flag specifying whether master unattended agent update settings should be returned. If the value is true then `{id}` is interpreted as the ID of tenant the settings belong to. Otherwise, the `{id}` is interpreted as the agent ID.
+        in: query
+        schema:
+          description: Boolean flag specifying whether master unattended agent update settings should be returned. If the value is true then `{id}` is interpreted as the ID of tenant the settings belong to. Otherwise, the `{id}` is interpreted as the agent ID.
+          default: false
+          type: boolean
+      - name: id
+        description: If query parameter is false or missing, this is a registered agent ID. Otherwise, this is a tenant ID.
+        required: true
+        in: path
+        schema:
+          description: If query parameter is false or missing, this is a registered agent ID. Otherwise, this is a tenant ID.
+          type: string
+      responses:
+        '200':
+          description: Unattended agent update settings were successfully retrieved.
+          content:
+            application/json:
+              schema:
+                description: Agent update settings.
+                type: object
+                required:
+                - automatic
+                - update_channel
+                properties:
+                  agent_id:
+                    description: ID of a registered agent the settings belong to. This must only be present if tenant ID is absent.
+                    example: 836fe933-d232-4ed1-b3be-2218f3bbf134
+                    type: string
+                  automatic:
+                    description: Boolean flag specifying whether agent should be automatically updated to the latest version available in its update channel.
+                    default: false
+                    type: boolean
+                  inherited_from_tenant_id:
+                    description: If the update details were inherited from a parent tenant, this is the tenant ID. Otherwise, the value is absent.
+                    example: '50'
+                    type: string
+                  maintenance_window:
+                    description: Time intervals when agent update is allowed. If the window is not specified, this means that agent can be updated at any time. The window should be ignored if automatic update is disabled.
+                    type: object
+                    required:
+                    - time_from
+                    - days_of_week
+                    - time_to
+                    properties:
+                      time_from:
+                        description: Time of day when agent maintenance may start. It is agent local time.
+                        example: 08:33:19
+                        type: string
+                        pattern: ^(?:[0-1][0-9]|2[0-3])(?::[0-5][0-9]){2}$
+                        minLength: 8
+                        maxLength: 8
+                      days_of_week:
+                        description: Days of week when agent maintenance may start (window's start time belongs to these days). They can be given in any order but duplicates are not allowed.
+                        type: array
+                        maxItems: 7
+                        minItems: 1
+                        uniqueItems: true
+                        items:
+                          $ref: '#/components/schemas/DayOfWeek'
+                      time_to:
+                        description: Time of day agent maintenance must complete before. It is agent local time. If this time is less than or equal to maintenance start time, this means the maintenance may proceed until this time next day.
+                        example: 08:33:19
+                        type: string
+                        pattern: ^(?:[0-1][0-9]|2[0-3])(?::[0-5][0-9]){2}$
+                        minLength: 8
+                        maxLength: 8
+                  update_channel:
+                    $ref: '#/components/schemas/AgentUpdateChannel'
+                  tenant_id:
+                    description: ID of a tenant the settings belong to. This must only be present if agent ID is absent.
+                    example: '62'
+                    type: string
+        '400':
+          description: Request is malformed.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - BAD_REQUEST
+                    - BAD_UNATTENDED_AGENT_UPDATE_SETTINGS
+                    - UNMARSHALLING_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '404':
+          description: The requested entity cannot be found.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - AGENT_NOT_FOUND
+                    - AGENT_UNIT_NOT_FOUND
+                    - TENANT_NOT_FOUND
+                    - HARDWARE_NODE_NOT_FOUND
+                    - NOT_FOUND
+                    - UNATTENDED_AGENT_UPDATE_SETTINGS_NOT_FOUND
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_update_settings_viewer
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Agent Update Settings
+      summary: Fetch agent update settings
+      x-summary-source: derived
+    delete:
+      operationId: DeleteAgentUpdateSettings
+      description: Deletes existing agent-specific or master unattended agent update settings.
+      parameters:
+      - name: master
+        description: Boolean flag specifying whether master unattended agent update settings are to be deleted. If the value is true then `{id}` is interpreted as the ID of tenant the settings belong to. Otherwise, the `{id}` is interpreted as the agent ID.
+        in: query
+        schema:
+          description: Boolean flag specifying whether master unattended agent update settings are to be deleted. If the value is true then `{id}` is interpreted as the ID of tenant the settings belong to. Otherwise, the `{id}` is interpreted as the agent ID.
+          default: false
+          type: boolean
+      - name: id
+        description: If query parameter is false or missing, this is a registered agent ID. Otherwise, this is a tenant ID.
+        required: true
+        in: path
+        schema:
+          description: If query parameter is false or missing, this is a registered agent ID. Otherwise, this is a tenant ID.
+          type: string
+      responses:
+        '204':
+          description: Specified agent-specific or master unattended agent update settings were successfully deleted, did not exist or the caller does not have access to them.
+          content: {}
+        '400':
+          description: Request is malformed.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - BAD_REQUEST
+                    - BAD_UNATTENDED_AGENT_UPDATE_SETTINGS
+                    - UNMARSHALLING_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_update_settings_modifier
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Agent Update Settings
+      summary: Delete agent update settings
+      x-summary-source: derived
+components:
+  schemas:
+    AgentUpdateChannel:
+      description: Source of new agent versions.
+      enum:
+      - CURRENT
+      - STABLE
+      type: string
+    DayOfWeek:
+      description: Day of week specifier.
+      enum:
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+      - SUNDAY
+      type: string
+    AgentUpdateSettingsIn:
+      description: Unattended agent update settings to be stored by Agent Manager. The settings can be assigned either to a particular agent instance or to a tenant. In the latter case they are called master settings and apply to every agent that belongs to the tenant and does not have its own settings assigned. Master settings also recursively apply to tenants down tenant hierarchy until a tenant with its own master settings or visibility barrier set is encountered.
+      type: object
+      required:
+      - automatic
+      - update_channel
+      properties:
+        agent_id:
+          description: ID of a registered agent the settings belong to. This must only be present if tenant ID is absent.
+          example: 836fe933-d232-4ed1-b3be-2218f3bbf134
+          type: string
+        automatic:
+          description: Boolean flag specifying whether agent should be automatically updated to the latest version available in its update channel.
+          default: false
+          type: boolean
+        maintenance_window:
+          description: Time intervals when agent update is allowed. If the window is not specified, this means that agent can be updated at any time. The window should be ignored if automatic update is disabled.
+          type: object
+          required:
+          - time_from
+          - days_of_week
+          - time_to
+          properties:
+            time_from:
+              description: Time of day when agent maintenance may start. It is agent local time.
+              example: 08:33:19
+              type: string
+              pattern: ^(?:[0-1][0-9]|2[0-3])(?::[0-5][0-9]){2}$
+              minLength: 8
+              maxLength: 8
+            days_of_week:
+              description: Days of week when agent maintenance may start (window's start time belongs to these days). They can be given in any order but duplicates are not allowed.
+              type: array
+              maxItems: 7
+              minItems: 1
+              uniqueItems: true
+              items:
+                $ref: '#/components/schemas/DayOfWeek'
+            time_to:
+              description: Time of day agent maintenance must complete before. It is agent local time. If this time is less than or equal to maintenance start time, this means the maintenance may proceed until this time next day.
+              example: 08:33:19
+              type: string
+              pattern: ^(?:[0-1][0-9]|2[0-3])(?::[0-5][0-9]){2}$
+              minLength: 8
+              maxLength: 8
+        update_channel:
+          $ref: '#/components/schemas/AgentUpdateChannel'
+        tenant_id:
+          description: ID of a tenant the settings belong to. This must only be present if agent ID is absent. It is possible to omit both identifiers, in which case value from `X-Apigw-Tenant-Id` request header is used. If the header is also absent, root of tenant hierarchy as it is seen to Agent Manager (according to properties of its service account) is used.
+          example: '62'
+          type: string
+  securitySchemes:
+    oauth_2_0_user:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization.
+      flows:
+        password:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          tokenUrl: /api/2/idp/token
+        clientCredentials:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token

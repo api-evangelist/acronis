@@ -1,0 +1,343 @@
+openapi: 3.2.0
+info:
+  title: Vault Manager Storage Nodes API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/vault_manager/v1
+  variables: {}
+tags:
+- name: Storage Nodes
+paths:
+  /storage_nodes:
+    get:
+      operationId: Fetch registered storage nodes
+      description: 'Available in on-premises version only.
+
+
+        Fetches a list of all registered storage nodes.'
+      x-ExtJS: VaultManager.ListASN
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Storage node
+                  description: Storage node description.
+                  type: object
+                  additionalProperties: false
+                  required:
+                  - name
+                  - machine_id
+                  properties:
+                    id:
+                      description: Universally unique identifier.
+                      type: string
+                      format: uuid
+                    name:
+                      type: string
+                    machine_id:
+                      description: Identifier of the machine with Storage node. Currently hostname or IP address.
+                      type: string
+                    status:
+                      description: Status of the machine.
+                      type: string
+                    addresses:
+                      description: Addresses of the machine.
+                      type: array
+                      items:
+                        anyOf:
+                        - type: string
+                          format: ipv4
+                        - type: string
+                          format: ipv6
+                        type: string
+                    tenant_locator:
+                      type: string
+                    memory_size:
+                      description: Memory size of the machine.
+                      type: integer
+                    processor_frequency:
+                      description: Processor frequency of the machine.
+                      type: integer
+                    processor_name:
+                      description: Processor name of the machine.
+                      type: string
+                    operating_system_name:
+                      description: Operating system name of the machine.
+                      type: string
+                    architecture:
+                      description: Architecture of the machine.
+                      type: string
+                    agent_version:
+                      description: Agent version installed in the machine.
+                      type: string
+                    vault_count:
+                      description: Number of managed vaults.
+                      type: integer
+        '400':
+          description: Invalid request.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+        - vault_manager::read
+        - protection::readonly
+      tags:
+      - Storage Nodes
+      summary: Fetch registered storage nodes
+      x-summary-source: derived
+    post:
+      operationId: Register storage node_1
+      description: 'Available in on-premises version only.
+
+
+        Registers a new storage node.'
+      x-ExtJS: VaultManager.RegisterASN
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Storage node registration
+              description: Storage node registration description.
+              type: object
+              additionalProperties: false
+              required:
+              - host
+              properties:
+                host:
+                  description: IP address of the machine with storage node.
+                  type: string
+                username:
+                  description: Credentials.
+                  type: string
+                password:
+                  description: Credentials.
+                  type: string
+      responses:
+        '201':
+          description: Storage node was successfully registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/id_response'
+        '400':
+          description: Invalid request.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Storage Nodes
+      summary: Register storage node 1
+      x-summary-source: derived
+  /storage_nodes/{storageNodeID}/checkuser:
+    post:
+      operationId: Check user access
+      description: 'Available in on-premises version only.
+
+
+        Checks whether the provided user credentials can access the storage node.'
+      x-ExtJS: VaultManager.ValidateAgentCreds
+      parameters:
+      - name: storageNodeID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/validate_credentials'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                description: Acronis Storage Node response for task completion.
+                type: object
+                additionalProperties: false
+                properties:
+                  id:
+                    description: Universally unique identifier.
+                    type: string
+                    format: uuid
+                  completionResult:
+                    description: Result of the task executed on Acronis Storage Node.
+                    type: string
+        '400':
+          description: Invalid request.
+          content: {}
+        '404':
+          description: Resource not found.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Storage Nodes
+      summary: Check user access
+      x-summary-source: derived
+  /storage_nodes/{storageNodeID}/check_location:
+    post:
+      operationId: Find vault by path
+      description: 'Available in on-premises version only.
+
+
+        Attempts to find a vault by the provided path.'
+      x-ExtJS: VaultManager.CheckLocation
+      parameters:
+      - name: storageNodeID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/find_location'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                description: Acronis Storage Node response for find location request.
+                type: object
+                additionalProperties: false
+                properties:
+                  checkLocationResult:
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      conclusion:
+                        type: string
+                      vault_config:
+                        type: object
+                  uri:
+                    type: string
+        '400':
+          description: Invalid request.
+          content: {}
+        '404':
+          description: Resource not found.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Storage Nodes
+      summary: Find vault by path
+      x-summary-source: derived
+components:
+  schemas:
+    find_location:
+      description: Checks if the path provided contains a vault.
+      example:
+        uri_to_find: E:\MyDocuments
+        protected_storage:
+          session_id: 0F6C5CB2-C01F-4E7C-A061-6F61F01692A1
+      type: object
+      additionalProperties: false
+      properties:
+        uri_to_find:
+          description: Path of possible vault.
+          type: string
+        protected_storage:
+          $ref: '#/components/schemas/protected_storage'
+    id_response:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+    validate_credentials:
+      description: Request to add new vault.
+      example:
+        session_id: 0F6C5CB2-C01F-4E7C-A061-6F61F01692A1
+        uri: 5D0B5B70-BEB7-48A7-94BA-683D86FC3886#storage_credentials
+      type: object
+      additionalProperties: false
+      properties:
+        session_id:
+          $ref: '#/components/schemas/id'
+        uri:
+          description: URI in Protected storage.
+          type: string
+    uuid:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    protected_storage:
+      type: object
+      additionalProperties: false
+      properties:
+        session_id:
+          $ref: '#/components/schemas/id'
+    id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

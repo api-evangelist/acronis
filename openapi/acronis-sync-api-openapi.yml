@@ -1,0 +1,4009 @@
+openapi: 3.2.0
+info:
+  title: Vault Manager Sync API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/vault_manager/v1
+  variables: {}
+tags:
+- name: Sync
+paths:
+  /sync/archives:
+    get:
+      operationId: Fetch archives sync info
+      description: Fetches the archives sync information.
+      x-ExtJS: VaultManager.ListArchivesSyncInfo
+      parameters:
+      - name: agentId
+        description: Filter archives by agent ID.
+        required: false
+        in: query
+        schema:
+          description: Filter archives by agent ID.
+          type: string
+          format: uuid
+      - name: sourceUsnGt
+        description: Show only archives with source Update Sequence Number (USN) greater than requested.
+        required: false
+        in: query
+        schema:
+          description: Show only archives with source Update Sequence Number (USN) greater than requested.
+          type: integer
+      - name: limit
+        required: true
+        in: query
+        schema:
+          type: integer
+      - name: order
+        description: 'An ordering filter that orders the results by value of the specified properties.
+
+          Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+          Available operators:
+
+
+          * `asc` - ascending
+
+          * `desc` - descending
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'An ordering filter that orders the results by value of the specified properties.
+
+            Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+            Available operators:
+
+
+            * `asc` - ascending
+
+            * `desc` - descending
+
+            '
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                description: Archive sync info list.
+                type: array
+                items:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    source_key:
+                      type: string
+                    source_usn:
+                      type: integer
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+        - vault_manager::read
+        - protection::readonly
+      tags:
+      - Sync
+      summary: Fetch archives sync info
+      x-summary-source: derived
+    post:
+      operationId: Update archives batch
+      description: Updates a batch of archives.
+      x-ExtJS: VaultManager.UpdateArchivesBulk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Request to update archives set.
+              type: object
+              additionalProperties: false
+              properties:
+                vault:
+                  description: Properties with the request-wide effect when `full_resync` or `last_batch` is true. Ignored otherwise.
+                  type: object
+                  properties:
+                    id:
+                      $ref: '#/components/schemas/id_12'
+                    last_seen_at:
+                      description: Allows to update `last_seen_at` value in archive and backup objects that are deleted by this request. `last_seen_at` is updated if this property is not null both in the request and in the existing archive object and the request contains more recent `last_seen_at` than the value in the archive object.
+                      type: string
+                      format: date-time
+                add:
+                  description: List of archives that should be created.
+                  type: array
+                  items:
+                    allOf:
+                    - title: Archive
+                      description: Archive description.
+                      type: object
+                      additionalProperties: false
+                      required:
+                      - id
+                      - name
+                      - vault_id
+                      - format
+                      - created
+                      - file_name
+                      properties:
+                        id:
+                          $ref: '#/components/schemas/id_12'
+                        name:
+                          description: Name of the archive.
+                          type: string
+                        vault_id:
+                          $ref: '#/components/schemas/id_12'
+                        legacy_id:
+                          description: ID that is needed for old WCS API support. Don't use it in new services!
+                          type: string
+                        attributes:
+                          description: Any archive-specific attributes.
+                          type: object
+                        size:
+                          description: Size of the archive in bytes.
+                          type: integer
+                        compressed_data_size:
+                          description: Sum of compressed data in all slices in bytes. May be larger than `data_size` in case of dedup. Calculated by archive implementation.
+                          type: integer
+                        data_size:
+                          description: Size of backed up data in all slices of archive in bytes. Calculated by archive implementation.
+                          type: integer
+                        original_data_size:
+                          description: Size of the data that can be restored from all slices of the archive in bytes. Calculated by archive implementation.
+                          type: integer
+                        type:
+                          description: Archive type.
+                          enum:
+                          - unknown
+                          - file
+                          - image
+                          - vss_application
+                          - msexchange
+                          - msexchange_doc
+                          - mssql
+                          - oracle
+                          - ad
+                          - empty
+                          type: string
+                        format:
+                          description: Format of archive.
+                          enum:
+                          - '11'
+                          - '12'
+                          - alwaysIncremental
+                          type: string
+                        created:
+                          description: Date and time in RFC 3339 format the archive was created.
+                          type: string
+                          format: date-time
+                        updated:
+                          description: Date and time in RFC 3339 format the archive was updated.
+                          type: string
+                          format: date-time
+                        last_backup_created:
+                          description: Date and time in RFC 3339 format the last slice was created.
+                          type: string
+                          format: date-time
+                        resource_type:
+                          description: 'Type of resource stored in archive (e.g., `machine`, `mssql_server`). Can include additional resource type (e.g., type of VM: `datastore.vmwesx`, `virtual_appliance.mshyperv`).'
+                          type: string
+                        protected_by_password:
+                          description: If true, the archive is protected by password. False otherwise.
+                          type: boolean
+                        encryption_algorithm:
+                          description: Encryption algorithm of the archive.
+                          enum:
+                          - none
+                          - aes_128
+                          - aes128
+                          - aes_192
+                          - aes192
+                          - aes_256
+                          - aes256
+                          - gost
+                          type: string
+                        deleted:
+                          description: If true, the archive is deleted and no longer exists. False otherwise.
+                          type: boolean
+                        file_name:
+                          description: The archive file name.
+                          type: string
+                        tenant_id:
+                          description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+                          oneOf:
+                          - $ref: '#/components/schemas/id_12'
+                          - description: Numeric identifier.
+                            type: string
+                            pattern: ^\d+$
+                        tenant_locator:
+                          description: Locator of the tenant that owns the archive.
+                          type: string
+                        agent_id:
+                          $ref: '#/components/schemas/id_12'
+                        source_key:
+                          description: Key of archive in DML DB. Used for legacy agents support.
+                          type: string
+                        source_usn:
+                          description: Timestamp of archive in DML DB. Used for legacy agents support.
+                          type: integer
+                        actions:
+                          description: List of available actions.
+                          type: array
+                          items:
+                            type: string
+                        agent_name:
+                          description: Hostname of agent machine.
+                          type: string
+                          format: hostname
+                        centralized_plan_id:
+                          description: Global identifier of the backup plan in accordance to that the archive is created.
+                          type: string
+                        backup_plan_id:
+                          description: ID of the backup plan that created the archive.
+                          type: string
+                        backup_plan_name:
+                          description: Name of the backup plan that created the archive.
+                          type: string
+                        description:
+                          description: User-defined description.
+                          type: string
+                        display_name:
+                          description: Human-readable archive name.
+                          type: string
+                        owner_id:
+                          description: ID of the user (SID for Windows) that owns the archive.
+                          type: string
+                        owner_name:
+                          description: Name of the user that owns the archive.
+                          type: string
+                        resource_id:
+                          description: ID of the resource that stored in the archive.
+                          type: string
+                        resource_ids:
+                          description: List of identifiers of backed up resources.
+                          type: array
+                          items:
+                            description: ID of backed up resource.
+                            type: string
+                        resource_name:
+                          description: Name of the resource that stored in the archive.
+                          type: string
+                        consistent:
+                          description: False if archive content could be outdated and a refresh is required. True otherwise.
+                          type: boolean
+                        stats:
+                          title: Archive stats
+                          description: Additional information about slices.
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            first_backup:
+                              type: string
+                            last_backup_size:
+                              type: integer
+                            last_backup_path:
+                              type: string
+                            backup_count:
+                              type: integer
+                        marked_for_deletion:
+                          description: True if archive marked as deleted. False otherwise.
+                          type: boolean
+                        pds_status:
+                          description: State of physical data shipment.
+                          enum:
+                          - archiveNotReady
+                          - archiveInTransit
+                          - archiveDelivered
+                          type: string
+                        search_index_size:
+                          description: Size of search index.
+                          type: integer
+                        resource_path:
+                          description: Path to the backed up resource in a format acceptable by Resource Manager.
+                          type: string
+                        last_seen_at:
+                          description: Last time when the archive was seen.
+                          type: string
+                          format: date-time
+                        cataloged_status:
+                          description: State of archive is cataloged.
+                          enum:
+                          - notIndexed
+                          - partiallyIndexed
+                          - indexed
+                          type: string
+                        forensic:
+                          description: True if the archive contains forensic data. False otherwise.
+                          type: boolean
+                        pre_patch_management:
+                          description: Flag that specifies whether the archive contains at least one backup which was made before patch management. True if there's at least one backup that was made before patch management. False otherwise.
+                          type: boolean
+                        malware_found:
+                          description: Malware assessment result of backups in the archive. Absent if no backups were scanned. True if at least one backup has malware. False otherwise.
+                          type: boolean
+                        logical_size:
+                          description: Reflects logical size of archive.
+                          type: integer
+                        immutable_size:
+                          description: Reflects immutable size of archive.
+                          type: integer
+                        deleted_immutable:
+                          description: True if the archive is marked as deleted immutable. False otherwise.
+                          type: boolean
+                        orphanage:
+                          title: Set archive orphanage status request
+                          description: Archive orphanage status description.
+                          type: object
+                          required:
+                          - status
+                          properties:
+                            status:
+                              description: Value of archive orphanage status.
+                              enum:
+                              - NONE
+                              - NO_POLICY
+                              - NO_RESOURCE
+                              type: string
+                    - type: object
+                      required:
+                      - vault_id
+                      - archive_id
+                      properties:
+                        vault_id: {}
+                        archive_id: {}
+                delete:
+                  description: Specifies archives that should be deleted.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    change_tag:
+                      description: User-defined tag of operation.
+                      type: string
+                    ids:
+                      description: List of archives that should be deleted.
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/items_13'
+                full_resync:
+                  description: Specifies the full re-sync mode. If true, `add` array will be treated like a full and only full list of vault archives. Other archives will be marked as deletable and if not added again they will be deleted at the end of the session.
+                  type: boolean
+                last_batch:
+                  description: Specifies that it is the last batch. If true, the session started with full_resync for the same vault will be closed, so non-added archives will be deleted.
+                  type: boolean
+      responses:
+        '200':
+          description: 'Multiple operations have taken over archives with successful status
+
+            for each archive can be viewed in the body of the response.
+
+            '
+          content:
+            application/json:
+              schema:
+                description: Archive batch update result.
+                type: object
+                additionalProperties: false
+                properties:
+                  created:
+                    description: IDs of created archives.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/items_13'
+                  updated:
+                    description: IDs of updated archives.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/items_13'
+                  errors:
+                    description: List of errors per archive that encountered during batch operation execution.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/error'
+        '207':
+          description: 'Multiple operations have taken over archives with different status
+
+            for each archive can be viewed in the body of the response.
+
+            '
+          content:
+            application/json:
+              schema:
+                description: Archive batch update result.
+                type: object
+                additionalProperties: false
+                properties:
+                  created:
+                    description: IDs of created archives.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/items_13'
+                  updated:
+                    description: IDs of updated archives.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/items_13'
+                  errors:
+                    description: List of errors per archive that encountered during batch operation execution.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/error'
+        '404':
+          description: The involved archives/vaults have not been found.
+          content:
+            application/json:
+              schema:
+                description: Archive batch update result.
+                type: object
+                additionalProperties: false
+                properties:
+                  created:
+                    description: IDs of created archives.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/items_13'
+                  updated:
+                    description: IDs of updated archives.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/items_13'
+                  errors:
+                    description: List of errors per archive that encountered during batch operation execution.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/error'
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Update archives batch
+      x-summary-source: derived
+  /sync/backups:
+    get:
+      operationId: Fetch backups sync info
+      description: Fetches the backups sync information.
+      x-ExtJS: VaultManager.ListBackupsSyncInfo
+      parameters:
+      - name: agentId
+        description: Filter archives by agent ID.
+        required: false
+        in: query
+        schema:
+          description: Filter archives by agent ID.
+          type: string
+          format: uuid
+      - name: sourceUsnGt
+        description: Show only archives with source Update Sequence Number (USN) greater than requested.
+        required: false
+        in: query
+        schema:
+          description: Show only archives with source Update Sequence Number (USN) greater than requested.
+          type: integer
+      - name: limit
+        required: true
+        in: query
+        schema:
+          type: integer
+      - name: order
+        description: 'An ordering filter that orders the results by value of the specified properties.
+
+          Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+          Available operators:
+
+
+          * `asc` - ascending
+
+          * `desc` - descending
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'An ordering filter that orders the results by value of the specified properties.
+
+            Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+            Available operators:
+
+
+            * `asc` - ascending
+
+            * `desc` - descending
+
+            '
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                description: Backup sync info list.
+                type: array
+                items:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    source_key:
+                      type: string
+                    source_usn:
+                      type: integer
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+        - vault_manager::read
+        - protection::readonly
+      tags:
+      - Sync
+      summary: Fetch backups sync info
+      x-summary-source: derived
+    post:
+      operationId: Update backups batch
+      description: Updates a batch of backups.
+      x-ExtJS: VaultManager.UpdateBackupsBulk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Request to update backups set.
+              anyOf:
+              - oneOf:
+                - type: object
+                  required:
+                  - full_resync
+                  - vault_id
+                  - archive_id
+                  - add
+                  properties:
+                    full_resync:
+                      enum:
+                      - true
+                    vault_id: {}
+                    archive_id: {}
+                    add: {}
+                - type: object
+                  required:
+                  - full_resync
+                  - add
+                  properties:
+                    full_resync:
+                      enum:
+                      - true
+                    add: {}
+                - type: object
+                  required:
+                  - add
+                  properties:
+                    add: {}
+              - type: object
+                required:
+                - patch
+                properties:
+                  patch: {}
+              - type: object
+                required:
+                - delete
+                properties:
+                  delete: {}
+              type: object
+              additionalProperties: false
+              properties:
+                add:
+                  description: List of backups that should be created.
+                  type: array
+                  items:
+                    allOf:
+                    - description: Backup creation request.
+                      allOf:
+                      - $ref: '#/components/schemas/item0'
+                      - type: object
+                        required:
+                        - change_tag
+                        - created
+                        - size
+                        properties:
+                          change_tag:
+                            description: Tag to identify creation task.
+                            type: string
+                          archive_credentials_id:
+                            description: Archive credentials ID.
+                            type: string
+                          created: {}
+                          size: {}
+                    - type: object
+                      required:
+                      - vault_id
+                      - archive_id
+                      - backup_id
+                      properties:
+                        vault_id: {}
+                        archive_id: {}
+                        backup_id: {}
+                patch:
+                  description: List of backups that should be patched. For non-existent backups, errors will be returned.
+                  type: array
+                  items:
+                    allOf:
+                    - description: Backup updating request, modified partial version of the Backup. Identified by `vault_id`, `archive_id` and `backup_id`.
+                      allOf:
+                      - $ref: '#/components/schemas/item0'
+                      - type: object
+                        properties:
+                          archive_credentials_id:
+                            description: Archive credentials ID.
+                            type: string
+                      type: object
+                    - type: object
+                      required:
+                      - vault_id
+                      - archive_id
+                      - backup_id
+                      properties:
+                        vault_id: {}
+                        archive_id: {}
+                        backup_id: {}
+                delete:
+                  description: Specifies backups that should be deleted.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    change_tag:
+                      description: User-defined tag of operation.
+                      type: string
+                    ids:
+                      description: List of backups that should be deleted.
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/items_14'
+                full_resync:
+                  description: Specifies the full re-sync mode. If true, `add` array will be treated like a full and only full list of archive backups.
+                  type: boolean
+                vault_id:
+                  $ref: '#/components/schemas/archive_id_15'
+                archive_id:
+                  $ref: '#/components/schemas/archive_id_15'
+      responses:
+        '200':
+          description: 'Multiple operations have taken over backups with successful status for each backup
+
+            can be viewed in the body of the response.
+
+            '
+          content:
+            application/json:
+              schema:
+                description: Backup batch update result.
+                type: object
+                additionalProperties: false
+                properties:
+                  created:
+                    description: IDs of created backups.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/items_14'
+                  errors:
+                    description: List of errors per backup that encountered during batch operation execution.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/error'
+        '207':
+          description: 'Multiple operations have taken over backups with different status for each backup
+
+            can be viewed in the body of the response.
+
+            '
+          content:
+            application/json:
+              schema:
+                description: Backup batch update result.
+                type: object
+                additionalProperties: false
+                properties:
+                  created:
+                    description: IDs of created backups.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/items_14'
+                  errors:
+                    description: List of errors per backup that encountered during batch operation execution.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/error'
+        '404':
+          description: The involved archives/vaults/backups have not been found.
+          content:
+            application/json:
+              schema:
+                description: Backup batch update result.
+                type: object
+                additionalProperties: false
+                properties:
+                  created:
+                    description: IDs of created backups.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/items_14'
+                  errors:
+                    description: List of errors per backup that encountered during batch operation execution.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/error'
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Update backups batch
+      x-summary-source: derived
+  /sync/vaults:
+    get:
+      operationId: Fetch vaults sync info
+      description: Fetches the vaults sync information.
+      x-ExtJS: VaultManager.ListVaultsSyncInfo
+      parameters:
+      - name: managingAgentId
+        description: Filter vaults by agent ID.
+        required: false
+        in: query
+        schema:
+          description: Filter vaults by agent ID.
+          type: string
+          format: uuid
+      - name: sourceUsnGt
+        description: Show only vaults with source Update Sequence Number (USN) greater than requested.
+        required: false
+        in: query
+        schema:
+          description: Show only vaults with source Update Sequence Number (USN) greater than requested.
+          type: integer
+      - name: limit
+        required: false
+        in: query
+        schema:
+          type: integer
+      - name: before
+        description: 'Base64-encoded token obtained from the previous response.
+
+          Points to the end of the page.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Base64-encoded token obtained from the previous response.
+
+            Points to the end of the page.
+
+            '
+          type: string
+      - name: order
+        description: 'An ordering filter that orders the results by value of the specified properties.
+
+          Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+          Available operators:
+
+
+          * `asc` - ascending
+
+          * `desc` - descending
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'An ordering filter that orders the results by value of the specified properties.
+
+            Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+            Available operators:
+
+
+            * `asc` - ascending
+
+            * `desc` - descending
+
+            '
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                description: Vault sync info list.
+                type: array
+                items:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    source_key:
+                      type: string
+                    source_usn:
+                      type: integer
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+        - vault_manager::read
+        - protection::readonly
+      tags:
+      - Sync
+      summary: Fetch vaults sync info
+      x-summary-source: derived
+    post:
+      operationId: Add vaults batch
+      description: Adds a batch of vaults.
+      x-ExtJS: VaultManager.AddVaultsBulk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: Vault info.
+                type: object
+                additionalProperties: false
+                required:
+                - config
+                properties:
+                  config:
+                    title: Vault description
+                    description: Vault description.
+                    type: object
+                    additionalProperties: false
+                    required:
+                    - name
+                    - version
+                    - storage_type
+                    - settings
+                    properties:
+                      id:
+                        $ref: '#/components/schemas/managing_agent_id'
+                      name:
+                        description: Name of the vault.
+                        type: string
+                      uri:
+                        description: URI of the vault.
+                        type: string
+                      version:
+                        description: Version of the vault.
+                        type: string
+                      managing_agent_id:
+                        $ref: '#/components/schemas/managing_agent_id'
+                      storage_type:
+                        $ref: '#/components/schemas/storage_type_16'
+                      organizational:
+                        description: True if vault is online and is created on customer or personal tenant levels. False otherwise.
+                        type: boolean
+                      settings:
+                        description: Any vault type specific settings.
+                        oneOf:
+                        - type: object
+                          additionalProperties: false
+                          properties:
+                            comment:
+                              type: string
+                            storage_type:
+                              $ref: '#/components/schemas/storage_type_16'
+                            catalog_type:
+                              type: string
+                            catalog_uri:
+                              type: string
+                            encryption_type:
+                              enum:
+                              - CRYPT_NONE
+                              - CRYPT_AES128
+                              - CRYPT_AES192
+                              - CRYPT_AES256
+                              - CRYPT_GOST
+                              type: string
+                            encryption_uri:
+                              type: string
+                            encryption_key:
+                              type: string
+                            dedup_type:
+                              type: string
+                            dedup_uri:
+                              type: string
+                        - title: Local ABGW Vault settings
+                          description: Local ABGW Vault settings.
+                          type: object
+                          additionalProperties: false
+                          required:
+                          - storage_id
+                          properties:
+                            path:
+                              description: Path on the storage.
+                              type: string
+                            storage_id: {}
+                        - title: Amazon S3 Vault settings
+                          description: Amazon S3 Vault settings.
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            connection_id:
+                              description: Connection ID is used to get Amazon credentials from Cloud Connection Service
+                              type: string
+                            region:
+                              description: Region of the storage
+                              type: string
+                            storage_class:
+                              description: Storage class
+                              enum:
+                              - STANDARD
+                              - STANDARD_IA
+                              - ONEZONE_IA
+                              - INTELLIGENT_TIERING
+                              type: string
+                            bucket:
+                              description: Bucket name
+                              type: string
+                            path:
+                              description: Path on the storage.
+                              type: string
+                            immutability_days:
+                              description: Object lock duration in days.
+                              default: 30
+                              type: integer
+                              minimum: 1
+                              maximum: 999
+                        - title: S3 Compatible Vault settings
+                          description: S3 Compatible Vault settings.
+                          type: object
+                          additionalProperties: false
+                          required:
+                          - cred_id
+                          - endpoint
+                          - bucket
+                          - path
+                          properties:
+                            cred_id:
+                              description: Cred ID from CredentialStore service used to get s3 credentials
+                              type: string
+                            s3_auth_flavour:
+                              description: Authentication method
+                              default: authv4
+                              enum:
+                              - authv2
+                              - authv4
+                              type: string
+                            cert_verify:
+                              description: Verify server cerificate?
+                              default: true
+                              type: boolean
+                            endpoint:
+                              description: Endpoint of the compatible s3 storage
+                              type: string
+                            bucket:
+                              description: Bucket name
+                              type: string
+                            path:
+                              description: Path on the storage.
+                              type: string
+                            s3_subtype:
+                              default: ''
+                              enum:
+                              - ''
+                              - ACI
+                              - ImpossibleCloud
+                              type: string
+                        - title: Wasabi S3 Vault settings
+                          description: Wasabi S3 Vault settings.
+                          type: object
+                          additionalProperties: false
+                          required:
+                          - connection_id
+                          - region
+                          - endpoint
+                          - bucket
+                          - path
+                          - s3_subtype
+                          properties:
+                            connection_id:
+                              description: Connection ID is used to get Wasabi credentials from Cloud Connection Service
+                              type: string
+                            region:
+                              description: Region of the storage
+                              type: string
+                            endpoint:
+                              description: Endpoint of wasabi based on the region
+                              type: string
+                            bucket:
+                              description: Bucket name
+                              type: string
+                            path:
+                              description: Path on the storage.
+                              type: string
+                            s3_subtype:
+                              enum:
+                              - Wasabi
+                              type: string
+                        - type: object
+                      storage_id:
+                        description: ID of the storage, for Local ABGW Vault or Storage node Vault.
+                        type: string
+                      status:
+                        description: Status of the vault.
+                        type: object
+                      tenant_id:
+                        description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+                        oneOf:
+                        - $ref: '#/components/schemas/managing_agent_id'
+                        - description: Numeric identifier.
+                          type: string
+                          pattern: ^\d+$
+                      tenant_locator:
+                        description: Tenant locator.
+                        type: string
+                      access_address:
+                        description: Hostname or IP address of Acronis Storage Node to create vault on.
+                        anyOf:
+                        - type: string
+                          format: ipv4
+                        - type: string
+                          format: ipv6
+                        - type: string
+                          format: hostname
+                        - type: string
+                          minLength: 0
+                        type: string
+                      compacting_plan_id:
+                        $ref: '#/components/schemas/managing_agent_id'
+                      hostname:
+                        description: Hostname of local vault.
+                        type: string
+                        format: hostname
+                      consistent:
+                        description: False if vault content could be outdated and a refresh is required. True otherwise.
+                        type: boolean
+                      last_seen_at:
+                        description: Date and time in RFC 3339 format when the vault was last seen.
+                        type: string
+                        format: date-time
+                      is_full_config:
+                        description: True if `name`, `uri`, `settings`, `storage_type` are filled. False otherwise.
+                        type: boolean
+                  stats:
+                    title: Vault stats
+                    description: Vault statistics.
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      archive_count:
+                        description: Number of archives in the vault.
+                        type: integer
+                      backup_count:
+                        description: Number of backups in the vault.
+                        type: integer
+                      backed_up_data_size:
+                        description: Size of data stored in vault's backups.
+                        type: integer
+                      original_data_size:
+                        description: Original size of all data vault holds.
+                        type: integer
+                      occupied_data_size:
+                        description: Amount of space that vault takes up on storage.
+                        type: integer
+                      immutable_size:
+                        description: Amount of space that vault takes up on immutable storage.
+                        type: integer
+                      free_space:
+                        description: Amount of space left on storage where vault is.
+                        type: integer
+                      total_space:
+                        description: Total about of space on storage where vault is.
+                        type: integer
+                      logical_archive_size:
+                        description: Logical archive size sum.
+                        type: integer
+                      deduplication_stats:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          occupied_deduplication_db_size:
+                            description: Amount of space deduplication database takes up.
+                            type: integer
+                          free_deduplication_db_size:
+                            description: Amount of space left on storage where deduplication database is.
+                            type: integer
+                          occupied_deduplication_ds_size:
+                            description: Amount of space datastore takes up.
+                            type: integer
+                          occupied_deduplication_ram:
+                            description: Amount of RAM deduplication database takes up.
+                            type: integer
+                          free_deduplication_ram:
+                            description: Amount of free RAM that is left for deduplication database to use.
+                            type: integer
+                          deduplication_index_usage:
+                            description: Load factor of deduplication database.
+                            type: string
+                          data_to_index_size:
+                            description: Amount of data that needs to be indexed (LDS size).
+                            type: integer
+                  agents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/managing_agent_id'
+                  status:
+                    type: object
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                description: Batch vault creation result.
+                type: object
+                additionalProperties: false
+                properties:
+                  created:
+                    description: List of IDs of created vaults.
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: false
+                      required:
+                      - vault_id
+                      properties:
+                        vault_id:
+                          $ref: '#/components/schemas/managing_agent_id'
+                  errors:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/error'
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Add vaults batch
+      x-summary-source: derived
+  /sync/vaults/{vaultID}:
+    put:
+      operationId: Register or update vault
+      description: Registers or updates a vault.
+      x-ExtJS: VaultManager.RegisterVault
+      parameters:
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/vault_info'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/id_response'
+        '400':
+          description: Invalid request.
+          content: {}
+        '409':
+          description: Conflict on object update.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Register or update vault
+      x-summary-source: derived
+    delete:
+      operationId: Soft delete vault
+      description: Marks the vault as deleted in the Vault Manager database.
+      x-ExtJS: VaultManager.MarkVaultDeleted
+      parameters:
+      - name: tenantID
+        description: Tenant ID (where the vault will be removed from) to separate the target tenant from the effective one
+        required: false
+        in: query
+        schema:
+          description: Tenant ID (where the vault will be removed from) to separate the target tenant from the effective one
+          oneOf:
+          - $ref: '#/components/schemas/id'
+          - $ref: '#/components/schemas/item1'
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The vault was soft deleted successfully.
+          content: {}
+        '404':
+          description: The vault is not found.
+          content: {}
+        '409':
+          description: Update of the vault has failed because its last seen time is in the past.
+          content: {}
+        '500':
+          description: Any other error.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Soft delete vault
+      x-summary-source: derived
+  /sync/vaults/{vaultID}/agents:
+    post:
+      operationId: Bind agents to vault
+      description: Binds agents to the vault.
+      x-ExtJS: VaultManager.BindAgents
+      parameters:
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Request to bind agents to a vault.
+              type: object
+              additionalProperties: false
+              properties:
+                agent_ids:
+                  type: array
+                  items:
+                    description: Universally unique identifier.
+                    type: string
+                    format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/id_response'
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Bind agents to vault
+      x-summary-source: derived
+  /sync/vaults/{vaultID}/index_catalog_status:
+    post:
+      operationId: Update vault index catalog status
+      description: Updates the index catalog status of vault.
+      x-ExtJS: VaultManager.UpdateIndexCatalogStatus
+      parameters:
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Request to update index catalog status.
+              type: object
+              additionalProperties: false
+              properties:
+                catalog_index_result:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      archive_id:
+                        $ref: '#/components/schemas/items_17'
+                      indexed_backup_ids:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/items_17'
+                      is_delete_archive:
+                        type: boolean
+      responses:
+        '204':
+          description: The vault index catalog status was updated successfully.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Update vault index catalog status
+      x-summary-source: derived
+  /sync/vaults/{vaultID}/stats:
+    patch:
+      operationId: Update vault stats
+      description: Updates the specified fields of vault stats.
+      x-ExtJS: VaultManager.UpdateVaultStats
+      parameters:
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Vault stats
+              description: Vault statistics.
+              example:
+                archive_count: 2
+                backup_count: 25
+                backed_up_data_size: 339214336
+                original_data_size: 53691285504
+                occupied_data_size: 339214336
+                immutable_size: 6432517
+                free_space: 483221569536
+                total_space: 500000000000
+              type: object
+              additionalProperties: false
+              properties:
+                archive_count:
+                  description: Number of archives in the vault.
+                  type: integer
+                backup_count:
+                  description: Number of backups in the vault.
+                  type: integer
+                backed_up_data_size:
+                  description: Size of data stored in vault's backups.
+                  type: integer
+                original_data_size:
+                  description: Original size of all data vault holds.
+                  type: integer
+                occupied_data_size:
+                  description: Amount of space that vault takes up on storage.
+                  type: integer
+                immutable_size:
+                  description: Amount of space that vault takes up on immutable storage.
+                  type: integer
+                free_space:
+                  description: Amount of space left on storage where vault is.
+                  type: integer
+                total_space:
+                  description: Total about of space on storage where vault is.
+                  type: integer
+                logical_archive_size:
+                  description: Logical archive size sum.
+                  type: integer
+                deduplication_stats:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    occupied_deduplication_db_size:
+                      description: Amount of space deduplication database takes up.
+                      type: integer
+                    free_deduplication_db_size:
+                      description: Amount of space left on storage where deduplication database is.
+                      type: integer
+                    occupied_deduplication_ds_size:
+                      description: Amount of space datastore takes up.
+                      type: integer
+                    occupied_deduplication_ram:
+                      description: Amount of RAM deduplication database takes up.
+                      type: integer
+                    free_deduplication_ram:
+                      description: Amount of free RAM that is left for deduplication database to use.
+                      type: integer
+                    deduplication_index_usage:
+                      description: Load factor of deduplication database.
+                      type: string
+                    data_to_index_size:
+                      description: Amount of data that needs to be indexed (LDS size).
+                      type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Invalid request.
+          content: {}
+        '404':
+          description: Resource not found.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Update vault stats
+      x-summary-source: derived
+  /sync/vaults/{vaultID}/archives/{archiveID}:
+    put:
+      operationId: Add archive to vault
+      description: Adds an archive to the vault.
+      x-ExtJS: VaultManager.AddArchive
+      parameters:
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      - name: archiveID
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/archive'
+      responses:
+        '201':
+          description: The archive was successfully added to the vault.
+          content: {}
+        '400':
+          description: Invalid request.
+          content: {}
+        '404':
+          description: Resource not found.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Add archive to vault
+      x-summary-source: derived
+    patch:
+      operationId: Update archive
+      description: Updates an archive in the vault.
+      x-ExtJS: VaultManager.UpdateArchive
+      parameters:
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      - name: archiveID
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/archive'
+      responses:
+        '204':
+          description: Ok, no content.
+          content: {}
+        '400':
+          description: Invalid request.
+          content: {}
+        '404':
+          description: Resource not found.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Update archive
+      x-summary-source: derived
+    delete:
+      operationId: Soft delete archive
+      description: Marks the archive as deleted in the Vault Manager database.
+      x-ExtJS: VaultManager.DeleteArchive
+      parameters:
+      - name: last_seen_at
+        description: Date and time in RFC 3339 when the archive was last seen.
+        required: false
+        in: query
+        schema:
+          description: Date and time in RFC 3339 when the archive was last seen.
+          type: string
+          format: date-time
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      - name: archiveID
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The archive was soft deleted successfully.
+          content: {}
+        '400':
+          description: Invalid request.
+          content: {}
+        '404':
+          description: Resource not found.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Soft delete archive
+      x-summary-source: derived
+  /sync/vaults/{vaultID}/archives/{archiveID}/backups/{backupID}:
+    put:
+      operationId: Add backup
+      description: Adds a new backup to the vault archive.
+      x-ExtJS: VaultManager.AddBackup
+      parameters:
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      - name: archiveID
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: backupID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/backup_create_request'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Invalid request.
+          content: {}
+        '404':
+          description: Resource not found.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Add backup
+      x-summary-source: derived
+    patch:
+      operationId: Update backup
+      description: Updates a backup in the vault archive.
+      x-ExtJS: VaultManager.UpdateBackup
+      parameters:
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      - name: archiveID
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: backupID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/backup_update_request'
+      responses:
+        '204':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Invalid request.
+          content: {}
+        '404':
+          description: Resource not found.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Update backup
+      x-summary-source: derived
+    delete:
+      operationId: Soft delete backup
+      description: Marks the backup as deleted in the Vault Manager database.
+      x-ExtJS: VaultManager.DeleteBackup
+      parameters:
+      - name: tenantId
+        description: Tenant ID to reduce the scope.
+        required: false
+        in: query
+        schema:
+          description: Tenant ID to reduce the scope.
+          oneOf:
+          - $ref: '#/components/schemas/id'
+          - $ref: '#/components/schemas/item1'
+      - name: changeTag
+        description: Change tag.
+        required: false
+        in: query
+        schema:
+          description: Change tag.
+          type: string
+      - name: last_seen_at
+        description: Date and time in RFC 3339 when the backup was last seen.
+        required: false
+        in: query
+        schema:
+          description: Date and time in RFC 3339 when the backup was last seen.
+          type: string
+          format: date-time
+      - name: archive_credentials_id
+        description: Archive credentials ID.
+        required: false
+        in: query
+        schema:
+          description: Archive credentials ID.
+          type: string
+      - name: vaultID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      - name: archiveID
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: backupID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          description: The backup was soft deleted successfully.
+          content: {}
+        '400':
+          description: Invalid request.
+          content: {}
+        '404':
+          description: Resource not found.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Soft delete backup
+      x-summary-source: derived
+  /sync/agents/{agentID}:
+    delete:
+      operationId: Delete agent
+      description: Deletes an agent.
+      x-ExtJS: VaultManager.RemoveAgent
+      parameters:
+      - name: agentID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Delete agent
+      x-summary-source: derived
+  /sync/storage_nodes:
+    post:
+      operationId: Register storage node_0
+      description: 'Available in on-premises version only.
+
+
+        Registers a new storage node.'
+      x-ExtJS: VaultManager.SyncASN
+      parameters:
+      - name: tenantID
+        description: Tenant ID (where the vault will be removed from) to separate the target tenant from the effective one
+        required: false
+        in: query
+        schema:
+          description: Tenant ID (where the vault will be removed from) to separate the target tenant from the effective one
+          oneOf:
+          - $ref: '#/components/schemas/id'
+          - $ref: '#/components/schemas/item1'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/storage_node_extended'
+      responses:
+        '201':
+          description: Storage node was successfully registered.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  id:
+                    description: Universally unique identifier.
+                    type: string
+                    format: uuid
+                  tenant_locator:
+                    description: Tenant locator.
+                    type: string
+        '400':
+          description: Invalid request.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Sync
+      summary: Register storage node 0
+      x-summary-source: derived
+components:
+  schemas:
+    items_4:
+      description: Archive type.
+      enum:
+      - unknown
+      - file
+      - image
+      - vss_application
+      - msexchange
+      - msexchange_doc
+      - mssql
+      - oracle
+      - ad
+      - empty
+      type: string
+    item3:
+      title: S3 Compatible Vault settings
+      description: S3 Compatible Vault settings.
+      type: object
+      additionalProperties: false
+      required:
+      - cred_id
+      - endpoint
+      - bucket
+      - path
+      properties:
+        cred_id:
+          description: Cred ID from CredentialStore service used to get s3 credentials
+          type: string
+        s3_auth_flavour:
+          description: Authentication method
+          default: authv4
+          enum:
+          - authv2
+          - authv4
+          type: string
+        cert_verify:
+          description: Verify server cerificate?
+          default: true
+          type: boolean
+        endpoint:
+          description: Endpoint of the compatible s3 storage
+          type: string
+        bucket:
+          description: Bucket name
+          type: string
+        path:
+          description: Path on the storage.
+          type: string
+        s3_subtype:
+          default: ''
+          enum:
+          - ''
+          - ACI
+          - ImpossibleCloud
+          type: string
+    archive_id_15:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    item2:
+      title: Amazon S3 Vault settings
+      description: Amazon S3 Vault settings.
+      type: object
+      additionalProperties: false
+      properties:
+        connection_id:
+          description: Connection ID is used to get Amazon credentials from Cloud Connection Service
+          type: string
+        region:
+          description: Region of the storage
+          type: string
+        storage_class:
+          description: Storage class
+          enum:
+          - STANDARD
+          - STANDARD_IA
+          - ONEZONE_IA
+          - INTELLIGENT_TIERING
+          type: string
+        bucket:
+          description: Bucket name
+          type: string
+        path:
+          description: Path on the storage.
+          type: string
+        immutability_days:
+          description: Object lock duration in days.
+          default: 30
+          type: integer
+          minimum: 1
+          maximum: 999
+    stats:
+      title: Vault stats
+      description: Vault statistics.
+      type: object
+      additionalProperties: false
+      properties:
+        archive_count:
+          description: Number of archives in the vault.
+          type: integer
+        backup_count:
+          description: Number of backups in the vault.
+          type: integer
+        backed_up_data_size:
+          description: Size of data stored in vault's backups.
+          type: integer
+        original_data_size:
+          description: Original size of all data vault holds.
+          type: integer
+        occupied_data_size:
+          description: Amount of space that vault takes up on storage.
+          type: integer
+        immutable_size:
+          description: Amount of space that vault takes up on immutable storage.
+          type: integer
+        free_space:
+          description: Amount of space left on storage where vault is.
+          type: integer
+        total_space:
+          description: Total about of space on storage where vault is.
+          type: integer
+        logical_archive_size:
+          description: Logical archive size sum.
+          type: integer
+        deduplication_stats:
+          type: object
+          additionalProperties: false
+          properties:
+            occupied_deduplication_db_size:
+              description: Amount of space deduplication database takes up.
+              type: integer
+            free_deduplication_db_size:
+              description: Amount of space left on storage where deduplication database is.
+              type: integer
+            occupied_deduplication_ds_size:
+              description: Amount of space datastore takes up.
+              type: integer
+            occupied_deduplication_ram:
+              description: Amount of RAM deduplication database takes up.
+              type: integer
+            free_deduplication_ram:
+              description: Amount of free RAM that is left for deduplication database to use.
+              type: integer
+            deduplication_index_usage:
+              description: Load factor of deduplication database.
+              type: string
+            data_to_index_size:
+              description: Amount of data that needs to be indexed (LDS size).
+              type: integer
+    tenant_id_20:
+      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+      oneOf:
+      - $ref: '#/components/schemas/id'
+      - $ref: '#/components/schemas/item1'
+    items_17:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    items:
+      description: Backup type.
+      enum:
+      - full
+      - incremental
+      - differential
+      - unknown
+      - cdp
+      type: string
+    item0_19:
+      type: object
+      additionalProperties: false
+      properties:
+        comment:
+          type: string
+        storage_type:
+          $ref: '#/components/schemas/storage_type'
+        catalog_type:
+          type: string
+        catalog_uri:
+          type: string
+        encryption_type:
+          enum:
+          - CRYPT_NONE
+          - CRYPT_AES128
+          - CRYPT_AES192
+          - CRYPT_AES256
+          - CRYPT_GOST
+          type: string
+        encryption_uri:
+          type: string
+        encryption_key:
+          type: string
+        dedup_type:
+          type: string
+        dedup_uri:
+          type: string
+    item0_28:
+      description: Backup description.
+      type: object
+      additionalProperties: false
+      required:
+      - vault_id
+      - archive_id
+      - backup_id
+      - type
+      properties:
+        vault_id:
+          $ref: '#/components/schemas/id'
+        archive_id:
+          $ref: '#/components/schemas/id'
+        backup_id:
+          $ref: '#/components/schemas/id'
+        created:
+          description: Date and time in RFC 3339 format the backup was created.
+          type: string
+          format: date-time
+        size:
+          description: Size in bytes on backup location.
+          type: integer
+        deduplicated_size:
+          description: Deduplicated size in bytes on backup location.
+          type: integer
+        backed_up_data_size:
+          description: Size in bytes of backed up data in backup.
+          type: integer
+        original_data_size:
+          description: Size in bytes of data that can be restored from this backup; for full backup this value is equal to `backed_up_data_size`.
+          type: integer
+        item_counters:
+          title: Slice item counters
+          description: Counters of items modified during backup.
+          type: object
+          additionalProperties: false
+          properties:
+            items_added:
+              description: Items added during backup.
+              type: integer
+            items_changed:
+              description: Items changed during backup.
+              type: integer
+            items_removed:
+              description: Items removed during backup.
+              type: integer
+        deleted:
+          description: True if the backup is deleted. False otherwise.
+          type: boolean
+        tenant_id:
+          $ref: '#/components/schemas/tenant_id_20'
+        tenant_locator:
+          description: Tenant path.
+          type: string
+        resource_ids:
+          description: List of identifiers of backed up resources.
+          type: array
+          items:
+            description: ID of backed up resource.
+            type: string
+        catalog_status:
+          description: Catalog status for backup or backup subtypes.
+          type: object
+        notarized:
+          description: If true, the backup is notarized. False otherwise.
+          type: boolean
+        attributes:
+          description: Any vault-specific or backup-point-specific attributes.
+          type: object
+        vault:
+          $ref: '#/components/schemas/config_29'
+        archive:
+          title: Archive
+          description: Archive description.
+          type: object
+          additionalProperties: false
+          required:
+          - id
+          - name
+          - vault_id
+          - format
+          - created
+          - file_name
+          properties:
+            id:
+              $ref: '#/components/schemas/id'
+            name:
+              description: Name of the archive.
+              type: string
+            vault_id:
+              $ref: '#/components/schemas/id'
+            legacy_id:
+              description: ID that is needed for old WCS API support. Don't use it in new services!
+              type: string
+            attributes:
+              description: Any archive-specific attributes.
+              type: object
+            size:
+              description: Size of the archive in bytes.
+              type: integer
+            compressed_data_size:
+              description: Sum of compressed data in all slices in bytes. May be larger than `data_size` in case of dedup. Calculated by archive implementation.
+              type: integer
+            data_size:
+              description: Size of backed up data in all slices of archive in bytes. Calculated by archive implementation.
+              type: integer
+            original_data_size:
+              description: Size of the data that can be restored from all slices of the archive in bytes. Calculated by archive implementation.
+              type: integer
+            type:
+              $ref: '#/components/schemas/items_4'
+            format:
+              $ref: '#/components/schemas/items_5'
+            created:
+              description: Date and time in RFC 3339 format the archive was created.
+              type: string
+              format: date-time
+            updated:
+              description: Date and time in RFC 3339 format the archive was updated.
+              type: string
+              format: date-time
+            last_backup_created:
+              description: Date and time in RFC 3339 format the last slice was created.
+              type: string
+              format: date-time
+            resource_type:
+              description: 'Type of resource stored in archive (e.g., `machine`, `mssql_server`). Can include additional resource type (e.g., type of VM: `datastore.vmwesx`, `virtual_appliance.mshyperv`).'
+              type: string
+            protected_by_password:
+              description: If true, the archive is protected by password. False otherwise.
+              type: boolean
+            encryption_algorithm:
+              description: Encryption algorithm of the archive.
+              enum:
+              - none
+              - aes_128
+              - aes128
+              - aes_192
+              - aes192
+              - aes_256
+              - aes256
+              - gost
+              type: string
+            deleted:
+              description: If true, the archive is deleted and no longer exists. False otherwise.
+              type: boolean
+            file_name:
+              description: The archive file name.
+              type: string
+            tenant_id:
+              $ref: '#/components/schemas/tenant_id_20'
+            tenant_locator:
+              description: Locator of the tenant that owns the archive.
+              type: string
+            agent_id:
+              $ref: '#/components/schemas/id'
+            source_key:
+              description: Key of archive in DML DB. Used for legacy agents support.
+              type: string
+            source_usn:
+              description: Timestamp of archive in DML DB. Used for legacy agents support.
+              type: integer
+            actions:
+              description: List of available actions.
+              type: array
+              items:
+                type: string
+            agent_name:
+              description: Hostname of agent machine.
+              type: string
+              format: hostname
+            centralized_plan_id:
+              description: Global identifier of the backup plan in accordance to that the archive is created.
+              type: string
+            backup_plan_id:
+              description: ID of the backup plan that created the archive.
+              type: string
+            backup_plan_name:
+              description: Name of the backup plan that created the archive.
+              type: string
+            description:
+              description: User-defined description.
+              type: string
+            display_name:
+              description: Human-readable archive name.
+              type: string
+            owner_id:
+              description: ID of the user (SID for Windows) that owns the archive.
+              type: string
+            owner_name:
+              description: Name of the user that owns the archive.
+              type: string
+            resource_id:
+              description: ID of the resource that stored in the archive.
+              type: string
+            resource_ids:
+              description: List of identifiers of backed up resources.
+              type: array
+              items:
+                description: ID of backed up resource.
+                type: string
+            resource_name:
+              description: Name of the resource that stored in the archive.
+              type: string
+            consistent:
+              description: False if archive content could be outdated and a refresh is required. True otherwise.
+              type: boolean
+            stats:
+              $ref: '#/components/schemas/stats_27'
+            marked_for_deletion:
+              description: True if archive marked as deleted. False otherwise.
+              type: boolean
+            pds_status:
+              description: State of physical data shipment.
+              enum:
+              - archiveNotReady
+              - archiveInTransit
+              - archiveDelivered
+              type: string
+            search_index_size:
+              description: Size of search index.
+              type: integer
+            resource_path:
+              description: Path to the backed up resource in a format acceptable by Resource Manager.
+              type: string
+            last_seen_at:
+              description: Last time when the archive was seen.
+              type: string
+              format: date-time
+            cataloged_status:
+              description: State of archive is cataloged.
+              enum:
+              - notIndexed
+              - partiallyIndexed
+              - indexed
+              type: string
+            forensic:
+              description: True if the archive contains forensic data. False otherwise.
+              type: boolean
+            pre_patch_management:
+              description: Flag that specifies whether the archive contains at least one backup which was made before patch management. True if there's at least one backup that was made before patch management. False otherwise.
+              type: boolean
+            malware_found:
+              description: Malware assessment result of backups in the archive. Absent if no backups were scanned. True if at least one backup has malware. False otherwise.
+              type: boolean
+            logical_size:
+              description: Reflects logical size of archive.
+              type: integer
+            immutable_size:
+              description: Reflects immutable size of archive.
+              type: integer
+            deleted_immutable:
+              description: True if the archive is marked as deleted immutable. False otherwise.
+              type: boolean
+            orphanage:
+              $ref: '#/components/schemas/orphanage'
+        disks:
+          description: Disks in the Disk-image backup.
+          type: array
+          items:
+            title: Disk
+            description: Disk description.
+            type: object
+            additionalProperties: false
+            properties:
+              device_model:
+                type: string
+              name:
+                type: string
+              size:
+                description: Disk size in bytes.
+                type: integer
+              volumes:
+                type: array
+                items:
+                  $ref: '#/components/schemas/items_30'
+        dynamic_volumes:
+          description: Dynamic volumes in the Disk-image backup.
+          type: array
+          items:
+            $ref: '#/components/schemas/items_30'
+        source_key:
+          description: Old agents sync info.
+          type: string
+        source_usn:
+          description: Old agents sync info.
+          type: integer
+        actions:
+          description: List of available actions.
+          type: array
+          items:
+            type: string
+        last_seen_at:
+          description: Date and time in RFC 3339 format the backup was last seen.
+          type: string
+          format: date-time
+        change_tag:
+          description: User-defined identifier to mark records affected by this request (obsolete).
+          type: string
+        failover_check_info:
+          title: Failover check info
+          description: Information about status of failover.
+          type: object
+          additionalProperties: false
+          properties:
+            error:
+              description: Failover check error.
+              type: object
+              additionalProperties: false
+              properties:
+                code:
+                  type: string
+                domain:
+                  type: string
+            is_critical_error:
+              description: True if check has failed with error that is critical for failover. False otherwise.
+              type: boolean
+        triggered_by:
+          $ref: '#/components/schemas/items_1'
+        av_scanning_date:
+          description: Date and time in RFC 3339 format when backup was scanned by antivirus. Input timezone is removed by conversion to UTC
+          type: string
+          format: date-time
+        vulnerability_assessment_result:
+          description: "Vulnerability assessment result:\n* 0 - clean.\n* 1 - malicious.\n 2 - unknown.\n 3 - failed.\n* 4 - unsupported."
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          type: integer
+        malware_assessment_result:
+          description: 'Malware assessment result:
+
+            * 0 - clean.
+
+            * 1 - malware.
+
+            * 4 - unsupported (unsupported file system).'
+          enum:
+          - 0
+          - 1
+          - 4
+          type: integer
+        type:
+          $ref: '#/components/schemas/items'
+        tapes:
+          $ref: '#/components/schemas/tapes'
+        tapes_for_restore:
+          $ref: '#/components/schemas/tapes'
+        deleted_immutable:
+          description: True if the backup is marked as deleted immutable. False otherwise.
+          type: boolean
+        validation_status:
+          description: Result of backup validation.
+          type: object
+          additionalProperties: false
+          required:
+          - overall_status
+          properties:
+            overall_status:
+              $ref: '#/components/schemas/checksum_validation_31'
+            checksum_validation:
+              $ref: '#/components/schemas/checksum_validation_31'
+            vm_heartbeat_validation:
+              $ref: '#/components/schemas/checksum_validation_31'
+            screenshot_validation:
+              $ref: '#/components/schemas/checksum_validation_31'
+            screenshot_full_url:
+              description: URL to screenshot file (this is an optional unsigned URL to S3 storage).
+              type: string
+            screenshot_preview_url:
+              description: URL to screenshot preview file (this is an optional unsigned URL to S3 storage).
+              type: string
+        automated_test_failover_validation_status:
+          description: Status of backup validation by Disaster Recovery Automated Test Failover feature.
+          type: object
+          additionalProperties: false
+          required:
+          - completed_at
+          - overall_status
+          - started_at
+          - task_id
+          properties:
+            completed_at:
+              description: Date and time in RFC 3339 format when Automated Test Failover validation of the Backup was completed. Input timezone is removed by conversion to UTC.
+              type: string
+              format: date-time
+            overall_status:
+              $ref: '#/components/schemas/checksum_validation_31'
+            started_at:
+              description: Date and time in RFC 3339 format when Automated Test Failover validation of the Backup was started. Input timezone is removed by conversion to UTC.
+              type: string
+            screenshot_full_url:
+              description: URL to Vault Manager which redirects to signed S3 storage URL with screenshot file produced during backup validation by Disaster Recovery Automated Test Failover feature (optional).
+              type: string
+            screenshot_preview_url:
+              description: URL to Vault Manager which redirects to signed S3 storage URL with screenshot preview file produced during backup validation by Disaster Recovery Automated Test Failover feature (optional).
+              type: string
+            task_id:
+              description: The ID of the Task Manager task which the Automated Test Failover process was started from.
+              type: string
+        created_in_network_isolation:
+          description: True if the backup was created after network isolation. False otherwise.
+          type: boolean
+    item4:
+      title: Wasabi S3 Vault settings
+      description: Wasabi S3 Vault settings.
+      type: object
+      additionalProperties: false
+      required:
+      - connection_id
+      - region
+      - endpoint
+      - bucket
+      - path
+      - s3_subtype
+      properties:
+        connection_id:
+          description: Connection ID is used to get Wasabi credentials from Cloud Connection Service
+          type: string
+        region:
+          description: Region of the storage
+          type: string
+        endpoint:
+          description: Endpoint of wasabi based on the region
+          type: string
+        bucket:
+          description: Bucket name
+          type: string
+        path:
+          description: Path on the storage.
+          type: string
+        s3_subtype:
+          enum:
+          - Wasabi
+          type: string
+    tapes_for_restore_25:
+      type: array
+      items:
+        $ref: '#/components/schemas/archive_id_15'
+    vault_info:
+      description: Vault info.
+      example:
+        config:
+          name: 'WIN-FBM117GB12I: C:\\test\\'
+          settings:
+            storage_uri: C:/test/
+          is_full_config: true
+          uri: C:/test/
+          tenant_locator: /00000000-0000-0000-0000-000000000000/
+          storage_type: local_folder
+          version: LOCATION_VERSION_ABR12
+          managing_agent_id: 45EB1623-FA48-44A6-9C35-17188781ADC5
+          id: A574AB3E-DB44-2C60-01A9-FB9CFBA89D43
+        stats:
+          free_space: 26164383744
+          total_space: 42580570112
+        status:
+          status: ok
+          status_error: '{}\n'
+        agents:
+        - 45EB1623-FA48-44A6-9C35-17188781ADC5
+      type: object
+      additionalProperties: false
+      required:
+      - config
+      properties:
+        config:
+          $ref: '#/components/schemas/config'
+        stats:
+          $ref: '#/components/schemas/stats'
+        agents:
+          type: array
+          items:
+            $ref: '#/components/schemas/id'
+        status:
+          type: object
+    checksum_validation_31:
+      description: Value of backup validation status.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
+      type: string
+    access_address:
+      description: Hostname or IP address of Acronis Storage Node to create vault on.
+      anyOf:
+      - type: string
+        format: ipv4
+      - type: string
+        format: ipv6
+      - type: string
+        format: hostname
+      - type: string
+        minLength: 0
+      type: string
+    items_24:
+      title: Volume
+      description: Volume description.
+      type: object
+      additionalProperties: false
+      properties:
+        free_space:
+          description: Free volume space in bytes.
+          type: integer
+        is_bootable:
+          type: boolean
+        is_system:
+          type: boolean
+        name:
+          type: string
+        size:
+          description: Volume size in bytes.
+          type: integer
+        mount_strid:
+          description: String identifier of the volume.
+          type: string
+    config:
+      title: Vault description
+      description: Vault description.
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - version
+      - storage_type
+      - settings
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          description: Name of the vault.
+          type: string
+        uri:
+          description: URI of the vault.
+          type: string
+        version:
+          description: Version of the vault.
+          type: string
+        managing_agent_id:
+          $ref: '#/components/schemas/id'
+        storage_type:
+          $ref: '#/components/schemas/storage_type'
+        organizational:
+          description: True if vault is online and is created on customer or personal tenant levels. False otherwise.
+          type: boolean
+        settings:
+          description: Any vault type specific settings.
+          oneOf:
+          - $ref: '#/components/schemas/item0_19'
+          - $ref: '#/components/schemas/item1_21'
+          - $ref: '#/components/schemas/item2'
+          - $ref: '#/components/schemas/item3'
+          - $ref: '#/components/schemas/item4'
+          - type: object
+        storage_id:
+          description: ID of the storage, for Local ABGW Vault or Storage node Vault.
+          type: string
+        status:
+          description: Status of the vault.
+          type: object
+        tenant_id:
+          $ref: '#/components/schemas/tenant_id_20'
+        tenant_locator:
+          description: Tenant locator.
+          type: string
+        access_address:
+          $ref: '#/components/schemas/access_address'
+        compacting_plan_id:
+          $ref: '#/components/schemas/id'
+        hostname:
+          description: Hostname of local vault.
+          type: string
+          format: hostname
+        consistent:
+          description: False if vault content could be outdated and a refresh is required. True otherwise.
+          type: boolean
+        last_seen_at:
+          description: Date and time in RFC 3339 format when the vault was last seen.
+          type: string
+          format: date-time
+        is_full_config:
+          description: True if `name`, `uri`, `settings`, `storage_type` are filled. False otherwise.
+          type: boolean
+    item1_21:
+      title: Local ABGW Vault settings
+      description: Local ABGW Vault settings.
+      type: object
+      additionalProperties: false
+      required:
+      - storage_id
+      properties:
+        path:
+          description: Path on the storage.
+          type: string
+        storage_id: {}
+    storage_node_extended:
+      description: Extended info about Storage Node and its vaults.
+      example:
+        config:
+          name: RU-O0000123
+          machine_id: 10.250.176.12
+      type: object
+      additionalProperties: false
+      required:
+      - config
+      properties:
+        config:
+          title: Storage node
+          description: Storage node description.
+          type: object
+          additionalProperties: false
+          required:
+          - name
+          - machine_id
+          properties:
+            id:
+              $ref: '#/components/schemas/id'
+            name:
+              type: string
+            machine_id:
+              description: Identifier of the machine with Storage node. Currently hostname or IP address.
+              type: string
+            status:
+              description: Status of the machine.
+              type: string
+            addresses:
+              description: Addresses of the machine.
+              type: array
+              items:
+                anyOf:
+                - type: string
+                  format: ipv4
+                - type: string
+                  format: ipv6
+                type: string
+            tenant_locator:
+              type: string
+            memory_size:
+              description: Memory size of the machine.
+              type: integer
+            processor_frequency:
+              description: Processor frequency of the machine.
+              type: integer
+            processor_name:
+              description: Processor name of the machine.
+              type: string
+            operating_system_name:
+              description: Operating system name of the machine.
+              type: string
+            architecture:
+              description: Architecture of the machine.
+              type: string
+            agent_version:
+              description: Agent version installed in the machine.
+              type: string
+            vault_count:
+              description: Number of managed vaults.
+              type: integer
+        vaults:
+          type: array
+          items:
+            description: Vault info.
+            type: object
+            additionalProperties: false
+            required:
+            - config
+            properties:
+              config:
+                $ref: '#/components/schemas/config_29'
+              stats:
+                $ref: '#/components/schemas/stats'
+              agents:
+                type: array
+                items:
+                  $ref: '#/components/schemas/id'
+              status:
+                type: object
+    storage_type:
+      description: Vault storage type.
+      enum:
+      - unknown
+      - local_folder
+      - network_share
+      - ftp
+      - sftp
+      - cd
+      - tape
+      - storage_server
+      - asz
+      - removable_drive
+      - online
+      - nfs_share
+      - esx
+      - local_abgw
+      - microsoft_azure
+      - amazon_s3
+      - s3_compatible
+      type: string
+    managing_agent_id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    id_12:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    items_30:
+      title: Volume
+      description: Volume description.
+      type: object
+      additionalProperties: false
+      properties:
+        free_space:
+          description: Free volume space in bytes.
+          type: integer
+        is_bootable:
+          type: boolean
+        is_system:
+          type: boolean
+        name:
+          type: string
+        size:
+          description: Volume size in bytes.
+          type: integer
+        mount_strid:
+          description: String identifier of the volume.
+          type: string
+    checksum_validation_26:
+      description: Value of backup validation status.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
+      type: string
+    storage_type_16:
+      description: Vault storage type.
+      enum:
+      - unknown
+      - local_folder
+      - network_share
+      - ftp
+      - sftp
+      - cd
+      - tape
+      - storage_server
+      - asz
+      - removable_drive
+      - online
+      - nfs_share
+      - esx
+      - local_abgw
+      - microsoft_azure
+      - amazon_s3
+      - s3_compatible
+      type: string
+    item0:
+      description: Backup description.
+      type: object
+      additionalProperties: false
+      required:
+      - vault_id
+      - archive_id
+      - backup_id
+      - type
+      properties:
+        vault_id:
+          $ref: '#/components/schemas/archive_id_15'
+        archive_id:
+          $ref: '#/components/schemas/archive_id_15'
+        backup_id:
+          $ref: '#/components/schemas/archive_id_15'
+        created:
+          description: Date and time in RFC 3339 format the backup was created.
+          type: string
+          format: date-time
+        size:
+          description: Size in bytes on backup location.
+          type: integer
+        deduplicated_size:
+          description: Deduplicated size in bytes on backup location.
+          type: integer
+        backed_up_data_size:
+          description: Size in bytes of backed up data in backup.
+          type: integer
+        original_data_size:
+          description: Size in bytes of data that can be restored from this backup; for full backup this value is equal to `backed_up_data_size`.
+          type: integer
+        item_counters:
+          title: Slice item counters
+          description: Counters of items modified during backup.
+          type: object
+          additionalProperties: false
+          properties:
+            items_added:
+              description: Items added during backup.
+              type: integer
+            items_changed:
+              description: Items changed during backup.
+              type: integer
+            items_removed:
+              description: Items removed during backup.
+              type: integer
+        deleted:
+          description: True if the backup is deleted. False otherwise.
+          type: boolean
+        tenant_id:
+          $ref: '#/components/schemas/tenant_id_22'
+        tenant_locator:
+          description: Tenant path.
+          type: string
+        resource_ids:
+          description: List of identifiers of backed up resources.
+          type: array
+          items:
+            description: ID of backed up resource.
+            type: string
+        catalog_status:
+          description: Catalog status for backup or backup subtypes.
+          type: object
+        notarized:
+          description: If true, the backup is notarized. False otherwise.
+          type: boolean
+        attributes:
+          description: Any vault-specific or backup-point-specific attributes.
+          type: object
+        vault:
+          title: Vault description
+          description: Vault description.
+          type: object
+          additionalProperties: false
+          required:
+          - name
+          - version
+          - storage_type
+          - settings
+          properties:
+            id:
+              $ref: '#/components/schemas/archive_id_15'
+            name:
+              description: Name of the vault.
+              type: string
+            uri:
+              description: URI of the vault.
+              type: string
+            version:
+              description: Version of the vault.
+              type: string
+            managing_agent_id:
+              $ref: '#/components/schemas/archive_id_15'
+            storage_type:
+              $ref: '#/components/schemas/storage_type_23'
+            organizational:
+              description: True if vault is online and is created on customer or personal tenant levels. False otherwise.
+              type: boolean
+            settings:
+              description: Any vault type specific settings.
+              oneOf:
+              - type: object
+                additionalProperties: false
+                properties:
+                  comment:
+                    type: string
+                  storage_type:
+                    $ref: '#/components/schemas/storage_type_23'
+                  catalog_type:
+                    type: string
+                  catalog_uri:
+                    type: string
+                  encryption_type:
+                    enum:
+                    - CRYPT_NONE
+                    - CRYPT_AES128
+                    - CRYPT_AES192
+                    - CRYPT_AES256
+                    - CRYPT_GOST
+                    type: string
+                  encryption_uri:
+                    type: string
+                  encryption_key:
+                    type: string
+                  dedup_type:
+                    type: string
+                  dedup_uri:
+                    type: string
+              - title: Local ABGW Vault settings
+                description: Local ABGW Vault settings.
+                type: object
+                additionalProperties: false
+                required:
+                - storage_id
+                properties:
+                  path:
+                    description: Path on the storage.
+                    type: string
+                  storage_id: {}
+              - title: Amazon S3 Vault settings
+                description: Amazon S3 Vault settings.
+                type: object
+                additionalProperties: false
+                properties:
+                  connection_id:
+                    description: Connection ID is used to get Amazon credentials from Cloud Connection Service
+                    type: string
+                  region:
+                    description: Region of the storage
+                    type: string
+                  storage_class:
+                    description: Storage class
+                    enum:
+                    - STANDARD
+                    - STANDARD_IA
+                    - ONEZONE_IA
+                    - INTELLIGENT_TIERING
+                    type: string
+                  bucket:
+                    description: Bucket name
+                    type: string
+                  path:
+                    description: Path on the storage.
+                    type: string
+                  immutability_days:
+                    description: Object lock duration in days.
+                    default: 30
+                    type: integer
+                    minimum: 1
+                    maximum: 999
+              - title: S3 Compatible Vault settings
+                description: S3 Compatible Vault settings.
+                type: object
+                additionalProperties: false
+                required:
+                - cred_id
+                - endpoint
+                - bucket
+                - path
+                properties:
+                  cred_id:
+                    description: Cred ID from CredentialStore service used to get s3 credentials
+                    type: string
+                  s3_auth_flavour:
+                    description: Authentication method
+                    default: authv4
+                    enum:
+                    - authv2
+                    - authv4
+                    type: string
+                  cert_verify:
+                    description: Verify server cerificate?
+                    default: true
+                    type: boolean
+                  endpoint:
+                    description: Endpoint of the compatible s3 storage
+                    type: string
+                  bucket:
+                    description: Bucket name
+                    type: string
+                  path:
+                    description: Path on the storage.
+                    type: string
+                  s3_subtype:
+                    default: ''
+                    enum:
+                    - ''
+                    - ACI
+                    - ImpossibleCloud
+                    type: string
+              - title: Wasabi S3 Vault settings
+                description: Wasabi S3 Vault settings.
+                type: object
+                additionalProperties: false
+                required:
+                - connection_id
+                - region
+                - endpoint
+                - bucket
+                - path
+                - s3_subtype
+                properties:
+                  connection_id:
+                    description: Connection ID is used to get Wasabi credentials from Cloud Connection Service
+                    type: string
+                  region:
+                    description: Region of the storage
+                    type: string
+                  endpoint:
+                    description: Endpoint of wasabi based on the region
+                    type: string
+                  bucket:
+                    description: Bucket name
+                    type: string
+                  path:
+                    description: Path on the storage.
+                    type: string
+                  s3_subtype:
+                    enum:
+                    - Wasabi
+                    type: string
+              - type: object
+            storage_id:
+              description: ID of the storage, for Local ABGW Vault or Storage node Vault.
+              type: string
+            status:
+              description: Status of the vault.
+              type: object
+            tenant_id:
+              $ref: '#/components/schemas/tenant_id_22'
+            tenant_locator:
+              description: Tenant locator.
+              type: string
+            access_address:
+              description: Hostname or IP address of Acronis Storage Node to create vault on.
+              anyOf:
+              - type: string
+                format: ipv4
+              - type: string
+                format: ipv6
+              - type: string
+                format: hostname
+              - type: string
+                minLength: 0
+              type: string
+            compacting_plan_id:
+              $ref: '#/components/schemas/archive_id_15'
+            hostname:
+              description: Hostname of local vault.
+              type: string
+              format: hostname
+            consistent:
+              description: False if vault content could be outdated and a refresh is required. True otherwise.
+              type: boolean
+            last_seen_at:
+              description: Date and time in RFC 3339 format when the vault was last seen.
+              type: string
+              format: date-time
+            is_full_config:
+              description: True if `name`, `uri`, `settings`, `storage_type` are filled. False otherwise.
+              type: boolean
+        archive:
+          title: Archive
+          description: Archive description.
+          type: object
+          additionalProperties: false
+          required:
+          - id
+          - name
+          - vault_id
+          - format
+          - created
+          - file_name
+          properties:
+            id:
+              $ref: '#/components/schemas/archive_id_15'
+            name:
+              description: Name of the archive.
+              type: string
+            vault_id:
+              $ref: '#/components/schemas/archive_id_15'
+            legacy_id:
+              description: ID that is needed for old WCS API support. Don't use it in new services!
+              type: string
+            attributes:
+              description: Any archive-specific attributes.
+              type: object
+            size:
+              description: Size of the archive in bytes.
+              type: integer
+            compressed_data_size:
+              description: Sum of compressed data in all slices in bytes. May be larger than `data_size` in case of dedup. Calculated by archive implementation.
+              type: integer
+            data_size:
+              description: Size of backed up data in all slices of archive in bytes. Calculated by archive implementation.
+              type: integer
+            original_data_size:
+              description: Size of the data that can be restored from all slices of the archive in bytes. Calculated by archive implementation.
+              type: integer
+            type:
+              description: Archive type.
+              enum:
+              - unknown
+              - file
+              - image
+              - vss_application
+              - msexchange
+              - msexchange_doc
+              - mssql
+              - oracle
+              - ad
+              - empty
+              type: string
+            format:
+              description: Format of archive.
+              enum:
+              - '11'
+              - '12'
+              - alwaysIncremental
+              type: string
+            created:
+              description: Date and time in RFC 3339 format the archive was created.
+              type: string
+              format: date-time
+            updated:
+              description: Date and time in RFC 3339 format the archive was updated.
+              type: string
+              format: date-time
+            last_backup_created:
+              description: Date and time in RFC 3339 format the last slice was created.
+              type: string
+              format: date-time
+            resource_type:
+              description: 'Type of resource stored in archive (e.g., `machine`, `mssql_server`). Can include additional resource type (e.g., type of VM: `datastore.vmwesx`, `virtual_appliance.mshyperv`).'
+              type: string
+            protected_by_password:
+              description: If true, the archive is protected by password. False otherwise.
+              type: boolean
+            encryption_algorithm:
+              description: Encryption algorithm of the archive.
+              enum:
+              - none
+              - aes_128
+              - aes128
+              - aes_192
+              - aes192
+              - aes_256
+              - aes256
+              - gost
+              type: string
+            deleted:
+              description: If true, the archive is deleted and no longer exists. False otherwise.
+              type: boolean
+            file_name:
+              description: The archive file name.
+              type: string
+            tenant_id:
+              $ref: '#/components/schemas/tenant_id_22'
+            tenant_locator:
+              description: Locator of the tenant that owns the archive.
+              type: string
+            agent_id:
+              $ref: '#/components/schemas/archive_id_15'
+            source_key:
+              description: Key of archive in DML DB. Used for legacy agents support.
+              type: string
+            source_usn:
+              description: Timestamp of archive in DML DB. Used for legacy agents support.
+              type: integer
+            actions:
+              description: List of available actions.
+              type: array
+              items:
+                type: string
+            agent_name:
+              description: Hostname of agent machine.
+              type: string
+              format: hostname
+            centralized_plan_id:
+              description: Global identifier of the backup plan in accordance to that the archive is created.
+              type: string
+            backup_plan_id:
+              description: ID of the backup plan that created the archive.
+              type: string
+            backup_plan_name:
+              description: Name of the backup plan that created the archive.
+              type: string
+            description:
+              description: User-defined description.
+              type: string
+            display_name:
+              description: Human-readable archive name.
+              type: string
+            owner_id:
+              description: ID of the user (SID for Windows) that owns the archive.
+              type: string
+            owner_name:
+              description: Name of the user that owns the archive.
+              type: string
+            resource_id:
+              description: ID of the resource that stored in the archive.
+              type: string
+            resource_ids:
+              description: List of identifiers of backed up resources.
+              type: array
+              items:
+                description: ID of backed up resource.
+                type: string
+            resource_name:
+              description: Name of the resource that stored in the archive.
+              type: string
+            consistent:
+              description: False if archive content could be outdated and a refresh is required. True otherwise.
+              type: boolean
+            stats:
+              title: Archive stats
+              description: Additional information about slices.
+              type: object
+              additionalProperties: false
+              properties:
+                first_backup:
+                  type: string
+                last_backup_size:
+                  type: integer
+                last_backup_path:
+                  type: string
+                backup_count:
+                  type: integer
+            marked_for_deletion:
+              description: True if archive marked as deleted. False otherwise.
+              type: boolean
+            pds_status:
+              description: State of physical data shipment.
+              enum:
+              - archiveNotReady
+              - archiveInTransit
+              - archiveDelivered
+              type: string
+            search_index_size:
+              description: Size of search index.
+              type: integer
+            resource_path:
+              description: Path to the backed up resource in a format acceptable by Resource Manager.
+              type: string
+            last_seen_at:
+              description: Last time when the archive was seen.
+              type: string
+              format: date-time
+            cataloged_status:
+              description: State of archive is cataloged.
+              enum:
+              - notIndexed
+              - partiallyIndexed
+              - indexed
+              type: string
+            forensic:
+              description: True if the archive contains forensic data. False otherwise.
+              type: boolean
+            pre_patch_management:
+              description: Flag that specifies whether the archive contains at least one backup which was made before patch management. True if there's at least one backup that was made before patch management. False otherwise.
+              type: boolean
+            malware_found:
+              description: Malware assessment result of backups in the archive. Absent if no backups were scanned. True if at least one backup has malware. False otherwise.
+              type: boolean
+            logical_size:
+              description: Reflects logical size of archive.
+              type: integer
+            immutable_size:
+              description: Reflects immutable size of archive.
+              type: integer
+            deleted_immutable:
+              description: True if the archive is marked as deleted immutable. False otherwise.
+              type: boolean
+            orphanage:
+              title: Set archive orphanage status request
+              description: Archive orphanage status description.
+              type: object
+              required:
+              - status
+              properties:
+                status:
+                  description: Value of archive orphanage status.
+                  enum:
+                  - NONE
+                  - NO_POLICY
+                  - NO_RESOURCE
+                  type: string
+        disks:
+          description: Disks in the Disk-image backup.
+          type: array
+          items:
+            title: Disk
+            description: Disk description.
+            type: object
+            additionalProperties: false
+            properties:
+              device_model:
+                type: string
+              name:
+                type: string
+              size:
+                description: Disk size in bytes.
+                type: integer
+              volumes:
+                type: array
+                items:
+                  $ref: '#/components/schemas/items_24'
+        dynamic_volumes:
+          description: Dynamic volumes in the Disk-image backup.
+          type: array
+          items:
+            $ref: '#/components/schemas/items_24'
+        source_key:
+          description: Old agents sync info.
+          type: string
+        source_usn:
+          description: Old agents sync info.
+          type: integer
+        actions:
+          description: List of available actions.
+          type: array
+          items:
+            type: string
+        last_seen_at:
+          description: Date and time in RFC 3339 format the backup was last seen.
+          type: string
+          format: date-time
+        change_tag:
+          description: User-defined identifier to mark records affected by this request (obsolete).
+          type: string
+        failover_check_info:
+          title: Failover check info
+          description: Information about status of failover.
+          type: object
+          additionalProperties: false
+          properties:
+            error:
+              description: Failover check error.
+              type: object
+              additionalProperties: false
+              properties:
+                code:
+                  type: string
+                domain:
+                  type: string
+            is_critical_error:
+              description: True if check has failed with error that is critical for failover. False otherwise.
+              type: boolean
+        triggered_by:
+          description: Reason why Backup was created.
+          enum:
+          - patch_management
+          type: string
+        av_scanning_date:
+          description: Date and time in RFC 3339 format when backup was scanned by antivirus. Input timezone is removed by conversion to UTC
+          type: string
+          format: date-time
+        vulnerability_assessment_result:
+          description: "Vulnerability assessment result:\n* 0 - clean.\n* 1 - malicious.\n 2 - unknown.\n 3 - failed.\n* 4 - unsupported."
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          type: integer
+        malware_assessment_result:
+          description: 'Malware assessment result:
+
+            * 0 - clean.
+
+            * 1 - malware.
+
+            * 4 - unsupported (unsupported file system).'
+          enum:
+          - 0
+          - 1
+          - 4
+          type: integer
+        type:
+          description: Backup type.
+          enum:
+          - full
+          - incremental
+          - differential
+          - unknown
+          - cdp
+          type: string
+        tapes:
+          $ref: '#/components/schemas/tapes_for_restore_25'
+        tapes_for_restore:
+          $ref: '#/components/schemas/tapes_for_restore_25'
+        deleted_immutable:
+          description: True if the backup is marked as deleted immutable. False otherwise.
+          type: boolean
+        validation_status:
+          description: Result of backup validation.
+          type: object
+          additionalProperties: false
+          required:
+          - overall_status
+          properties:
+            overall_status:
+              $ref: '#/components/schemas/checksum_validation_26'
+            checksum_validation:
+              $ref: '#/components/schemas/checksum_validation_26'
+            vm_heartbeat_validation:
+              $ref: '#/components/schemas/checksum_validation_26'
+            screenshot_validation:
+              $ref: '#/components/schemas/checksum_validation_26'
+            screenshot_full_url:
+              description: URL to screenshot file (this is an optional unsigned URL to S3 storage).
+              type: string
+            screenshot_preview_url:
+              description: URL to screenshot preview file (this is an optional unsigned URL to S3 storage).
+              type: string
+        automated_test_failover_validation_status:
+          description: Status of backup validation by Disaster Recovery Automated Test Failover feature.
+          type: object
+          additionalProperties: false
+          required:
+          - completed_at
+          - overall_status
+          - started_at
+          - task_id
+          properties:
+            completed_at:
+              description: Date and time in RFC 3339 format when Automated Test Failover validation of the Backup was completed. Input timezone is removed by conversion to UTC.
+              type: string
+              format: date-time
+            overall_status:
+              $ref: '#/components/schemas/checksum_validation_26'
+            started_at:
+              description: Date and time in RFC 3339 format when Automated Test Failover validation of the Backup was started. Input timezone is removed by conversion to UTC.
+              type: string
+            screenshot_full_url:
+              description: URL to Vault Manager which redirects to signed S3 storage URL with screenshot file produced during backup validation by Disaster Recovery Automated Test Failover feature (optional).
+              type: string
+            screenshot_preview_url:
+              description: URL to Vault Manager which redirects to signed S3 storage URL with screenshot preview file produced during backup validation by Disaster Recovery Automated Test Failover feature (optional).
+              type: string
+            task_id:
+              description: The ID of the Task Manager task which the Automated Test Failover process was started from.
+              type: string
+        created_in_network_isolation:
+          description: True if the backup was created after network isolation. False otherwise.
+          type: boolean
+    error:
+      description: Base error object.
+      type: object
+      additionalProperties: false
+      required:
+      - domain
+      - reason
+      properties:
+        domain:
+          description: Error type or category.
+          type: string
+        reason:
+          description: Error ID or code.
+          type: string
+        context:
+          description: Error context dictionary.
+          type: object
+        serCode:
+          type: string
+        kbLink:
+          type: string
+        hints:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+            - name
+            - href
+            properties:
+              name:
+                type: string
+              href:
+                type: string
+        debug:
+          description: Error debug information.
+          type: object
+          additionalProperties: false
+          properties:
+            msg:
+              type: string
+            stackTrace:
+              type: string
+    backup_update_request:
+      description: Backup updating request, modified partial version of the Backup. Identified by `vault_id`, `archive_id` and `backup_id`.
+      allOf:
+      - $ref: '#/components/schemas/item0_28'
+      - type: object
+        properties:
+          archive_credentials_id:
+            description: Archive credentials ID.
+            type: string
+      example:
+        vault_id: 885b7fe4-95ce-71fd-fff5-8de5b3cce9bb
+        archive_id: 1f8867c2-179f-ef34-159f-84279a18174d
+        backup_id: c2aa0462-dd30-4e08-afce-1bad7cfbf8be
+        av_scanning_date: '2018-02-02T01:40:05Z'
+        type: cdp
+      type: object
+    id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    item1:
+      description: Numeric identifier.
+      type: string
+      pattern: ^\d+$
+    items_5:
+      description: Format of archive.
+      enum:
+      - '11'
+      - '12'
+      - alwaysIncremental
+      type: string
+    stats_27:
+      title: Archive stats
+      description: Additional information about slices.
+      type: object
+      additionalProperties: false
+      properties:
+        first_backup:
+          type: string
+        last_backup_size:
+          type: integer
+        last_backup_path:
+          type: string
+        backup_count:
+          type: integer
+    tapes:
+      type: array
+      items:
+        $ref: '#/components/schemas/id'
+    backup_create_request:
+      description: Backup creation request.
+      allOf:
+      - $ref: '#/components/schemas/item0_28'
+      - type: object
+        required:
+        - change_tag
+        - created
+        - size
+        properties:
+          change_tag:
+            description: Tag to identify creation task.
+            type: string
+          archive_credentials_id:
+            description: Archive credentials ID.
+            type: string
+          created: {}
+          size: {}
+      example:
+        vault_id: 885b7fe4-95ce-71fd-fff5-8de5b3cce9bb
+        archive_id: 1f8867c2-179f-ef34-159f-84279a18174d
+        backup_id: c2aa0462-dd30-4e08-afce-1bad7cfbf8be
+        created: '2018-02-02T01:40:05Z'
+        size: 70844416
+        deleted: false
+        tenant_id: 00000000-0000-0000-0000-000000000000
+        tenant_locator: /00000000-0000-0000-0000-000000000000/
+        source_key: ''
+        source_usn: 0
+        actions:
+        - restoreDisks
+        - restoreFiles
+        - downloadFiles
+        - deleteByAgent
+        - validate
+        - replicate
+        notarized: false
+        attributes:
+          Kind: full
+          MarkedForDeletion: '0'
+          SliceMediaIDs: ''
+        resource_ids:
+        - EDD63875-4641-44AA-B1A6-BACB4610AA11
+        change_tag: b7a6e9b1-f728-45c6-a778-4b97cb651e57
+        type: full
+    items_13:
+      description: Composite archive ID that includes vault ID.
+      type: object
+      additionalProperties: false
+      required:
+      - vault_id
+      - archive_id
+      properties:
+        vault_id:
+          $ref: '#/components/schemas/id_12'
+        archive_id:
+          $ref: '#/components/schemas/id_12'
+    id_response:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+    config_29:
+      title: Vault description
+      description: Vault description.
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - version
+      - storage_type
+      - settings
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          description: Name of the vault.
+          type: string
+        uri:
+          description: URI of the vault.
+          type: string
+        version:
+          description: Version of the vault.
+          type: string
+        managing_agent_id:
+          $ref: '#/components/schemas/id'
+        storage_type:
+          $ref: '#/components/schemas/storage_type'
+        organizational:
+          description: True if vault is online and is created on customer or personal tenant levels. False otherwise.
+          type: boolean
+        settings:
+          description: Any vault type specific settings.
+          oneOf:
+          - $ref: '#/components/schemas/item0_19'
+          - $ref: '#/components/schemas/item1_21'
+          - $ref: '#/components/schemas/item2'
+          - $ref: '#/components/schemas/item3'
+          - $ref: '#/components/schemas/item4'
+          - type: object
+        storage_id:
+          description: ID of the storage, for Local ABGW Vault or Storage node Vault.
+          type: string
+        status:
+          description: Status of the vault.
+          type: object
+        tenant_id:
+          $ref: '#/components/schemas/tenant_id_20'
+        tenant_locator:
+          description: Tenant locator.
+          type: string
+        access_address:
+          $ref: '#/components/schemas/access_address'
+        compacting_plan_id:
+          $ref: '#/components/schemas/id'
+        hostname:
+          description: Hostname of local vault.
+          type: string
+          format: hostname
+        consistent:
+          description: False if vault content could be outdated and a refresh is required. True otherwise.
+          type: boolean
+        last_seen_at:
+          description: Date and time in RFC 3339 format when the vault was last seen.
+          type: string
+          format: date-time
+        is_full_config:
+          description: True if `name`, `uri`, `settings`, `storage_type` are filled. False otherwise.
+          type: boolean
+    items_1:
+      description: Reason why Backup was created.
+      enum:
+      - patch_management
+      type: string
+    uuid:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    storage_type_23:
+      description: Vault storage type.
+      enum:
+      - unknown
+      - local_folder
+      - network_share
+      - ftp
+      - sftp
+      - cd
+      - tape
+      - storage_server
+      - asz
+      - removable_drive
+      - online
+      - nfs_share
+      - esx
+      - local_abgw
+      - microsoft_azure
+      - amazon_s3
+      - s3_compatible
+      type: string
+    items_14:
+      description: Composite backup ID that includes vault and archive ID. Tenant ID has meaning in case where vault ID is not unique.
+      type: object
+      additionalProperties: false
+      required:
+      - vault_id
+      - archive_id
+      - backup_id
+      properties:
+        vault_id:
+          $ref: '#/components/schemas/archive_id_15'
+        archive_id:
+          $ref: '#/components/schemas/archive_id_15'
+        backup_id:
+          $ref: '#/components/schemas/archive_id_15'
+        tenant_id:
+          $ref: '#/components/schemas/tenant_id_22'
+        archive_credentials_id:
+          type: string
+    tenant_id_22:
+      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+      oneOf:
+      - $ref: '#/components/schemas/archive_id_15'
+      - description: Numeric identifier.
+        type: string
+        pattern: ^\d+$
+    orphanage:
+      title: Set archive orphanage status request
+      description: Archive orphanage status description.
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          description: Value of archive orphanage status.
+          enum:
+          - NONE
+          - NO_POLICY
+          - NO_RESOURCE
+          type: string
+    archive:
+      title: Archive
+      description: Archive description.
+      example:
+        id: 21057332-3588-4363-a0d1-c00b5757593c
+        name: b2af49a9-f2b3-470b-a827-614bdf817a8e
+        vault_id: 00000000-0000-0000-0000-000000000000
+        attributes:
+          archive-id: 21057332-3588-4363-A0D1-C00B5757593C
+          backup_count: 57
+          cluster_id: ''
+          cluster_name: ''
+          compressed_dataSize: 0
+          data_size: 4531466240
+          deduplicated_size: 4531466240
+          description: ''
+          display_name: Linux primary - New backup plan
+          forIndexing_dataSize: 0
+          initial-seeding-verified: '0'
+          machine_id: D7198861-C9EA-4AFC-8C1E-5513E23D8D58
+          machine_name: BCA-msk7-7725-failover-c7b3623d-fee9-4025-a068-3a5265d4f906
+          original_dataSize: 267268243456
+          owner_id: security-posix-uid-0
+          owner_name: root
+          plan_id: 00000000-0000-0000-0000-000000000000
+          plan_name: ''
+          resource_name: ''
+          storage-uri: avfs:/online?account%3d137%26authProtoVersion%3d1%26computer%3d1%26provider%3dAcronis
+          uri: avfs:/online?account%3d137%26authProtoVersion%3d1%26computer%3d1%26provider%3dAcronis#arl:/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000/21057332-3588-4363-A0D1-C00B5757593C?archive_name%3db2af49a9-f2b3-470b-a827-614bdf817a8e
+          '{DD212122-6CA8-4CFE-9CA9-DE586882C979}': '0'
+          '{EC4C7738-9F4B-4F1C-9ED0-E29CD70C3AED}': '0'
+        size: 2254254080
+        type: image
+        created: '2017-10-04T09:05:21Z'
+        updated: '0001-01-01T00:00:00Z'
+        last_backup_created: '2017-10-12T08:01:48Z'
+        resource_type: vmwesx
+        protected_by_password: false
+        deleted: false
+        file_name: ''
+        tenant_id: '65'
+        tenant_locator: /1/65/
+        agent_id: bec6091d-de3f-4d5b-a042-22ee65fce812
+        source_key: ''
+        source_usn: 0
+        actions:
+        - refresh
+        cataloged_status: notIndexed
+        pds_status: archiveNotReady
+        search_index_size: 0
+        format: '11'
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - name
+      - vault_id
+      - format
+      - created
+      - file_name
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          description: Name of the archive.
+          type: string
+        vault_id:
+          $ref: '#/components/schemas/id'
+        legacy_id:
+          description: ID that is needed for old WCS API support. Don't use it in new services!
+          type: string
+        attributes:
+          description: Any archive-specific attributes.
+          type: object
+        size:
+          description: Size of the archive in bytes.
+          type: integer
+        compressed_data_size:
+          description: Sum of compressed data in all slices in bytes. May be larger than `data_size` in case of dedup. Calculated by archive implementation.
+          type: integer
+        data_size:
+          description: Size of backed up data in all slices of archive in bytes. Calculated by archive implementation.
+          type: integer
+        original_data_size:
+          description: Size of the data that can be restored from all slices of the archive in bytes. Calculated by archive implementation.
+          type: integer
+        type:
+          $ref: '#/components/schemas/items_4'
+        format:
+          $ref: '#/components/schemas/items_5'
+        created:
+          description: Date and time in RFC 3339 format the archive was created.
+          type: string
+          format: date-time
+        updated:
+          description: Date and time in RFC 3339 format the archive was updated.
+          type: string
+          format: date-time
+        last_backup_created:
+          description: Date and time in RFC 3339 format the last slice was created.
+          type: string
+          format: date-time
+        resource_type:
+          description: 'Type of resource stored in archive (e.g., `machine`, `mssql_server`). Can include additional resource type (e.g., type of VM: `datastore.vmwesx`, `virtual_appliance.mshyperv`).'
+          type: string
+        protected_by_password:
+          description: If true, the archive is protected by password. False otherwise.
+          type: boolean
+        encryption_algorithm:
+          description: Encryption algorithm of the archive.
+          enum:
+          - none
+          - aes_128
+          - aes128
+          - aes_192
+          - aes192
+          - aes_256
+          - aes256
+          - gost
+          type: string
+        deleted:
+          description: If true, the archive is deleted and no longer exists. False otherwise.
+          type: boolean
+        file_name:
+          description: The archive file name.
+          type: string
+        tenant_id:
+          $ref: '#/components/schemas/tenant_id_20'
+        tenant_locator:
+          description: Locator of the tenant that owns the archive.
+          type: string
+        agent_id:
+          $ref: '#/components/schemas/id'
+        source_key:
+          description: Key of archive in DML DB. Used for legacy agents support.
+          type: string
+        source_usn:
+          description: Timestamp of archive in DML DB. Used for legacy agents support.
+          type: integer
+        actions:
+          description: List of available actions.
+          type: array
+          items:
+            type: string
+        agent_name:
+          description: Hostname of agent machine.
+          type: string
+          format: hostname
+        centralized_plan_id:
+          description: Global identifier of the backup plan in accordance to that the archive is created.
+          type: string
+        backup_plan_id:
+          description: ID of the backup plan that created the archive.
+          type: string
+        backup_plan_name:
+          description: Name of the backup plan that created the archive.
+          type: string
+        description:
+          description: User-defined description.
+          type: string
+        display_name:
+          description: Human-readable archive name.
+          type: string
+        owner_id:
+          description: ID of the user (SID for Windows) that owns the archive.
+          type: string
+        owner_name:
+          description: Name of the user that owns the archive.
+          type: string
+        resource_id:
+          description: ID of the resource that stored in the archive.
+          type: string
+        resource_ids:
+          description: List of identifiers of backed up resources.
+          type: array
+          items:
+            description: ID of backed up resource.
+            type: string
+        resource_name:
+          description: Name of the resource that stored in the archive.
+          type: string
+        consistent:
+          description: False if archive content could be outdated and a refresh is required. True otherwise.
+          type: boolean
+        stats:
+          $ref: '#/components/schemas/stats_27'
+        marked_for_deletion:
+          description: True if archive marked as deleted. False otherwise.
+          type: boolean
+        pds_status:
+          description: State of physical data shipment.
+          enum:
+          - archiveNotReady
+          - archiveInTransit
+          - archiveDelivered
+          type: string
+        search_index_size:
+          description: Size of search index.
+          type: integer
+        resource_path:
+          description: Path to the backed up resource in a format acceptable by Resource Manager.
+          type: string
+        last_seen_at:
+          description: Last time when the archive was seen.
+          type: string
+          format: date-time
+        cataloged_status:
+          description: State of archive is cataloged.
+          enum:
+          - notIndexed
+          - partiallyIndexed
+          - indexed
+          type: string
+        forensic:
+          description: True if the archive contains forensic data. False otherwise.
+          type: boolean
+        pre_patch_management:
+          description: Flag that specifies whether the archive contains at least one backup which was made before patch management. True if there's at least one backup that was made before patch management. False otherwise.
+          type: boolean
+        malware_found:
+          description: Malware assessment result of backups in the archive. Absent if no backups were scanned. True if at least one backup has malware. False otherwise.
+          type: boolean
+        logical_size:
+          description: Reflects logical size of archive.
+          type: integer
+        immutable_size:
+          description: Reflects immutable size of archive.
+          type: integer
+        deleted_immutable:
+          description: True if the archive is marked as deleted immutable. False otherwise.
+          type: boolean
+        orphanage:
+          $ref: '#/components/schemas/orphanage'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

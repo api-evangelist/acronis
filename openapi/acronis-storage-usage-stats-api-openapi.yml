@@ -1,0 +1,120 @@
+openapi: 3.2.0
+info:
+  title: Vault Manager Storage Usage Stats API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/vault_manager/v1
+  variables: {}
+tags:
+- name: Storage Usage Stats
+paths:
+  /storage_usage_stats:
+    get:
+      operationId: Fetch storage usage stats
+      description: Fetches the storage usage counters per tenant.
+      x-ExtJS: VaultManager.StorageUsageItems
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                title: Storage usage items
+                description: Cloud and local storage counters.
+                type: object
+                additionalProperties: false
+                properties:
+                  items:
+                    description: Cloud and local storage counters calculated per tenant.
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: false
+                      properties:
+                        tenant:
+                          description: Tenant identifier.
+                          type: string
+                        amazon_s3_storage_usage:
+                          description: Amazon S3 storage usage.
+                          type: integer
+                        amazon_s3_archive_count:
+                          description: Number of archives stored in Amazon S3 storage.
+                          type: integer
+                        s3_compatible_storage_usage:
+                          description: S3-compatible storages usage.
+                          type: integer
+                        s3_compatible_archive_count:
+                          description: Number of archives stored in S3-compatible storages.
+                          type: integer
+                        microsoft_azure_storage_usage:
+                          description: Microsoft Azure storage usage.
+                          type: integer
+                        microsoft_azure_archive_count:
+                          description: Number of archives stored in Microsoft Azure storage.
+                          type: integer
+                        cloud_storage_usage:
+                          description: Cloud storage usage.
+                          type: integer
+                        cloud_archive_count:
+                          description: Number of archives stored in Cloud storage.
+                          type: integer
+                        local_storage_usage:
+                          description: Local storage usage, counted as sum of usages by all local storage types (local folder, network folder, NFS folder, Secure Zone).
+                          type: integer
+                        local_storage_size:
+                          description: Total local storage size.
+                          type: integer
+                        local_archive_count:
+                          description: Number of archives stored in local storages.
+                          type: integer
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Storage Usage Stats
+      summary: Fetch storage usage stats
+      x-summary-source: derived
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

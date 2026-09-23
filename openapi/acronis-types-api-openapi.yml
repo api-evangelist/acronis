@@ -1,0 +1,696 @@
+openapi: 3.2.0
+info:
+  title: Acronis Types API
+  version: '1.0'
+  description: 'Operations tagged Types across 2 of this provider''s published API definitions: acronis-alerts-v1-openapi.json, acronis-events-v1-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://dev-cloud.acronis.com/api/alert_manager/v1
+  variables: {}
+- url: https://dev-cloud.acronis.com/api/event_manager/v1
+  variables: {}
+tags:
+- name: Types
+paths:
+  /types:
+    get:
+      operationId: Fetch all alert types
+      description: Fetches all registered alert types.
+      parameters:
+      - name: category
+        description: 'A filter by list of type categories. A list of registered categories can be obtained by sending a GET request to the `/categories` endpoint.
+
+
+          * Example: `category=Backup&category=Monitoring`
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'A filter by list of type categories. A list of registered categories can be obtained by sending a GET request to the `/categories` endpoint.
+
+
+            * Example: `category=Backup&category=Monitoring`
+
+            '
+          type: array
+          items:
+            type: string
+      - name: os_type
+        description: A filter by the list of operating systems supported by the alert types.
+        required: true
+        in: query
+        schema:
+          description: A filter by the list of operating systems supported by the alert types.
+          type: array
+          items:
+            $ref: '#/components/schemas/OSType'
+      - name: order
+        description: 'An ordering filter that orders the results by column name.
+
+          If no operator provided, the column will be ordered in ascending order.
+
+
+          Following columns can be used:
+
+
+          * `id`
+
+          * `severity`
+
+          * `category`
+
+
+          Available operators:
+
+
+          * `asc` - ascending
+
+          * `desc` - descending
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'An ordering filter that orders the results by column name.
+
+            If no operator provided, the column will be ordered in ascending order.
+
+
+            Following columns can be used:
+
+
+            * `id`
+
+            * `severity`
+
+            * `category`
+
+
+            Available operators:
+
+
+            * `asc` - ascending
+
+            * `desc` - descending
+
+            '
+          type: string
+      responses:
+        '200':
+          description: A list of registered alerts types.
+          content:
+            application/json:
+              schema:
+                example:
+                  items:
+                  - id: BackupFailed
+                    severity: critical
+                    enabled: true
+                    contextKeys:
+                    - planId
+                    - resourceId
+                    searchableDetails:
+                    - planName
+                    - resourceName
+                    supportedOS:
+                    - ios
+                    - linux
+                    - macos
+                    - windows
+                    category: Backup
+                    cti_name: cti.a.p.am.alerts.v1.0~a.backup.failed.v1.0
+                  - id: cti.a.p.am.alert.v1.0~a.test.type.v1.0
+                    severity: error
+                    enabled: true
+                    contextKeys: []
+                    searchableDetails: []
+                    supportedOS:
+                    - ios
+                    - linux
+                    - macos
+                    - windows
+                    category: cti.a.p.am.alert.category.v1.0~a.test.category.v1.0
+                    cti_name: cti.a.p.am.alert.v1.0~a.test.type.v1.0
+                    alias: test type
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Type'
+        '401':
+          description: Request is refused because authentication parameters are invalid.
+          content:
+            text/plain:
+              schema:
+                example: "<html>\n  <head>\n    <title>401 Authorization Required</title>\n  </head>\n  <body>\n    <center>\n      <h1>401 Authorization Required</h1>\n    </center>\n    <hr>\n    <center>nginx</center>\n  </body>\n</html>\n"
+        '403':
+          description: 'A security error due to an issue with tenant security claim: invalid tenant in the access token, tenant resolution failed and etc.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - oauth_2_0:
+        - urn:acronis.com::alert_manager::viewer
+      tags:
+      - Types
+      summary: Fetch all alert types
+      x-summary-source: derived
+    post:
+      operationId: Register new alert type
+      description: Registers a new alert type.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: A list of types to register.
+              example:
+                items:
+                - id: BackupFailed
+                  severity: critical
+                  enabled: true
+                  contextKeys:
+                  - planId
+                  - resourceId
+                  searchableDetails:
+                  - planName
+                  - resourceName
+                  exportable:
+                  - name: planId
+                    acep_name: plan_id
+                  - name: resourceId
+                    acep_name: resource_id
+                  - name: errorMessage
+                    acep_name: error_reason
+                    acep_path: reason
+                  - name: planName
+                    acep_name: plan_name
+                  - name: taskType
+                    acep_name: task_type
+                  supportedOS:
+                  - ios
+                  - linux
+                  - macos
+                  - windows
+                  category: Backup
+                  cti_name: cti.a.p.am.alerts.v1.0~a.backup.failed.v1.0
+              type: object
+              required:
+              - items
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Type'
+      responses:
+        '204':
+          description: Alert types were successfully registered.
+          content: {}
+        '400':
+          description: Input parameters error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Request is refused because authentication parameters are invalid.
+          content:
+            text/plain:
+              schema:
+                example: "<html>\n  <head>\n    <title>401 Authorization Required</title>\n  </head>\n  <body>\n    <center>\n      <h1>401 Authorization Required</h1>\n    </center>\n    <hr>\n    <center>nginx</center>\n  </body>\n</html>\n"
+        '403':
+          description: 'A security error due to an issue with tenant security claim: invalid tenant in the access token, tenant resolution failed and etc.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - oauth_2_0:
+        - urn:acronis.com::alert_manager::admin
+      tags:
+      - Types
+      summary: Register new alert type
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/alert_manager/v1
+      variables: {}
+  /types/{id}:
+    get:
+      operationId: Fetch an alert type by ID
+      description: Fetch registered alert type by ID.
+      parameters:
+      - name: id
+        description: ID of an alert type.
+        required: true
+        in: path
+        schema:
+          description: ID of an alert type.
+          type: string
+      responses:
+        '200':
+          description: Alert type was successfully fetched.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Type'
+        '401':
+          description: Request is refused because authentication parameters are invalid.
+          content:
+            text/plain:
+              schema:
+                example: "<html>\n  <head>\n    <title>401 Authorization Required</title>\n  </head>\n  <body>\n    <center>\n      <h1>401 Authorization Required</h1>\n    </center>\n    <hr>\n    <center>nginx</center>\n  </body>\n</html>\n"
+        '403':
+          description: 'A security error due to an issue with tenant security claim: invalid tenant in the access token, tenant resolution failed and etc.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Alert type was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - oauth_2_0:
+        - urn:acronis.com::alert_manager::viewer
+      tags:
+      - Types
+      summary: Fetch an alert type by ID
+      x-summary-source: derived
+    delete:
+      operationId: Unregister an alert type by ID
+      description: Unregisters the alert type. All alerts of this type will be disabled.
+      parameters:
+      - name: id
+        description: ID of an alert type.
+        required: true
+        in: path
+        schema:
+          description: ID of an alert type.
+          type: string
+      responses:
+        '204':
+          description: Alert type was successfully unregistered.
+          content: {}
+        '404':
+          description: Alert type was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - oauth_2_0:
+        - urn:acronis.com::alert_manager::admin
+      tags:
+      - Types
+      summary: Unregister an alert type by ID
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/alert_manager/v1
+      variables: {}
+components:
+  schemas:
+    NotificationRecipient:
+      enum:
+      - SIBLINGS
+      - DIRECT_PARENT
+      - ALL_PARENTS
+      type: string
+    Type:
+      description: An information about the alert type.
+      example:
+        id: BackupFailed
+        severity: critical
+        enabled: true
+        contextKeys:
+        - planId
+        - resourceId
+        searchableDetails:
+        - planName
+        - resourceName
+        exportable:
+        - name: planId
+          acep_name: plan_id
+        - name: resourceId
+          acep_name: resource_id
+        - name: errorMessage
+          acep_name: error_reason
+          acep_path: reason
+        - name: planName
+          acep_name: plan_name
+        - name: taskType
+          acep_name: task_type
+        supportedOS:
+        - ios
+        - linux
+        - macos
+        - windows
+        category: Backup
+        cti_name: cti.a.p.am.alerts.v1.0~a.backup.failed.v1.0
+      type: object
+      required:
+      - id
+      - enabled
+      - severity
+      - contextKeys
+      - searchableDetails
+      - supportedOS
+      - category
+      properties:
+        id:
+          type: string
+        enabled:
+          description: Alerts of disabled types are treated as non-existent for any GET request until type is enabled again.
+          default: true
+          type: boolean
+        severity:
+          description: Alert severity level.
+          enum:
+          - ok
+          - information
+          - warning
+          - error
+          - critical
+          type: string
+        contextKeys:
+          description: '**Deprecated.** A list of context keys that are used for validation of completeness and
+
+            correctness of alert context object.
+
+            '
+          type: array
+          items:
+            type: string
+        searchableDetails:
+          description: 'A list of keys by which the alert type could be found and filtered.
+
+            '
+          type: array
+          items:
+            type: string
+        exportable:
+          description: 'Mapping between `contextKeys` and `acep` field names to allow exporting of the required fields to ACEP.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/ACEPKeyValue'
+        supportedOS:
+          description: A list of operating systems that are supported by the alert type.
+          default:
+          - ios
+          - linux
+          - macos
+          - windows
+          type: array
+          items:
+            $ref: '#/components/schemas/OSType'
+        notificationType:
+          description: If specified, a notification of the specified type will be triggered on alert creation.
+          type: string
+        notificationExtraRecipients:
+          description: 'A list of additional notification targets that will receive notifications for alerts of this type.
+
+            By default notification is sent to the alert''s tenant and its children.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationRecipient'
+        category:
+          description: Alert type category.
+          type: string
+        cti_name:
+          description: A cti-name used as an event subject type while sending events to event manager.
+          type: string
+        alias:
+          description: Alert type name alias.
+          type: string
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    Error:
+      description: Base error object
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kbLink:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    OSType:
+      enum:
+      - ios
+      - linux
+      - macos
+      - windows
+      type: string
+    ACEPKeyValue:
+      description: 'Key-value mapping between context fields and ACEP fields.
+
+        It is mostly for internal use only.
+
+        '
+      type: object
+      required:
+      - name
+      - acep_name
+      properties:
+        name:
+          description: Context field key name.
+          type: string
+        acep_name:
+          description: Alias for corresponding field in ACEP.
+          type: string
+        acep_path:
+          description: 'If a custom column is JSON data, this property makes possible to export specific field from JSON.
+
+            '
+          type: string
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+    error:
+      description: Base error object
+      example:
+        domain: EventManager
+        code: invalidEvent
+        error: Bad Request
+        context:
+          errors:
+          - event_id: 62d2afda-685e-457f-8624-92132d97a7ed
+            message: 'Invalid payload: tenant_id is required'
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        message:
+          description: human-readable message, describing the error.
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kb_link:
+          $ref: '#/components/schemas/kbLinkInfo_2'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    ErrorMessage:
+      type: object
+      additionalProperties: false
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/error'
+    EventType:
+      description: 'Defines the structure of the event type. It is used to define the structure of the event and to validate the event data.
+
+        '
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - topic_id
+      - description
+      properties:
+        allowed_subject_types:
+          description: 'List of allowed subject types for the event type. If the subject type is not in the list, the event will be rejected.
+
+            '
+          x-cti.reference: true
+          type: array
+          maxItems: 32
+          items:
+            $ref: '#/components/schemas/CTIWildcard'
+        data_schema:
+          description: 'A JSON schema that describes the structure of the event.
+
+            '
+          example: "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema\",\n  \"$id\": \"http://acronis.com/tenant-undeleted.json\",\n  \"type\": \"object\",\n  \"title\": \"The schema of tenant.undeleted event.\",\n  \"description\": \"The root schema comprises the entire JSON document.\",\n  \"properties\": {\n    \"subject\": {\n      \"type\": \"string\",\n      \"format\": \"uuid\",\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\",\n          \"examples\": [\n            \"My Tenant\"\n          ]\n        }\n      },\n      \"additionalProperties\": false\n    }\n  },\n  \"required\": [\"subject\",\"data\"],\n  \"additionalProperties\": false\n}\n"
+          type: string
+        id:
+          description: The specific event type.
+          x-cti.reference: cti.a.p.em.event.v1.0
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        topic_id:
+          description: Topic unique id
+          x-cti.reference: cti.a.p.em.topic.v1.0
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        subject_ref_template:
+          description: 'API endpoint URL to fetch subject details, so the client can
+
+            automate subject retrieval for given type of events
+
+            '
+          example: /api/v2/tenants/{{subjectId}}
+          type: string
+          maxLength: 1024
+        description:
+          description: Description of the type purpose and usage
+          type: string
+    kbLinkInfo_2:
+      description: Components for kblink
+      type: object
+      required:
+      - line_tag
+      - ser_code
+      - version
+      - build
+      - product
+      - os
+      properties:
+        line_tag:
+          type: string
+        ser_code:
+          type: string
+        version:
+          type: string
+        build:
+          type: string
+        product:
+          type: string
+        os:
+          type: string
+    CTIWildcard:
+      description: 'CTI with wildcard support, where the wildcard `*` can only be used as the final character of a segment.
+
+        '
+      type: string
+      pattern: ^cti((\.([a-z][a-z0-9_]*))|\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?(~(([a-z][a-z0-9_]*)|([a-z][a-z0-9_]*)\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?)*\*$|^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+      maxLength: 1024
+  securitySchemes:
+    oauth_2_0:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a service authorization.
+      flows:
+        password:
+          scopes:
+            urn:acronis.com:event_manager:{cti_query}:publisher: ''
+            urn:acronis.com:event_manager:{cti_query}:subscriber: ''
+            urn:acronis.com:audit:{role|permissions}: ''
+          tokenUrl: /bc/ipd/token
+        clientCredentials:
+          scopes:
+            urn:acronis.com:event_manager:{cti_query}:publisher: ''
+            urn:acronis.com:event_manager:{cti_query}:subscriber: ''
+            urn:acronis.com:audit:{role|permissions}: ''
+          tokenUrl: /bc/ipd/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com:event_manager:{cti_query}:publisher: ''
+            urn:acronis.com:event_manager:{cti_query}:subscriber: ''
+            urn:acronis.com:audit:{role|permissions}: ''
+          authorizationUrl: /bc/ipd/authorize
+          tokenUrl: /bc/ipd/token
+x-refined-from:
+- acronis-alerts-v1-openapi.json
+- acronis-events-v1-openapi.json
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

@@ -1,0 +1,348 @@
+openapi: 3.2.0
+info:
+  title: PSA Contract Part API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: ContractPart
+paths:
+  /ContractPart:
+    put:
+      operationId: Create or update a Contract Part
+      description: Creates or updates a contract part.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - Price
+              properties:
+                ActualQuantity:
+                  description: Defines an actual product quantity in use.
+                  default: 0
+                  type: number
+                AutomaticUpdate:
+                  description: Defines whether actual quantity will be automatically synchronised from the connected usage integration.
+                  default: false
+                  type: boolean
+                Description:
+                  type:
+                  - string
+                  - 'null'
+                Discount:
+                  description: Defines a discount percent for billing.
+                  default: 0
+                  type: number
+                DiscountReason:
+                  type:
+                  - string
+                  - 'null'
+                EndDate:
+                  description: Defines a contract part's start date.
+                  default: '0001-01-01T00:00:00Z'
+                  type: string
+                  format: date-time
+                MinBillableQuantity:
+                  description: Defines a minimum product quantity that will be used for billing.
+                  default: 0
+                  type: number
+                Price:
+                  description: Defines a product price for a single item for billing.
+                  default: 0
+                  type: number
+                Product:
+                  description: Defines a product used for billing.
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                ServiceLevelAgreement:
+                  description: Defines a SLA that will be used by default in service desk tickets related to the contract part.
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                ShowMachinesOnInvoice:
+                  description: In case an actual quantity is synchronised from the number of active devices, defines whether device names will be added to the invoice line.
+                  default: false
+                  type: boolean
+                ShowUsersOnInvoice:
+                  description: In case an actual quantity is synchronised from the number of active users, defines whether user names will be added to the invoice line.
+                  default: false
+                  type: boolean
+                StartDate:
+                  description: Defines a contract part's end date. Need to describe how to proceed with "Forever" end date. We have this check-box in UI.
+                  default: '0001-01-01T00:00:00Z'
+                  type: string
+                  format: date-time
+                TrialPeriod:
+                  description: Defines whether the contract part will have a trial period. Need to describe how to use it and not use it.
+                  default: 0
+                  type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth2: []
+      tags:
+      - ContractPart
+      summary: Create or update a contract part
+      x-summary-source: derived
+    get:
+      operationId: Fetch Contract Part
+      description: Fetches a contract part by Contract ID.
+      parameters:
+      - name: contract
+        description: Contract ID
+        required: true
+        in: query
+        schema:
+          description: Contract ID
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  ContractParts:
+                  - ProductName: ''
+                    Product: 00000000-0000-0000-0000-000000000000
+                    Id: null
+                    Discount: 0
+                    DiscountReason: ''
+                    ActualQuantity: 0
+                    MinBillableQuantity: 0
+                    Quantity: 0
+                    Price: 0
+                    EndDate: '0001-01-01T00:00:00Z'
+                    StartDate: '0001-01-01T00:00:00Z'
+                    Description: ''
+                    APIConnection: null
+                    ServiceObjectGroup: null
+                    IsReadOnly: false
+                    ServiceLevelAgreement: 00000000-0000-0000-0000-000000000000
+                    ServiceObjects: []
+                    ServiceObjectTypes: []
+                    ContractPartType: 00000000-0000-0000-0000-000000000000
+                    AutomaticUpdate: false
+                    MachinesCount: null
+                    Contract: 00000000-0000-0000-0000-000000000000
+                    VARConnection: 00000000-0000-0000-0000-000000000000
+                    VARGroup: 00000000-0000-0000-0000-000000000000
+                    SubscriptionType: 00000000-0000-0000-0000-000000000000
+                    ShowUsersOnInvoice: false
+                    TrialPeriod: 0
+                    UserType: 0
+                    DeviceServiceTypes: []
+                type: object
+                additionalProperties: false
+                required:
+                - ContractParts
+                properties:
+                  ContractParts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ContractPart'
+      security:
+      - oauth2: []
+      tags:
+      - ContractPart
+      summary: Fetch contract part
+      x-summary-source: derived
+    delete:
+      operationId: Delete Contract Part
+      description: Deletes a Contract Part by ID
+      parameters:
+      - name: id
+        description: Contract Part ID
+        required: true
+        in: query
+        schema:
+          description: Contract Part ID
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth2: []
+      tags:
+      - ContractPart
+      summary: Delete contract part
+      x-summary-source: derived
+components:
+  schemas:
+    ContractPart:
+      type: object
+      additionalProperties: false
+      required:
+      - APIConnection
+      - ActualQuantity
+      - AutomaticUpdate
+      - Contract
+      - ContractPartType
+      - Description
+      - Discount
+      - DiscountReason
+      - EndDate
+      - Id
+      - IsReadOnly
+      - MachinesCount
+      - MinBillableQuantity
+      - Price
+      - Product
+      - ProductName
+      - Quantity
+      - ServiceLevelAgreement
+      - ServiceObjectGroup
+      - ShowUsersOnInvoice
+      - StartDate
+      - SubscriptionType
+      - TrialPeriod
+      - UserType
+      - VARConnection
+      - VARGroup
+      properties:
+        APIConnection:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        ActualQuantity:
+          type: number
+        AutomaticUpdate:
+          type: boolean
+        Contract:
+          $ref: '#/components/schemas/Guid'
+        ContractPartType:
+          $ref: '#/components/schemas/Guid'
+        Description:
+          type: string
+        Discount:
+          type: number
+        DiscountReason:
+          type: string
+        EndDate:
+          $ref: '#/components/schemas/DatetimeNoTZ'
+        Id:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        IsReadOnly:
+          type: boolean
+        MachinesCount:
+          type:
+          - integer
+          - 'null'
+        MinBillableQuantity:
+          type: number
+        Price:
+          type: number
+        Product:
+          $ref: '#/components/schemas/Guid'
+        ProductName:
+          type: string
+        Quantity:
+          type: number
+        ServiceLevelAgreement:
+          $ref: '#/components/schemas/Guid'
+        ServiceObjectGroup:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        ShowUsersOnInvoice:
+          type: boolean
+        StartDate:
+          $ref: '#/components/schemas/DatetimeNoTZ'
+        SubscriptionType:
+          $ref: '#/components/schemas/Guid'
+        TrialPeriod:
+          type: integer
+        UserType:
+          type: integer
+        VARConnection:
+          $ref: '#/components/schemas/Guid'
+        VARGroup:
+          $ref: '#/components/schemas/Guid'
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    DatetimeNoTZ:
+      description: RFC3339-like date and time without timezone.
+      type: string
+      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

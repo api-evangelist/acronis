@@ -1,0 +1,328 @@
+openapi: 3.2.0
+info:
+  title: Account Management Search API
+  version: '2'
+servers:
+- url: https://dev-cloud.acronis.com/api/2
+  variables: {}
+tags:
+- name: Search
+paths:
+  /search:
+    get:
+      operationId: Search
+      description: 'Searches for tenants and users.
+
+
+        Tenants are searched by `name`, `custom_id`, `first_name`, `last_name` and `email` from contact info.
+
+
+        Users are searched by `login`, `email`, `first_name` and `last_name`.
+
+
+        Search is case-insensitive.'
+      parameters:
+      - name: tenant
+        description: An ID of the tenant where the search will be performed.
+        required: true
+        in: query
+        schema:
+          description: An ID of the tenant where the search will be performed.
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed
+          type: string
+      - name: text
+        description: Search in all available properties for the supplied text.
+        required: true
+        in: query
+        schema:
+          description: Search in all available properties for the supplied text.
+          example: acronis
+          type: string
+      - name: limit
+        description: Limit the number of found objects.
+        in: query
+        schema:
+          description: Limit the number of found objects.
+          default: 10
+          type: integer
+      - name: allow_deleted
+        description: If true, deleted tenants and users may be returned.
+        in: query
+        schema:
+          description: If true, deleted tenants and users may be returned.
+          type: boolean
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/global_search'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Search
+      summary: Search
+      x-summary-source: derived
+components:
+  schemas:
+    global_search:
+      example:
+        items:
+        - obj_type: tenant
+          kind: customer
+          id: bfe40b45-7d3f-4183-a655-afa62b59b383
+          parent_id: bfe40b45-7d3f-4183-a655-afa62b59b383
+          path:
+          - my tenant
+          - some child
+          name: Example group
+          first_name: null
+          last_name: null
+          deleted_at: null
+        - obj_type: user
+          id: 1c234e69-5469-424a-a6d1-ff5658b387a6
+          parent_id: 1c234e69-5469-424a-a6d1-ff5658b387a6
+          path:
+          - my tenant
+          - some child
+          - Example group
+          login: admin@example.com
+          first_name: Example
+          last_name: Admin
+          deleted_at: '2022-08-10T00:00:00Z'
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - obj_type
+            - id
+            - parent_id
+            - path
+            properties:
+              obj_type:
+                enum:
+                - tenant
+                - user
+                type: string
+              id:
+                $ref: '#/components/schemas/uuid'
+              parent_id:
+                $ref: '#/components/schemas/uuid'
+              path:
+                description: List of tenants' names between search root and found object.
+                type: array
+                items:
+                  type: string
+              kind:
+                $ref: '#/components/schemas/tenantKind'
+              login:
+                description: User's login.
+                type: string
+              name:
+                description: Tenant's name.
+                type: string
+              first_name:
+                description: User's or tenant's contact first name. This field can have a null value.
+                type:
+                - string
+                - 'null'
+              last_name:
+                description: User's or tenant's contact last name. This field can have a null value.
+                type:
+                - string
+                - 'null'
+              deleted_at:
+                description: Soft deletion timestamp.
+                allOf:
+                - $ref: '#/components/schemas/item1'
+    tenantKind:
+      description: A tenant kind.
+      enum:
+      - root
+      - partner
+      - folder
+      - customer
+      - unit
+      type: string
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

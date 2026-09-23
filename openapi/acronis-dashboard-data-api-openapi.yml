@@ -1,0 +1,453 @@
+openapi: 3.2.0
+info:
+  title: PSA Dashboard Data API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: Dashboard Data
+paths:
+  /DashboardData:
+    get:
+      operationId: Fetch dashboard data
+      description: Fetches data for Dashboard which includes ticket types.
+      parameters:
+      - name: CurrentUser
+        required: true
+        in: query
+        schema:
+          $ref: '#/components/schemas/Guid'
+      - name: EndDate
+        in: query
+        schema:
+          description: RFC3339-like date and time without timezone.
+          type:
+          - string
+          - 'null'
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+      - name: StartDate
+        in: query
+        schema:
+          description: RFC3339-like date and time without timezone.
+          type:
+          - string
+          - 'null'
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+      - name: isTier4
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardData'
+      security:
+      - oauth2: []
+      tags:
+      - Dashboard Data
+      summary: Fetch dashboard data
+      x-summary-source: derived
+components:
+  schemas:
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    Statistics:
+      type: object
+      additionalProperties: false
+      required:
+      - Closed
+      - Day
+      - OutOfSLA
+      properties:
+        Closed:
+          description: ''
+          type: integer
+        Day:
+          description: ''
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        OutOfSLA:
+          description: ''
+          type: integer
+    DashboardData:
+      example:
+        OpenTicketsNumberDay: 0
+        SLATicketsNumberDay: 0
+        UnassignedTicketsNumber: 0
+        NPSRatings:
+          IsGroup: false
+          NPSGroupMonth: 0
+          NPSGroupYear: 0
+          NPSOwnYear: 0
+          NPSOwnMonth: 0
+        TicketStatistics:
+          TicketStatistics: {}
+          TicketStatisticsAll: {}
+          TicketStatisticsLast: {}
+        OccupancyRate: 0
+        TotalEndpointsUnderManagement: 0
+        EndpointsPartOfAContract: 0
+        NumberOfEndUsers: 0
+        CurrentContractsRevenue: 0
+        Revenues: []
+        MRRGrowth:
+          LastNet: 0
+          NetGrowth: 0
+        SalesItemsGrowth:
+          LastBilledSalesItems: 0
+          SalesItemsGrowth: 0
+        ARPU: 0
+        ShowNumberEndpoints: true
+        ShowNumberEndUsers: true
+        ShowCurrentContractsRevenue: true
+        ShowARPU: true
+        ShowNewSalesItems: true
+        ShowAllRevenue: true
+        ShowOccupancyRate: true
+        TicketTypes: []
+        TicketTypesSplit: []
+        AllCurrentSalesItemsAmount: 0
+        TicketsDueTodayNumber: 0
+        UpcomingOnSiteVisitNumber: 0
+        UpcomingOnSiteVisit: {}
+        accountIsExpired:
+          TrialAccountExpired: false
+      type: object
+      additionalProperties: false
+      required:
+      - ARPU
+      - AllCurrentSalesItemsAmount
+      - CurrentContractsRevenue
+      - EndpointsPartOfAContract
+      - MRRGrowth
+      - NPSRatings
+      - NumberOfEndUsers
+      - OccupancyRate
+      - OpenTicketsNumberDay
+      - Revenues
+      - SLATicketsNumberDay
+      - SalesItemsGrowth
+      - ShowARPU
+      - ShowAllRevenue
+      - ShowCurrentContractsRevenue
+      - ShowNewSalesItems
+      - ShowNumberEndpoints
+      - ShowOccupancyRate
+      - TicketStatistics
+      - TicketTypes
+      - TicketTypesSplit
+      - TicketsDueTodayNumber
+      - TotalEndpointsUnderManagement
+      - UnassignedTicketsNumber
+      - UpcomingOnSiteVisit
+      - UpcomingOnSiteVisitNumber
+      - accountIsExpired
+      properties:
+        ARPU:
+          description: ''
+          type: number
+        AllCurrentSalesItemsAmount:
+          description: ''
+          type: integer
+        CurrentContractsRevenue:
+          description: ''
+          type: number
+        EndpointsPartOfAContract:
+          description: ''
+          type: integer
+        MRRGrowth:
+          description: ''
+          type: object
+          required:
+          - LastNet
+          - NetGrowth
+          properties:
+            LastNet:
+              description: ''
+              type: number
+            NetGrowth:
+              description: ''
+              type: number
+        NPSRatings:
+          description: ''
+          type: object
+          additionalProperties: false
+          required:
+          - IsGroup
+          - NPSGroupMonth
+          - NPSGroupYear
+          - NPSOwnMonth
+          - NPSOwnYear
+          properties:
+            IsGroup:
+              description: ''
+              type: boolean
+            NPSGroupMonth:
+              description: ''
+              type: number
+            NPSGroupYear:
+              description: ''
+              type: number
+            NPSOwnMonth:
+              description: ''
+              type: number
+            NPSOwnYear:
+              description: ''
+              type: number
+        NumberOfEndUsers:
+          description: ''
+          type: integer
+        OccupancyRate:
+          description: ''
+          type: number
+        OpenTicketsNumberDay:
+          description: ''
+          type: integer
+        Revenues:
+          description: ''
+          type: array
+          items: {}
+        SLATicketsNumberDay:
+          description: ''
+          type: integer
+        SalesItemsGrowth:
+          description: ''
+          type: object
+          additionalProperties: false
+          required:
+          - LastBilledSalesItems
+          - SalesItemsGrowth
+          properties:
+            LastBilledSalesItems:
+              description: ''
+              type: number
+            SalesItemsGrowth:
+              description: ''
+              type: number
+        ShowARPU:
+          description: ''
+          type: boolean
+        ShowAllRevenue:
+          description: ''
+          type: boolean
+        ShowCurrentContractsRevenue:
+          description: ''
+          type: boolean
+        ShowNewSalesItems:
+          description: ''
+          type: boolean
+        ShowNumberEndpoints:
+          description: ''
+          type: boolean
+        ShowOccupancyRate:
+          description: ''
+          type: boolean
+        TicketStatistics:
+          description: ''
+          type: object
+          required:
+          - TicketStatistics
+          - TicketStatisticsAll
+          - TicketStatisticsLast
+          properties:
+            TicketStatistics:
+              description: ''
+              type: object
+              additionalProperties: false
+              required:
+              - MonthClosed
+              - MonthClosedGroup
+              - TodayClosed
+              - TodayClosedGroup
+              - TotalClosed
+              - TotalClosedGroup
+              - YearClosed
+              - YearClosedGroup
+              properties:
+                MonthClosed:
+                  description: ''
+                  type: integer
+                MonthClosedGroup:
+                  description: ''
+                  type: integer
+                TodayClosed:
+                  description: ''
+                  type: integer
+                TodayClosedGroup:
+                  description: ''
+                  type: integer
+                TotalClosed:
+                  description: ''
+                  type: integer
+                TotalClosedGroup:
+                  description: ''
+                  type: integer
+                YearClosed:
+                  description: ''
+                  type: integer
+                YearClosedGroup:
+                  description: ''
+                  type: integer
+            TicketStatisticsAll:
+              description: ''
+              type: object
+              additionalProperties: false
+              required:
+              - MonthClosed
+              - MonthClosedGroup
+              - TodayClosed
+              - TodayClosedGroup
+              - TotalClosed
+              - TotalClosedGroup
+              - YearClosed
+              - YearClosedGroup
+              properties:
+                MonthClosed:
+                  description: ''
+                  type: integer
+                MonthClosedGroup:
+                  description: ''
+                  type: integer
+                TodayClosed:
+                  description: ''
+                  type: integer
+                TodayClosedGroup:
+                  description: ''
+                  type: integer
+                TotalClosed:
+                  description: ''
+                  type: integer
+                TotalClosedGroup:
+                  description: ''
+                  type: integer
+                YearClosed:
+                  description: ''
+                  type: integer
+                YearClosedGroup:
+                  description: ''
+                  type: integer
+            TicketStatisticsLast:
+              description: ''
+              type: object
+              required:
+              - GroupManagerMonth
+              - GroupManagerWeek
+              - GroupStatisticsMonth
+              - GroupStatisticsWeek
+              properties:
+                GroupManagerMonth:
+                  description: ''
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Statistics'
+                GroupManagerWeek:
+                  description: ''
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Statistics'
+                GroupStatisticsMonth:
+                  description: ''
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Statistics'
+                GroupStatisticsWeek:
+                  description: ''
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Statistics'
+        TicketTypes:
+          description: ''
+          type: array
+          items: {}
+        TicketTypesSplit:
+          description: ''
+          type: array
+          items: {}
+        TicketsDueTodayNumber:
+          description: ''
+          type: integer
+        TotalEndpointsUnderManagement:
+          description: ''
+          type: integer
+        UnassignedTicketsNumber:
+          description: ''
+          type: integer
+        UpcomingOnSiteVisit:
+          description: ''
+          type: boolean
+        UpcomingOnSiteVisitNumber:
+          description: ''
+          type: integer
+        accountIsExpired:
+          description: ''
+          type: object
+          additionalProperties: false
+          required:
+          - TrialAccountExpired
+          properties:
+            TrialAccountExpired:
+              type: boolean
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

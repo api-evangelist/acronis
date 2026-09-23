@@ -1,0 +1,2073 @@
+openapi: 3.2.0
+info:
+  title: Vault Manager Archives API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/vault_manager/v1
+  variables: {}
+tags:
+- name: Archives
+paths:
+  /archives:
+    get:
+      operationId: Fetch archives
+      description: Fetches a list of archives.
+      x-ExtJS: VaultManager.ListArchives
+      parameters:
+      - name: archiveId
+        description: Show a list of archives of specified archive IDs.
+        required: false
+        in: query
+        schema:
+          description: Show a list of archives of specified archive IDs.
+          type: array
+          items:
+            description: Universally unique identifier.
+            type: string
+            format: uuid
+      - name: showDeleted
+        description: 'A flag that specifies what should be added to the list of returned archives:
+
+
+          * 1 - All deleted archives are added to the list of archives.
+
+          * 2 - Only deleted archives marked as immutable are added to the list of archives.
+
+          * 3 - Only deleted archives are included to the list of archives, other ones are excluded.
+
+          * 0 - No deleted archives are added to the list of archives.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'A flag that specifies what should be added to the list of returned archives:
+
+
+            * 1 - All deleted archives are added to the list of archives.
+
+            * 2 - Only deleted archives marked as immutable are added to the list of archives.
+
+            * 3 - Only deleted archives are included to the list of archives, other ones are excluded.
+
+            * 0 - No deleted archives are added to the list of archives.
+
+            '
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          type: integer
+      - name: includeStats
+        description: 'Include additional information about archive.
+
+
+          If false or not specified, the `stats` field will not be included in the response data.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Include additional information about archive.
+
+
+            If false or not specified, the `stats` field will not be included in the response data.
+
+            '
+          default: false
+          type: boolean
+      - name: includeStorageStats
+        description: 'Include storage-side stats about archive calculated at DC and return them in the `immutable_size` field.
+
+
+          If false or not specified, the `immutable_size` field will not be included in the response data.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Include storage-side stats about archive calculated at DC and return them in the `immutable_size` field.
+
+
+            If false or not specified, the `immutable_size` field will not be included in the response data.
+
+            '
+          default: false
+          type: boolean
+      - name: agentId
+        description: Show a list of archives of specified agent ID.
+        required: false
+        in: query
+        schema:
+          description: Show a list of archives of specified agent ID.
+          type: string
+          format: uuid
+      - name: name
+        description: Show a list of archives of specified archive name. Supports matching any number of characters using asterisk wildcard character if it's enabled with the `wildcard` query string parameter.
+        required: false
+        in: query
+        schema:
+          description: Show a list of archives of specified archive name. Supports matching any number of characters using asterisk wildcard character if it's enabled with the `wildcard` query string parameter.
+          type: string
+      - name: wildcard
+        description: Enable wildcard support in the name filter.
+        required: false
+        in: query
+        schema:
+          description: Enable wildcard support in the name filter.
+          default: false
+          type: boolean
+      - name: resourceId
+        description: Show only archives that contain backups for at least one resource from the specified list.
+        required: false
+        in: query
+        schema:
+          description: Show only archives that contain backups for at least one resource from the specified list.
+          type: array
+          items:
+            description: Universally unique identifier.
+            type: string
+            format: uuid
+      - name: storageType
+        description: Show a list of Archives in vaults of specified storage types.
+        required: false
+        in: query
+        schema:
+          description: Show a list of Archives in vaults of specified storage types.
+          type: array
+          items:
+            $ref: '#/components/schemas/storage_type'
+      - name: type
+        description: Show a list of Archives of specified types.
+        required: false
+        in: query
+        schema:
+          description: Show a list of Archives of specified types.
+          type: array
+          items:
+            $ref: '#/components/schemas/items_4'
+      - name: format
+        description: Show a list of Archives of specified formats.
+        required: false
+        in: query
+        schema:
+          description: Show a list of Archives of specified formats.
+          type: array
+          items:
+            $ref: '#/components/schemas/items_5'
+      - name: backupPlanId
+        description: Show only archives created by backup plan with specified ID.
+        required: false
+        in: query
+        schema:
+          description: Show only archives created by backup plan with specified ID.
+          type: string
+          format: uuid
+      - name: centralizedPlanId
+        description: Show only archives created by centralized plan with specified ID.
+        required: false
+        in: query
+        schema:
+          description: Show only archives created by centralized plan with specified ID.
+          type: string
+          format: uuid
+      - name: includeCatalogInfo
+        description: 'Include cataloged status of archive.
+
+
+          If false or not specified, `cataloged_status` and `actions` fields will not
+
+          be included in the response data.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Include cataloged status of archive.
+
+
+            If false or not specified, `cataloged_status` and `actions` fields will not
+
+            be included in the response data.
+
+            '
+          default: false
+          type: boolean
+      - name: forensic
+        description: 'Show only archives with forensic data or without forensic.
+
+
+          If not specified, archives are listed regardless of forensic data.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Show only archives with forensic data or without forensic.
+
+
+            If not specified, archives are listed regardless of forensic data.
+
+            '
+          type: boolean
+      - name: includePrePatchManagement
+        description: 'Include pre-patch management status of archive.
+
+
+          If false or not specified, the `pre_patch_management` field will not be included in the response data.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Include pre-patch management status of archive.
+
+
+            If false or not specified, the `pre_patch_management` field will not be included in the response data.
+
+            '
+          default: false
+          type: boolean
+      - name: prePatchManagementOnly
+        description: 'Show only archives with at least one backup which was made before patch management.
+
+
+          If false or not specified, archives are listed regardless of this filter.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Show only archives with at least one backup which was made before patch management.
+
+
+            If false or not specified, archives are listed regardless of this filter.
+
+            '
+          default: false
+          type: boolean
+      - name: includeMalwareFound
+        description: 'Include malware assessment result of backups in the archive.
+
+
+          If false or not specified, the `malware_found` field will not be included in the response data.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Include malware assessment result of backups in the archive.
+
+
+            If false or not specified, the `malware_found` field will not be included in the response data.
+
+            '
+          default: false
+          type: boolean
+      - name: malwareFound
+        description: 'Show only archives with backups that have the specified malware status.
+
+
+          Possible malware statuses:
+
+
+          * notScanned - No backups were scanned in the archive.
+
+          * clean - Backups that don''t contain malware.
+
+          * malware - Backup that contain malware.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Show only archives with backups that have the specified malware status.
+
+
+            Possible malware statuses:
+
+
+            * notScanned - No backups were scanned in the archive.
+
+            * clean - Backups that don''t contain malware.
+
+            * malware - Backup that contain malware.
+
+            '
+          type: array
+          items:
+            enum:
+            - notScanned
+            - clean
+            - malware
+            type: string
+      - name: includeOrphanage
+        description: 'Include orphanage status of archive.
+
+
+          If false or not specified, the `orphanage` object will not be included in the response data.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Include orphanage status of archive.
+
+
+            If false or not specified, the `orphanage` object will not be included in the response data.
+
+            '
+          default: false
+          type: boolean
+      - name: orphanage.status
+        description: 'Filter archives by orphanage status.
+
+
+          * NONE - Not orphaned
+
+          * NO_POLICY - Orphaned due to missing policy
+
+          * NO_RESOURCE - Orphaned due to missing resource
+
+          If not specified, archives are listed regardless of their orphanage status.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Filter archives by orphanage status.
+
+
+            * NONE - Not orphaned
+
+            * NO_POLICY - Orphaned due to missing policy
+
+            * NO_RESOURCE - Orphaned due to missing resource
+
+            If not specified, archives are listed regardless of their orphanage status.
+
+            '
+          type: array
+          items:
+            enum:
+            - NONE
+            - NO_POLICY
+            - NO_RESOURCE
+            type: string
+      - name: fromDate
+        description: Filters archives by the last updated date and time that is greater or equal to the given date and time.
+        required: false
+        in: query
+        schema:
+          description: Filters archives by the last updated date and time that is greater or equal to the given date and time.
+          type: string
+          format: date-time
+      - name: toDate
+        description: Filters archives by the last updated date and time that is less than or equal to the given date and time.
+        required: false
+        in: query
+        schema:
+          description: Filters archives by the last updated date and time that is less than or equal to the given date and time.
+          type: string
+          format: date-time
+      - name: includeActions
+        description: Calculate and include possible actions in the response.
+        required: false
+        in: query
+        schema:
+          description: Calculate and include possible actions in the response.
+          type: boolean
+      - name: targetAgentId
+        description: Select target agent to calculate actions.
+        required: false
+        in: query
+        schema:
+          description: Select target agent to calculate actions.
+          type: string
+          format: uuid
+      - name: before
+        description: 'Base64-encoded token obtained from the previous response.
+
+          Points to the end of the page.
+
+          '
+        in: query
+        schema:
+          description: 'Base64-encoded token obtained from the previous response.
+
+            Points to the end of the page.
+
+            '
+          type: string
+      - name: after
+        description: 'Base64-encoded token obtained from the previous response.
+
+          Points to the start of the page.
+
+          '
+        in: query
+        schema:
+          description: 'Base64-encoded token obtained from the previous response.
+
+            Points to the start of the page.
+
+            '
+          type: string
+      - name: offset
+        description: The number of elements to skip before beginning to return elements.
+        in: query
+        schema:
+          description: The number of elements to skip before beginning to return elements.
+          default: 0
+          type: integer
+      - name: limit
+        description: Limit the number of elements to return in one page.
+        in: query
+        schema:
+          description: Limit the number of elements to return in one page.
+          default: 100
+          type: integer
+          maximum: 1000
+      - name: count
+        description: Show total count in the response.
+        in: query
+        schema:
+          description: Show total count in the response.
+          default: false
+          type: boolean
+      - name: order
+        description: 'An ordering filter that orders the results by value of the specified properties.
+
+          Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+          Available operators:
+
+
+          * `asc` - ascending
+
+          * `desc` - descending
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'An ordering filter that orders the results by value of the specified properties.
+
+            Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+            Available operators:
+
+
+            * `asc` - ascending
+
+            * `desc` - descending
+
+            '
+          type: string
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                example:
+                  items:
+                  - id: 1f8867c2-179f-ef34-159f-84279a18174d
+                    name: WIN-FBM117GB12I-BACDFE64-B958-4F32-B204-2043249DBB2B-EDD63875-4641-44AA-B1A6-BACB4610AA11A
+                    vault_id: 885b7fe4-95ce-71fd-fff5-8de5b3cce9bb
+                    attributes:
+                      Description: ''
+                      MachineName: WIN-FBM117GB12I
+                      MarkedForDeletion: '0'
+                      MediaIDs: ''
+                      OwnerID: S-1-5-18
+                      OwnerName: WORKGROUP\WIN-FBM117GB12I$
+                      archive3format: '1'
+                      display-name: 'WIN-FBM117GB12I - Files/folders to WIN-FBM117GB12I: C:\local\'
+                      plan-id: FF26E847-4310-0B94-2E31-375BA31C16EE
+                      plan-name: 'Files/folders to WIN-FBM117GB12I: C:\local\'
+                      resource-name: WIN-FBM117GB12I
+                    size: 70893568
+                    type: file
+                    format: '11'
+                    created: '2018-02-02T01:39:24Z'
+                    updated: '2018-02-02T01:39:24Z'
+                    last_backup_created: '2018-02-02T01:40:05Z'
+                    resource_type: file
+                    protected_by_password: false
+                    encryption_algorithm: none
+                    deleted: false
+                    file_name: ''
+                    tenant_id: 00000000-0000-0000-0000-000000000000
+                    tenant_locator: /00000000-0000-0000-0000-000000000000/
+                    agent_id: 45eb1623-fa48-44a6-9c35-17188781adc5
+                    source_key: ''
+                    source_usn: 0
+                    actions:
+                    - refresh
+                    cataloged_status: notIndexed
+                    stats:
+                      first_backup: '2018-01-01T12:10:00Z'
+                      last_backup_size: 140
+                      last_backup_path: test-slice-stream-name
+                      backup_count: 5
+                    search_index_size: 0
+                  paging:
+                    cursors:
+                      before: eyJfdXJsUGF0aCI6WyIvYXBpL3ZhdWx0X21hbmFnZXIvdjEvYXJjaGl2ZXMiXSwib2Zmc2V0IjpbIjAiXX0
+                type: object
+                additionalProperties: false
+                properties:
+                  paging:
+                    title: Paging status
+                    description: Paging status.
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      total_count:
+                        description: Total number of selected items according given filters.
+                        type: integer
+                      cursors:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          after:
+                            description: A cursor that points to the end of the page of data that has been returned.
+                            type: string
+                          before:
+                            description: A cursor that points to the start of the page of data that has been returned.
+                            type: string
+                  items:
+                    type: array
+                    items:
+                      title: Archive
+                      description: Archive description.
+                      type: object
+                      additionalProperties: false
+                      required:
+                      - id
+                      - name
+                      - vault_id
+                      - format
+                      - created
+                      - file_name
+                      properties:
+                        id:
+                          $ref: '#/components/schemas/vault_id'
+                        name:
+                          description: Name of the archive.
+                          type: string
+                        vault_id:
+                          $ref: '#/components/schemas/vault_id'
+                        legacy_id:
+                          description: ID that is needed for old WCS API support. Don't use it in new services!
+                          type: string
+                        attributes:
+                          description: Any archive-specific attributes.
+                          type: object
+                        size:
+                          description: Size of the archive in bytes.
+                          type: integer
+                        compressed_data_size:
+                          description: Sum of compressed data in all slices in bytes. May be larger than `data_size` in case of dedup. Calculated by archive implementation.
+                          type: integer
+                        data_size:
+                          description: Size of backed up data in all slices of archive in bytes. Calculated by archive implementation.
+                          type: integer
+                        original_data_size:
+                          description: Size of the data that can be restored from all slices of the archive in bytes. Calculated by archive implementation.
+                          type: integer
+                        type:
+                          description: Archive type.
+                          enum:
+                          - unknown
+                          - file
+                          - image
+                          - vss_application
+                          - msexchange
+                          - msexchange_doc
+                          - mssql
+                          - oracle
+                          - ad
+                          - empty
+                          type: string
+                        format:
+                          description: Format of archive.
+                          enum:
+                          - '11'
+                          - '12'
+                          - alwaysIncremental
+                          type: string
+                        created:
+                          description: Date and time in RFC 3339 format the archive was created.
+                          type: string
+                          format: date-time
+                        updated:
+                          description: Date and time in RFC 3339 format the archive was updated.
+                          type: string
+                          format: date-time
+                        last_backup_created:
+                          description: Date and time in RFC 3339 format the last slice was created.
+                          type: string
+                          format: date-time
+                        resource_type:
+                          description: 'Type of resource stored in archive (e.g., `machine`, `mssql_server`). Can include additional resource type (e.g., type of VM: `datastore.vmwesx`, `virtual_appliance.mshyperv`).'
+                          type: string
+                        protected_by_password:
+                          description: If true, the archive is protected by password. False otherwise.
+                          type: boolean
+                        encryption_algorithm:
+                          description: Encryption algorithm of the archive.
+                          enum:
+                          - none
+                          - aes_128
+                          - aes128
+                          - aes_192
+                          - aes192
+                          - aes_256
+                          - aes256
+                          - gost
+                          type: string
+                        deleted:
+                          description: If true, the archive is deleted and no longer exists. False otherwise.
+                          type: boolean
+                        file_name:
+                          description: The archive file name.
+                          type: string
+                        tenant_id:
+                          description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+                          oneOf:
+                          - $ref: '#/components/schemas/vault_id'
+                          - description: Numeric identifier.
+                            type: string
+                            pattern: ^\d+$
+                        tenant_locator:
+                          description: Locator of the tenant that owns the archive.
+                          type: string
+                        agent_id:
+                          $ref: '#/components/schemas/vault_id'
+                        source_key:
+                          description: Key of archive in DML DB. Used for legacy agents support.
+                          type: string
+                        source_usn:
+                          description: Timestamp of archive in DML DB. Used for legacy agents support.
+                          type: integer
+                        actions:
+                          description: List of available actions.
+                          type: array
+                          items:
+                            type: string
+                        agent_name:
+                          description: Hostname of agent machine.
+                          type: string
+                          format: hostname
+                        centralized_plan_id:
+                          description: Global identifier of the backup plan in accordance to that the archive is created.
+                          type: string
+                        backup_plan_id:
+                          description: ID of the backup plan that created the archive.
+                          type: string
+                        backup_plan_name:
+                          description: Name of the backup plan that created the archive.
+                          type: string
+                        description:
+                          description: User-defined description.
+                          type: string
+                        display_name:
+                          description: Human-readable archive name.
+                          type: string
+                        owner_id:
+                          description: ID of the user (SID for Windows) that owns the archive.
+                          type: string
+                        owner_name:
+                          description: Name of the user that owns the archive.
+                          type: string
+                        resource_id:
+                          description: ID of the resource that stored in the archive.
+                          type: string
+                        resource_ids:
+                          description: List of identifiers of backed up resources.
+                          type: array
+                          items:
+                            description: ID of backed up resource.
+                            type: string
+                        resource_name:
+                          description: Name of the resource that stored in the archive.
+                          type: string
+                        consistent:
+                          description: False if archive content could be outdated and a refresh is required. True otherwise.
+                          type: boolean
+                        stats:
+                          title: Archive stats
+                          description: Additional information about slices.
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            first_backup:
+                              type: string
+                            last_backup_size:
+                              type: integer
+                            last_backup_path:
+                              type: string
+                            backup_count:
+                              type: integer
+                        marked_for_deletion:
+                          description: True if archive marked as deleted. False otherwise.
+                          type: boolean
+                        pds_status:
+                          description: State of physical data shipment.
+                          enum:
+                          - archiveNotReady
+                          - archiveInTransit
+                          - archiveDelivered
+                          type: string
+                        search_index_size:
+                          description: Size of search index.
+                          type: integer
+                        resource_path:
+                          description: Path to the backed up resource in a format acceptable by Resource Manager.
+                          type: string
+                        last_seen_at:
+                          description: Last time when the archive was seen.
+                          type: string
+                          format: date-time
+                        cataloged_status:
+                          description: State of archive is cataloged.
+                          enum:
+                          - notIndexed
+                          - partiallyIndexed
+                          - indexed
+                          type: string
+                        forensic:
+                          description: True if the archive contains forensic data. False otherwise.
+                          type: boolean
+                        pre_patch_management:
+                          description: Flag that specifies whether the archive contains at least one backup which was made before patch management. True if there's at least one backup that was made before patch management. False otherwise.
+                          type: boolean
+                        malware_found:
+                          description: Malware assessment result of backups in the archive. Absent if no backups were scanned. True if at least one backup has malware. False otherwise.
+                          type: boolean
+                        logical_size:
+                          description: Reflects logical size of archive.
+                          type: integer
+                        immutable_size:
+                          description: Reflects immutable size of archive.
+                          type: integer
+                        deleted_immutable:
+                          description: True if the archive is marked as deleted immutable. False otherwise.
+                          type: boolean
+                        orphanage:
+                          title: Set archive orphanage status request
+                          description: Archive orphanage status description.
+                          type: object
+                          required:
+                          - status
+                          properties:
+                            status:
+                              description: Value of archive orphanage status.
+                              enum:
+                              - NONE
+                              - NO_POLICY
+                              - NO_RESOURCE
+                              type: string
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+        - vault_manager::read
+        - protection::readonly
+      tags:
+      - Archives
+      summary: Fetch archives
+      x-summary-source: derived
+    delete:
+      operationId: Delete archives
+      description: Deletes archives containing selected resources.
+      x-ExtJS: VaultManager.DeleteResourceArchives
+      parameters:
+      - name: resourceId
+        description: ID of resource.
+        required: true
+        in: query
+        schema:
+          description: ID of resource.
+          type: string
+          format: uuid
+      - name: changeTag
+        description: Tag for run tasks.
+        required: true
+        in: query
+        schema:
+          description: Tag for run tasks.
+          type: string
+      - name: vaultId
+        description: ID of vault.
+        required: false
+        in: query
+        schema:
+          description: ID of vault.
+          type: string
+          format: uuid
+      - name: clusterId
+        description: Limit affinity to this cluster.
+        required: false
+        in: query
+        schema:
+          description: Limit affinity to this cluster.
+          type: string
+          format: uuid
+      - name: locationCredentialsId
+        description: ID of credentials to access vault.
+        required: false
+        in: query
+        schema:
+          description: ID of credentials to access vault.
+          type: string
+      - name: targetAgentId
+        description: ID of the agent to execute the task.
+        required: false
+        in: query
+        schema:
+          description: ID of the agent to execute the task.
+          type: string
+      responses:
+        '200':
+          description: List of task IDs created.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  items:
+                    description: List of Tasks identifiers.
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Invalid request.
+          content: {}
+        '500':
+          description: Internal error occurred.
+          content: {}
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Archives
+      summary: Delete archives
+      x-summary-source: derived
+  /archives/{archiveID}/backups:
+    get:
+      operationId: Fetch archive backups
+      description: Fetches a list of backups within the archive.
+      x-ExtJS: VaultManager.ListArchiveBackups
+      parameters:
+      - name: resourceId
+        description: Show only backups for specified resources.
+        required: false
+        in: query
+        schema:
+          description: Show only backups for specified resources.
+          type: array
+          items:
+            description: Universally unique identifier.
+            type: string
+            format: uuid
+      - name: protectedByPassword
+        description: 'Show only backups in protected by password or unprotected by password archives.
+
+
+          If not specified, backups are listed regardless of their password protection status.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Show only backups in protected by password or unprotected by password archives.
+
+
+            If not specified, backups are listed regardless of their password protection status.
+
+            '
+          type: boolean
+      - name: count
+        description: Show total count in the response.
+        in: query
+        schema:
+          description: Show total count in the response.
+          default: false
+          type: boolean
+      - name: before
+        description: 'Base64-encoded token obtained from the previous response.
+
+          Points to the end of the page.
+
+          '
+        in: query
+        schema:
+          description: 'Base64-encoded token obtained from the previous response.
+
+            Points to the end of the page.
+
+            '
+          type: string
+      - name: tapeId
+        description: Show only backups for specified tapes.
+        required: false
+        in: query
+        schema:
+          description: Show only backups for specified tapes.
+          type: array
+          items:
+            description: Universally unique identifier.
+            type: string
+            format: uuid
+      - name: embed
+        description: 'An array of field names to include in the response.
+
+
+          Each value represents the name of the extension field to be included in the base response.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'An array of field names to include in the response.
+
+
+            Each value represents the name of the extension field to be included in the base response.
+
+            '
+          type: array
+          items:
+            enum:
+            - archive
+            - automated_test_failover_validation_status
+            - validation_status
+            - vault
+            type: string
+      - name: showDeleted
+        description: 'A flag that specifies what should be added to the list of returned backups:
+
+
+          * 1 - All deleted backups are added to the list of archives.
+
+          * 2 - Only deleted backups marked as immutable are added to the list of backups.
+
+          * 0 - No deleted backups are added to the list of backups.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'A flag that specifies what should be added to the list of returned backups:
+
+
+            * 1 - All deleted backups are added to the list of archives.
+
+            * 2 - Only deleted backups marked as immutable are added to the list of backups.
+
+            * 0 - No deleted backups are added to the list of backups.
+
+            '
+          enum:
+          - 0
+          - 1
+          - 2
+          type: integer
+      - name: targetAgentId
+        description: Select target agent to calculate actions.
+        required: false
+        in: query
+        schema:
+          description: Select target agent to calculate actions.
+          type: string
+          format: uuid
+      - name: triggeredBy
+        description: Show a list of Backups triggered by specified reason.
+        required: false
+        in: query
+        schema:
+          description: Show a list of Backups triggered by specified reason.
+          type: array
+          items:
+            $ref: '#/components/schemas/items_1'
+      - name: offset
+        description: The number of elements to skip before beginning to return elements.
+        in: query
+        schema:
+          description: The number of elements to skip before beginning to return elements.
+          default: 0
+          type: integer
+      - name: after
+        description: 'Base64-encoded token obtained from the previous response.
+
+          Points to the start of the page.
+
+          '
+        in: query
+        schema:
+          description: 'Base64-encoded token obtained from the previous response.
+
+            Points to the start of the page.
+
+            '
+          type: string
+      - name: order
+        description: 'An ordering filter that orders the results by value of the specified properties.
+
+          Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+          Available operators:
+
+
+          * `asc` - ascending
+
+          * `desc` - descending
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'An ordering filter that orders the results by value of the specified properties.
+
+            Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+            Available operators:
+
+
+            * `asc` - ascending
+
+            * `desc` - descending
+
+            '
+          type: string
+      - name: includeActions
+        description: Calculate and include possible actions in the response.
+        required: false
+        in: query
+        schema:
+          description: Calculate and include possible actions in the response.
+          type: boolean
+      - name: backupType
+        description: Show only backups of specified types.
+        required: false
+        in: query
+        schema:
+          description: Show only backups of specified types.
+          type: array
+          items:
+            $ref: '#/components/schemas/items'
+      - name: vulnerabilityAssessmentStatus
+        description: Show only backups with specified Vulnerability Assessment Result statuses.
+        required: false
+        in: query
+        schema:
+          description: Show only backups with specified Vulnerability Assessment Result statuses.
+          type: array
+          items:
+            enum:
+            - notScanned
+            - clean
+            - vulnerable
+            type: string
+      - name: changeTag
+        description: Show only backups for specified change tag.
+        required: false
+        in: query
+        schema:
+          description: Show only backups for specified change tag.
+          type: string
+      - name: avScanningDate
+        description: Show only backups scanned within the specified time range OR never scanned backups if "none" is specified.
+        required: false
+        in: query
+        schema:
+          description: Show only backups scanned within the specified time range OR never scanned backups if "none" is specified.
+          type: array
+          items:
+            $ref: '#/components/schemas/datetime_fn'
+      - name: limit
+        description: Limit the number of elements to return in one page.
+        in: query
+        schema:
+          description: Limit the number of elements to return in one page.
+          default: 100
+          type: integer
+          maximum: 1000
+      - name: malwareAssessmentStatus
+        description: Show only backups with specified Malware Assessment Result statuses.
+        required: false
+        in: query
+        schema:
+          description: Show only backups with specified Malware Assessment Result statuses.
+          type: array
+          items:
+            enum:
+            - notScanned
+            - clean
+            - malware
+            type: string
+      - name: created
+        description: Show only backups created within specified time range.
+        required: false
+        in: query
+        schema:
+          description: Show only backups created within specified time range.
+          type: array
+          items:
+            $ref: '#/components/schemas/datetime_fn'
+      - name: archiveID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                example:
+                  items:
+                  - vault_id: 885b7fe4-95ce-71fd-fff5-8de5b3cce9bb
+                    archive_id: 1f8867c2-179f-ef34-159f-84279a18174d
+                    backup_id: c2aa0462-dd30-4e08-afce-1bad7cfbf8be
+                    created: '2018-02-02T01:40:05Z'
+                    size: 70844416
+                    deleted: false
+                    tenant_id: 00000000-0000-0000-0000-000000000000
+                    tenant_locator: /00000000-0000-0000-0000-000000000000/
+                    attributes:
+                      Kind: full
+                      MarkedForDeletion: '0'
+                      SliceMediaIDs: ''
+                    resource_ids:
+                    - EDD63875-4641-44AA-B1A6-BACB4610AA11
+                    source_key: ''
+                    source_usn: 0
+                    type: full
+                    actions:
+                    - restoreDisks
+                    - restoreFiles
+                    - downloadFiles
+                    - deleteByAgent
+                    - validate
+                    - replicate
+                    catalog_status:
+                      MsTeamsMails: true
+                      MsTeamsSite: false
+                      MsTeamsChannel: false
+                    notarized: false
+                    tapes:
+                    - 7E1DBD9A-7A7A-4D98-AB13-50084215FCDD
+                    - 3DBFADA4-D2E9-442E-9942-39685E956EC1
+                    - C2067C48-0819-41E2-9749-4B448793A782
+                    tapes_for_restore:
+                    - 3DBFADA4-D2E9-442E-9942-39685E956EC1
+                    - C2067C48-0819-41E2-9749-4B448793A782
+                  paging:
+                    cursors:
+                      before: eyJfdXJsUGF0aCI6WyIvYXBpL3ZhdWx0X21hbmFnZXIvdjEvYXJjaGl2ZXMiXSwib2Zmc2V0IjpbIjAiXX0
+                type: object
+                additionalProperties: false
+                properties:
+                  paging:
+                    title: Paging status
+                    description: Paging status.
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      total_count:
+                        description: Total number of selected items according given filters.
+                        type: integer
+                      cursors:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          after:
+                            description: A cursor that points to the end of the page of data that has been returned.
+                            type: string
+                          before:
+                            description: A cursor that points to the start of the page of data that has been returned.
+                            type: string
+                  items:
+                    type: array
+                    items:
+                      description: Backup description.
+                      type: object
+                      additionalProperties: false
+                      required:
+                      - vault_id
+                      - archive_id
+                      - backup_id
+                      - type
+                      properties:
+                        vault_id:
+                          $ref: '#/components/schemas/archive_id'
+                        archive_id:
+                          $ref: '#/components/schemas/archive_id'
+                        backup_id:
+                          $ref: '#/components/schemas/archive_id'
+                        created:
+                          description: Date and time in RFC 3339 format the backup was created.
+                          type: string
+                          format: date-time
+                        size:
+                          description: Size in bytes on backup location.
+                          type: integer
+                        deduplicated_size:
+                          description: Deduplicated size in bytes on backup location.
+                          type: integer
+                        backed_up_data_size:
+                          description: Size in bytes of backed up data in backup.
+                          type: integer
+                        original_data_size:
+                          description: Size in bytes of data that can be restored from this backup; for full backup this value is equal to `backed_up_data_size`.
+                          type: integer
+                        item_counters:
+                          title: Slice item counters
+                          description: Counters of items modified during backup.
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            items_added:
+                              description: Items added during backup.
+                              type: integer
+                            items_changed:
+                              description: Items changed during backup.
+                              type: integer
+                            items_removed:
+                              description: Items removed during backup.
+                              type: integer
+                        deleted:
+                          description: True if the backup is deleted. False otherwise.
+                          type: boolean
+                        tenant_id:
+                          $ref: '#/components/schemas/tenant_id'
+                        tenant_locator:
+                          description: Tenant path.
+                          type: string
+                        resource_ids:
+                          description: List of identifiers of backed up resources.
+                          type: array
+                          items:
+                            description: ID of backed up resource.
+                            type: string
+                        catalog_status:
+                          description: Catalog status for backup or backup subtypes.
+                          type: object
+                        notarized:
+                          description: If true, the backup is notarized. False otherwise.
+                          type: boolean
+                        attributes:
+                          description: Any vault-specific or backup-point-specific attributes.
+                          type: object
+                        vault:
+                          title: Vault description
+                          description: Vault description.
+                          type: object
+                          additionalProperties: false
+                          required:
+                          - name
+                          - version
+                          - storage_type
+                          - settings
+                          properties:
+                            id:
+                              $ref: '#/components/schemas/archive_id'
+                            name:
+                              description: Name of the vault.
+                              type: string
+                            uri:
+                              description: URI of the vault.
+                              type: string
+                            version:
+                              description: Version of the vault.
+                              type: string
+                            managing_agent_id:
+                              $ref: '#/components/schemas/archive_id'
+                            storage_type:
+                              $ref: '#/components/schemas/storage_type_2'
+                            organizational:
+                              description: True if vault is online and is created on customer or personal tenant levels. False otherwise.
+                              type: boolean
+                            settings:
+                              description: Any vault type specific settings.
+                              oneOf:
+                              - type: object
+                                additionalProperties: false
+                                properties:
+                                  comment:
+                                    type: string
+                                  storage_type:
+                                    $ref: '#/components/schemas/storage_type_2'
+                                  catalog_type:
+                                    type: string
+                                  catalog_uri:
+                                    type: string
+                                  encryption_type:
+                                    enum:
+                                    - CRYPT_NONE
+                                    - CRYPT_AES128
+                                    - CRYPT_AES192
+                                    - CRYPT_AES256
+                                    - CRYPT_GOST
+                                    type: string
+                                  encryption_uri:
+                                    type: string
+                                  encryption_key:
+                                    type: string
+                                  dedup_type:
+                                    type: string
+                                  dedup_uri:
+                                    type: string
+                              - title: Local ABGW Vault settings
+                                description: Local ABGW Vault settings.
+                                type: object
+                                additionalProperties: false
+                                required:
+                                - storage_id
+                                properties:
+                                  path:
+                                    description: Path on the storage.
+                                    type: string
+                                  storage_id: {}
+                              - title: Amazon S3 Vault settings
+                                description: Amazon S3 Vault settings.
+                                type: object
+                                additionalProperties: false
+                                properties:
+                                  connection_id:
+                                    description: Connection ID is used to get Amazon credentials from Cloud Connection Service
+                                    type: string
+                                  region:
+                                    description: Region of the storage
+                                    type: string
+                                  storage_class:
+                                    description: Storage class
+                                    enum:
+                                    - STANDARD
+                                    - STANDARD_IA
+                                    - ONEZONE_IA
+                                    - INTELLIGENT_TIERING
+                                    type: string
+                                  bucket:
+                                    description: Bucket name
+                                    type: string
+                                  path:
+                                    description: Path on the storage.
+                                    type: string
+                                  immutability_days:
+                                    description: Object lock duration in days.
+                                    default: 30
+                                    type: integer
+                                    minimum: 1
+                                    maximum: 999
+                              - title: S3 Compatible Vault settings
+                                description: S3 Compatible Vault settings.
+                                type: object
+                                additionalProperties: false
+                                required:
+                                - cred_id
+                                - endpoint
+                                - bucket
+                                - path
+                                properties:
+                                  cred_id:
+                                    description: Cred ID from CredentialStore service used to get s3 credentials
+                                    type: string
+                                  s3_auth_flavour:
+                                    description: Authentication method
+                                    default: authv4
+                                    enum:
+                                    - authv2
+                                    - authv4
+                                    type: string
+                                  cert_verify:
+                                    description: Verify server cerificate?
+                                    default: true
+                                    type: boolean
+                                  endpoint:
+                                    description: Endpoint of the compatible s3 storage
+                                    type: string
+                                  bucket:
+                                    description: Bucket name
+                                    type: string
+                                  path:
+                                    description: Path on the storage.
+                                    type: string
+                                  s3_subtype:
+                                    default: ''
+                                    enum:
+                                    - ''
+                                    - ACI
+                                    - ImpossibleCloud
+                                    type: string
+                              - title: Wasabi S3 Vault settings
+                                description: Wasabi S3 Vault settings.
+                                type: object
+                                additionalProperties: false
+                                required:
+                                - connection_id
+                                - region
+                                - endpoint
+                                - bucket
+                                - path
+                                - s3_subtype
+                                properties:
+                                  connection_id:
+                                    description: Connection ID is used to get Wasabi credentials from Cloud Connection Service
+                                    type: string
+                                  region:
+                                    description: Region of the storage
+                                    type: string
+                                  endpoint:
+                                    description: Endpoint of wasabi based on the region
+                                    type: string
+                                  bucket:
+                                    description: Bucket name
+                                    type: string
+                                  path:
+                                    description: Path on the storage.
+                                    type: string
+                                  s3_subtype:
+                                    enum:
+                                    - Wasabi
+                                    type: string
+                              - type: object
+                            storage_id:
+                              description: ID of the storage, for Local ABGW Vault or Storage node Vault.
+                              type: string
+                            status:
+                              description: Status of the vault.
+                              type: object
+                            tenant_id:
+                              $ref: '#/components/schemas/tenant_id'
+                            tenant_locator:
+                              description: Tenant locator.
+                              type: string
+                            access_address:
+                              description: Hostname or IP address of Acronis Storage Node to create vault on.
+                              anyOf:
+                              - type: string
+                                format: ipv4
+                              - type: string
+                                format: ipv6
+                              - type: string
+                                format: hostname
+                              - type: string
+                                minLength: 0
+                              type: string
+                            compacting_plan_id:
+                              $ref: '#/components/schemas/archive_id'
+                            hostname:
+                              description: Hostname of local vault.
+                              type: string
+                              format: hostname
+                            consistent:
+                              description: False if vault content could be outdated and a refresh is required. True otherwise.
+                              type: boolean
+                            last_seen_at:
+                              description: Date and time in RFC 3339 format when the vault was last seen.
+                              type: string
+                              format: date-time
+                            is_full_config:
+                              description: True if `name`, `uri`, `settings`, `storage_type` are filled. False otherwise.
+                              type: boolean
+                        archive:
+                          title: Archive
+                          description: Archive description.
+                          type: object
+                          additionalProperties: false
+                          required:
+                          - id
+                          - name
+                          - vault_id
+                          - format
+                          - created
+                          - file_name
+                          properties:
+                            id:
+                              $ref: '#/components/schemas/archive_id'
+                            name:
+                              description: Name of the archive.
+                              type: string
+                            vault_id:
+                              $ref: '#/components/schemas/archive_id'
+                            legacy_id:
+                              description: ID that is needed for old WCS API support. Don't use it in new services!
+                              type: string
+                            attributes:
+                              description: Any archive-specific attributes.
+                              type: object
+                            size:
+                              description: Size of the archive in bytes.
+                              type: integer
+                            compressed_data_size:
+                              description: Sum of compressed data in all slices in bytes. May be larger than `data_size` in case of dedup. Calculated by archive implementation.
+                              type: integer
+                            data_size:
+                              description: Size of backed up data in all slices of archive in bytes. Calculated by archive implementation.
+                              type: integer
+                            original_data_size:
+                              description: Size of the data that can be restored from all slices of the archive in bytes. Calculated by archive implementation.
+                              type: integer
+                            type:
+                              description: Archive type.
+                              enum:
+                              - unknown
+                              - file
+                              - image
+                              - vss_application
+                              - msexchange
+                              - msexchange_doc
+                              - mssql
+                              - oracle
+                              - ad
+                              - empty
+                              type: string
+                            format:
+                              description: Format of archive.
+                              enum:
+                              - '11'
+                              - '12'
+                              - alwaysIncremental
+                              type: string
+                            created:
+                              description: Date and time in RFC 3339 format the archive was created.
+                              type: string
+                              format: date-time
+                            updated:
+                              description: Date and time in RFC 3339 format the archive was updated.
+                              type: string
+                              format: date-time
+                            last_backup_created:
+                              description: Date and time in RFC 3339 format the last slice was created.
+                              type: string
+                              format: date-time
+                            resource_type:
+                              description: 'Type of resource stored in archive (e.g., `machine`, `mssql_server`). Can include additional resource type (e.g., type of VM: `datastore.vmwesx`, `virtual_appliance.mshyperv`).'
+                              type: string
+                            protected_by_password:
+                              description: If true, the archive is protected by password. False otherwise.
+                              type: boolean
+                            encryption_algorithm:
+                              description: Encryption algorithm of the archive.
+                              enum:
+                              - none
+                              - aes_128
+                              - aes128
+                              - aes_192
+                              - aes192
+                              - aes_256
+                              - aes256
+                              - gost
+                              type: string
+                            deleted:
+                              description: If true, the archive is deleted and no longer exists. False otherwise.
+                              type: boolean
+                            file_name:
+                              description: The archive file name.
+                              type: string
+                            tenant_id:
+                              $ref: '#/components/schemas/tenant_id'
+                            tenant_locator:
+                              description: Locator of the tenant that owns the archive.
+                              type: string
+                            agent_id:
+                              $ref: '#/components/schemas/archive_id'
+                            source_key:
+                              description: Key of archive in DML DB. Used for legacy agents support.
+                              type: string
+                            source_usn:
+                              description: Timestamp of archive in DML DB. Used for legacy agents support.
+                              type: integer
+                            actions:
+                              description: List of available actions.
+                              type: array
+                              items:
+                                type: string
+                            agent_name:
+                              description: Hostname of agent machine.
+                              type: string
+                              format: hostname
+                            centralized_plan_id:
+                              description: Global identifier of the backup plan in accordance to that the archive is created.
+                              type: string
+                            backup_plan_id:
+                              description: ID of the backup plan that created the archive.
+                              type: string
+                            backup_plan_name:
+                              description: Name of the backup plan that created the archive.
+                              type: string
+                            description:
+                              description: User-defined description.
+                              type: string
+                            display_name:
+                              description: Human-readable archive name.
+                              type: string
+                            owner_id:
+                              description: ID of the user (SID for Windows) that owns the archive.
+                              type: string
+                            owner_name:
+                              description: Name of the user that owns the archive.
+                              type: string
+                            resource_id:
+                              description: ID of the resource that stored in the archive.
+                              type: string
+                            resource_ids:
+                              description: List of identifiers of backed up resources.
+                              type: array
+                              items:
+                                description: ID of backed up resource.
+                                type: string
+                            resource_name:
+                              description: Name of the resource that stored in the archive.
+                              type: string
+                            consistent:
+                              description: False if archive content could be outdated and a refresh is required. True otherwise.
+                              type: boolean
+                            stats:
+                              title: Archive stats
+                              description: Additional information about slices.
+                              type: object
+                              additionalProperties: false
+                              properties:
+                                first_backup:
+                                  type: string
+                                last_backup_size:
+                                  type: integer
+                                last_backup_path:
+                                  type: string
+                                backup_count:
+                                  type: integer
+                            marked_for_deletion:
+                              description: True if archive marked as deleted. False otherwise.
+                              type: boolean
+                            pds_status:
+                              description: State of physical data shipment.
+                              enum:
+                              - archiveNotReady
+                              - archiveInTransit
+                              - archiveDelivered
+                              type: string
+                            search_index_size:
+                              description: Size of search index.
+                              type: integer
+                            resource_path:
+                              description: Path to the backed up resource in a format acceptable by Resource Manager.
+                              type: string
+                            last_seen_at:
+                              description: Last time when the archive was seen.
+                              type: string
+                              format: date-time
+                            cataloged_status:
+                              description: State of archive is cataloged.
+                              enum:
+                              - notIndexed
+                              - partiallyIndexed
+                              - indexed
+                              type: string
+                            forensic:
+                              description: True if the archive contains forensic data. False otherwise.
+                              type: boolean
+                            pre_patch_management:
+                              description: Flag that specifies whether the archive contains at least one backup which was made before patch management. True if there's at least one backup that was made before patch management. False otherwise.
+                              type: boolean
+                            malware_found:
+                              description: Malware assessment result of backups in the archive. Absent if no backups were scanned. True if at least one backup has malware. False otherwise.
+                              type: boolean
+                            logical_size:
+                              description: Reflects logical size of archive.
+                              type: integer
+                            immutable_size:
+                              description: Reflects immutable size of archive.
+                              type: integer
+                            deleted_immutable:
+                              description: True if the archive is marked as deleted immutable. False otherwise.
+                              type: boolean
+                            orphanage:
+                              title: Set archive orphanage status request
+                              description: Archive orphanage status description.
+                              type: object
+                              required:
+                              - status
+                              properties:
+                                status:
+                                  description: Value of archive orphanage status.
+                                  enum:
+                                  - NONE
+                                  - NO_POLICY
+                                  - NO_RESOURCE
+                                  type: string
+                        disks:
+                          description: Disks in the Disk-image backup.
+                          type: array
+                          items:
+                            title: Disk
+                            description: Disk description.
+                            type: object
+                            additionalProperties: false
+                            properties:
+                              device_model:
+                                type: string
+                              name:
+                                type: string
+                              size:
+                                description: Disk size in bytes.
+                                type: integer
+                              volumes:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/items_3'
+                        dynamic_volumes:
+                          description: Dynamic volumes in the Disk-image backup.
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/items_3'
+                        source_key:
+                          description: Old agents sync info.
+                          type: string
+                        source_usn:
+                          description: Old agents sync info.
+                          type: integer
+                        actions:
+                          description: List of available actions.
+                          type: array
+                          items:
+                            type: string
+                        last_seen_at:
+                          description: Date and time in RFC 3339 format the backup was last seen.
+                          type: string
+                          format: date-time
+                        change_tag:
+                          description: User-defined identifier to mark records affected by this request (obsolete).
+                          type: string
+                        failover_check_info:
+                          title: Failover check info
+                          description: Information about status of failover.
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            error:
+                              description: Failover check error.
+                              type: object
+                              additionalProperties: false
+                              properties:
+                                code:
+                                  type: string
+                                domain:
+                                  type: string
+                            is_critical_error:
+                              description: True if check has failed with error that is critical for failover. False otherwise.
+                              type: boolean
+                        triggered_by:
+                          description: Reason why Backup was created.
+                          enum:
+                          - patch_management
+                          type: string
+                        av_scanning_date:
+                          description: Date and time in RFC 3339 format when backup was scanned by antivirus. Input timezone is removed by conversion to UTC
+                          type: string
+                          format: date-time
+                        vulnerability_assessment_result:
+                          description: "Vulnerability assessment result:\n* 0 - clean.\n* 1 - malicious.\n 2 - unknown.\n 3 - failed.\n* 4 - unsupported."
+                          enum:
+                          - 0
+                          - 1
+                          - 2
+                          - 3
+                          - 4
+                          type: integer
+                        malware_assessment_result:
+                          description: 'Malware assessment result:
+
+                            * 0 - clean.
+
+                            * 1 - malware.
+
+                            * 4 - unsupported (unsupported file system).'
+                          enum:
+                          - 0
+                          - 1
+                          - 4
+                          type: integer
+                        type:
+                          description: Backup type.
+                          enum:
+                          - full
+                          - incremental
+                          - differential
+                          - unknown
+                          - cdp
+                          type: string
+                        tapes:
+                          $ref: '#/components/schemas/tapes_for_restore'
+                        tapes_for_restore:
+                          $ref: '#/components/schemas/tapes_for_restore'
+                        deleted_immutable:
+                          description: True if the backup is marked as deleted immutable. False otherwise.
+                          type: boolean
+                        validation_status:
+                          description: Result of backup validation.
+                          type: object
+                          additionalProperties: false
+                          required:
+                          - overall_status
+                          properties:
+                            overall_status:
+                              $ref: '#/components/schemas/checksum_validation'
+                            checksum_validation:
+                              $ref: '#/components/schemas/checksum_validation'
+                            vm_heartbeat_validation:
+                              $ref: '#/components/schemas/checksum_validation'
+                            screenshot_validation:
+                              $ref: '#/components/schemas/checksum_validation'
+                            screenshot_full_url:
+                              description: URL to screenshot file (this is an optional unsigned URL to S3 storage).
+                              type: string
+                            screenshot_preview_url:
+                              description: URL to screenshot preview file (this is an optional unsigned URL to S3 storage).
+                              type: string
+                        automated_test_failover_validation_status:
+                          description: Status of backup validation by Disaster Recovery Automated Test Failover feature.
+                          type: object
+                          additionalProperties: false
+                          required:
+                          - completed_at
+                          - overall_status
+                          - started_at
+                          - task_id
+                          properties:
+                            completed_at:
+                              description: Date and time in RFC 3339 format when Automated Test Failover validation of the Backup was completed. Input timezone is removed by conversion to UTC.
+                              type: string
+                              format: date-time
+                            overall_status:
+                              $ref: '#/components/schemas/checksum_validation'
+                            started_at:
+                              description: Date and time in RFC 3339 format when Automated Test Failover validation of the Backup was started. Input timezone is removed by conversion to UTC.
+                              type: string
+                            screenshot_full_url:
+                              description: URL to Vault Manager which redirects to signed S3 storage URL with screenshot file produced during backup validation by Disaster Recovery Automated Test Failover feature (optional).
+                              type: string
+                            screenshot_preview_url:
+                              description: URL to Vault Manager which redirects to signed S3 storage URL with screenshot preview file produced during backup validation by Disaster Recovery Automated Test Failover feature (optional).
+                              type: string
+                            task_id:
+                              description: The ID of the Task Manager task which the Automated Test Failover process was started from.
+                              type: string
+                        created_in_network_isolation:
+                          description: True if the backup was created after network isolation. False otherwise.
+                          type: boolean
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+        - vault_manager::read
+        - protection::readonly
+        - vault_manager::core_restore
+        - vault_manager::c2c_restore
+      tags:
+      - Archives
+      summary: Fetch archive backups
+      x-summary-source: derived
+components:
+  schemas:
+    items_4:
+      description: Archive type.
+      enum:
+      - unknown
+      - file
+      - image
+      - vss_application
+      - msexchange
+      - msexchange_doc
+      - mssql
+      - oracle
+      - ad
+      - empty
+      type: string
+    tapes_for_restore:
+      type: array
+      items:
+        $ref: '#/components/schemas/archive_id'
+    storage_type_2:
+      description: Vault storage type.
+      enum:
+      - unknown
+      - local_folder
+      - network_share
+      - ftp
+      - sftp
+      - cd
+      - tape
+      - storage_server
+      - asz
+      - removable_drive
+      - online
+      - nfs_share
+      - esx
+      - local_abgw
+      - microsoft_azure
+      - amazon_s3
+      - s3_compatible
+      type: string
+    archive_id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    uuid:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    tenant_id:
+      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+      oneOf:
+      - $ref: '#/components/schemas/archive_id'
+      - description: Numeric identifier.
+        type: string
+        pattern: ^\d+$
+    storage_type:
+      description: Vault storage type.
+      enum:
+      - unknown
+      - local_folder
+      - network_share
+      - ftp
+      - sftp
+      - cd
+      - tape
+      - storage_server
+      - asz
+      - removable_drive
+      - online
+      - nfs_share
+      - esx
+      - local_abgw
+      - microsoft_azure
+      - amazon_s3
+      - s3_compatible
+      type: string
+    items:
+      description: Backup type.
+      enum:
+      - full
+      - incremental
+      - differential
+      - unknown
+      - cdp
+      type: string
+    items_1:
+      description: Reason why Backup was created.
+      enum:
+      - patch_management
+      type: string
+    items_5:
+      description: Format of archive.
+      enum:
+      - '11'
+      - '12'
+      - alwaysIncremental
+      type: string
+    vault_id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    checksum_validation:
+      description: Value of backup validation status.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
+      type: string
+    items_3:
+      title: Volume
+      description: Volume description.
+      type: object
+      additionalProperties: false
+      properties:
+        free_space:
+          description: Free volume space in bytes.
+          type: integer
+        is_bootable:
+          type: boolean
+        is_system:
+          type: boolean
+        name:
+          type: string
+        size:
+          description: Volume size in bytes.
+          type: integer
+        mount_strid:
+          description: String identifier of the volume.
+          type: string
+    datetime_fn:
+      description: 'A filter by date and time in RFC 3339 format with the support
+
+        for comparison operators.
+
+
+        Available operators:
+
+
+        * `lt` - less than
+
+        * `gt` - greater than
+
+        * `le` - less than or equals
+
+        * `ge` - greater than or equals
+
+        '
+      type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

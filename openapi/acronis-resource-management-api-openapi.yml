@@ -1,0 +1,2035 @@
+openapi: 3.2.0
+info:
+  title: Resource and Policy Management Resource Management API
+  version: v4
+servers:
+- url: https://dev-cloud.acronis.com/api
+  variables: {}
+tags:
+- name: Resource Management
+paths:
+  /resource_management/v4/resources:
+    get:
+      operationId: Fetch a list of all resources
+      parameters:
+      - name: include_attributes
+        description: If true, includes resources' attributes in the response. Mutually exclusive with `include_attribute_namespaces`.
+        in: query
+        schema:
+          description: If true, includes resources' attributes in the response. Mutually exclusive with `include_attribute_namespaces`.
+          type: boolean
+      - name: include_attribute_namespaces
+        description: Includes resources' attributes from specific namespaces. Mutually exclusive with `include_attributes`.
+        in: query
+        schema:
+          description: Includes resources' attributes from specific namespaces. Mutually exclusive with `include_attributes`.
+          type: string
+      - name: limit
+        description: Number of element in the page.
+        in: query
+        schema:
+          description: Number of element in the page.
+          type: integer
+      - name: before
+        description: Cursor before the current page.
+        in: query
+        schema:
+          description: Cursor before the current page.
+          type: string
+      - name: after
+        description: Cursor after the current page.
+        in: query
+        schema:
+          description: Cursor after the current page.
+          type: string
+      - name: tenant_id
+        description: Filter by one or more tenant IDs or UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more tenant IDs or UUIDs. Maximum 100 items.
+          type: string
+      - name: agent_id
+        description: Filter by one or more agent UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more agent UUIDs. Maximum 100 items.
+          type: string
+      - name: parent_id
+        description: Filter by one or more parent UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more parent UUIDs. Maximum 100 items.
+          type: string
+      - name: has_member_id
+        description: Filter by one or more member UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more member UUIDs. Maximum 100 items.
+          type: string
+      - name: type
+        description: Filter by one or more resource types. Items are of type `ResourceType` or `cti.CTI` (for workloads derived from `cti.a.p.wm.workload.v1.0`). Maximum 10 items.
+        in: query
+        schema:
+          description: Filter by one or more resource types. Items are of type `ResourceType` or `cti.CTI` (for workloads derived from `cti.a.p.wm.workload.v1.0`). Maximum 10 items.
+          type: string
+      - name: resource_id
+        description: Filter by one or more resource UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more resource UUIDs. Maximum 100 items.
+          type: string
+      - name: search
+        description: Search for resources by type and tags using an SQL-like syntax. See https://www.acronis.com/en-us/support/documentation/CyberProtectionService/index.html#operators-dynamic-groups.html
+        in: query
+        schema:
+          description: Search for resources by type and tags using an SQL-like syntax. See https://www.acronis.com/en-us/support/documentation/CyberProtectionService/index.html#operators-dynamic-groups.html
+          type: string
+      - name: not_applied_only
+        description: Fetch all resources that have no applied policies. Mutually exclusive with `not_applied_only` and `applied...` filters. Redundant if `applicable_to_policy_id` or `applicable_to_policy_selection_id` are also specified.
+        in: query
+        schema:
+          description: Fetch all resources that have no applied policies. Mutually exclusive with `not_applied_only` and `applied...` filters. Redundant if `applicable_to_policy_id` or `applicable_to_policy_selection_id` are also specified.
+          type: boolean
+      - name: applicable_to_policy_id
+        description: Fetch all resources that are applicable to the policies with the given IDs. The IDs are of type `InternalID`. Maximum 100 items. Mutually exclusive with `not_applied_only` and `applied...` filters.
+        in: query
+        schema:
+          description: Fetch all resources that are applicable to the policies with the given IDs. The IDs are of type `InternalID`. Maximum 100 items. Mutually exclusive with `not_applied_only` and `applied...` filters.
+          type: string
+      - name: applicable_to_policy_selection_id
+        description: Fetch all resources that are applicable to the policies in the policy selection. Mutually exclusive with `applied...` filters.
+        in: query
+        schema:
+          description: Fetch all resources that are applicable to the policies in the policy selection. Mutually exclusive with `applied...` filters.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: applied_only
+        description: Fetch all resources that have applied policies. Mutually exclusive with `not_applied_only` and `applicable...` filters. Redundant if `applied_to_policy_id` or `applied_to_policy_selection_id` are also specified.
+        in: query
+        schema:
+          description: Fetch all resources that have applied policies. Mutually exclusive with `not_applied_only` and `applicable...` filters. Redundant if `applied_to_policy_id` or `applied_to_policy_selection_id` are also specified.
+          type: boolean
+      - name: applied_to_policy_id
+        description: Fetch all resources that are applied to the policies with the given UUIDs. Maximum 100 items. Mutually exclusive with `not_applied_only` and `applicable...` filters.
+        in: query
+        schema:
+          description: Fetch all resources that are applied to the policies with the given UUIDs. Maximum 100 items. Mutually exclusive with `not_applied_only` and `applicable...` filters.
+          type: string
+      - name: applied_to_policy_selection_id
+        description: Fetch all resources applied to the policies in the selection with the given id. Mutually exclusive with `not_applied_only` and `applicable...` filters.
+        in: query
+        schema:
+          description: Fetch all resources applied to the policies in the selection with the given id. Mutually exclusive with `not_applied_only` and `applicable...` filters.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: include_deleted
+        description: If true, includes deleted resources.
+        in: query
+        schema:
+          description: If true, includes deleted resources.
+          type: boolean
+      - name: allowed_actions
+        description: Fetch all resources that have matching allowed_actions. Note that you probably would also want to set links_and_issues to get actions in _links or _linkIds. List of possible actions is listed in Actions enum in common.raml, resource management section
+        in: query
+        schema:
+          description: Fetch all resources that have matching allowed_actions. Note that you probably would also want to set links_and_issues to get actions in _links or _linkIds. List of possible actions is listed in Actions enum in common.raml, resource management section
+          type: string
+      - name: updated_at
+        in: query
+        schema:
+          type: string
+      - name: is_group
+        description: If true, includes only groups. If false, includes only resources, without groups.
+        in: query
+        schema:
+          description: If true, includes only groups. If false, includes only resources, without groups.
+          type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcePagedList'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/UnauthorizedRequestError'
+                - $ref: '#/components/schemas/AuthenticationTimeoutError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      security:
+      - oauth2:
+        - urn:acronis.com::resource_management::read
+      tags:
+      - Resource Management
+      summary: Fetch a list of all resources
+      x-summary-source: derived
+    delete:
+      operationId: Delete resources
+      parameters:
+      - name: resource_tag
+        description: Filter by resource tag
+        in: query
+        schema:
+          description: Filter by resource tag
+          type: string
+      - name: resource_id
+        description: Filter by one or more resource IDs. The IDs are of type `ScopedExternalID`. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more resource IDs. The IDs are of type `ScopedExternalID`. Maximum 100 items.
+          type: string
+      - name: agent_id
+        description: Filter by one agent UUID. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one agent UUID. Maximum 100 items.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: Resources deleted successfully.
+          content: {}
+        '400':
+          description: Malformed request errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/UnauthorizedRequestError'
+                - $ref: '#/components/schemas/AuthenticationTimeoutError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedError'
+        '422':
+          description: There are issues that blocked the resource creation.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - issues
+                properties:
+                  issues:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Issue'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      security:
+      - oauth2:
+        - urn:acronis.com::resource_management::read
+      tags:
+      - Resource Management
+      summary: Delete resources
+      x-summary-source: derived
+    post:
+      operationId: Create a resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Client-generated ID is not allowed here, for the already existing ID upsert semantics will be used.
+              type: object
+              required:
+              - name
+              - parent_group_ids
+              - cti
+              - type
+              properties:
+                is_auto_created:
+                  description: Automatic creation happens in workload merge and cluster-like use case, when `aggregates_detection_query` is defined per-workload type. Otherwise, workload is explicitly created - at the time of metadata provisioning or at runtime by a vendor agent or connector, or at runtime by a cusomter.
+                  type: boolean
+                group_condition:
+                  description: Per-workload children selection query, if the workload is a dynamic group.
+                  type: string
+                _issues:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Issue_1'
+                agent_id:
+                  type: string
+                external_id:
+                  description: ID from original external system.
+                  type: string
+                aspects:
+                  description: Calculatable field, representing all aspects of the aggregate (i.e. all aspect workloads with same `aggregate_id` value).
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Resource'
+                created_at:
+                  type: string
+                  format: date-time
+                name:
+                  type: string
+                allowed_member_types:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ResourceType'
+                id:
+                  $ref: '#/components/schemas/InternalID'
+                updated_at:
+                  type: string
+                  format: date-time
+                user_defined_name:
+                  type: string
+                aggregation_status:
+                  description: Aggregation / split status.
+                  enum:
+                  - NOT_AGGREGATED
+                  - MERGED_AUTOMATICALLY
+                  - MERGED_MANUALLY
+                  - SPLIT_MANUALLY
+                  type: string
+                attributes:
+                  description: Available base namespaces listed in the `ResourceAttributeNamespace` type definition.
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NamedKeyValueSet'
+                client_id:
+                  description: client ID of an agent or other subject, that manages and accesses the aspect. In case when a workload is managed by multiple agents, there should be multiple workload aspect instances, each aspect instance referencing different client ID of a corresponding agent, of same or different agent type.
+                  type: string
+                tag:
+                  description: Any user-defined string value, the resources can further be filtered by it
+                  type: string
+                parent_group_ids:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/InternalID_2'
+                aggregate_id:
+                  description: Reference to workload aggregate.
+                  type: string
+                  pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+                settings_schema:
+                  $ref: '#/components/schemas/SchemaVersion'
+                allowed_actions:
+                  description: Actions, allowed for the workload.
+                  type: array
+                  items:
+                    description: "ID used in Cyber Application to uniquely identify an entity either type or instance.\n\nGeneric format - cti.<ctx>[~<ctx>]*[~(<ctx>|<uuid>)]\n\n<ctx> - <vendor>.<application>.<name>.v<major>.<minor>\n<vendor> - vendor's short code (max 50 characters)\n<application> - application's short code (max 50 characters)\n<name> - entity's name (max 128 characters), may include `.` and `_` to be used for structuring\nv<major>.<minor> - entity's version\n\nBetter regex pattern (for advanced regex processors)\n  ^cti\\.(?'ctx'[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_.]{1,127}\\.v[\\d]+\\.[\\d]+)(~(?&ctx))*(~[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12})?$\n"
+                    x-cti.reference: cti.a.p.wm.action.v0.1
+                    type: string
+                    pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+                    maxLength: 1024
+                is_static:
+                  description: Is the workload a customer created static group.
+                  type: boolean
+                agent_cluster_id:
+                  type: string
+                cti:
+                  description: The specific workload type.
+                  type: string
+                  pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+                  maxLength: 1024
+                deleted_at:
+                  type: string
+                  format: date-time
+                _links:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Link'
+                type:
+                  $ref: '#/components/schemas/ResourceType'
+                tenant_id:
+                  type: string
+                is_customer_managed:
+                  description: Workload is managed if it's created at the time of vendor metadata provisioning, or at runtime by a vendor agent or connector. Otherwise it's managed at runtime by a cusomter (e.g. dynamic and static groups).
+                  type: boolean
+                _link_ids:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Action'
+      responses:
+        '204':
+          description: Resource posted successfully.
+          content: {}
+        '400':
+          description: Malformed request errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/UnauthorizedRequestError'
+                - $ref: '#/components/schemas/AuthenticationTimeoutError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedError'
+        '422':
+          description: There are issues that blocked the resource creation.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - issues
+                properties:
+                  issues:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Issue'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      security:
+      - oauth2:
+        - urn:acronis.com::resource_manager::admin
+      tags:
+      - Resource Management
+      summary: Create a resource
+      x-summary-source: derived
+  /resource_management/v4/resources/batch:
+    post:
+      operationId: Post multiple resources in one request from a single agent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: array
+              items:
+                $ref: '#/components/schemas/Resource_4'
+      responses:
+        '204':
+          description: Resources posted successfully.
+          content: {}
+        '400':
+          description: Malformed request errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/UnauthorizedRequestError'
+                - $ref: '#/components/schemas/AuthenticationTimeoutError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedError'
+        '422':
+          description: There are issues that blocked the resource creation.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - issues
+                properties:
+                  issues:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Issue'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      security:
+      - oauth2:
+        - urn:acronis.com::resource_manager::admin
+      tags:
+      - Resource Management
+      summary: Post multiple resources in one request from a single agent
+      x-summary-source: derived
+  /resource_management/v4/resources/count:
+    get:
+      operationId: Fetch a count of all resources that match filter parameters
+      parameters:
+      - name: tenant_id
+        description: Filter by one or more tenant IDs or UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more tenant IDs or UUIDs. Maximum 100 items.
+          type: string
+      - name: agent_id
+        description: Filter by one or more agent UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more agent UUIDs. Maximum 100 items.
+          type: string
+      - name: parent_id
+        description: Filter by one or more parent UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more parent UUIDs. Maximum 100 items.
+          type: string
+      - name: has_member_id
+        description: Filter by one or more member UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more member UUIDs. Maximum 100 items.
+          type: string
+      - name: type
+        description: Filter by one or more resource types. Items are of type `ResourceType` or `cti.CTI` (for workloads derived from `cti.a.p.wm.workload.v1.0`). Maximum 10 items.
+        in: query
+        schema:
+          description: Filter by one or more resource types. Items are of type `ResourceType` or `cti.CTI` (for workloads derived from `cti.a.p.wm.workload.v1.0`). Maximum 10 items.
+          type: string
+      - name: resource_id
+        description: Filter by one or more resource UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more resource UUIDs. Maximum 100 items.
+          type: string
+      - name: search
+        description: Search for resources by type and tags using an SQL-like syntax. See https://www.acronis.com/en-us/support/documentation/CyberProtectionService/index.html#operators-dynamic-groups.html
+        in: query
+        schema:
+          description: Search for resources by type and tags using an SQL-like syntax. See https://www.acronis.com/en-us/support/documentation/CyberProtectionService/index.html#operators-dynamic-groups.html
+          type: string
+      - name: not_applied_only
+        description: Fetch all resources that have no applied policies. Mutually exclusive with `not_applied_only` and `applied...` filters. Redundant if `applicable_to_policy_id` or `applicable_to_policy_selection_id` are also specified.
+        in: query
+        schema:
+          description: Fetch all resources that have no applied policies. Mutually exclusive with `not_applied_only` and `applied...` filters. Redundant if `applicable_to_policy_id` or `applicable_to_policy_selection_id` are also specified.
+          type: boolean
+      - name: applicable_to_policy_id
+        description: Fetch all resources that are applicable to the policies with the given IDs. The IDs are of type `InternalID`. Maximum 100 items. Mutually exclusive with `not_applied_only` and `applied...` filters.
+        in: query
+        schema:
+          description: Fetch all resources that are applicable to the policies with the given IDs. The IDs are of type `InternalID`. Maximum 100 items. Mutually exclusive with `not_applied_only` and `applied...` filters.
+          type: string
+      - name: applicable_to_policy_selection_id
+        description: Fetch all resources that are applicable to the policies in the policy selection. Mutually exclusive with `applied...` filters.
+        in: query
+        schema:
+          description: Fetch all resources that are applicable to the policies in the policy selection. Mutually exclusive with `applied...` filters.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: applied_only
+        description: Fetch all resources that have applied policies. Mutually exclusive with `not_applied_only` and `applicable...` filters. Redundant if `applied_to_policy_id` or `applied_to_policy_selection_id` are also specified.
+        in: query
+        schema:
+          description: Fetch all resources that have applied policies. Mutually exclusive with `not_applied_only` and `applicable...` filters. Redundant if `applied_to_policy_id` or `applied_to_policy_selection_id` are also specified.
+          type: boolean
+      - name: applied_to_policy_id
+        description: Fetch all resources that are applied to the policies with the given UUIDs. Maximum 100 items. Mutually exclusive with `not_applied_only` and `applicable...` filters.
+        in: query
+        schema:
+          description: Fetch all resources that are applied to the policies with the given UUIDs. Maximum 100 items. Mutually exclusive with `not_applied_only` and `applicable...` filters.
+          type: string
+      - name: applied_to_policy_selection_id
+        description: Fetch all resources applied to the policies in the selection with the given id. Mutually exclusive with `not_applied_only` and `applicable...` filters.
+        in: query
+        schema:
+          description: Fetch all resources applied to the policies in the selection with the given id. Mutually exclusive with `not_applied_only` and `applicable...` filters.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: include_deleted
+        description: If true, includes deleted resources.
+        in: query
+        schema:
+          description: If true, includes deleted resources.
+          type: boolean
+      - name: allowed_actions
+        description: Fetch all resources that have matching allowed_actions. Note that you probably would also want to set links_and_issues to get actions in _links or _linkIds. List of possible actions is listed in Actions enum in common.raml, resource management section
+        in: query
+        schema:
+          description: Fetch all resources that have matching allowed_actions. Note that you probably would also want to set links_and_issues to get actions in _links or _linkIds. List of possible actions is listed in Actions enum in common.raml, resource management section
+          type: string
+      - name: updated_at
+        in: query
+        schema:
+          type: string
+      - name: is_group
+        description: If true, includes only groups. If false, includes only resources, without groups.
+        in: query
+        schema:
+          description: If true, includes only groups. If false, includes only resources, without groups.
+          type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - count
+                properties:
+                  count:
+                    type: integer
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/UnauthorizedRequestError'
+                - $ref: '#/components/schemas/AuthenticationTimeoutError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      security:
+      - oauth2:
+        - urn:acronis.com::resource_management::read
+      tags:
+      - Resource Management
+      summary: Fetch a count of all resources that match filter parameters
+      x-summary-source: derived
+  /resource_management/v4/resources/{resource_internal_or_external_id}:
+    get:
+      operationId: Fetch a resource by ID
+      parameters:
+      - name: include_attributes
+        description: If true, includes resource's attributes in the response. Mutually exclusive with `include_attribute_namespaces`.
+        in: query
+        schema:
+          description: If true, includes resource's attributes in the response. Mutually exclusive with `include_attribute_namespaces`.
+          type: boolean
+      - name: include_attribute_namespaces
+        description: Includes resource's attributes from specific namespaces. Mutually exclusive with `include_attributes`.
+        in: query
+        schema:
+          description: Includes resource's attributes from specific namespaces. Mutually exclusive with `include_attributes`.
+          type: string
+      - name: links_and_issues
+        description: Request to calculate and return links and / or constraints on them. If `embed_brief` is requested - only non-constrained ('available') links should be returned (in `LinksAndIssues._linkIDs` array). If `embed_detailed` is requested - both links (non-constrained and constrained) and their constraint descriptions should be returned (in `LinksAndIssues._links` and `LinksAndIssues._issues` arrays).
+        in: query
+        schema:
+          description: Request to calculate and return links and / or constraints on them. If `embed_brief` is requested - only non-constrained ('available') links should be returned (in `LinksAndIssues._linkIDs` array). If `embed_detailed` is requested - both links (non-constrained and constrained) and their constraint descriptions should be returned (in `LinksAndIssues._links` and `LinksAndIssues._issues` arrays).
+          enum:
+          - embed_brief
+          - embed_detailed
+          type: string
+      - name: resource_internal_or_external_id
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/InternalOrExternalID'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resource_4'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/UnauthorizedRequestError'
+                - $ref: '#/components/schemas/AuthenticationTimeoutError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      security:
+      - oauth2:
+        - urn:acronis.com::resource_management::read
+      tags:
+      - Resource Management
+      summary: Fetch a resource by ID
+      x-summary-source: derived
+  /resource_management/v4/resources/{resource_internal_or_external_id}/attributes:
+    get:
+      operationId: Fetch a list of resource's attributes
+      description: Fetches a list of resource's attributes from all namespaces.
+      parameters:
+      - name: resource_internal_or_external_id
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/InternalOrExternalID'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NamedKeyValueSet_5'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/UnauthorizedRequestError'
+                - $ref: '#/components/schemas/AuthenticationTimeoutError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      security:
+      - oauth2:
+        - urn:acronis.com::resource_management::read
+      tags:
+      - Resource Management
+      summary: Fetch a list of resource's attributes
+      x-summary-source: derived
+  /resource_management/v4/resource_statuses:
+    get:
+      operationId: Fetch the protection status of resources
+      parameters:
+      - name: tenant_id
+        description: Filter by one or more tenant IDs or UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more tenant IDs or UUIDs. Maximum 100 items.
+          type: string
+      - name: agent_id
+        description: Filter by one or more agent UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more agent UUIDs. Maximum 100 items.
+          type: string
+      - name: parent_id
+        description: Filter by one or more parent UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more parent UUIDs. Maximum 100 items.
+          type: string
+      - name: has_member_id
+        description: Filter by one or more member UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more member UUIDs. Maximum 100 items.
+          type: string
+      - name: type
+        description: Filter by one or more resource types. Items are of type `ResourceType`. Maximum 10 items.
+        in: query
+        schema:
+          description: Filter by one or more resource types. Items are of type `ResourceType`. Maximum 10 items.
+          type: string
+      - name: resource_id
+        description: Filter by one or more resource UUIDs. Maximum 100 items.
+        in: query
+        schema:
+          description: Filter by one or more resource UUIDs. Maximum 100 items.
+          type: string
+      - name: selection_id
+        description: Filter by one or more selection
+        in: query
+        schema:
+          description: Filter by one or more selection
+          type: string
+      - name: search
+        description: Search for resources by type and tags using an SQL-like syntax.
+        in: query
+        schema:
+          description: Search for resources by type and tags using an SQL-like syntax.
+          type: string
+      - name: include_deleted
+        description: If true, includes deleted resources.
+        in: query
+        schema:
+          description: If true, includes deleted resources.
+          type: boolean
+      - name: include_attributes
+        description: If true, includes resources' attributes in the response. Mutually exclusive with `include_attribute_namespaces`.
+        in: query
+        schema:
+          description: If true, includes resources' attributes in the response. Mutually exclusive with `include_attribute_namespaces`.
+          type: boolean
+      - name: include_attribute_namespaces
+        description: Includes resources' attributes from specific namespaces. Mutually exclusive with `include_attributes`.
+        in: query
+        schema:
+          description: Includes resources' attributes from specific namespaces. Mutually exclusive with `include_attributes`.
+          type: string
+      - name: updated_at
+        in: query
+        schema:
+          type: string
+      - name: order
+        description: 'Defines sorting by root applications'' orderable items. Only one orderable is
+
+          allowed. The format is `sorting_mode(orderable)` (where `sorting_mode` is `asc` or
+
+          `desc`) or just `orderable` (with `sorting_mode` defaulted to `asc`).
+
+
+          Available orderable items:
+
+
+          - `is_group`
+
+          - `asc(updated_at)`
+
+          '
+        in: query
+        schema:
+          description: 'Defines sorting by root applications'' orderable items. Only one orderable is
+
+            allowed. The format is `sorting_mode(orderable)` (where `sorting_mode` is `asc` or
+
+            `desc`) or just `orderable` (with `sorting_mode` defaulted to `asc`).
+
+
+            Available orderable items:
+
+
+            - `is_group`
+
+            - `asc(updated_at)`
+
+            '
+          type: string
+      - name: limit
+        description: Number of element in the page.
+        in: query
+        schema:
+          description: Number of element in the page.
+          type: integer
+      - name: before
+        description: Cursor before the current page.
+        in: query
+        schema:
+          description: Cursor before the current page.
+          type: string
+      - name: after
+        description: Cursor after the current page.
+        in: query
+        schema:
+          description: Cursor after the current page.
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceStatusPageList'
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/UnauthorizedRequestError'
+                - $ref: '#/components/schemas/AuthenticationTimeoutError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      security:
+      - oauth2:
+        - urn:acronis.com::resource_management::read
+      tags:
+      - Resource Management
+      summary: Fetch the protection status of resources
+      x-summary-source: derived
+components:
+  schemas:
+    NamedKeyValueSet:
+      type: object
+      required:
+      - name
+      - kvs
+      properties:
+        name:
+          type: string
+        kvs:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValuePair_7'
+        details:
+          type: object
+    NotFoundError:
+      description: Specified REST resource wasn't found.
+      example:
+        domain: General
+        code: NotFoundError
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - NotFoundError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - General
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    InternalOrExternalID:
+      anyOf:
+      - $ref: '#/components/schemas/InternalID'
+      - $ref: '#/components/schemas/ScopedExternalID'
+    Action:
+      enum:
+      - policy_view
+      - policy_create
+      - policy_delete
+      - policy_update
+      - policy_enable
+      - policy_disable
+      - policy_add_child
+      - policy_remove_child
+      - policy_run
+      - policy_stop
+      - policy_apply
+      - policy_revoke
+      - policy_resume
+      - policy_pause
+      - policy_status
+      - backup
+      - restore
+      - getActivities
+      - largeScaleRecovery
+      - renameBackupPlans
+      - editBackupPlans
+      - collectSysinfo
+      - browse
+      - manageAsrm
+      - manageAsz
+      - activeProtection
+      - addToGroup
+      - removeFromGroup
+      - renameVMReplicationPlans
+      - editVMReplicationPlans
+      - startReplicaTest
+      - stopReplicaTest
+      - failover
+      - stopFailover
+      - failback
+      - finalize
+      - unmount
+      - detectApplications
+      - rebind
+      - permanentFailover
+      - remove
+      - replicate
+      - delete
+      - rename
+      - addResources
+      - removeResources
+      - move
+      - addStaticSubGroup
+      - addDynamicSubGroup
+      - editCondition
+      - changeCredentials
+      - changeMsSqlCredentials
+      - editCasSettings
+      - deleteCasSettings
+      - changeMsExchangeDbCredentials
+      - changeOffice365Credentials
+      - comment
+      - hostBackup
+      - removeAppliances
+      - select_disk_provision_mode
+      - reboot
+      - shutdown
+      - canDisasterRecovery
+      - manageLicense
+      - patchManagement
+      - remoteDesktop
+      - remoteWipe
+      - cyberDesktop
+      type: string
+    Link:
+      type: object
+      required:
+      - rel
+      properties:
+        rel:
+          description: \'Relation' - link name / ID or action / operation type.
+          enum:
+          - policy_view
+          - policy_create
+          - policy_delete
+          - policy_update
+          - policy_enable
+          - policy_disable
+          - policy_add_child
+          - policy_remove_child
+          - policy_run
+          - policy_stop
+          - policy_apply
+          - policy_revoke
+          - policy_resume
+          - policy_pause
+          - policy_status
+          - backup
+          - restore
+          - getActivities
+          - largeScaleRecovery
+          - renameBackupPlans
+          - editBackupPlans
+          - collectSysinfo
+          - browse
+          - manageAsrm
+          - manageAsz
+          - activeProtection
+          - addToGroup
+          - removeFromGroup
+          - renameVMReplicationPlans
+          - editVMReplicationPlans
+          - startReplicaTest
+          - stopReplicaTest
+          - failover
+          - stopFailover
+          - failback
+          - finalize
+          - unmount
+          - detectApplications
+          - rebind
+          - permanentFailover
+          - remove
+          - replicate
+          - delete
+          - rename
+          - addResources
+          - removeResources
+          - move
+          - addStaticSubGroup
+          - addDynamicSubGroup
+          - editCondition
+          - changeCredentials
+          - changeMsSqlCredentials
+          - editCasSettings
+          - deleteCasSettings
+          - changeMsExchangeDbCredentials
+          - changeOffice365Credentials
+          - comment
+          - hostBackup
+          - removeAppliances
+          - select_disk_provision_mode
+          - reboot
+          - shutdown
+          - canDisasterRecovery
+          - manageLicense
+          - patchManagement
+          - remoteDesktop
+          - remoteWipe
+          - cyberDesktop
+          type: string
+        href:
+          description: URL of an endpoint that can be used for this action or operation.
+          type: string
+    InternalID:
+      description: Service-wide unique object ID generated server-side.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    Page:
+      description: A subset of REST resources collection based on filter query.
+      type: object
+      required:
+      - cursors
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              $ref: '#/components/schemas/PageCursor'
+            after:
+              $ref: '#/components/schemas/PageCursor'
+            total:
+              description: Total number of elements in the REST resources collection.
+              type: integer
+    BadRequestError:
+      description: Request is malformed.
+      example:
+        domain: General
+        code: BadRequestError
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - BadRequestError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - General
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    AuthenticationTimeoutError:
+      description: Access token is already expired or invalid.
+      example:
+        domain: Access
+        code: AuthenticationTimeout
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - AuthenticationTimeout
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - Access
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    ResourceStatusPageList:
+      type: object
+      required:
+      - paging
+      - items
+      - timestamp
+      properties:
+        paging:
+          $ref: '#/components/schemas/Page'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceStatus'
+        timestamp:
+          description: Server-side timestamp of query start.
+          type: string
+          format: date-time
+    KeyValuePair_7:
+      description: Generic key-value pair.
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          anyOf:
+          - anyOf:
+            - type: string
+            - type: integer
+          - type: array
+            items:
+              anyOf:
+              - type: string
+              - type: integer
+    AccessDeniedError:
+      description: Access was denied.
+      example:
+        domain: Access
+        code: AccessDeniedError
+        context:
+          scope: urn:acronis.com::policy_management:1234567890:read urn:acronis.com::policy_management:0987654321:read
+          required_scope: urn:acronis.com::script_management:1234567890:reviewer
+      type: object
+      required:
+      - context
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+          required:
+          - scope
+          - required_scope
+          properties:
+            scope:
+              description: Access scope of the caller
+              type: string
+            required_scope:
+              description: Required access scope
+              type: string
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - AccessDeniedError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - Access
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    RunningStatus:
+      type: object
+      required:
+      - state
+      properties:
+        state:
+          $ref: '#/components/schemas/RunningState_10'
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+        progress:
+          type: integer
+        blockers:
+          description: So-called 'interaction required' escalations.
+          type: array
+          items:
+            $ref: '#/components/schemas/error'
+    UnauthorizedRequestError:
+      description: Authorization failed.
+      example:
+        domain: Access
+        code: UnauthorizedRequest
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - UnauthorizedRequest
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - Access
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    Issue:
+      type: object
+      required:
+      - severity
+      properties:
+        link:
+          description: Link name / ID or action / operation type, the issue is applied to.
+          enum:
+          - policy_view
+          - policy_create
+          - policy_delete
+          - policy_update
+          - policy_enable
+          - policy_disable
+          - policy_add_child
+          - policy_remove_child
+          - policy_run
+          - policy_stop
+          - policy_apply
+          - policy_revoke
+          - policy_resume
+          - policy_pause
+          - policy_status
+          - backup
+          - restore
+          - getActivities
+          - largeScaleRecovery
+          - renameBackupPlans
+          - editBackupPlans
+          - collectSysinfo
+          - browse
+          - manageAsrm
+          - manageAsz
+          - activeProtection
+          - addToGroup
+          - removeFromGroup
+          - renameVMReplicationPlans
+          - editVMReplicationPlans
+          - startReplicaTest
+          - stopReplicaTest
+          - failover
+          - stopFailover
+          - failback
+          - finalize
+          - unmount
+          - detectApplications
+          - rebind
+          - permanentFailover
+          - remove
+          - replicate
+          - delete
+          - rename
+          - addResources
+          - removeResources
+          - move
+          - addStaticSubGroup
+          - addDynamicSubGroup
+          - editCondition
+          - changeCredentials
+          - changeMsSqlCredentials
+          - editCasSettings
+          - deleteCasSettings
+          - changeMsExchangeDbCredentials
+          - changeOffice365Credentials
+          - comment
+          - hostBackup
+          - removeAppliances
+          - select_disk_provision_mode
+          - reboot
+          - shutdown
+          - canDisasterRecovery
+          - manageLicense
+          - patchManagement
+          - remoteDesktop
+          - remoteWipe
+          - cyberDesktop
+          type: string
+        severity:
+          description: Degree of trouble brought by the issue. If contains empty string, the severity is unknown.
+          enum:
+          - ok
+          - warning
+          - error
+          - critical
+          type: string
+        error:
+          description: Detailed issue domain and code, and context description as well.
+          type: object
+          required:
+          - code
+          - domain
+          properties:
+            context:
+              description: Description of context (call parameters, environment, etc), where the error occurred.
+              type: object
+            code:
+              description: Error ID or code, unique in the domain.
+              type: string
+            domain:
+              description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+              type: string
+            message:
+              description: Human-readable message, describing the error.
+              type: string
+    Issue_1:
+      type: object
+      required:
+      - severity
+      properties:
+        link:
+          description: Link name / ID or action / operation type, the issue is applied to.
+          enum:
+          - policy_view
+          - policy_create
+          - policy_delete
+          - policy_update
+          - policy_enable
+          - policy_disable
+          - policy_add_child
+          - policy_remove_child
+          - policy_run
+          - policy_stop
+          - policy_apply
+          - policy_revoke
+          - policy_resume
+          - policy_pause
+          - policy_status
+          - backup
+          - restore
+          - getActivities
+          - largeScaleRecovery
+          - renameBackupPlans
+          - editBackupPlans
+          - collectSysinfo
+          - browse
+          - manageAsrm
+          - manageAsz
+          - activeProtection
+          - addToGroup
+          - removeFromGroup
+          - renameVMReplicationPlans
+          - editVMReplicationPlans
+          - startReplicaTest
+          - stopReplicaTest
+          - failover
+          - stopFailover
+          - failback
+          - finalize
+          - unmount
+          - detectApplications
+          - rebind
+          - permanentFailover
+          - remove
+          - replicate
+          - delete
+          - rename
+          - addResources
+          - removeResources
+          - move
+          - addStaticSubGroup
+          - addDynamicSubGroup
+          - editCondition
+          - changeCredentials
+          - changeMsSqlCredentials
+          - editCasSettings
+          - deleteCasSettings
+          - changeMsExchangeDbCredentials
+          - changeOffice365Credentials
+          - comment
+          - hostBackup
+          - removeAppliances
+          - select_disk_provision_mode
+          - reboot
+          - shutdown
+          - canDisasterRecovery
+          - manageLicense
+          - patchManagement
+          - remoteDesktop
+          - remoteWipe
+          - cyberDesktop
+          type: string
+        severity:
+          description: Degree of trouble brought by the issue. If contains empty string, the severity is unknown.
+          enum:
+          - ok
+          - warning
+          - error
+          - critical
+          type: string
+        error:
+          description: Detailed issue domain and code, and context description as well.
+          type: object
+          required:
+          - code
+          - domain
+          properties:
+            context:
+              description: Description of context (call parameters, environment, etc), where the error occurred.
+              type: object
+            code:
+              description: Error ID or code, unique in the domain.
+              type: string
+            domain:
+              description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+              type: string
+            message:
+              description: Human-readable message, describing the error.
+              type: string
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request. Use as a base for more granular code and context definitions.
+      example:
+        domain: General
+        code: InternalServerError
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - InternalServerError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - General
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    PolicyExecutions:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+        last_run_time:
+          type: string
+          format: date-time
+        next_run_time:
+          type: string
+          format: date-time
+        last_success_run_time:
+          type: string
+          format: date-time
+        next_enable_time:
+          type: string
+          format: date-time
+        run_events:
+          type: array
+          items:
+            type: string
+        enable_events:
+          type: array
+          items:
+            type: string
+    AggregateStatus:
+      type: object
+      required:
+      - running
+      - status
+      properties:
+        running:
+          $ref: '#/components/schemas/RunningStatus'
+        names:
+          type: string
+        status:
+          $ref: '#/components/schemas/ExecutionStatus'
+    error:
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          type: string
+        code:
+          description: Error ID or code, unique in the domain.
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+    Resource:
+      description: 'An object, which status is interesting or important to track for some reason for
+
+        end customer. Typically originates from an external (customer-owned) system or in any other
+
+        way owned by customer. Identifiable and having a granularity enough to be easy to track
+
+        to the customer. Actions executed on this object, that change status important to customer,
+
+        can be configured either per resource or via policies. In the latter case, multiple policies
+
+        (i.e., multiple rules / settings sets) may be configured for the resource simultaneously.
+
+
+        Resources can be simple (''atomic'') or composite (''groups'') or / and linked with other
+
+        resources, but no separate type for resource compositions is defined, as a consequence,
+
+        simple and composite resources share the same identifiers space.
+
+
+        From policies perspective, resources serve as contexts to which policy rules / settings are
+
+        applied and executed.
+
+        '
+      type: object
+      required:
+      - name
+      - parent_group_ids
+      - cti
+      - type
+      properties:
+        is_auto_created:
+          description: Automatic creation happens in workload merge and cluster-like use case, when `aggregates_detection_query` is defined per-workload type. Otherwise, workload is explicitly created - at the time of metadata provisioning or at runtime by a vendor agent or connector, or at runtime by a cusomter.
+          type: boolean
+        group_condition:
+          description: Per-workload children selection query, if the workload is a dynamic group.
+          type: string
+        _issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue_1'
+        agent_id:
+          type: string
+        external_id:
+          description: ID from original external system.
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        aspects:
+          description: Calculatable field, representing all aspects of the aggregate (i.e. all aspect workloads with same `aggregate_id` value).
+          type: array
+          items:
+            $ref: '#/components/schemas/Resource'
+        name:
+          type: string
+        allowed_member_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceType'
+        updated_at:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/InternalID'
+        aggregation_status:
+          description: Aggregation / split status.
+          enum:
+          - NOT_AGGREGATED
+          - MERGED_AUTOMATICALLY
+          - MERGED_MANUALLY
+          - SPLIT_MANUALLY
+          type: string
+        user_defined_name:
+          type: string
+        attributes:
+          description: Available base namespaces listed in the `ResourceAttributeNamespace` type definition.
+          type: array
+          items:
+            $ref: '#/components/schemas/NamedKeyValueSet'
+        client_id:
+          description: client ID of an agent or other subject, that manages and accesses the aspect. In case when a workload is managed by multiple agents, there should be multiple workload aspect instances, each aspect instance referencing different client ID of a corresponding agent, of same or different agent type.
+          type: string
+        tag:
+          description: Any user-defined string value, the resources can further be filtered by it
+          type: string
+        parent_group_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/InternalID_2'
+        aggregate_id:
+          description: Reference to workload aggregate.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        settings_schema:
+          $ref: '#/components/schemas/SchemaVersion'
+        allowed_actions:
+          description: Actions, allowed for the workload.
+          type: array
+          items:
+            description: "ID used in Cyber Application to uniquely identify an entity either type or instance.\n\nGeneric format - cti.<ctx>[~<ctx>]*[~(<ctx>|<uuid>)]\n\n<ctx> - <vendor>.<application>.<name>.v<major>.<minor>\n<vendor> - vendor's short code (max 50 characters)\n<application> - application's short code (max 50 characters)\n<name> - entity's name (max 128 characters), may include `.` and `_` to be used for structuring\nv<major>.<minor> - entity's version\n\nBetter regex pattern (for advanced regex processors)\n  ^cti\\.(?'ctx'[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_.]{1,127}\\.v[\\d]+\\.[\\d]+)(~(?&ctx))*(~[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12})?$\n"
+            x-cti.reference: cti.a.p.wm.action.v0.1
+            type: string
+            pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+            maxLength: 1024
+        is_static:
+          description: Is the workload a customer created static group.
+          type: boolean
+        agent_cluster_id:
+          type: string
+        cti:
+          description: The specific workload type.
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        deleted_at:
+          type: string
+          format: date-time
+        _links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        type:
+          $ref: '#/components/schemas/ResourceType'
+        is_customer_managed:
+          description: Workload is managed if it's created at the time of vendor metadata provisioning, or at runtime by a vendor agent or connector. Otherwise it's managed at runtime by a cusomter (e.g. dynamic and static groups).
+          type: boolean
+        tenant_id:
+          type: string
+        _link_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    ExecutionStatus:
+      enum:
+      - warning
+      - error
+      - critical
+      - no_policies_applied
+      - scheduled
+      - interaction_required
+      - running
+      - cancelling
+      - idle
+      type: string
+    ResourceType:
+      description: 'A resource type in the `type.scope` format, where `type` is ''resource'' and `scope` is
+
+        like one of the `ResourceScope` values defined in `impl/resource/type_scopes.raml`.
+
+        '
+      type: string
+    ScopedExternalID:
+      description: Scoped external ID is used to uniquely identify replica objects. Is represented via `id` and `type_or_scope` and 'tenant' parts, serialized as string in the `id@type_or_scope!tenant` format.
+      type: string
+      pattern: ^(?<id>[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})(@(?<type_or_scope>[0-9a-zA-Z-_\.]+)?)?(!(?<tenant>[0-9a-zA-Z-_\.]+)?)?$
+    PageCursor:
+      type: string
+    NamedKeyValueSet_5:
+      type: object
+      required:
+      - name
+      - kvs
+      properties:
+        name:
+          type: string
+        kvs:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValuePair_7'
+        details:
+          type: object
+    Activity:
+      enum:
+      - backup
+      - recover
+      - install
+      - reboot
+      - failback
+      - test_replica
+      - run_vm
+      - finalize
+      - failover
+      - replicate
+      - create_asz
+      - delete_asz
+      - resize_asz
+      - av_scan
+      - update_installation
+      - vulnerability_assessment
+      - data_protection_map
+      - disaster_recovery
+      type: string
+    Resource_4:
+      description: 'An object, which status is interesting or important to track for some reason for
+
+        end customer. Typically originates from an external (customer-owned) system or in any other
+
+        way owned by customer. Identifiable and having a granularity enough to be easy to track
+
+        to the customer. Actions executed on this object, that change status important to customer,
+
+        can be configured either per resource or via policies. In the latter case, multiple policies
+
+        (i.e., multiple rules / settings sets) may be configured for the resource simultaneously.
+
+
+        Resources can be simple (''atomic'') or composite (''groups'') or / and linked with other
+
+        resources, but no separate type for resource compositions is defined, as a consequence,
+
+        simple and composite resources share the same identifiers space.
+
+
+        From policies perspective, resources serve as contexts to which policy rules / settings are
+
+        applied and executed.
+
+        '
+      type: object
+      required:
+      - name
+      - parent_group_ids
+      - cti
+      - type
+      properties:
+        is_auto_created:
+          description: Automatic creation happens in workload merge and cluster-like use case, when `aggregates_detection_query` is defined per-workload type. Otherwise, workload is explicitly created - at the time of metadata provisioning or at runtime by a vendor agent or connector, or at runtime by a cusomter.
+          type: boolean
+        group_condition:
+          description: Per-workload children selection query, if the workload is a dynamic group.
+          type: string
+        _issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue_1'
+        agent_id:
+          type: string
+        external_id:
+          description: ID from original external system.
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        aspects:
+          description: Calculatable field, representing all aspects of the aggregate (i.e. all aspect workloads with same `aggregate_id` value).
+          type: array
+          items:
+            $ref: '#/components/schemas/Resource'
+        name:
+          type: string
+        allowed_member_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceType'
+        updated_at:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/InternalID'
+        aggregation_status:
+          description: Aggregation / split status.
+          enum:
+          - NOT_AGGREGATED
+          - MERGED_AUTOMATICALLY
+          - MERGED_MANUALLY
+          - SPLIT_MANUALLY
+          type: string
+        user_defined_name:
+          type: string
+        attributes:
+          description: Available base namespaces listed in the `ResourceAttributeNamespace` type definition.
+          type: array
+          items:
+            $ref: '#/components/schemas/NamedKeyValueSet'
+        client_id:
+          description: client ID of an agent or other subject, that manages and accesses the aspect. In case when a workload is managed by multiple agents, there should be multiple workload aspect instances, each aspect instance referencing different client ID of a corresponding agent, of same or different agent type.
+          type: string
+        tag:
+          description: Any user-defined string value, the resources can further be filtered by it
+          type: string
+        parent_group_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/InternalID_2'
+        aggregate_id:
+          description: Reference to workload aggregate.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        settings_schema:
+          $ref: '#/components/schemas/SchemaVersion'
+        allowed_actions:
+          description: Actions, allowed for the workload.
+          type: array
+          items:
+            description: "ID used in Cyber Application to uniquely identify an entity either type or instance.\n\nGeneric format - cti.<ctx>[~<ctx>]*[~(<ctx>|<uuid>)]\n\n<ctx> - <vendor>.<application>.<name>.v<major>.<minor>\n<vendor> - vendor's short code (max 50 characters)\n<application> - application's short code (max 50 characters)\n<name> - entity's name (max 128 characters), may include `.` and `_` to be used for structuring\nv<major>.<minor> - entity's version\n\nBetter regex pattern (for advanced regex processors)\n  ^cti\\.(?'ctx'[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_.]{1,127}\\.v[\\d]+\\.[\\d]+)(~(?&ctx))*(~[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12})?$\n"
+            x-cti.reference: cti.a.p.wm.action.v0.1
+            type: string
+            pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+            maxLength: 1024
+        is_static:
+          description: Is the workload a customer created static group.
+          type: boolean
+        agent_cluster_id:
+          type: string
+        cti:
+          description: The specific workload type.
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        deleted_at:
+          type: string
+          format: date-time
+        _links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        type:
+          $ref: '#/components/schemas/ResourceType'
+        is_customer_managed:
+          description: Workload is managed if it's created at the time of vendor metadata provisioning, or at runtime by a vendor agent or connector. Otherwise it's managed at runtime by a cusomter (e.g. dynamic and static groups).
+          type: boolean
+        tenant_id:
+          type: string
+        _link_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    ResourceStatus:
+      description: Resource with aggregated status information.
+      type: object
+      required:
+      - context
+      properties:
+        context:
+          $ref: '#/components/schemas/Resource'
+        aggregate:
+          $ref: '#/components/schemas/AggregateStatus'
+        licensing:
+          $ref: '#/components/schemas/LicensingStatus'
+        policies:
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyExecutions'
+    SchemaVersion:
+      description: Schema version.
+      type: string
+      pattern: ^([0-9]+)\.([0-9]+)$
+    InternalID_2:
+      description: Service-wide unique object ID generated server-side.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    ResourcePagedList:
+      type: object
+      required:
+      - paging
+      - items
+      - timestamp
+      properties:
+        paging:
+          $ref: '#/components/schemas/Page'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Resource_4'
+        timestamp:
+          description: Server-side timestamp of query start.
+          type: string
+          format: date-time
+        dynamic_group_creation_forbidden:
+          description: This field defines that user can not create a group using query defined in 'search' query parameter (i.e. last_backup_time < '2020-12-20', isOnline = true)
+          type: boolean
+    RunningState_10:
+      enum:
+      - running
+      - idle
+      - cancelling
+      - interaction_required
+      type: string
+    LicensingStatus:
+      type: object
+      required:
+      - current_offering_item
+      - previous_offering_item
+      properties:
+        current_offering_item:
+          type: string
+        previous_offering_item:
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::resource_management::read: ''
+            urn:acronis.com::resource_manager::admin: ''
+            urn:acronis.com::policy_management::read: ''
+            urn:acronis.com::policy_management::notify: ''
+            urn:acronis.com::policy_manager::admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::resource_management::read: ''
+            urn:acronis.com::resource_manager::admin: ''
+            urn:acronis.com::policy_management::read: ''
+            urn:acronis.com::policy_management::notify: ''
+            urn:acronis.com::policy_manager::admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::resource_management::read: ''
+            urn:acronis.com::resource_manager::admin: ''
+            urn:acronis.com::policy_management::read: ''
+            urn:acronis.com::policy_management::notify: ''
+            urn:acronis.com::policy_manager::admin: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

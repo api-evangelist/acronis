@@ -1,0 +1,158 @@
+openapi: 3.2.0
+info:
+  title: Alert Manager Categories API
+  version: '1.0'
+servers:
+- url: https://dev-cloud.acronis.com/api/alert_manager/v1
+  variables: {}
+tags:
+- name: Categories
+paths:
+  /categories:
+    get:
+      operationId: Fetch categories
+      description: Fetches a list of enabled categories.
+      parameters:
+      - name: include_disabled
+        description: If true, both enabled and disabled categories are returned.
+        in: query
+        schema:
+          description: If true, both enabled and disabled categories are returned.
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: A list of categories.
+          content:
+            application/json:
+              schema:
+                example:
+                  items:
+                  - name: Backup
+                  - name: cti.a.p.am.alert.category.v1.0~a.test.category.v1.0
+                    alias: test category
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+        '401':
+          description: Request is refused because authentication parameters are invalid.
+          content:
+            text/plain:
+              schema:
+                example: "<html>\n  <head>\n    <title>401 Authorization Required</title>\n  </head>\n  <body>\n    <center>\n      <h1>401 Authorization Required</h1>\n    </center>\n    <hr>\n    <center>nginx</center>\n  </body>\n</html>\n"
+        '403':
+          description: 'A security error due to an issue with tenant security claim: invalid tenant in the access token, tenant resolution failed and etc.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - oauth_2_0:
+        - urn:acronis.com::alert_manager::viewer
+      tags:
+      - Categories
+      summary: Fetch categories
+      x-summary-source: derived
+components:
+  schemas:
+    Category:
+      description: An information about the alert category or alert type category.
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        disabled:
+          type: boolean
+        alias:
+          description: Alert category name alias.
+          type: string
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    Error:
+      description: Base error object
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kbLink:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+  securitySchemes:
+    oauth_2_0:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

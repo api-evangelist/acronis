@@ -1,214 +1,684 @@
 openapi: 3.2.0
 info:
-  title: Acronis Account Management Activities Clients API
-  description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
-  version: '2.0'
-  contact:
-    name: Acronis Developer Portal
-    url: https://developer.acronis.com
-  x-generated-from: documentation
-  x-last-validated: '2026-04-19'
+  title: Account Management Clients API
+  version: '2'
 servers:
-- url: https://{datacenter}.acronis.com/api/2
-  description: Acronis Cloud API - Account Management
-  variables:
-    datacenter:
-      default: eu2-cloud
-      description: Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)
-security:
-- bearerAuth: []
+- url: https://dev-cloud.acronis.com/api/2
+  variables: {}
 tags:
 - name: Clients
-  description: OAuth2 client credential management
 paths:
   /clients:
-    get:
-      operationId: listClients
-      summary: Acronis List OAuth Clients
-      description: List OAuth2 client credentials registered in the system.
-      tags:
-      - Clients
-      parameters:
-      - name: tenant_id
-        in: query
-        schema:
-          type: string
-          format: uuid
-        description: Filter clients by tenant UUID
-      responses:
-        '200':
-          description: List of OAuth clients
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ClientList'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
     post:
-      operationId: createClient
-      summary: Acronis Create OAuth Client
-      description: Create a new OAuth2 client credential for API authentication.
-      tags:
-      - Clients
+      operationId: CreateClient
+      description: Creates a new client.
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ClientRequest'
+              $ref: '#/components/schemas/clientPost'
       responses:
         '201':
-          description: Client created
+          description: Client was successfully created.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Client'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-  /clients/{client_id}:
-    get:
-      operationId: getClient
-      summary: Acronis Get OAuth Client
-      description: Retrieve details about a specific OAuth2 client.
+                $ref: '#/components/schemas/clientPostResult'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+        - urn:acronis.com::account-server::replication_manager
+        - urn:acronis.com::account-server::managed_clients_admin
       tags:
       - Clients
+      summary: Create client
+      x-summary-source: derived
+    get:
+      operationId: FetchClientsBatch
+      description: Fetches a batch of clients.
       parameters:
-      - name: client_id
-        in: path
-        required: true
+      - name: uuids
+        description: A filter by comma-separated list of client's UUIDs.
+        in: query
         schema:
+          description: A filter by comma-separated list of client's UUIDs.
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed,248c535a-0ebe-11e7-a80e-bbdaa1d60c7c
           type: string
-        description: OAuth2 client identifier
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}(,[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})*'
+          minLength: 36
+      - name: origin_id
+        description: A filter by clients origin ID. Can be used together with uuids or separately.
+        in: query
+        schema:
+          description: A filter by clients origin ID. Can be used together with uuids or separately.
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed
+          type: string
+      - name: allow_deleted
+        description: If true, info for deleted clients may be returned.
+        in: query
+        schema:
+          description: If true, info for deleted clients may be returned.
+          type: boolean
       responses:
         '200':
-          description: Client details
+          description: The request was successful.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Client'
-        '404':
-          $ref: '#/components/responses/NotFound'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-    delete:
-      operationId: deleteClient
-      summary: Acronis Delete OAuth Client
-      description: Delete an OAuth2 client credential.
+                $ref: '#/components/schemas/clientBatch'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
       tags:
       - Clients
+      summary: Fetch clients batch
+      x-summary-source: derived
+  /clients/{client_id}:
+    delete:
+      operationId: DeleteClient
+      description: Deletes a client by ID.
       parameters:
       - name: client_id
-        in: path
+        description: Client ID (UUID).
         required: true
+        in: path
         schema:
+          description: Client ID (UUID).
           type: string
-        description: OAuth2 client identifier
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
       responses:
         '204':
-          description: Client deleted
+          description: Client was successfully deleted.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
         '404':
-          $ref: '#/components/responses/NotFound'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+        - urn:acronis.com::account-server::replication_manager
+        - urn:acronis.com::account-server::managed_clients_admin
+      tags:
+      - Clients
+      summary: Delete client
+      x-summary-source: derived
+    put:
+      operationId: UpdateClient
+      description: Updates a client by ID.
+      parameters:
+      - name: client_id
+        description: Client ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Client ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/clientPut'
+      responses:
+        '200':
+          description: Client was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/client'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+        - urn:acronis.com::account-server::replication_manager
+        - urn:acronis.com::account-server::managed_clients_admin
+      tags:
+      - Clients
+      summary: Update client
+      x-summary-source: derived
+    get:
+      operationId: FetchClient
+      description: Fetches a client by ID.
+      parameters:
+      - name: client_id
+        description: Client ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Client ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/client'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Clients
+      summary: Fetch client
+      x-summary-source: derived
 components:
   schemas:
-    ClientList:
+    clientBatch:
+      example:
+        items:
+        - client_id: 4557d5f5-7881-54f4-83a5-212f19d355c1
+          client_secret_expires_at: 0
+          type: api_client
+          tenant_id: 0a305354-6efc-4b81-858d-2ae5dd1f08b1
+          data:
+            client_name: backup_api_gateway
+          token_endpoint_auth_method: client_secret_basic
+          created_at: '2023-07-06T16:26:33Z'
+          created_by: ab9ae709-0d00-521a-8be3-7891b1041e18
+          last_access_at: '2023-07-28T14:16:19Z'
+          last_access_from_ip: 10.233.106.171
+          status: enabled
+          redirect_uris:
+          - /bc/api/gateway/cb
+          - /bc/api/gateway/cb:ui
+        - client_id: 3663410d-4b70-4860-860c-8db82bffab8e
+          client_secret_expires_at: 0
+          type: managed_client
+          tenant_id: 48f86be5-c628-49c3-8575-62e78f54e4eb
+          data:
+            client_name: Some application client
+            origin_dc_id: ff7625c0-d649-445c-a2b3-9b59e66bfc2d
+          token_endpoint_auth_method: client_secret_basic
+          created_at: '2019-08-24T01:23:15'
+          created_by: ab9d9f43-f9aa-4f83-9409-5547172daa27
+          last_access_at: '2023-07-20T16:11:01Z'
+          last_access_from_ip: 10.233.106.172
+          status: enabled
+          origin_id: 72403667-8e45-4dd9-bcbc-3e6047b98b3d
       type: object
+      required:
+      - items
       properties:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Client'
-    Client:
+            $ref: '#/components/schemas/client'
+    clientPut:
+      example:
+        data:
+          client_name: Some application client
+        status: disabled
+        redirect_uris:
+        - com.acronis.abc://oauth
       type: object
-      description: OAuth2 client credential
+      additionalProperties: false
       properties:
-        client_id:
-          type: string
-          description: OAuth2 client identifier
-          example: abc123def456
-        client_secret:
-          type: string
-          description: OAuth2 client secret (only shown on creation)
-        tenant_id:
-          type: string
-          format: uuid
-          description: Tenant the client belongs to
-        type:
-          type: string
-          enum:
-          - api_client
-          - agent
-          description: Client type
+        data:
+          description: Additional metadata that will be updated.
+          type: object
         status:
-          type: string
+          description: Client status - either enabled or disabled. Disabled clients can no longer be used to receive Access Tokens.
           enum:
           - enabled
           - disabled
-        data:
-          type: object
-          additionalProperties: true
-          description: Additional client metadata
-    Error:
-      type: object
-      description: API error response
-      properties:
-        code:
-          type: integer
-          description: Error code
-          example: 400
-        message:
           type: string
-          description: Human-readable error message
-          example: Invalid request parameters
-        details:
+        redirect_uris:
+          description: List of possible redirect uris.
           type: array
           items:
             type: string
-    ClientRequest:
+        origin_id:
+          description: Client origin ID.
+          type: string
+    clientPostResult:
+      title: Post client result schema
+      example:
+        client_secret_expires_at: 0
+        token_endpoint_auth_method: client_secret_basic
+        tenant_id: 48f86be5-c628-49c3-8575-62e78f54e4eb
+        data:
+          client_name: Some application client
+          origin_dc_id: ff7625c0-d649-445c-a2b3-9b59e66bfc2d
+        client_secret: cfffe6f6271b4addbe90ca63236de581
+        registration_access_token: 94fe1f5e59b64bd69ad6754a34f37674
+        client_id: 3663410d-4b70-4860-860c-8db82bffab8e
+        created_at: '2019-08-24T01:23:15'
+        created_by: ab9d9f43-f9aa-4f83-9409-5547172daa27
+        type: managed_client
+        status: enabled
+        origin_id: 72403667-8e45-4dd9-bcbc-3e6047b98b3d
       type: object
       required:
+      - client_id
       - tenant_id
+      - client_secret_expires_at
       - type
+      - token_endpoint_auth_method
+      - client_secret
+      - registration_access_token
+      - created_at
+      - created_by
+      - status
       properties:
+        client_id:
+          $ref: '#/components/schemas/uuid'
         tenant_id:
-          type: string
-          format: uuid
-          description: Tenant UUID to associate the client with
+          $ref: '#/components/schemas/uuid'
+        client_secret_expires_at:
+          description: Time at which the client_secret will expire or 0 if it will not expire, according to the configured client secret lifetime. Its value is represented as number of seconds since the Unix epoch.
+          type: integer
         type:
-          type: string
+          description: Client type.
           enum:
           - api_client
-          description: Client type
+          - managed_client
+          type: string
         data:
+          description: Additional metadata, like agentType, hostname, etc...
           type: object
-          additionalProperties: true
-  responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request - invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+        token_endpoint_auth_method:
+          description: Explicit specified auth method.
+          enum:
+          - client_secret_basic
+          - client_secret_post
+          - none
+          type: string
+        client_secret:
+          description: Client secret.
+          type: string
+        registration_access_token:
+          description: Client registration access token.
+          type: string
+        created_at:
+          $ref: '#/components/schemas/item1'
+        created_by:
+          description: ID of the user who registered the client.
+          type: string
+        status:
+          description: Client status - either enabled or disabled. Disabled clients can no longer be used to receive Access Tokens.
+          enum:
+          - enabled
+          - disabled
+          type: string
+        redirect_uris:
+          description: List of possible redirect uris.
+          type: array
+          items:
+            type: string
+        origin_id:
+          description: Client origin ID.
+          type: string
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    client:
+      title: Basic client schema
+      example:
+        client_id: 4557d5f5-7881-54f4-83a5-212f19d355c1
+        client_secret_expires_at: 0
+        type: api_client
+        tenant_id: 0a305354-6efc-4b81-858d-2ae5dd1f08b1
+        data:
+          client_name: backup_api_gateway
+        token_endpoint_auth_method: client_secret_basic
+        created_at: '2023-07-06T16:26:33Z'
+        created_by: ab9ae709-0d00-521a-8be3-7891b1041e18
+        last_access_at: '2023-07-28T14:16:19Z'
+        last_access_from_ip: 10.233.106.171
+        status: enabled
+        redirect_uris:
+        - /bc/api/gateway/cb
+        - /bc/api/gateway/cb:ui
+      type: object
+      required:
+      - client_id
+      - tenant_id
+      - client_secret_expires_at
+      - type
+      - token_endpoint_auth_method
+      - created_at
+      - created_by
+      - last_access_at
+      - last_access_from_ip
+      - status
+      properties:
+        client_id:
+          $ref: '#/components/schemas/uuid'
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        client_secret_expires_at:
+          description: Time at which the client_secret will expire or 0 if it will not expire, according to the configured client secret lifetime. Its value is represented as number of seconds since the Unix epoch.
+          type: integer
+        type:
+          description: Client type.
+          enum:
+          - api_client
+          - managed_client
+          type: string
+        data:
+          description: Additional metadata, like agentType, hostname, etc...
+          type: object
+        token_endpoint_auth_method:
+          description: Explicit specified auth method.
+          enum:
+          - client_secret_basic
+          - client_secret_post
+          - none
+          type: string
+        created_at:
+          description: Date and time when the client was created. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        created_by:
+          description: ID of the user who registered the client.
+          type: string
+        last_access_at:
+          description: Date and time when client was used to issue token last time. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        last_access_from_ip:
+          description: IP address from witch client was used to issue token last time. This field can have a null value.
+          type:
+          - string
+          - 'null'
+        status:
+          description: Client status - either enabled or disabled. Disabled clients can no longer be used to receive Access Tokens.
+          enum:
+          - enabled
+          - disabled
+          type: string
+        redirect_uris:
+          description: List of possible redirect uris.
+          type: array
+          items:
+            type: string
+        origin_id:
+          description: Client origin ID.
+          type: string
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    clientPost:
+      example:
+        type: managed_client
+        tenant_id: 48f86be5-c628-49c3-8575-62e78f54e4eb
+        data:
+          client_name: Some application client
+          origin_dc_id: ff7625c0-d649-445c-a2b3-9b59e66bfc2d
+        token_endpoint_auth_method: client_secret_basic
+        origin_id: 72403667-8e45-4dd9-bcbc-3e6047b98b3d
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      - tenant_id
+      - token_endpoint_auth_method
+      properties:
+        type:
+          description: Client type.
+          enum:
+          - api_client
+          - managed_client
+          type: string
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        data:
+          description: Additional metadata, like agentType, hostname, etc...
+          type: object
+        token_endpoint_auth_method:
+          description: Explicit specified auth method.
+          enum:
+          - client_secret_basic
+          - client_secret_post
+          - none
+          type: string
+        redirect_uris:
+          description: List of possible redirect uris.
+          type: array
+          items:
+            type: string
+        origin_id:
+          description: Client origin ID.
+          type: string
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-      description: OAuth2 bearer token obtained from /idp/token
     basicAuth:
       type: http
       scheme: basic
-      description: Base64-encoded client_id:client_secret
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

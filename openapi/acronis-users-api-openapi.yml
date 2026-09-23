@@ -1,74 +1,1037 @@
 openapi: 3.2.0
 info:
-  title: Acronis Account Management Activities Users API
-  description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
-  version: '2.0'
-  contact:
-    name: Acronis Developer Portal
-    url: https://developer.acronis.com
-  x-generated-from: documentation
-  x-last-validated: '2026-04-19'
+  title: Acronis Users API
+  version: '1.0'
+  description: 'Operations tagged Users across 2 of this provider''s published API definitions: acronis-account-management-v2-openapi.json, acronis-files-v1-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
-- url: https://{datacenter}.acronis.com/api/2
-  description: Acronis Cloud API - Account Management
-  variables:
-    datacenter:
-      default: eu2-cloud
-      description: Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)
-security:
-- bearerAuth: []
+- url: https://dev-cloud.acronis.com/api/2
+  variables: {}
+- url: https://dev-cloud.acronis.com/fc/api/v1
+  variables: {}
 tags:
 - name: Users
-  description: User account management within tenants
 paths:
-  /tenants/{tenant_id}/users:
+  /users:
     get:
-      operationId: listTenantUsers
-      summary: Acronis List Tenant Users
-      description: List all users belonging to a specific tenant.
-      tags:
-      - Users
+      operationId: FetchUsersBatch
+      description: 'Fetches a batch of users.
+
+
+        Available in cloud version only.'
       parameters:
+      - name: uuids
+        description: 'A filter by comma-separated list of users'' UUIDs. Maximum of 100 UUIDs.
+
+          Is mutually exclusive with `subtree_root_tenant_id`, `external_ids` and `tenant_id`.
+
+          '
+        in: query
+        schema:
+          description: 'A filter by comma-separated list of users'' UUIDs. Maximum of 100 UUIDs.
+
+            Is mutually exclusive with `subtree_root_tenant_id`, `external_ids` and `tenant_id`.
+
+            '
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}(,[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})*'
+          minLength: 36
+      - name: origin_id
+        description: A filter by specific origin ID
+        in: query
+        schema:
+          description: A filter by specific origin ID
+          example: pillr.mdr
+          type: string
+      - name: external_ids
+        description: 'A filter by comma-separated list of users'' UUIDs in the external Identity Provider. Maximum of 100 UUIDs.
+
+          Is mutually exclusive with `subtree_root_tenant_id` and `uuids`.
+
+          '
+        in: query
+        schema:
+          description: 'A filter by comma-separated list of users'' UUIDs in the external Identity Provider. Maximum of 100 UUIDs.
+
+            Is mutually exclusive with `subtree_root_tenant_id` and `uuids`.
+
+            '
+          example: fae84e50-0eef-11e7-bc3f-d39de3f5fe32,fae84e50-0eef-11e7-bc3f-d39de3f5fe32
+          type: string
       - name: tenant_id
-        in: path
-        required: true
+        description: 'A filter by specific tenant ID. Required when searching the users by `external_id`. Not used otherwise.
+
+          '
+        in: query
         schema:
+          description: 'A filter by specific tenant ID. Required when searching the users by `external_id`. Not used otherwise.
+
+            '
+          example: fae84e50-0eef-11e7-bc3f-d39de3f5fe32
           type: string
-          format: uuid
-        description: Tenant UUID
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: subtree_root_tenant_id
+        description: A filter by tenants tree starting from the specified tenant ID. Is mutually exclusive with `uuids` and `tenant_id`.
+        in: query
+        schema:
+          description: A filter by tenants tree starting from the specified tenant ID. Is mutually exclusive with `uuids` and `tenant_id`.
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: updated_since
+        description: A filter by users that were updated after the specified RFC3339 timestamp in UTC time zone.
+        in: query
+        schema:
+          description: A filter by users that were updated after the specified RFC3339 timestamp in UTC time zone.
+          example: '2016-02-28T16:41:41.090Z'
+          type: string
+          format: date-time
       - name: limit
+        description: Number of elements in current users page of the response.
         in: query
         schema:
+          description: Number of elements in current users page of the response.
+          default: 2000
           type: integer
-          default: 100
-        description: Maximum number of results
+          minimum: 1
       - name: after
+        description: 'Cursor to fetch the next users page. The cursor encodes all the filtering and sorting arguments, thus client does not need to provide all them for the next page, only cursor should be provided. Client can get the cursor from `paging.cursors.after` field of the previous page response.
+
+          '
         in: query
         schema:
+          description: 'Cursor to fetch the next users page. The cursor encodes all the filtering and sorting arguments, thus client does not need to provide all them for the next page, only cursor should be provided. Client can get the cursor from `paging.cursors.after` field of the previous page response.
+
+            '
           type: string
-        description: Cursor for pagination
+      - name: lod
+        description: 'A predefined level of details for the user object to return.
+
+
+          The following levels of details can be specified:
+
+          -   `stamps` - includes `id`, `version`, `tenant_id`, `created_at`, `updated_at`, `deleted_at`, `access_policies`, `origin_id`, `origin_external_id`, `disable_after`.
+
+          -   `basic` - includes all stamps fields plus `personal_tenant_id`, `login`, `enabled`, `session_mfa_status`, `delivery_channel`.
+
+          -   `full` - includes all basic fields plus `contact`, `activated`, `language`, `business_types`, `notifications`, `idp_id`, `external_id`, `mfa_status`, `external_operation_status`.'
+        in: query
+        schema:
+          description: 'A predefined level of details for the user object to return.
+
+
+            The following levels of details can be specified:
+
+            -   `stamps` - includes `id`, `version`, `tenant_id`, `created_at`, `updated_at`, `deleted_at`, `access_policies`, `origin_id`, `origin_external_id`, `disable_after`.
+
+            -   `basic` - includes all stamps fields plus `personal_tenant_id`, `login`, `enabled`, `session_mfa_status`, `delivery_channel`.
+
+            -   `full` - includes all basic fields plus `contact`, `activated`, `language`, `business_types`, `notifications`, `idp_id`, `external_id`, `mfa_status`, `external_operation_status`.'
+          default: full
+          enum:
+          - stamps
+          - basic
+          - full
+          type: string
+      - name: with_access_policies
+        description: If true, all users' access policies will be returned in the response.
+        in: query
+        schema:
+          description: If true, all users' access policies will be returned in the response.
+          type: boolean
+      - name: allow_deleted
+        description: If true, deleted users may be returned.
+        in: query
+        schema:
+          description: If true, deleted users may be returned.
+          type: boolean
+      - name: inside_organization
+        description: If true, only users that belong to the same organization will be returned. It requires 'subtree_root_tenant_id' to be specified.
+        in: query
+        schema:
+          description: If true, only users that belong to the same organization will be returned. It requires 'subtree_root_tenant_id' to be specified.
+          type: boolean
+      - name: access_policies
+        description: Users in access policies will be returned. It accepts a comma-separated list. It requires 'inside_organization' to be set.
+        in: query
+        schema:
+          description: Users in access policies will be returned. It accepts a comma-separated list. It requires 'inside_organization' to be set.
+          example: company_admin,unit_admin
+          type: string
+      - name: tenant_kinds
+        description: Users in tenant kinds will be returned. It accepts a comma-separated list. It requires 'inside_organization' to be set.
+        in: query
+        schema:
+          description: Users in tenant kinds will be returned. It accepts a comma-separated list. It requires 'inside_organization' to be set.
+          example: customer,unit
+          type: string
+      - name: target_tenant_id
+        description: Users within range starting from 'subtree_root_tenant_id' to the 'target_tenant_id' will be returned. It requires 'inside_organization' to be set.
+        in: query
+        schema:
+          description: Users within range starting from 'subtree_root_tenant_id' to the 'target_tenant_id' will be returned. It requires 'inside_organization' to be set.
+          example: fae84e50-0eef-11e7-bc3f-d39de3f5fe32
+          type: string
       responses:
         '200':
-          description: List of users
+          description: The request was successful.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserList'
+                $ref: '#/components/schemas/userBatch'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
         '404':
-          $ref: '#/components/responses/NotFound'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Users
+      summary: Fetch users batch
+      x-summary-source: derived
+    post:
+      operationId: CreateUser
+      description: 'Creates a new user.
+
+        If the user is created in a customer tenant and below - a personal tenant will be created and attached to it.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userPost'
+      responses:
+        '200':
+          description: User was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Users
+      summary: Create user
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/check_login:
+    get:
+      operationId: CheckLoginNameAvailability
+      description: Checks whether the login name (username) is available or already taken.
+      parameters:
+      - name: username
+        description: A login name to check.
+        required: true
+        in: query
+        schema:
+          description: A login name to check.
+          type: string
+      responses:
+        '204':
+          description: Login name is available.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '406':
+          description: Provided arguments are not acceptable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Users
+      summary: Check login name availability
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/check_password:
+    post:
+      operationId: CheckPassword
+      description: Checks whether a password was previously exposed in data breaches.
+      x-optionalSecurity: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/checkPasswordPost'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/checkPasswordPostResult'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - {}
+      tags:
+      - Users
+      summary: Check password
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/me:
+    get:
+      operationId: FetchCurrentUserInfo
+      description: Fetches information about the currently authenticated user.
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userMe'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Users
+      summary: Fetch current user info
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/{user_id}:
+    delete:
+      operationId: DeleteUser
+      description: Deletes a user by ID.
+      parameters:
+      - name: version
+        description: Growing number of object internal version.
+        required: true
+        in: query
+        schema:
+          description: Growing number of object internal version.
+          example: 1559561146223
+          type: integer
+      - name: user_id
+        description: User ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: User ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: User was successfully deleted.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Users
+      summary: Delete user
+      x-summary-source: derived
+    put:
+      operationId: UpdateUser
+      description: Updates a user by ID.
+      parameters:
+      - name: user_id
+        description: User ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: User ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userPut'
+      responses:
+        '200':
+          description: User was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Users
+      summary: Update user
+      x-summary-source: derived
+    get:
+      operationId: FetchUser
+      description: Fetches a user by ID.
+      parameters:
+      - name: allow_deleted
+        description: If true, deleted users may be returned.
+        in: query
+        schema:
+          description: If true, deleted users may be returned.
+          default: false
+          type: boolean
+      - name: user_id
+        description: User ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: User ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Users
+      summary: Fetch user
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/{user_id}/access_policies:
+    get:
+      operationId: FetchUserAccessPolicies
+      description: Fetches a list of user's access policies.
+      parameters:
+      - name: includeUserGroupPolicies
+        description: If set true, security group policies will be included in response.
+        in: query
+        schema:
+          description: If set true, security group policies will be included in response.
+          type: boolean
+      - name: user_id
+        description: User ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: User ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accessPoliciesList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Users
+      summary: Fetch user access policies
+      x-summary-source: derived
+    put:
+      operationId: UpdateUserAccessPolicies
+      description: Rewrites user's access policies.
+      parameters:
+      - name: user_id
+        description: User ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: User ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/accessPoliciesList'
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/accessPoliciesList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::user_admin
+      tags:
+      - Users
+      summary: Update user access policies
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/{user_id}/mfa/status:
+    put:
+      operationId: ManageUserMFAStatus
+      description: Manages MFA status for the user.
+      parameters:
+      - name: user_id
+        description: User ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: User ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mfaUserStatusPut'
+      responses:
+        '200':
+          description: MFA settings status was successfully changed.
+          content: {}
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Users
+      summary: Manage user MFA status
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/{user_id}/password:
+    post:
+      operationId: SetUserPassword
+      description: 'This method can be accessed only by OAuth 2.0 / OpenID Connect client.
+
+
+        Sets user''s password.'
+      parameters:
+      - name: user_id
+        description: User ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: User ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passwordPost'
+      responses:
+        '204':
+          description: Password was successfully set.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::user_admin
+      tags:
+      - Users
+      summary: Set user password
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/{user_id}/send-activation-email:
+    post:
+      operationId: SendActivationEmail
+      description: Sends an activation email to the user.
+      parameters:
+      - name: user_id
+        description: User ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: User ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: Email was successfully queued.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::user_admin
+      tags:
+      - Users
+      summary: Send activation email
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/{user_id}/restore:
+    post:
+      operationId: RestoreDeletedUser
+      description: Restores previously soft-deleted user.
+      parameters:
+      - name: force
+        description: 'Defines if the user should be restored in case of a conflict with another user who has taken the same login.
+
+          In such a case restored user will have a postfix added.'
+        in: query
+        schema:
+          description: 'Defines if the user should be restored in case of a conflict with another user who has taken the same login.
+
+            In such a case restored user will have a postfix added.'
+          type: boolean
+      - name: enable
+        description: Defines if the user should be re-enabled.
+        in: query
+        schema:
+          description: Defines if the user should be re-enabled.
+          type: boolean
+      - name: user_id
+        description: User ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: User ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: User was successfully restored.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Users
+      summary: Restore deleted user
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/2
+      variables: {}
+  /users/{user_uuid}:
+    get:
+      operationId: Get user information
+      description: Gets information about a user
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: user_uuid
+        description: UUID of the user
+        required: true
+        in: path
+        schema:
+          description: UUID of the user
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '200':
+          description: Successfully retrieved the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Resource was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Users
+      summary: Get user information
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/fc/api/v1
+      variables: {}
 components:
-  responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Paging:
+    tenantKind:
+      description: A tenant kind.
+      enum:
+      - root
+      - partner
+      - folder
+      - customer
+      - unit
+      type: string
+    userBatch:
+      description: 'Batch response for users. The structure of items depends on the `lod` query parameter: stamps, basic, or full (default).'
+      type: object
+      required:
+      - timestamp
+      - items
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging'
+        timestamp:
+          $ref: '#/components/schemas/item1'
+        items:
+          description: Array of user objects. The fields returned depend on the `lod` query parameter.
+          type: array
+          items:
+            oneOf:
+            - title: User stamps schema (lod=stamps)
+              description: User object with minimal fields returned when lod=stamps is specified.
+              type: object
+              additionalProperties: false
+              required:
+              - id
+              - version
+              - tenant_id
+              - created_at
+              - updated_at
+              - deleted_at
+              - access_policies
+              - origin_id
+              - origin_external_id
+              - disable_after
+              properties:
+                id:
+                  $ref: '#/components/schemas/uuid'
+                version:
+                  description: Auto-incremented entity version.
+                  type: integer
+                tenant_id:
+                  $ref: '#/components/schemas/uuid'
+                created_at:
+                  $ref: '#/components/schemas/item1'
+                updated_at:
+                  $ref: '#/components/schemas/item1'
+                deleted_at:
+                  description: Soft deletion timestamp.
+                  allOf:
+                  - $ref: '#/components/schemas/item1'
+                access_policies:
+                  description: Will be returned with all user access policies if query param `with_access_policies` is provided.
+                  type: array
+                  minItems: 0
+                  items:
+                    $ref: '#/components/schemas/items_1'
+                origin_id:
+                  description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
+                  type:
+                  - string
+                  - 'null'
+                origin_external_id:
+                  description: User's external origin ID.
+                  type:
+                  - string
+                  - 'null'
+                disable_after:
+                  description: Timestamp indicating when the user will be disabled.
+                  allOf:
+                  - $ref: '#/components/schemas/item1'
+            - $ref: '#/components/schemas/userBasic'
+            - $ref: '#/components/schemas/item0'
+    paging:
+      title: Generic paging parameters schema
       type: object
       properties:
         cursors:
@@ -76,72 +1039,1436 @@ components:
           properties:
             after:
               type: string
-              description: Cursor for next page
-    Error:
+    userMe:
+      title: User me schema (lod=me)
+      description: User object returned for /users/me endpoint. Includes all full fields plus terms_accepted, login_totp_time, tenant_kind, tenant_pricing_model, brand_id.
+      allOf:
+      - $ref: '#/components/schemas/item0'
+      - type: object
+        required:
+        - terms_accepted
+        - tenant_kind
+        - tenant_pricing_model
+        - brand_id
+        properties:
+          terms_accepted:
+            description: Flag that defines if this user has accepted EULA.
+            type: boolean
+          login_totp_time:
+            description: Timestamp of last TOTP login.
+            allOf:
+            - $ref: '#/components/schemas/item1'
+          tenant_kind:
+            $ref: '#/components/schemas/tenantKind'
+          tenant_pricing_model:
+            $ref: '#/components/schemas/pricingMode'
+          brand_id:
+            $ref: '#/components/schemas/uuid'
+      example:
+        id: 948efcf2-b740-4c40-bb2d-4e4a46adfd87
+        version: 2
+        tenant_id: 0ef03214-6e47-4e50-87f2-a5955ba6095c
+        created_at: '2016-06-22T18:25:16'
+        updated_at: '2016-06-22T18:25:16'
+        deleted_at: null
+        access_policies: []
+        origin_id: pillr.mdr
+        origin_external_id: c66b1af2-2ac5-4764-8db6-97b054e7d27e
+        disable_after: '2017-06-22T18:25:16'
+        personal_tenant_id: 2f8ad2e2-28f2-11e7-aad1-5ffe2ad47151
+        login: mylogin
+        enabled: true
+        session_mfa_status: passed_or_not_required
+        delivery_channel: email
+        contact:
+          id: 27f6f164-63dd-47df-b5b6-83a0fd117beb
+          created_at: '2020-05-19T11:50:00'
+          updated_at: '2020-05-19T11:50:00'
+          types: []
+          email: me@mysite.com
+          address1: '1440 River Drive #100'
+          address2: ''
+          country: USA
+          state: CA
+          zipcode: '12345'
+          city: Rivertown
+          phone: '123456789'
+          firstname: John
+          lastname: Doe
+          title: ''
+          website: ''
+          industry: ''
+          organization_size: ''
+          email_confirmed: false
+          aan: '111111'
+          language: en
+        activated: true
+        language: ru
+        business_types: []
+        notifications:
+        - maintenance
+        - quota
+        - reports
+        - backup_error
+        - backup_warning
+        - backup_info
+        - backup_daily_report
+        - backup_critical
+        idp_id: e6f73a28-ff2e-4728-8f78-49eb74b20fce
+        external_id: S-1-5-21-917267712-1342860078-1792151419-500
+        mfa_status: setup_required
+        external_operation_status: null
+        terms_accepted: true
+        login_totp_time: null
+        tenant_kind: partner
+        tenant_pricing_model: trial
+        brand_id: a77b1af2-3ac5-576d-1db3-27b054e7d2aa
+    items:
       type: object
-      description: API error response
       properties:
-        code:
-          type: integer
-          description: Error code
-          example: 400
-        message:
-          type: string
-          description: Human-readable error message
-          example: Invalid request parameters
-        details:
+        id:
+          $ref: '#/components/schemas/uuid'
+        created_at:
+          description: Date and time when contact was created.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        updated_at:
+          description: Last update timestamp, if contact has just been created - then is equal to `created_at`.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        types:
           type: array
+          minItems: 0
+          uniqueItems: true
           items:
+            enum:
+            - legal
+            - primary
+            - billing
+            - technical
+            - management
+            - company_billing
             type: string
-    UserList:
+        email:
+          $ref: '#/components/schemas/email'
+        address1:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        address2:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        country:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        state:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        city:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        zipcode:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        phone:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        firstname:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        lastname:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        title:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        website:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        industry:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        organization_size:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        email_confirmed:
+          description: This field can have a null value.
+          type:
+          - boolean
+          - 'null'
+        aan:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+    business_types:
+      description: Business types.
+      type: array
+      items:
+        enum:
+        - buyer
+        type: string
+    userNotifications:
+      description: User notifications.
+      type: array
+      items:
+        enum:
+        - maintenance
+        - quota
+        - reports
+        - backup_error
+        - backup_warning
+        - backup_info
+        - backup_daily_report
+        - backup_critical
+        - device_control_warning
+        - certificate_management_error
+        - certificate_management_warning
+        - certificate_management_info
+        type: string
+    userRole:
+      description: Name of the user role.
+      enum:
+      - root_admin
+      - partner_admin
+      - company_admin
+      - unit_admin
+      - readonly_admin
+      - protection_admin
+      - protection_ro_admin
+      - restore_operator
+      - backup_user
+      - sync_share_admin
+      - sync_share_user
+      - sync_share_guest
+      - pds_operator
+      - pds_support
+      - notary_admin
+      - notary_user
+      - hci_admin
+      - omnivoice_admin
+      - omnivoice_user
+      - greathorn_admin
+      - greathorn_user
+      - greathorn_analyst
+      - greathorn_client_manager
+      type: string
+    userPut:
+      example:
+        contact:
+          firstname: John
+        notifications: []
+        disable_after: '2017-06-22T18:25:16'
+        version: 2
       type: object
+      additionalProperties: false
+      required:
+      - version
       properties:
+        login:
+          description: User's login.
+          type: string
+        external_id:
+          description: User's ID in external identity provider (e.g. SID in AD).
+          type: string
+        idp_id:
+          $ref: '#/components/schemas/uuid'
+        contact:
+          $ref: '#/components/schemas/contactPut'
+        enabled:
+          description: Flag, indicates whether the user is enabled or disabled.
+          type: boolean
+        language:
+          description: Preferred locale.
+          type: string
+        notifications:
+          $ref: '#/components/schemas/userNotifications'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        disable_after:
+          $ref: '#/components/schemas/item1'
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+    userBasic:
+      title: User basic schema (lod=basic)
+      description: User object with basic fields returned when lod=basic is specified. Includes all stamps fields plus login, personal_tenant_id, enabled, session_mfa_status, delivery_channel.
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - version
+      - tenant_id
+      - created_at
+      - updated_at
+      - deleted_at
+      - access_policies
+      - origin_id
+      - origin_external_id
+      - disable_after
+      - personal_tenant_id
+      - login
+      - enabled
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        access_policies:
+          description: Will be returned with all user access policies if query param `with_access_policies` is provided.
+          type: array
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/items_1'
+        origin_id:
+          description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
+          type:
+          - string
+          - 'null'
+        origin_external_id:
+          description: User's external origin ID.
+          type:
+          - string
+          - 'null'
+        disable_after:
+          description: Timestamp indicating when the user will be disabled.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        personal_tenant_id:
+          description: UUID of user's personal tenant. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        login:
+          description: User's login.
+          type: string
+        enabled:
+          description: Flag, indicates whether the user is enabled or disabled.
+          type: boolean
+        session_mfa_status:
+          description: Multi-factor authentication status of the user session.
+          enum:
+          - passed_or_not_required
+          - passed_as_trusted
+          - required
+          type: string
+        delivery_channel:
+          description: Activation delivery channel for the user.
+          enum:
+          - email
+          - none
+          type:
+          - string
+          - 'null'
+    userPost:
+      example:
+        tenant_id: 0ef03214-6e47-4e50-87f2-a5955ba6095c
+        login: mylogin
+        contact:
+          email: me@mysite.com
+          address1: '1440 River Drive #100'
+          address2: ''
+          country: USA
+          state: CA
+          zipcode: '12345'
+          city: Rivertown
+          phone: '123456789'
+          firstname: John
+          lastname: Doe
+        enabled: true
+        origin_id: pillr.mdr
+        origin_external_id: c66b1af2-2ac5-4764-8db6-97b054e7d27e
+        disable_after: '2017-06-22T18:25:16'
+        language: ru
+        business_types:
+        - buyer
+        notifications:
+        - maintenance
+        - quota
+        - reports
+        - backup_error
+        - backup_warning
+        - backup_info
+        - backup_daily_report
+        - backup_critical
+        - device_control_warning
+        - certificate_management_error
+        - certificate_management_warning
+        - certificate_management_info
+      type: object
+      additionalProperties: false
+      required:
+      - tenant_id
+      properties:
+        tenant_id:
+          description: ID of tenant this user belongs to.
+          type: string
+        login:
+          description: User's login.
+          type: string
+        external_id:
+          description: User's ID in external identity provider (e.g. SID in AD).
+          type: string
+        idp_id:
+          $ref: '#/components/schemas/uuid'
+        contact:
+          type: object
+          required:
+          - email
+          properties:
+            email:
+              $ref: '#/components/schemas/email'
+            address1:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            address2:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            country:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            state:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            city:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            zipcode:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            phone:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            firstname:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            lastname:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            title:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            website:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            industry:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            organization_size:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            aan:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            fax:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            language:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+        enabled:
+          description: Flag, indicates whether the user is enabled or disabled.
+          type: boolean
+        language:
+          description: Preferred locale.
+          type: string
+        business_types:
+          $ref: '#/components/schemas/business_types'
+        notifications:
+          $ref: '#/components/schemas/userNotifications'
+        use_existing_identity:
+          description: Use existing identity (user with same login already exists).
+          type: boolean
+        origin_id:
+          description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
+          type: string
+        origin_external_id:
+          description: User's external origin ID.
+          type: string
+        disable_after:
+          $ref: '#/components/schemas/item1'
+    user:
+      example:
+        id: 948efcf2-b740-4c40-bb2d-4e4a46adfd87
+        version: 2
+        tenant_id: 0ef03214-6e47-4e50-87f2-a5955ba6095c
+        login: mylogin
+        contact:
+          id: 27f6f164-63dd-47df-b5b6-83a0fd117beb
+          created_at: '2020-05-19T11:50:00'
+          updated_at: '2020-05-19T11:50:00'
+          types: []
+          email: me@mysite.com
+          address1: '1440 River Drive #100'
+          address2: ''
+          country: USA
+          state: CA
+          zipcode: '12345'
+          city: Rivertown
+          phone: '123456789'
+          firstname: John
+          lastname: Doe
+          title: ''
+          website: ''
+          industry: ''
+          organization_size: ''
+          email_confirmed: false
+          aan: '111111'
+          deleted_at: '2020-05-19T11:50:00'
+        activated: true
+        enabled: true
+        created_at: '2016-06-22T18:25:16'
+        updated_at: '2016-06-22T18:25:16'
+        deleted_at: null
+        language: ru
+        idp_id: e6f73a28-ff2e-4728-8f78-49eb74b20fce
+        external_id: S-1-5-21-917267712-1342860078-1792151419-500
+        personal_tenant_id: 2f8ad2e2-28f2-11e7-aad1-5ffe2ad47151
+        business_types: []
+        notifications:
+        - maintenance
+        - quota
+        - reports
+        - backup_error
+        - backup_warning
+        - backup_info
+        - backup_daily_report
+        - backup_critical
+        - device_control_warning
+        - certificate_management_error
+        - certificate_management_warning
+        - certificate_management_info
+        mfa_status: setup_required
+        session_mfa_status: required
+        origin_id: pillr.mdr
+        origin_external_id: c66b1af2-2ac5-4764-8db6-97b054e7d27e
+        disable_after: '2017-06-22T18:25:16'
+        terms_accepted: true
+        tenant_kind: partner
+        tenant_pricing_model: trial
+        brand_id: a77b1af2-3ac5-576d-1db3-27b054e7d2aa
+      type: object
+      required:
+      - id
+      - version
+      - tenant_id
+      - login
+      - contact
+      - activated
+      - enabled
+      - created_at
+      - updated_at
+      - deleted_at
+      - language
+      - business_types
+      - notifications
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        login:
+          description: User's login.
+          type: string
+        contact:
+          $ref: '#/components/schemas/items'
+        activated:
+          description: Flag, indicates whether the user has been activated or not.
+          type: boolean
+        enabled:
+          description: Flag, indicates whether the user is enabled or disabled.
+          type: boolean
+        access_policies:
+          description: Will be returned with all user access policies if query param `with_access_policies` is provided.
+          type: array
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/items_1'
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        language:
+          description: Preferred locale.
+          type: string
+        idp_id:
+          $ref: '#/components/schemas/uuid'
+        external_id:
+          description: User's ID in external identity provider (e.g. SID in AD).
+          type: string
+        origin_id:
+          description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
+          type: string
+        origin_external_id:
+          description: User's external origin ID.
+          type: string
+        disable_after:
+          $ref: '#/components/schemas/item1'
+        personal_tenant_id:
+          description: UUID of user's personal tenant. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        business_types:
+          $ref: '#/components/schemas/business_types'
+        notifications:
+          $ref: '#/components/schemas/userNotifications'
+        mfa_status:
+          description: Multi-factor authentication status of the user.
+          enum:
+          - disabled
+          - forcibly_disabled
+          - setup_required
+          - enabled
+          type: string
+        session_mfa_status:
+          description: Multi-factor authentication status of the user session.
+          enum:
+          - passed_or_not_required
+          - passed_as_trusted
+          - required
+          type: string
+        external_operation_status:
+          description: Indicates if some external operation in progress for this user (his personal tenant).
+          enum:
+          - deleting
+          - recovering
+          type:
+          - string
+          - 'null'
+        terms_accepted:
+          description: Flag that defines if this user has accepted EULA.
+          type: boolean
+        login_totp_time:
+          description: The time when the user in the current session passed TOTP verification.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        tenant_kind:
+          $ref: '#/components/schemas/tenantKind'
+        tenant_pricing_model:
+          $ref: '#/components/schemas/pricingMode'
+        brand_id:
+          $ref: '#/components/schemas/uuid'
+    item0:
+      title: User full schema (lod=full)
+      description: User object with all fields returned when lod=full is specified (default).
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - version
+      - tenant_id
+      - created_at
+      - updated_at
+      - deleted_at
+      - access_policies
+      - origin_id
+      - origin_external_id
+      - disable_after
+      - personal_tenant_id
+      - login
+      - enabled
+      - contact
+      - activated
+      - language
+      - business_types
+      - notifications
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        access_policies:
+          description: Will be returned with all user access policies if query param `with_access_policies` is provided.
+          type: array
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/items_1'
+        origin_id:
+          description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
+          type:
+          - string
+          - 'null'
+        origin_external_id:
+          description: User's external origin ID.
+          type:
+          - string
+          - 'null'
+        disable_after:
+          description: Timestamp indicating when the user will be disabled.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        personal_tenant_id:
+          description: UUID of user's personal tenant. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        login:
+          description: User's login.
+          type: string
+        enabled:
+          description: Flag, indicates whether the user is enabled or disabled.
+          type: boolean
+        contact:
+          $ref: '#/components/schemas/items'
+        activated:
+          description: Flag, indicates whether the user has been activated or not.
+          type: boolean
+        language:
+          description: Preferred locale.
+          type: string
+        business_types:
+          $ref: '#/components/schemas/business_types'
+        notifications:
+          $ref: '#/components/schemas/userNotifications'
+        idp_id:
+          $ref: '#/components/schemas/uuid'
+        external_id:
+          description: User's ID in external identity provider (e.g. SID in AD).
+          type: string
+        mfa_status:
+          description: Multi-factor authentication status of the user.
+          enum:
+          - disabled
+          - forcibly_disabled
+          - setup_required
+          - enabled
+          type: string
+        external_operation_status:
+          description: Indicates if some external operation in progress for this user (his personal tenant).
+          enum:
+          - deleting
+          - recovering
+          type:
+          - string
+          - 'null'
+    checkPasswordPostResult:
+      example:
+        compromised: true
+      type: object
+      required:
+      - compromised
+      properties:
+        compromised:
+          description: Flag that specifies whether the password was previously exposed in data breaches. True if the password was exposed; false otherwise.
+          type: boolean
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    pricingMode:
+      description: Mode of tenant's pricing.
+      enum:
+      - trial
+      - production
+      - suspended
+      type: string
+    checkPasswordPost:
+      example:
+        password: 970C2D1A9869F18291D85BC389B33F0739496DE9
+      type: object
+      additionalProperties: false
+      required:
+      - password
+      properties:
+        password:
+          description: Password (SHA-1 hash) to check.
+          type: string
+    items_1:
+      type: object
+      required:
+      - id
+      - version
+      - created_at
+      - updated_at
+      - deleted_at
+      - trustee_id
+      - trustee_type
+      - issuer_id
+      - tenant_id
+      - role_id
+      properties:
+        id:
+          description: Access policy unique identifier.
+          type: string
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        trustee_id:
+          description: Unique identifier of the Subject for whom access policy is granted.
+          type: string
+        trustee_type:
+          description: Type of the Subject for whom access policy is granted.
+          enum:
+          - user
+          - user_group
+          - client
+          type: string
+        issuer_id:
+          description: Issuer unique identifier.
+          type: string
+        tenant_id:
+          description: Tenant unique identifier.
+          type: string
+        resource_server_id:
+          description: Tenant unique identifier.
+          type: string
+        resource_namespace:
+          description: Resource namespace.
+          type: string
+        resource_path:
+          description: Resource path.
+          type: string
+        role_id:
+          $ref: '#/components/schemas/userRole'
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    contactPut:
+      example:
+        tenant_id: f313ecf6-9256-4afd-9d47-72e032ee81d0
+        user_id: 1bfe361d-fcb8-43ff-8f43-9ecc29a08ea5
+        types:
+        - legal
+        - primary
+        - billing
+        - technical
+        - management
+        email: owner@mysite.com
+        address1: '1440 River Drive #100'
+        address2: ''
+        country: USA
+        state: CA
+        city: Rivertown
+        zipcode: '12345'
+        phone: '123456789'
+        firstname: Company
+        lastname: Owner
+        title: Mr.
+        website: www.mysite.com
+        industry: IT
+        organization_size: 50-100
+        email_confirmed: true
+        aan: '111111'
+        language: en
+        fax: 123 Example Street
+      type: object
+      additionalProperties: false
+      properties:
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        user_id:
+          $ref: '#/components/schemas/uuid'
+        types:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            enum:
+            - legal
+            - primary
+            - billing
+            - technical
+            - management
+            type: string
+        email:
+          $ref: '#/components/schemas/email'
+        address1:
+          type:
+          - string
+          - 'null'
+        address2:
+          type:
+          - string
+          - 'null'
+        country:
+          type:
+          - string
+          - 'null'
+        state:
+          type:
+          - string
+          - 'null'
+        city:
+          type:
+          - string
+          - 'null'
+        zipcode:
+          type:
+          - string
+          - 'null'
+        phone:
+          type:
+          - string
+          - 'null'
+        firstname:
+          type:
+          - string
+          - 'null'
+        lastname:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        website:
+          type:
+          - string
+          - 'null'
+        industry:
+          type:
+          - string
+          - 'null'
+        organization_size:
+          type:
+          - string
+          - 'null'
+        email_confirmed:
+          type:
+          - boolean
+          - 'null'
+        aan:
+          type:
+          - string
+          - 'null'
+        language:
+          type:
+          - string
+          - 'null'
+        fax:
+          type:
+          - string
+          - 'null'
+    email:
+      type: string
+      pattern: ^$|\S+@\S+
+    accessPoliciesList:
+      example:
+        timestamp: '2016-06-22T18:25:16'
+        items:
+        - id: 00000000-0000-0000-0000-000000000005
+          version: 0
+          trustee_id: 2a0402b8-3867-4578-8ebc-e874a2864e79
+          trustee_type: user
+          issuer_id: b7028817-d180-44c1-ae3d-b99f4b3f844a
+          tenant_id: b7028817-d180-44c1-ae3d-b99f4b3f844a
+          role_id: hci_admin
+          created_at: '1970-01-01T00:00:00Z'
+          updated_at: '2022-03-22T21:45:47Z'
+          deleted_at: null
+          resource_server_id: 53a2a450-8e4e-11e7-96dd-f45c89947331
+          resource_namespace: hci
+          resource_path: res1
+        - id: 00000000-0000-0000-0000-000000000004
+          version: 0
+          trustee_id: 2a0402b8-3867-4578-8ebc-e874a2864e79
+          trustee_type: user
+          issuer_id: b7028817-d180-44c1-ae3d-b99f4b3f844a
+          tenant_id: b7028817-d180-44c1-ae3d-b99f4b3f844a
+          role_id: notary_admin
+          created_at: '1970-01-01T00:00:00Z'
+          updated_at: '2022-03-22T21:45:47Z'
+          deleted_at: null
+          resource_server_id: 53a2a450-8e4e-11e7-96dd-f45c89947331
+          resource_namespace: notary
+          resource_path: res4/res5
+        - id: 00000000-0000-0000-0000-000000000002
+          version: 0
+          trustee_id: 2a0402b8-3867-4578-8ebc-e874a2864e79
+          trustee_type: user
+          issuer_id: b7028817-d180-44c1-ae3d-b99f4b3f844a
+          tenant_id: b7028817-d180-44c1-ae3d-b99f4b3f844a
+          role_id: pds_operator
+          created_at: '1970-01-01T00:00:00Z'
+          updated_at: '2022-03-22T21:45:47Z'
+          deleted_at: null
+          resource_server_id: 53a2a450-8e4e-11e7-96dd-f45c89947331
+          resource_namespace: physical_data_shipping
+          resource_path: res4/res5
+        - id: 00000000-0000-0000-0000-000000000003
+          version: 0
+          trustee_id: 2a0402b8-3867-4578-8ebc-e874a2864e79
+          trustee_type: user
+          issuer_id: b7028817-d180-44c1-ae3d-b99f4b3f844a
+          tenant_id: b7028817-d180-44c1-ae3d-b99f4b3f844a
+          role_id: pds_support
+          created_at: '1970-01-01T00:00:00Z'
+          updated_at: '2022-03-22T21:45:47Z'
+          deleted_at: null
+          resource_server_id: 53a2a450-8e4e-11e7-96dd-f45c89947331
+          resource_namespace: physical_data_shipping
+          resource_path: res4/res5
+      type: object
+      required:
+      - timestamp
+      - items
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging'
+        timestamp:
+          $ref: '#/components/schemas/item1'
         items:
           type: array
           items:
-            $ref: '#/components/schemas/User'
-        paging:
-          $ref: '#/components/schemas/Paging'
-    User:
+            type: object
+            required:
+            - id
+            - version
+            - created_at
+            - updated_at
+            - deleted_at
+            - trustee_id
+            - trustee_type
+            - issuer_id
+            - tenant_id
+            - role_id
+            properties:
+              id:
+                description: Access policy unique identifier.
+                type: string
+              version:
+                description: Auto-incremented entity version.
+                type: integer
+              created_at:
+                $ref: '#/components/schemas/item1'
+              updated_at:
+                $ref: '#/components/schemas/item1'
+              deleted_at:
+                description: Soft deletion timestamp.
+                allOf:
+                - $ref: '#/components/schemas/item1'
+              trustee_id:
+                description: Unique identifier of the Subject for whom access policy is granted.
+                type: string
+              trustee_type:
+                description: Type of the Subject for whom access policy is granted.
+                enum:
+                - user
+                - user_group
+                - client
+                type: string
+              issuer_id:
+                description: Issuer unique identifier.
+                type: string
+              tenant_id:
+                description: Tenant unique identifier.
+                type: string
+              resource_server_id:
+                description: Tenant unique identifier.
+                type: string
+              resource_namespace:
+                description: Resource namespace.
+                type: string
+              resource_path:
+                description: Resource path.
+                type: string
+              role_id:
+                $ref: '#/components/schemas/userRole'
+    passwordPost:
+      example:
+        password: testSECRETpassword123
       type: object
-      description: Acronis platform user account
+      additionalProperties: false
+      required:
+      - password
       properties:
-        id:
+        password:
+          description: Password.
           type: string
-          format: uuid
-          description: User unique identifier
-        login:
+    mfaUserStatusPut:
+      example:
+        enabled: true
+      type: object
+      additionalProperties: false
+      required:
+      - enabled
+      properties:
+        enabled:
+          description: Status of MFA for user.
+          type: boolean
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
+    User:
+      example:
+        name: user
+        email: user@example.com
+        uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+        allow_sync_and_share: true
+        disabled: false
+        free_space_to_maintain: 0
+        is_superuser: false
+        licensed: true
+        locale: en
+        purge_proactively: false
+        override_quota: 3221225472
+        quota: 3221225472
+        login_url: https://localhost/signin?email=user%example.com
+        updated_at: '2019-04-09T07:16:24Z'
+        created_at: '2018-01-16T13:04:11Z'
+        last_logged_in_at: '2019-04-09T07:16:24Z'
+        sync_and_share_content:
+          file_count: 4
+          folder_count: 3
+          used_space: 818498
+      type: object
+      required:
+      - name
+      - email
+      - uuid
+      - allow_sync_and_share
+      - disabled
+      - free_space_to_maintain
+      - is_superuser
+      - licensed
+      - locale
+      - purge_proactively
+      - override_quota
+      - quota
+      - login_url
+      - updated_at
+      - created_at
+      - sync_and_share_content
+      properties:
+        name:
           type: string
-          description: Username/login for the user
-          example: jsmith
         email:
           type: string
-          format: email
-          description: User email address
-          example: jsmith@example.com
-        firstname:
-          type: string
-          example: John
-        lastname:
-          type: string
-          example: Smith
-        enabled:
+        uuid:
+          $ref: '#/components/schemas/UUID'
+        allow_sync_and_share:
           type: boolean
-          description: Whether the user account is active
-        tenant_id:
+        disabled:
+          type: boolean
+        free_space_to_maintain:
+          type: integer
+          format: int64
+        is_superuser:
+          type: boolean
+        licensed:
+          type: boolean
+        locale:
+          $ref: '#/components/schemas/Locale'
+        purge_proactively:
+          type: boolean
+        override_quota:
+          type: integer
+          format: int64
+        quota:
+          type: integer
+          format: int64
+        login_url:
           type: string
-          format: uuid
-          description: Tenant the user belongs to
+        updated_at:
+          type: string
+          format: date-time
         created_at:
           type: string
           format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+        last_logged_in_at:
+          type: string
+          format: date-time
+        sync_and_share_content:
+          type: object
+          required:
+          - file_count
+          - folder_count
+          - used_space
+          properties:
+            file_count:
+              type: integer
+            folder_count:
+              type: integer
+            used_space:
+              type: integer
+              format: int64
+    Locale:
+      description: Locale code
+      enum:
+      - cs
+      - de
+      - en
+      - es
+      - fr
+      - it
+      - ja
+      - ko
+      - pl
+      - ru
+      - zh_tw
+      - zh_cn
+      type: string
+    UUID:
+      description: Universally unique identifier
+      example: b8ccbf27-4e92-41a9-8b66-d78108985321
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-      description: OAuth2 bearer token obtained from /idp/token
     basicAuth:
       type: http
       scheme: basic
-      description: Base64-encoded client_id:client_secret
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+    oauth_2_0:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes: {}
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-refined-from:
+- acronis-account-management-v2-openapi.json
+- acronis-files-v1-openapi.json
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

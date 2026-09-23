@@ -1,0 +1,275 @@
+openapi: 3.2.0
+info:
+  title: Alert Manager Status API
+  version: '1.0'
+servers:
+- url: https://dev-cloud.acronis.com/api/alert_manager/v1
+  variables: {}
+tags:
+- name: Status
+paths:
+  /status:
+    get:
+      operationId: Fetch alerts grouped by scope
+      description: Returns the last of the most critical alerts grouped by selected scope.
+      parameters:
+      - name: scope_key
+        description: 'Groups the results by the context key or searchable details.
+
+          See registered alert types for available context keys and searchable details.
+
+          '
+        required: true
+        in: query
+        schema:
+          description: 'Groups the results by the context key or searchable details.
+
+            See registered alert types for available context keys and searchable details.
+
+            '
+          type: string
+      - name: scope_value
+        description: 'Scope values to filter alerts by.
+
+          If omitted, the response will contain the last most critical status among available alerts.
+
+
+          Client may group statuses for multiple scope values by using the `or()` operator:
+
+          * Example: `scope_key=KEY&scope_value=VAL1&scope_value=VAL2` - looks for two statuses
+
+          * Example: `scope_key=KEY&scope_value=or(VAL1,VAL2)` - looks for single status
+
+          * Example: `scope_key=KEY&scope_value=or(VAL1,VAL2)&scope_value=VAL3` - looks for two statuses
+
+
+          Client should explicitly url-encode values breaking URL syntax.
+
+          For example, to find a status of the resource with the `stepName` key containing `step 01` or `step 02`: `scope_key=stepName&scope_value=or(step%201,step%202)`
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'Scope values to filter alerts by.
+
+            If omitted, the response will contain the last most critical status among available alerts.
+
+
+            Client may group statuses for multiple scope values by using the `or()` operator:
+
+            * Example: `scope_key=KEY&scope_value=VAL1&scope_value=VAL2` - looks for two statuses
+
+            * Example: `scope_key=KEY&scope_value=or(VAL1,VAL2)` - looks for single status
+
+            * Example: `scope_key=KEY&scope_value=or(VAL1,VAL2)&scope_value=VAL3` - looks for two statuses
+
+
+            Client should explicitly url-encode values breaking URL syntax.
+
+            For example, to find a status of the resource with the `stepName` key containing `step 01` or `step 02`: `scope_key=stepName&scope_value=or(step%201,step%202)`
+
+            '
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Alert list grouped by scopes.
+          content:
+            application/json:
+              schema:
+                example:
+                  items:
+                  - scope:
+                      resourceId: 0A0E639A-4E27-4C61-AFFF-7BE314C30A33
+                    status:
+                      id: 01C2D69A-112B-4DE1-98AE-8688223C5F4B
+                      type: BackupFailed
+                      severity: critical
+                      details:
+                        activity:
+                          id: 1F80FCFF-B72F-492E-8A9D-C01457FF505A
+                          type: 8F01AC13-F59E-4851-9204-DE1FD77E36B4
+                        activityId: 1F80FCFF-B72F-492E-8A9D-C01457FF505A
+                        resourceId: 0A0E639A-4E27-4C61-AFFF-7BE314C30A33
+                        resourceName: DESKTOP-GCNCFC8
+                      createdAt: '2021-04-01T22:16:19Z'
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ScopeStatus'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Request is refused because authentication parameters are invalid.
+          content:
+            text/plain:
+              schema:
+                example: "<html>\n  <head>\n    <title>401 Authorization Required</title>\n  </head>\n  <body>\n    <center>\n      <h1>401 Authorization Required</h1>\n    </center>\n    <hr>\n    <center>nginx</center>\n  </body>\n</html>\n"
+        '403':
+          description: 'A security error due to an issue with tenant security claim: invalid tenant in the access token, tenant resolution failed and etc.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '414':
+          description: 'Too many scope values.
+
+            For cloud deployment there is no practical limitation.
+
+            For on-premise deployment known limits imposed by database engine are 32766 for SQLite and more than 32768 for MS SQL Server.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - oauth_2_0:
+        - urn:acronis.com::alert_manager::viewer
+      tags:
+      - Status
+      summary: Fetch alerts grouped by scope
+      x-summary-source: derived
+components:
+  schemas:
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+    ScopeStatus:
+      description: Status of the selected scope.
+      type: object
+      required:
+      - scope
+      - status
+      properties:
+        scope:
+          description: 'Value of scope. Contains values of context or searchable details.
+
+            '
+          type: object
+        status:
+          $ref: '#/components/schemas/Status'
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    Error:
+      description: Base error object
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kbLink:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    Status:
+      description: 'Status of any scope that represents the last alert with the highest severity in the scope.
+
+        '
+      type: object
+      required:
+      - id
+      - type
+      - severity
+      - createdAt
+      - details
+      properties:
+        id:
+          description: ID of the alert.
+          type: string
+        type:
+          description: Type of the alert.
+          type: string
+        severity:
+          description: Severity level of the alert.
+          enum:
+          - ok
+          - information
+          - warning
+          - error
+          - critical
+          type: string
+        createdAt:
+          description: A date and time when the alert was created.
+          type: string
+          format: date-time
+        details:
+          description: Details about the alert.
+          type: object
+  securitySchemes:
+    oauth_2_0:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

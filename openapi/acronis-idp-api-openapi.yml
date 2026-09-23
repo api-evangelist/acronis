@@ -1,0 +1,1384 @@
+openapi: 3.2.0
+info:
+  title: Account Management Idp API
+  version: '2'
+servers:
+- url: https://dev-cloud.acronis.com/api/2
+  variables: {}
+tags:
+- name: IDP
+paths:
+  /idp/token:
+    post:
+      operationId: RequestTokens
+      description: 'Requests an access token, an ID token and, optionally, a refresh token.
+
+
+        To additionally request a refresh token, refer to OpenID Connect Core 1.0 Section 11.'
+      x-optionalSecurity: true
+      parameters:
+      - name: Authorization
+        description: 'Used to send the base64-encoded "client_id:client_secret" credentials.
+
+          May be required depending on the grant type and ''token_endpoint_auth_method'''
+        in: header
+        schema:
+          description: 'Used to send the base64-encoded "client_id:client_secret" credentials.
+
+            May be required depending on the grant type and ''token_endpoint_auth_method'''
+          example: Basic QUJDMTIz=
+          type: string
+          pattern: ^Basic [0-9a-zA-Z\-\._~+/]*=$
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - grant_type
+              properties:
+                grant_type:
+                  description: 'The following authorization grant types are supported:
+
+
+                    - `password` grant type implementation is in accordance with [RFC6749 Section 4.3](https://datatracker.ietf.org/doc/html/rfc6749#section-4.3).
+
+                    - `md5_password` grant type is the same as `password` grant type, but password provided as MD5 hashsum.
+
+                    - `authorization_code`, `refresh_token` and `client_credentials` grant types implementation is in accordance with [OpenID Connect Core 1.0 Section 3.1.3](https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint).
+
+                    - `authorization_code` grant type implementation also supports PKCE extension in accordance with [RFC7636](https://datatracker.ietf.org/doc/html/rfc7636)
+
+                    - `urn:ietf:params:oauth:grant-type:device_code` grant type implementation is in accordance with [RFC8628](https://datatracker.ietf.org/doc/html/rfc8628).
+
+                    - `urn:ietf:params:oauth:grant-type:jwt-bearer` grant type implementation is in accordance with [RFC7523](https://datatracker.ietf.org/doc/html/rfc7523).'
+                  enum:
+                  - password
+                  - md5_password
+                  - authorization_code
+                  - refresh_token
+                  - client_credentials
+                  - urn:ietf:params:oauth:grant-type:device_code
+                  - urn:ietf:params:oauth:grant-type:jwt-bearer
+                  type: string
+                client_id:
+                  description: 'OAuth 2.0 / OpenID Connect client''s identifier (UUID).
+
+
+                    Required for the `urn:ietf:params:oauth:grant-type:device_code` grant type.
+
+
+                    Required for `authorization_code` and `client_credentials` grant types if the client was created with `token_endpoint_auth_method` set to `client_secret_post`.'
+                  type: string
+                client_secret:
+                  description: 'OAuth 2.0 / OpenID Connect clients secret.
+
+
+                    Required for `authorization_code` and `client_credentials` grant types if the client was created with `token_endpoint_auth_method` set to `client_secret_post`.'
+                  type: string
+                username:
+                  description: Required for the `password` and `md5_password` grant types.
+                  type: string
+                password:
+                  description: Required for the `password` and `md5_password` grant types.
+                  type: string
+                refresh_token:
+                  description: Required for the `refresh_token` grant type.
+                  type: string
+                code:
+                  description: Required for the `authorization_code` grant type.
+                  type: string
+                scope:
+                  description: Not used for the `authorization_code` grant type. Optional for all other supported grant types.
+                  type: string
+                  pattern: ^[\w_]+(\s+[\w_]+)*$
+                assertion:
+                  description: Required for the `urn:ietf:params:oauth:grant-type:jwt-bearer` grant type.
+                  type: string
+                device_code:
+                  description: Required for the `urn:ietf:params:oauth:grant-type:device_code` grant type.
+                  type: string
+                totp_code:
+                  description: Required for the `password` grant type with TOTP authentication.
+                  type: string
+                code_verifier:
+                  description: 'A cryptographically random string that is used to correlate the authorization request to the token request.
+
+
+                    Required for the `authorization_code` grant type if `code_challenge` was provided during the authorization request.'
+                  type: string
+                  pattern: ^[A-Za-z0-9\-\._~]{43,128}$
+                not_required_introspection:
+                  description: 'Determines what kind of the access token will be issued: that require introspection or that do not require it.
+
+
+                    Tokens that require introspection we call "hybrid" because we use combined approach to work with them: one part of the tokens'' data could be obtained from the token itself but another part requires making a request to the introspection endpoint.
+
+                    They contain not the full list of associated access policies in the scope and their introspection is required by the resource server for proper authorization.
+
+
+                    If `not_required_introspection` is set to `true`, the issued token will contain all associated access policies in the scope and its introspection will not be required.
+
+                    Such JWT token has `"nri": 1` in the header section ("nri" - not required introspection).
+
+
+                    If `not_required_introspection` is not set or set to `false`, Account Server will decide whether to issue a "hybrid" token or not based on the its internal logic and roles configuration.
+
+                    Non "hybrid" JWT token has `"nri": 0` in the header section or does not have this field at all.'
+                  type: boolean
+      responses:
+        '200':
+          description: Authentication was successful and the tokens were issued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/token'
+        '400':
+          description: Failed authentication factors check and when `redirect_uri` form parameter is not defined.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenError'
+        '401':
+          description: Failed authentication factors check and when `redirect_uri` form parameter is not defined.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenError'
+        '403':
+          description: Requested scope is not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenError'
+      security:
+      - {}
+      tags:
+      - IDP
+      summary: Request tokens
+      x-summary-source: derived
+  /idp/revoke_token:
+    post:
+      operationId: RevokeToken
+      description: 'Revokes an access token and, if any, a refresh token in accordance with RFC7009.
+
+
+        Confidential clients must either follow Basic authentication scheme or provide credentials in the request body.
+
+
+        Public clients must provide `client_id` in the request body.
+
+
+        If `access_token` revocation is requested, the refresh token, if any, issued together with provided access token will also be revoked.
+
+
+        If `refresh_token` revocation is requested, the access token issued together with provided refresh token will also be revoked.'
+      x-optionalSecurity: true
+      parameters:
+      - name: Authorization
+        description: Used to send the base64-encoded "client_id:client_secret" credentials.
+        in: header
+        schema:
+          description: Used to send the base64-encoded "client_id:client_secret" credentials.
+          example: Basic QUJDMTIz=
+          type: string
+          pattern: ^Basic [0-9a-zA-Z\-\._~+/]*=$
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - token
+              properties:
+                token:
+                  description: The token that the client wants to revoke.
+                  type: string
+                token_type_hint:
+                  description: A hint about the token type submitted for revocation.
+                  enum:
+                  - access_token
+                  - refresh_token
+                  type: string
+                client_id:
+                  description: 'OAuth 2.0 / OpenID Connect client''s identifier (UUID).
+
+                    Required for public clients.'
+                  type: string
+                client_secret:
+                  description: 'OAuth 2.0 / OpenID Connect clients secret.
+
+                    Can be used by confidential clients for authentication.'
+                  type: string
+      responses:
+        '200':
+          description: Authentication was successful and the token was revoked.
+          content: {}
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/revokeError'
+        '401':
+          description: Failed authentication factors check.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/revokeError'
+      security:
+      - {}
+      tags:
+      - IDP
+      summary: Revoke token
+      x-summary-source: derived
+  /idp/introspect_token:
+    post:
+      operationId: IntrospectToken
+      description: Introspect an access token in accordance with RFC7662.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - token
+              properties:
+                token:
+                  description: The token that the client wants to introspect.
+                  type: string
+      responses:
+        '200':
+          description: 'Authentication and authorization were successful and the token''s was introspected.
+
+
+            Note if the token from the request body is invalid (signature verification failed, token is expired, or something else), 200 HTTP code will be returned, but the response body will contain `{"active": false}`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenIntrospectionResponse'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::token_introspector
+      tags:
+      - IDP
+      summary: Introspect token
+      x-summary-source: derived
+  /idp/ott:
+    post:
+      operationId: RequestOneTimeToken
+      description: 'Available in cloud version only and this method can be accessed only by OAuth 2.0 / OpenID Connect client.
+
+
+        Requests a one-time token for authentication on behalf of the specified user.
+
+        Either user external ID or Acronis user login or Acronis user UUID can be supplied.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idpOttPost'
+      responses:
+        '200':
+          description: One-time token was successfully issued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/idpOtt'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::user_admin
+      tags:
+      - IDP
+      summary: Request one time token
+      x-summary-source: derived
+  /idp/ott/login:
+    post:
+      operationId: LogInWithOneTimeToken
+      description: 'Authenticates to the platform using one-time token and provides the IdP session cookie.
+
+
+        Available in cloud version only.'
+      x-optionalSecurity: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idpOttLoginPost'
+      responses:
+        '200':
+          description: Authentication with one-time token was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - {}
+      tags:
+      - IDP
+      summary: Log in with one time token
+      x-summary-source: derived
+  /idp/logout:
+    get:
+      operationId: Logout
+      description: Performs a logout from the platform.
+      responses:
+        '200':
+          description: User was successfully logged out.
+          content:
+            text/html:
+              schema:
+                example: '<body onload="window.location.replace(''/'')">
+
+                  <h5>Please wait...</h5>
+
+
+                  <img src="https://cloud.example.com/fc/signout" />
+
+
+                  <img src="https://cloud.example.com/signout" />
+
+
+                  </body>
+
+                  '
+      tags:
+      - IDP
+      summary: Logout
+      x-summary-source: derived
+  /idp/device_authorization:
+    post:
+      description: Registers device codes and issues device and user codes.
+      x-optionalSecurity: true
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - client_id
+              - scope
+              properties:
+                client_id:
+                  description: OAuth 2.0 / OpenID Connect client's identifier (UUID).
+                  type: string
+                display_name:
+                  description: Device display name (machine name, cluster ID, etc.).
+                  type: string
+                scope:
+                  description: 'Scopes requested or authorized by the end user for the client.
+
+                    Supported scopes:
+
+                    - urn:acronis.com:tenant-id:<uuid>:backup_agent_admin - For backup agent registration
+
+                    - urn:acronis.com:tenant-id:<uuid>:cyber_frame_registrator - For Cyber Frame Connector registration'
+                  type: array
+                  items:
+                    type: string
+                    pattern: ^urn:acronis\.com:tenant-id:(?:[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12})?:(?:backup_agent_admin|cyber_frame_registrator)$
+      responses:
+        '200':
+          description: Device code successfully registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceAuthorizationResponse'
+      security:
+      - {}
+      tags:
+      - IDP
+      summary: Create idp device authorization
+      x-summary-source: derived
+      operationId: postIdpDeviceAuthorization
+      x-operation-id-source: derived
+  /idp/device_authorization/approval:
+    get:
+      operationId: DeviceAuthorizationApproval_0
+      description: Returns information about existing device authorization by the user code.
+      parameters:
+      - name: code
+        description: The end-user verification code.
+        required: true
+        in: query
+        schema:
+          description: The end-user verification code.
+          type: string
+      - name: tenant_uuid
+        description: Personal tenant UUID for which the device code will be approved.
+        in: query
+        schema:
+          description: Personal tenant UUID for which the device code will be approved.
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: Device authorization exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deviceAuthorizationApprovalResponse'
+        '400':
+          description: 'Invalid request parameters, device code expired or associated public client not found.
+
+            Scoped tenant or its owner not satisfied the requirements.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenError'
+        '403':
+          description: 'Current user is not authorized to access this endpoint or its method.
+
+            Current user has no access to the scoped tenant.
+
+            User code is invalid or the related device code already deleted.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenError'
+      security:
+      - oauth2:
+        - urn:acronis.com::backup::backup_user
+        - urn:acronis.com::backup::protection_admin
+        - urn:acronis.com::files_cloud::sync_share_user
+      tags:
+      - IDP
+      summary: Device authorization approval 0
+      x-summary-source: derived
+    post:
+      operationId: DeviceAuthorizationApproval_1
+      description: 'Approves existing device code.
+
+        In case of setting tenant_uuid parameter in the request body or in the scope
+
+        the current user and target tenant should satisfy next requirements:
+
+        user should be a partner_admin,
+
+        user should have RW access to the target tenant,
+
+        target tenant should be personal,
+
+        target tenant''s owner should have protection_admin or backup_user roles.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deviceAuthorizationApprovalRequest'
+      responses:
+        '204':
+          description: Device code successfully approved.
+          content: {}
+        '400':
+          description: 'Invalid request parameters, device code expired or associated public client not found.
+
+            Scoped tenant or its owner not satisfied the requirements.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenError'
+        '403':
+          description: 'Current user is not authorized to access this endpoint or its method.
+
+            Current user has no access to the scoped tenant.
+
+            User code is invalid or the related device code already deleted.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokenError'
+      security:
+      - oauth2:
+        - urn:acronis.com::backup::backup_user
+        - urn:acronis.com::backup::protection_admin
+        - urn:acronis.com::files_cloud::sync_share_user
+      tags:
+      - IDP
+      summary: Device authorization approval 1
+      x-summary-source: derived
+  /idp/external-login:
+    get:
+      operationId: FetchOneTimeTokenLoginPage
+      description: 'Fetches an HTML page that handles the login flow from external systems with one-time tokens and redirects users to the provided
+
+        `targetURI`. The legacy way to provide one-time token and target URI is via the following URL fragment parameters:
+
+
+        - `ott` - a URL-encoded one-time token.
+
+        - `targetURI` - a URI the user should be redirected to on successful authentication.
+
+
+        Example: `/idp/external-login#ott=dG9rZW4gd2l0aCBzYWZlIGVuY29kaW5n&targetURI=https://example.com/app`.
+
+
+        Please use the query parameters instead to access up-to-date features like branding.'
+      parameters:
+      - name: ott
+        description: a URL-encoded one-time token.
+        in: query
+        schema:
+          description: a URL-encoded one-time token.
+          example: T1RUAQAAAIAAAAAAAAAAcumYC1v_T9C054zvFPGlQg%3D%3D
+          type: string
+      - name: targetURI
+        description: a URI the user should be redirected to on successful authentication.
+        in: query
+        schema:
+          description: a URI the user should be redirected to on successful authentication.
+          example: https%3A%2F%2Fexample.com
+          type: string
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            text/html:
+              schema:
+                example: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n</head>\n<script language=\"JavaScript\">\n    window.onload = function() {\n        let params = window.location.hash.substr(1).split('&').reduce(function (result, item) {\n            let parts = item.split('=');\n            result[parts[0]] = parts[1];\n            return result;\n        }, {});\n\n        let xhr = new XMLHttpRequest();\n        xhr.open('post', '/api/2/idp/ott/login');\n        xhr.setRequestHeader(\"Content-type\", \"application/json\");\n        xhr.setRequestHeader(\"X-Acronis-API\", \"1\")\n\n        xhr.onreadystatechange = function () {\n            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {\n                window.location.replace(params['targetURI']);\n            }\n        };\n        xhr.send(JSON.stringify({ott: decodeURIComponent(params['ott'])}));\n    };\n</script>\n<body>\n    <h5>{{ _('Please wait...') }}</h5>\n    <img src=\"/mc/logout\"/>\n    <img src=\"/bc/logout\"/>\n</body>\n</html>"
+      tags:
+      - IDP
+      summary: Fetch one time token login page
+      x-summary-source: derived
+components:
+  schemas:
+    tenantKind:
+      description: A tenant kind.
+      enum:
+      - root
+      - partner
+      - folder
+      - customer
+      - unit
+      type: string
+    items:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        created_at:
+          description: Date and time when contact was created.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        updated_at:
+          description: Last update timestamp, if contact has just been created - then is equal to `created_at`.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        types:
+          type: array
+          minItems: 0
+          uniqueItems: true
+          items:
+            enum:
+            - legal
+            - primary
+            - billing
+            - technical
+            - management
+            - company_billing
+            type: string
+        email:
+          $ref: '#/components/schemas/email'
+        address1:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        address2:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        country:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        state:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        city:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        zipcode:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        phone:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        firstname:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        lastname:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        title:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        website:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        industry:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        organization_size:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        email_confirmed:
+          description: This field can have a null value.
+          type:
+          - boolean
+          - 'null'
+        aan:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+    idpOttPost:
+      example:
+        login: user@mail.org
+        purpose: user_login
+        audit_data: external system support department user ID
+      type: object
+      additionalProperties: false
+      required:
+      - purpose
+      properties:
+        purpose:
+          description: Purposes of one-time tokens.
+          enum:
+          - user_login
+          - verify
+          type: string
+        login:
+          type: string
+        external_id:
+          type: string
+        user_id:
+          $ref: '#/components/schemas/uuid'
+        audit_data:
+          description: An arbitrary optional text field that could be later used for auditing purposes.
+          type: string
+    deviceAuthorizationApprovalRequest:
+      example:
+        code: RDRD-WNDB
+        tenant_uuid: ab7869a9-f5e1-4faf-a56c-5a0ae866dc41
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          description: The end-user verification code.
+          type: string
+        tenant_uuid:
+          $ref: '#/components/schemas/uuid'
+    business_types:
+      description: Business types.
+      type: array
+      items:
+        enum:
+        - buyer
+        type: string
+    userNotifications:
+      description: User notifications.
+      type: array
+      items:
+        enum:
+        - maintenance
+        - quota
+        - reports
+        - backup_error
+        - backup_warning
+        - backup_info
+        - backup_daily_report
+        - backup_critical
+        - device_control_warning
+        - certificate_management_error
+        - certificate_management_warning
+        - certificate_management_info
+        type: string
+    idpOtt:
+      example:
+        ott: dGhpcyBpcyB0ZXN0IG9uZS10aW1lIHRva2Vu
+      type: object
+      required:
+      - ott
+      properties:
+        ott:
+          description: A base64-encoded one-time token.
+          type: string
+    token:
+      example:
+        access_token: nowhere_to_apply
+        token_type: bearer
+        expires_in: 600
+        expires_on: 1388444763
+        id_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.....
+        refresh_token: OhYc9oko5ej9
+      type: object
+      required:
+      - access_token
+      - token_type
+      - id_token
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        expires_on:
+          type: integer
+        id_token:
+          type: string
+        refresh_token:
+          type: string
+    userRole:
+      description: Name of the user role.
+      enum:
+      - root_admin
+      - partner_admin
+      - company_admin
+      - unit_admin
+      - readonly_admin
+      - protection_admin
+      - protection_ro_admin
+      - restore_operator
+      - backup_user
+      - sync_share_admin
+      - sync_share_user
+      - sync_share_guest
+      - pds_operator
+      - pds_support
+      - notary_admin
+      - notary_user
+      - hci_admin
+      - omnivoice_admin
+      - omnivoice_user
+      - greathorn_admin
+      - greathorn_user
+      - greathorn_analyst
+      - greathorn_client_manager
+      type: string
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+    user:
+      example:
+        id: 948efcf2-b740-4c40-bb2d-4e4a46adfd87
+        version: 2
+        tenant_id: 0ef03214-6e47-4e50-87f2-a5955ba6095c
+        login: mylogin
+        contact:
+          id: 27f6f164-63dd-47df-b5b6-83a0fd117beb
+          created_at: '2020-05-19T11:50:00'
+          updated_at: '2020-05-19T11:50:00'
+          types: []
+          email: me@mysite.com
+          address1: '1440 River Drive #100'
+          address2: ''
+          country: USA
+          state: CA
+          zipcode: '12345'
+          city: Rivertown
+          phone: '123456789'
+          firstname: John
+          lastname: Doe
+          title: ''
+          website: ''
+          industry: ''
+          organization_size: ''
+          email_confirmed: false
+          aan: '111111'
+          deleted_at: '2020-05-19T11:50:00'
+        activated: true
+        enabled: true
+        created_at: '2016-06-22T18:25:16'
+        updated_at: '2016-06-22T18:25:16'
+        deleted_at: null
+        language: ru
+        idp_id: e6f73a28-ff2e-4728-8f78-49eb74b20fce
+        external_id: S-1-5-21-917267712-1342860078-1792151419-500
+        personal_tenant_id: 2f8ad2e2-28f2-11e7-aad1-5ffe2ad47151
+        business_types: []
+        notifications:
+        - maintenance
+        - quota
+        - reports
+        - backup_error
+        - backup_warning
+        - backup_info
+        - backup_daily_report
+        - backup_critical
+        - device_control_warning
+        - certificate_management_error
+        - certificate_management_warning
+        - certificate_management_info
+        mfa_status: setup_required
+        session_mfa_status: required
+        origin_id: pillr.mdr
+        origin_external_id: c66b1af2-2ac5-4764-8db6-97b054e7d27e
+        disable_after: '2017-06-22T18:25:16'
+        terms_accepted: true
+        tenant_kind: partner
+        tenant_pricing_model: trial
+        brand_id: a77b1af2-3ac5-576d-1db3-27b054e7d2aa
+      type: object
+      required:
+      - id
+      - version
+      - tenant_id
+      - login
+      - contact
+      - activated
+      - enabled
+      - created_at
+      - updated_at
+      - deleted_at
+      - language
+      - business_types
+      - notifications
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        login:
+          description: User's login.
+          type: string
+        contact:
+          $ref: '#/components/schemas/items'
+        activated:
+          description: Flag, indicates whether the user has been activated or not.
+          type: boolean
+        enabled:
+          description: Flag, indicates whether the user is enabled or disabled.
+          type: boolean
+        access_policies:
+          description: Will be returned with all user access policies if query param `with_access_policies` is provided.
+          type: array
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/items_1'
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        language:
+          description: Preferred locale.
+          type: string
+        idp_id:
+          $ref: '#/components/schemas/uuid'
+        external_id:
+          description: User's ID in external identity provider (e.g. SID in AD).
+          type: string
+        origin_id:
+          description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
+          type: string
+        origin_external_id:
+          description: User's external origin ID.
+          type: string
+        disable_after:
+          $ref: '#/components/schemas/item1'
+        personal_tenant_id:
+          description: UUID of user's personal tenant. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        business_types:
+          $ref: '#/components/schemas/business_types'
+        notifications:
+          $ref: '#/components/schemas/userNotifications'
+        mfa_status:
+          description: Multi-factor authentication status of the user.
+          enum:
+          - disabled
+          - forcibly_disabled
+          - setup_required
+          - enabled
+          type: string
+        session_mfa_status:
+          description: Multi-factor authentication status of the user session.
+          enum:
+          - passed_or_not_required
+          - passed_as_trusted
+          - required
+          type: string
+        external_operation_status:
+          description: Indicates if some external operation in progress for this user (his personal tenant).
+          enum:
+          - deleting
+          - recovering
+          type:
+          - string
+          - 'null'
+        terms_accepted:
+          description: Flag that defines if this user has accepted EULA.
+          type: boolean
+        login_totp_time:
+          description: The time when the user in the current session passed TOTP verification.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        tenant_kind:
+          $ref: '#/components/schemas/tenantKind'
+        tenant_pricing_model:
+          $ref: '#/components/schemas/pricingMode'
+        brand_id:
+          $ref: '#/components/schemas/uuid'
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    pricingMode:
+      description: Mode of tenant's pricing.
+      enum:
+      - trial
+      - production
+      - suspended
+      type: string
+    deviceAuthorizationApprovalResponse:
+      example:
+        client_id: fa6859a9-f5e1-4faf-a56c-5a0ae866dc4f
+        display_name: Super Device
+        scope:
+        - urn:acronis.com:tenant-id::backup_agent_admin
+        tenant_id: '822'
+        tenant_name: Ivan Ivanov
+        is_current_tenant: false
+      type: object
+      required:
+      - client_id
+      - display_name
+      - scope
+      properties:
+        client_id:
+          $ref: '#/components/schemas/uuid'
+        display_name:
+          description: Device display name (machine name, cluster ID, etc.).
+          type: string
+        scope:
+          description: Scopes requested or authorized by the end user for the client.
+          type: array
+          items:
+            type: string
+        tenant_id:
+          description: ID of the scoped tenant.
+          type: string
+        tenant_name:
+          description: Name of the scoped tenant.
+          type: string
+        is_current_tenant:
+          description: True if the tenant ID provided by ApiGW is in the path of the scoped tenant ID; false otherwise.
+          type: boolean
+    tokenIntrospectionResponse:
+      example:
+        active: true
+        token_type: access_token
+        exp: 1721745289
+        aud: mc-global.do.acronis.fun
+        jti: ded74262-94ab-490a-b852-0214fe09a7ad
+        iss: https://mc-global.do.acronis.fun/bc
+        sub: f5c64710-6726-5fea-97fd-b2263b9c4d8b
+        sub_type: c2c_backup_manager
+        client_id: f5c64710-6726-5fea-97fd-b2263b9c4d8b
+        owner_tuid: 7fce5f09-2e4b-4c26-8311-31a361c13190
+        scope:
+        - tid: '1'
+          tuid: 7fce5f09-2e4b-4c26-8311-31a361c13190
+          rn: task_manager
+          rp: queue_c2c_acc_registration
+          role: consumer
+        - tid: '1'
+          tuid: 7fce5f09-2e4b-4c26-8311-31a361c13190
+          rn: credentials_store
+          role: consumer
+      type: object
+      required:
+      - active
+      properties:
+        active:
+          type: boolean
+        token_type:
+          type: string
+        exp:
+          type: integer
+        aud:
+          type: string
+        jti:
+          type: string
+        iss:
+          type: string
+        sub:
+          type: string
+        sub_type:
+          type: string
+        client_id:
+          type: string
+        owner_tuid:
+          type: string
+        scope:
+          type: array
+          items:
+            type: object
+            properties:
+              tuid:
+                type: string
+              tid:
+                type: string
+              role:
+                type: string
+              rn:
+                type: string
+              rs:
+                type: string
+              rp:
+                type: string
+    items_1:
+      type: object
+      required:
+      - id
+      - version
+      - created_at
+      - updated_at
+      - deleted_at
+      - trustee_id
+      - trustee_type
+      - issuer_id
+      - tenant_id
+      - role_id
+      properties:
+        id:
+          description: Access policy unique identifier.
+          type: string
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        trustee_id:
+          description: Unique identifier of the Subject for whom access policy is granted.
+          type: string
+        trustee_type:
+          description: Type of the Subject for whom access policy is granted.
+          enum:
+          - user
+          - user_group
+          - client
+          type: string
+        issuer_id:
+          description: Issuer unique identifier.
+          type: string
+        tenant_id:
+          description: Tenant unique identifier.
+          type: string
+        resource_server_id:
+          description: Tenant unique identifier.
+          type: string
+        resource_namespace:
+          description: Resource namespace.
+          type: string
+        resource_path:
+          description: Resource path.
+          type: string
+        role_id:
+          $ref: '#/components/schemas/userRole'
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    idpOttLoginPost:
+      example:
+        ott: dGhpcyBpcyB0ZXN0IG9uZS10aW1lIHRva2Vu
+      type: object
+      additionalProperties: false
+      required:
+      - ott
+      properties:
+        ott:
+          type: string
+    email:
+      type: string
+      pattern: ^$|\S+@\S+
+    deviceAuthorizationResponse:
+      example:
+        device_code: qVqLLfXHCdFS7nT4M_WI-_hMGXaxzylUBhqZ-CXUPGd-g4B5CFQfgrrDFtHqxSX4
+        user_code: RDRD-WNDB
+        verification_uri: http://127.0.0.1:61827/abc
+        verification_uri_complete: http://127.0.0.1:61827/abc?code=RDRD-WNDB
+        expires_in: 30
+        interval: 100
+      type: object
+      required:
+      - device_code
+      - user_code
+      - verification_uri
+      properties:
+        device_code:
+          description: The device verification code.
+          type: string
+        user_code:
+          description: The end-user verification code.
+          type: string
+        verification_uri:
+          description: The end-user verification URI.
+          type: string
+        verification_uri_complete:
+          description: A verification URI that includes the `user_code`.
+          type: string
+        expires_in:
+          description: The lifetime in seconds of the `device_code` and `user_code`.
+          type: integer
+        interval:
+          description: The minimum interval time in seconds for the client polling requests to the token endpoint.
+          type: integer
+    tokenError:
+      type: object
+      required:
+      - error
+      - error_description
+      properties:
+        error:
+          enum:
+          - totp_setup_required
+          - totp_required
+          - invalid_totp
+          - access_denied
+          - invalid_request
+          type: string
+        error_description:
+          type: string
+    revokeError:
+      type: object
+      required:
+      - error
+      - error_description
+      properties:
+        error:
+          enum:
+          - invalid_client
+          - invalid_request
+          - unsupported_token_type
+          type: string
+        error_description:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

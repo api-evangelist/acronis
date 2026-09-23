@@ -1,0 +1,254 @@
+openapi: 3.2.0
+info:
+  title: Vault Manager Backed Up Resources API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/vault_manager/v1
+  variables: {}
+tags:
+- name: Backed Up Resources
+paths:
+  /backed_up_resources:
+    get:
+      operationId: Fetch backed up resources
+      description: Fetches a list of backed up resources.
+      x-ExtJS: VaultManager.ListBackedUpResources
+      parameters:
+      - name: vaultId
+        description: ID of vault to search backups for.
+        required: false
+        in: query
+        schema:
+          description: ID of vault to search backups for.
+          type: string
+          format: uuid
+      - name: archiveId
+        description: ID of archive to search backups for.
+        required: false
+        in: query
+        schema:
+          description: ID of archive to search backups for.
+          type: string
+          format: uuid
+      - name: tapeId
+        description: Filter backups for specified tapes.
+        required: false
+        in: query
+        schema:
+          description: Filter backups for specified tapes.
+          type: array
+          items:
+            description: Universally unique identifier.
+            type: string
+            format: uuid
+      - name: showDeleted
+        description: 'A flag that specifies what should be added to the list of returned returned backed up resources:
+
+
+          * 1 - Resources contained in live and deleted archives.
+
+          * 2 - Resources contained only in live and immutable archives.
+
+          * 3 - Resources contained in deleted archives only.
+
+          * 0 - Resources contained in live archives only.
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'A flag that specifies what should be added to the list of returned returned backed up resources:
+
+
+            * 1 - Resources contained in live and deleted archives.
+
+            * 2 - Resources contained only in live and immutable archives.
+
+            * 3 - Resources contained in deleted archives only.
+
+            * 0 - Resources contained in live archives only.
+
+            '
+          default: 0
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          type: integer
+      - name: before
+        description: 'Base64-encoded token obtained from the previous response.
+
+          Points to the end of the page.
+
+          '
+        in: query
+        schema:
+          description: 'Base64-encoded token obtained from the previous response.
+
+            Points to the end of the page.
+
+            '
+          type: string
+      - name: after
+        description: 'Base64-encoded token obtained from the previous response.
+
+          Points to the start of the page.
+
+          '
+        in: query
+        schema:
+          description: 'Base64-encoded token obtained from the previous response.
+
+            Points to the start of the page.
+
+            '
+          type: string
+      - name: offset
+        description: The number of elements to skip before beginning to return elements.
+        in: query
+        schema:
+          description: The number of elements to skip before beginning to return elements.
+          default: 0
+          type: integer
+      - name: limit
+        description: Limit the number of elements to return in one page.
+        in: query
+        schema:
+          description: Limit the number of elements to return in one page.
+          default: 100
+          type: integer
+          maximum: 1000
+      - name: count
+        description: Show total count in the response.
+        in: query
+        schema:
+          description: Show total count in the response.
+          default: false
+          type: boolean
+      - name: order
+        description: 'An ordering filter that orders the results by value of the specified properties.
+
+          Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+          Available operators:
+
+
+          * `asc` - ascending
+
+          * `desc` - descending
+
+          '
+        required: false
+        in: query
+        schema:
+          description: 'An ordering filter that orders the results by value of the specified properties.
+
+            Property in inner object can be specified using dot, e.g. orphanage.status.
+
+
+            Available operators:
+
+
+            * `asc` - ascending
+
+            * `desc` - descending
+
+            '
+          type: string
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  paging:
+                    title: Paging status
+                    description: Paging status.
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      total_count:
+                        description: Total number of selected items according given filters.
+                        type: integer
+                      cursors:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          after:
+                            description: A cursor that points to the end of the page of data that has been returned.
+                            type: string
+                          before:
+                            description: A cursor that points to the start of the page of data that has been returned.
+                            type: string
+                  items:
+                    type: array
+                    items:
+                      title: Resource
+                      description: Backed up resource description.
+                      type: object
+                      additionalProperties: false
+                      properties:
+                        id:
+                          description: ID of the resource.
+                          type: string
+                        name:
+                          description: Name of the resource.
+                          type: string
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+        - vault_manager::read
+        - protection::readonly
+      tags:
+      - Backed Up Resources
+      summary: Fetch backed up resources
+      x-summary-source: derived
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

@@ -1,0 +1,117 @@
+openapi: 3.2.0
+info:
+  title: Vault Manager Search Index Size Stats API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/vault_manager/v1
+  variables: {}
+tags:
+- name: Search Index Size Stats
+paths:
+  /search_index_size_stats/{tenantID}:
+    get:
+      operationId: Fetch archive search index size stats
+      description: Fetches a list of archives and their search index sizes for the tenant.
+      x-ExtJS: VaultManager.SearchIndexSize
+      parameters:
+      - name: archive_name
+        description: Archive Name.
+        required: false
+        in: query
+        schema:
+          description: Archive Name.
+          type: string
+      - name: tenantID
+        required: true
+        in: path
+        schema:
+          $ref: '#/components/schemas/tenant_id_18'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: false
+                  required:
+                  - archive_name
+                  - instance_id
+                  - index_size
+                  properties:
+                    archive_name:
+                      description: Name of the archive.
+                      type: string
+                    instance_id:
+                      description: ID of the instance which resource stored at.
+                      type: string
+                    index_size:
+                      description: Size of search index.
+                      type: integer
+      security:
+      - oauth2:
+        - vault_manager::system_admin
+        - vault_manager::admin
+      tags:
+      - Search Index Size Stats
+      summary: Fetch archive search index size stats
+      x-summary-source: derived
+components:
+  schemas:
+    item1:
+      description: Numeric identifier.
+      type: string
+      pattern: ^\d+$
+    id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    tenant_id_18:
+      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+      oneOf:
+      - $ref: '#/components/schemas/id'
+      - $ref: '#/components/schemas/item1'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        password:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            vault_manager::system_admin: ''
+            vault_manager::admin: ''
+            vault_manager::core_restore: ''
+            vault_manager::c2c_restore: ''
+            vault_manager::orphanage_readwrite: ''
+            vault_manager::read: ''
+            protection::readonly: ''
+            root_admin: ''
+            partner_admin: ''
+            infra_admin: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

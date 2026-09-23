@@ -1,0 +1,290 @@
+openapi: 3.2.0
+info:
+  title: PSA Taxes API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: Taxes
+paths:
+  /Taxes:
+    put:
+      operationId: Create tax
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaxRequestPayload'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  Id: 00000000-0000-0000-0000-000000000000
+                  Tenant: 00000000-0000-0000-0000-000000000000
+                  Name: ''
+                  Value: 0
+                  Active: false
+                  Code: ''
+                  AllowInactive: false
+                  IsDefault: false
+                type: object
+                additionalProperties: false
+                required:
+                - Active
+                - AllowInactive
+                - Code
+                - Id
+                - IsDefault
+                - Name
+                - Tenant
+                - Value
+                properties:
+                  Active:
+                    description: ''
+                    type: boolean
+                  AllowInactive:
+                    description: ''
+                    type: boolean
+                  Code:
+                    description: ''
+                    type: string
+                  Id:
+                    description: ''
+                    example: 00000000-0000-0000-0000-000000000000
+                    type: string
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  IsDefault:
+                    description: ''
+                    type: boolean
+                  Name:
+                    description: ''
+                    type: string
+                  Tenant:
+                    description: ''
+                    example: 00000000-0000-0000-0000-000000000000
+                    type: string
+                    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                  Value:
+                    description: ''
+                    type: number
+      security:
+      - oauth2: []
+      tags:
+      - Taxes
+      summary: Create tax
+      x-summary-source: derived
+    post:
+      operationId: Create taxes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - Tax
+              properties:
+                Tax:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TaxRequestPayload'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth2: []
+      tags:
+      - Taxes
+      summary: Create taxes
+      x-summary-source: derived
+    get:
+      operationId: Fetch tax
+      parameters:
+      - name: id
+        required: true
+        in: query
+        schema:
+          $ref: '#/components/schemas/Guid'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxResponsePayload'
+      security:
+      - oauth2: []
+      tags:
+      - Taxes
+      summary: Fetch tax
+      x-summary-source: derived
+    delete:
+      operationId: Delete tax
+      parameters:
+      - name: id
+        required: true
+        in: query
+        schema:
+          $ref: '#/components/schemas/Guid'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth2: []
+      tags:
+      - Taxes
+      summary: Delete tax
+      x-summary-source: derived
+components:
+  schemas:
+    TaxResponsePayload:
+      type: object
+      additionalProperties: false
+      required:
+      - Active
+      - AllowInactive
+      - Code
+      - Id
+      - IsDefault
+      - Name
+      - Tenant
+      - Value
+      properties:
+        Active:
+          description: ''
+          type: boolean
+        AllowInactive:
+          description: ''
+          type: boolean
+        Code:
+          description: ''
+          type: string
+        Id:
+          description: ''
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        IsDefault:
+          description: ''
+          type: boolean
+        Name:
+          description: ''
+          type: string
+        Tenant:
+          description: ''
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        Value:
+          description: ''
+          type: number
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    TaxRequestPayload:
+      type: object
+      additionalProperties: false
+      required:
+      - Name
+      properties:
+        Active:
+          description: ''
+          default: false
+          type: boolean
+        AllowInactive:
+          description: ''
+          default: false
+          type: boolean
+        Code:
+          type:
+          - string
+          - 'null'
+        Id:
+          description: ''
+          default: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        IsDefault:
+          description: ''
+          default: false
+          type: boolean
+        Name:
+          type:
+          - string
+          - 'null'
+        Tenant:
+          description: ''
+          default: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        Value:
+          description: ''
+          default: 0
+          type: number
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

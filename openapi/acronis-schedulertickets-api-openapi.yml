@@ -1,0 +1,234 @@
+openapi: 3.2.0
+info:
+  title: PSA Scheduler Tickets API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: SchedulerTickets
+paths:
+  /SchedulerTickets:
+    put:
+      operationId: Update Ticket
+      description: Covers ticket updates management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                ExternalUpdateId:
+                  type:
+                  - integer
+                  - 'null'
+                Note:
+                  type:
+                  - string
+                  - 'null'
+                TicketId:
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth2: []
+      tags:
+      - SchedulerTickets
+      summary: Update ticket
+      x-summary-source: derived
+    get:
+      operationId: Fetch Ticket updates
+      description: Covers ticket updates management
+      parameters:
+      - name: endDate
+        in: query
+        schema:
+          description: RFC3339-like date and time without timezone.
+          type:
+          - string
+          - 'null'
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+      - name: id
+        description: User id
+        required: true
+        in: query
+        schema:
+          description: User id
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      - name: startDate
+        in: query
+        schema:
+          description: RFC3339-like date and time without timezone.
+          type:
+          - string
+          - 'null'
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  Tickets: []
+                  PlannedTickets: []
+                  CalendarWorkingHours: []
+                  CalendarWorkingHoursFiltered: []
+                  calls: []
+                  Customers:
+                    customers: []
+                  BussinesUnits: []
+                  CalendarEvents: []
+                  Activities:
+                    Activities: []
+                    Paging:
+                      AmountRecordsFound: 0
+                      AmountOfPages: 0
+                      AmountTotalItems: 0
+                  DayOffs: []
+                type: object
+                additionalProperties: false
+                required:
+                - Activities
+                - BussinesUnits
+                - CalendarEvents
+                - CalendarWorkingHours
+                - CalendarWorkingHoursFiltered
+                - Customers
+                - DayOffs
+                - PlannedTickets
+                - Tickets
+                - calls
+                properties:
+                  Activities:
+                    type: object
+                    additionalProperties: false
+                    required:
+                    - Activities
+                    - Paging
+                    properties:
+                      Activities:
+                        type: array
+                        items: {}
+                      Paging:
+                        $ref: '#/components/schemas/Paging'
+                  BussinesUnits:
+                    type: array
+                    items: {}
+                  CalendarEvents:
+                    type: array
+                    items: {}
+                  CalendarWorkingHours:
+                    type: array
+                    items: {}
+                  CalendarWorkingHoursFiltered:
+                    type: array
+                    items: {}
+                  Customers:
+                    type: object
+                    additionalProperties: false
+                    required:
+                    - customers
+                    properties:
+                      customers:
+                        type: array
+                        items: {}
+                  DayOffs:
+                    type: array
+                    items: {}
+                  PlannedTickets:
+                    type: array
+                    items: {}
+                  Tickets:
+                    type: array
+                    items: {}
+                  calls:
+                    type: array
+                    items: {}
+      security:
+      - oauth2: []
+      tags:
+      - SchedulerTickets
+      summary: Fetch ticket updates
+      x-summary-source: derived
+components:
+  schemas:
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

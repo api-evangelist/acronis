@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Acronis Account Management Activities Agent Updates API
-  description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
+  title: Acronis Agent Management REST Agent Updates API
+  description: The Acronis Agent Management API provides endpoints for managing Acronis backup and protection agents registered across the platform, including listing agents, managing update settings, and hardware node management.
   version: '2.0'
   contact:
     name: Acronis Developer Portal
@@ -9,12 +9,12 @@ info:
   x-generated-from: documentation
   x-last-validated: '2026-04-19'
 servers:
-- url: https://{datacenter}.acronis.com/api/2
-  description: Acronis Cloud API - Account Management
+- url: https://{datacenter}.acronis.com/api/agent_manager/v2
+  description: Acronis Agent Management API
   variables:
     datacenter:
       default: eu2-cloud
-      description: Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)
+      description: Acronis datacenter region
 security:
 - bearerAuth: []
 tags:
@@ -105,31 +105,7 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
-  responses:
-    BadRequest:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    AgentUpdateSettings:
-      type: object
-      description: Configuration for automatic agent updates
-      properties:
-        update_channel:
-          type: string
-          enum:
-          - CURRENT
-          - STABLE
-          description: Update channel to use
-          example: STABLE
-        automatic:
-          type: boolean
-          description: Whether updates should be applied automatically
-          example: true
-        maintenance_window:
-          $ref: '#/components/schemas/MaintenanceWindow'
     MaintenanceWindow:
       type: object
       description: Time window for restricting automatic updates
@@ -155,6 +131,23 @@ components:
             - SATURDAY
             - SUNDAY
           description: Days when maintenance window applies
+    AgentUpdateSettings:
+      type: object
+      description: Configuration for automatic agent updates
+      properties:
+        update_channel:
+          type: string
+          enum:
+          - CURRENT
+          - STABLE
+          description: Update channel to use
+          example: STABLE
+        automatic:
+          type: boolean
+          description: Whether updates should be applied automatically
+          example: true
+        maintenance_window:
+          $ref: '#/components/schemas/MaintenanceWindow'
     Error:
       type: object
       properties:
@@ -162,13 +155,15 @@ components:
           type: integer
         message:
           type: string
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: OAuth2 bearer token obtained from /idp/token
-    basicAuth:
-      type: http
-      scheme: basic
-      description: Base64-encoded client_id:client_secret

@@ -1,87 +1,503 @@
 openapi: 3.2.0
 info:
-  title: Acronis Account Management Activities Hardware Nodes API
-  description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
-  version: '2.0'
-  contact:
-    name: Acronis Developer Portal
-    url: https://developer.acronis.com
-  x-generated-from: documentation
-  x-last-validated: '2026-04-19'
+  title: Acronis Hardware Nodes API
+  x-refined-note:
+  - x-generated-from differs across the merged source definitions and was not carried
+  - x-last-validated differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Hardware Nodes across 2 of this provider''s published API definitions: acronis-agents-v2-openapi.json, acronis-agent-management-openapi.yaml. Each path carries the servers of the definition it was published in.'
 servers:
-- url: https://{datacenter}.acronis.com/api/2
-  description: Acronis Cloud API - Account Management
+- url: https://dev-cloud.acronis.com/api/agent_manager/v2
+  variables: {}
+- url: https://{datacenter}.acronis.com/api/agent_manager/v2
+  description: Acronis Agent Management API
   variables:
     datacenter:
       default: eu2-cloud
-      description: Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)
-security:
-- bearerAuth: []
+      description: Acronis datacenter region
 tags:
 - name: Hardware Nodes
-  description: Hardware node management
 paths:
   /hardware_nodes:
     get:
-      operationId: listHardwareNodes
-      summary: Acronis List Hardware Nodes
-      description: List all hardware nodes visible from a specified tenant.
-      tags:
-      - Hardware Nodes
-      parameters:
-      - name: tenant_id
-        in: query
-        required: true
-        schema:
-          type: string
-          format: uuid
-        description: Tenant UUID to scope listing
+      operationId: FetchHardwareNodes
+      description: 'Fetches all hardware nodes visible by the specified tenant.
+
+
+        Result includes all nodes registered in this tenant and in all its child tenants that don''t
+
+        block parent access using visibility barrier.'
       responses:
         '200':
-          description: List of hardware nodes
+          description: Hardware node list was successfully retrieved.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HardwareNodeList'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
+                description: Hardware node list.
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    description: Collection of hardware node descriptions.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HardwareNode'
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_viewer
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Hardware Nodes
+      summary: Fetch hardware nodes
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/agent_manager/v2
+      variables: {}
   /hardware_nodes/{node_id}:
     get:
-      operationId: getHardwareNode
-      summary: Acronis Get Hardware Node
-      description: Retrieve specific hardware node information including storage configuration.
-      tags:
-      - Hardware Nodes
+      operationId: FetchHardwareNode
+      description: Fetches the specific hardware node.
       parameters:
       - name: node_id
-        in: path
+        description: The node ID.
         required: true
+        in: path
         schema:
+          description: The node ID.
           type: string
-        description: Hardware node identifier
       responses:
         '200':
-          description: Hardware node details
+          description: Hardware node description was successfully retrieved.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HardwareNode'
+                description: Hardware node description.
+                type: object
+                required:
+                - cpu
+                - storage
+                - ram
+                - id
+                - tenant_id
+                properties:
+                  cpu:
+                    description: CPU description.
+                    type: object
+                    required:
+                    - model
+                    - slots
+                    - cores
+                    properties:
+                      model:
+                        description: CPU model name.
+                        example: Intel Xeon E5-2620 V4 Broadwell-EP 2.0 GHz
+                        type: string
+                      slots:
+                        description: Total number of CPU slots.
+                        example: 2
+                        type: integer
+                        format: int32
+                      cores:
+                        description: Total number of CPU cores.
+                        example: 16
+                        type: integer
+                        format: int32
+                  agent_id:
+                    description: The identifier of the agent managing the node.
+                    type: string
+                  model:
+                    description: Hardware model name.
+                    example: BDR-R1008
+                    type: string
+                  storage:
+                    description: Storage description.
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HardwareNodeStorage'
+                  ram:
+                    description: RAM description.
+                    type: object
+                    required:
+                    - capacity
+                    properties:
+                      model:
+                        description: 'Model of RAM module.
+
+
+                          The model is not specified if several modules of different models are
+
+                          installed.
+
+                          '
+                        example: Samsung M393A4K40BB1-CRC
+                        type: string
+                      capacity:
+                        description: Total physical RAM capacity in bytes.
+                        example: 137438953472
+                        type: integer
+                        format: int64
+                  hardware_id:
+                    description: Hardware unique identifier.
+                    type: string
+                  id:
+                    description: Hardware node internal ID.
+                    type: string
+                  tenant_id:
+                    description: Tenant ID of the node owner.
+                    type: string
+                  serial_number:
+                    description: Hardware serial number.
+                    type: string
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
         '404':
-          $ref: '#/components/responses/NotFound'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
+          description: The requested entity cannot be found.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - AGENT_NOT_FOUND
+                    - AGENT_UNIT_NOT_FOUND
+                    - TENANT_NOT_FOUND
+                    - HARDWARE_NODE_NOT_FOUND
+                    - NOT_FOUND
+                    - UNATTENDED_AGENT_UPDATE_SETTINGS_NOT_FOUND
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_viewer
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Hardware Nodes
+      summary: Fetch hardware node
+      x-summary-source: derived
+    servers:
+    - url: https://dev-cloud.acronis.com/api/agent_manager/v2
+      variables: {}
 components:
   schemas:
-    Error:
+    HardwareNodeStorage:
+      description: Hardware node storage device description.
       type: object
+      required:
+      - type
+      - capacity
       properties:
-        code:
-          type: integer
-        message:
+        type:
+          description: Type of the device.
+          example: SSD
           type: string
+        capacity:
+          description: Total physical capacity of the device in bytes.
+          type: integer
+          format: int64
     HardwareNode:
+      description: Hardware node descriptor.
+      example:
+        id: 8f27a66f-71ff-4b5c-b665-75ec0f42b849
+        cpu:
+          model: Intel Xeon E5-2620 V4 Broadwell-EP 2.0 GHz
+          slots: 4
+          cores: 32
+        ram:
+          capacity: 68719476736
+        storage:
+        - type: SSD
+          capacity: 687194767360
+        tenant_id: '37'
+      type: object
+      required:
+      - id
+      - cpu
+      - ram
+      - storage
+      - tenant_id
+      properties:
+        id:
+          description: Hardware node internal ID.
+          type: string
+        agent_id:
+          description: The identifier of the agent managing the node.
+          type: string
+        model:
+          description: Hardware model name.
+          example: BDR-R1008
+          type: string
+        hardware_id:
+          description: Hardware unique identifier.
+          type: string
+        serial_number:
+          description: Hardware serial number.
+          type: string
+        cpu:
+          description: CPU description.
+          type: object
+          required:
+          - model
+          - slots
+          - cores
+          properties:
+            model:
+              description: CPU model name.
+              example: Intel Xeon E5-2620 V4 Broadwell-EP 2.0 GHz
+              type: string
+            slots:
+              description: Total number of CPU slots.
+              example: 2
+              type: integer
+              format: int32
+            cores:
+              description: Total number of CPU cores.
+              example: 16
+              type: integer
+              format: int32
+        ram:
+          description: RAM description.
+          type: object
+          required:
+          - capacity
+          properties:
+            model:
+              description: 'Model of RAM module.
+
+
+                The model is not specified if several modules of different models are
+
+                installed.
+
+                '
+              example: Samsung M393A4K40BB1-CRC
+              type: string
+            capacity:
+              description: Total physical RAM capacity in bytes.
+              example: 137438953472
+              type: integer
+              format: int64
+        storage:
+          description: Storage description.
+          type: array
+          items:
+            $ref: '#/components/schemas/HardwareNodeStorage'
+        tenant_id:
+          description: Tenant ID of the node owner.
+          type: string
+    HardwareNode_2:
       type: object
       description: Physical or virtual hardware node managed by Acronis
       properties:
@@ -106,7 +522,14 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/HardwareNode'
+            $ref: '#/components/schemas/HardwareNode_2'
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
   responses:
     NotFound:
       description: Not found
@@ -115,12 +538,56 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   securitySchemes:
+    oauth_2_0_user:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization.
+      flows:
+        password:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          tokenUrl: /api/2/idp/token
+        clientCredentials:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: OAuth2 bearer token obtained from /idp/token
-    basicAuth:
-      type: http
-      scheme: basic
-      description: Base64-encoded client_id:client_secret
+x-refined-from:
+- acronis-agents-v2-openapi.json
+- acronis-agent-management-openapi.yaml
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

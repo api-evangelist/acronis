@@ -1,0 +1,427 @@
+openapi: 3.2.0
+info:
+  title: PSA Invoice Overview API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: InvoiceOverview
+paths:
+  /InvoiceOverview:
+    post:
+      operationId: Update invoice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - invoice
+              properties:
+                invoice:
+                  $ref: '#/components/schemas/Guid'
+                paymentConfirmed:
+                  type: boolean
+                intPaymentType:
+                  type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - oauth2: []
+      tags:
+      - InvoiceOverview
+      summary: Update invoice
+      x-summary-source: derived
+    get:
+      operationId: Fetch invoice
+      parameters:
+      - name: Customer
+        description: Customer (GUID)
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: DeliveryMethod
+        description: Invoice's delivery method
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+      - name: DeliveryMethodByEmail
+        description: Invoice's delivery method "By email"
+        in: query
+        schema:
+          description: Invoice's delivery method "By email"
+          default: false
+          type: boolean
+      - name: DeliveryMethodByPost
+        description: Invoice's delivery method "By mail"
+        in: query
+        schema:
+          description: Invoice's delivery method "By mail"
+          default: false
+          type: boolean
+      - name: InvoiceNumber
+        description: Invoice number
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: PaymentSent
+        description: Invoice's payment link
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+      - name: PaymentSentNotSent
+        description: Invoice's payment link not sent
+        in: query
+        schema:
+          description: Invoice's payment link not sent
+          default: false
+          type: boolean
+      - name: PaymentSentSent
+        description: Invoice's payment link sent
+        in: query
+        schema:
+          description: Invoice's payment link sent
+          default: false
+          type: boolean
+      - name: PaymentStatus
+        description: Invoice's payment status
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+      - name: PaymentStatusConfirmed
+        description: Invoice's payment status confirmed
+        in: query
+        schema:
+          description: Invoice's payment status confirmed
+          default: false
+          type: boolean
+      - name: PaymentStatusNotConfirmed
+        description: Invoice's payment status not confirmed
+        in: query
+        schema:
+          description: Invoice's payment status not confirmed
+          default: false
+          type: boolean
+      - name: ShowExported
+        description: Allows filtering by exported Invoices
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+      - name: SortColumn
+        description: Invoice sorting options
+        in: query
+        schema:
+          description: Invoice sorting options
+          default: CustomerName
+          enum:
+          - CustomerName
+          - BatchNumber
+          - CreationDate
+          - ScheduleAt
+          - DeliveryMethod
+          - EmailSent
+          - PaymentConfirmed
+          - PaidDate
+          - InvoicedBy
+          - ExportDate
+          - Exported
+          - InvoiceNumber
+          - BilledFor
+          - PaymentMethod
+          - InvoiceTotal
+          type: string
+      - name: SortDirection
+        description: Invoice sorting direction ascending or descending
+        in: query
+        schema:
+          description: Invoice sorting direction ascending or descending
+          default: Asc
+          enum:
+          - Asc
+          - Desc
+          type: string
+      - name: Page
+        description: 'Invoice pagination options: page number.'
+        required: true
+        in: query
+        schema:
+          description: 'Invoice pagination options: page number.'
+          default: 0
+          type: integer
+      - name: PageSize
+        description: 'Invoice pagination options: page size.'
+        required: true
+        in: query
+        schema:
+          description: 'Invoice pagination options: page size.'
+          default: 0
+          type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                - InvoicesPagedSearchResult
+                properties:
+                  InvoicesPagedSearchResult:
+                    type: object
+                    additionalProperties: false
+                    required:
+                    - Invoices
+                    - Paging
+                    properties:
+                      Invoices:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Invoice'
+                      Paging:
+                        $ref: '#/components/schemas/Paging'
+      security:
+      - oauth2: []
+      tags:
+      - InvoiceOverview
+      summary: Fetch invoice
+      x-summary-source: derived
+components:
+  schemas:
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
+    Invoice:
+      type: object
+      additionalProperties: false
+      required:
+      - BatchNumber
+      - BillingEntityName
+      - CreationDate
+      - Customer
+      - CustomerName
+      - Exported
+      - ExportedDate
+      - Id
+      - Incasso
+      - InvoiceNumber
+      - InvoiceQueueErrorCount
+      - InvoiceQueueErrorMessage
+      - InvoiceQueueExternalInvoiceStatus
+      - InvoiceQueueId
+      - InvoiceQueueLastUpdateTime
+      - InvoiceQueueStatus
+      - InvoiceXml
+      - InvoicedBy
+      - InvoicerDeleted
+      - IsConsolidateBillingStructure
+      - PaymentDate
+      - PaymentSent
+      - PaymentStatus
+      - PaymentType
+      - ScheduledAt
+      - SendByEmail
+      - Tenant
+      - Total
+      properties:
+        BatchNumber:
+          description: ''
+          type: string
+        BillingEntityName:
+          description: ''
+          type: string
+        CreationDate:
+          description: ''
+          default: '0001-01-01T00:00:00+00:00'
+          type: string
+          format: date-time
+        Customer:
+          description: ''
+          default: 00000000-0000-0000-0000-000000000000
+          type: string
+        CustomerName:
+          type:
+          - string
+          - 'null'
+        Exported:
+          description: ''
+          default: false
+          type: boolean
+        ExportedDate:
+          description: ''
+          default: '0001-01-01T00:00:00+00:00'
+          type: string
+          format: date-time
+        Id:
+          description: ''
+          default: 00000000-0000-0000-0000-000000000000
+          type: string
+        Incasso:
+          description: ''
+          default: false
+          type: boolean
+        InvoiceNumber:
+          description: ''
+          type: string
+        InvoiceQueueErrorCount:
+          description: ''
+          default: 0
+          type: integer
+        InvoiceQueueErrorMessage:
+          description: ''
+          type: string
+        InvoiceQueueExternalInvoiceStatus:
+          description: ''
+          default: 0
+          type: integer
+        InvoiceQueueId:
+          description: ''
+          default: 00000000-0000-0000-0000-000000000000
+          type: string
+        InvoiceQueueLastUpdateTime:
+          description: ''
+          default: '0001-01-01T00:00:00'
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        InvoiceQueueStatus:
+          description: ''
+          default: 0
+          type: integer
+        InvoiceXml:
+          type:
+          - string
+          - 'null'
+        InvoicedBy:
+          type:
+          - string
+          - 'null'
+        InvoicerDeleted:
+          description: ''
+          type: boolean
+        IsConsolidateBillingStructure:
+          description: ''
+          default: false
+          type: boolean
+        PaymentDate:
+          description: ''
+          default: '0001-01-01T00:00:00'
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        PaymentSent:
+          description: ''
+          default: false
+          type: boolean
+        PaymentStatus:
+          description: ''
+          default: false
+          type: boolean
+        PaymentType:
+          description: ''
+          default: 0
+          type: integer
+        ScheduledAt:
+          description: ''
+          default: '0001-01-01T00:00:00'
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        SendByEmail:
+          description: ''
+          default: false
+          type: boolean
+        Tenant:
+          description: ''
+          default: 00000000-0000-0000-0000-000000000000
+          type: string
+        Total:
+          description: ''
+          default: 0
+          type: number
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

@@ -1,0 +1,347 @@
+openapi: 3.2.0
+info:
+  title: Event Manager Events API
+  description: Event Manager API describes the interface for event publishing and subscription management.
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/event_manager/v1
+  variables: {}
+tags:
+- name: Events
+paths:
+  /events:
+    get:
+      operationId: Fetch events
+      description: Fetch a batch of events starting from a specified cursor position, supporting real-time event consumption with optional limits and timeouts.
+      parameters:
+      - name: subscription_id
+        description: 'Required. Identifier of the subscription under which events are being consumed.  Used in conjunction with instance_id to manage event distribution.
+
+          '
+        required: true
+        in: query
+        schema:
+          description: 'Required. Identifier of the subscription under which events are being consumed.  Used in conjunction with instance_id to manage event distribution.
+
+            '
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: consumer_id
+        description: Required. Unique identifier for the consumer instance, ensuring event distribution among multiple instances.
+        required: true
+        in: query
+        schema:
+          description: Required. Unique identifier for the consumer instance, ensuring event distribution among multiple instances.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      - name: offset
+        description: Required. Specifies the starting point for event fetching, allowing instances to resume from a precise position.
+        required: true
+        in: query
+        schema:
+          description: Required. Specifies the starting point for event fetching, allowing instances to resume from a precise position.
+          type: integer
+          format: int64
+      - name: limit
+        description: Optional. Limits the number of events returned in one response. Helps manage processing load.
+        in: query
+        schema:
+          description: Optional. Limits the number of events returned in one response. Helps manage processing load.
+          default: 100
+          type: integer
+      - name: timeout
+        description: 'Optional. Time to wait for events to become available in ISO 8601 duration format. Can be decreased by the server to the session timeout of the subscription.
+
+          '
+        in: query
+        schema:
+          description: 'Optional. Time to wait for events to become available in ISO 8601 duration format. Can be decreased by the server to the session timeout of the subscription.
+
+            '
+          default: PT30S
+          type: string
+          pattern: ^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEventsResponse'
+        '401':
+          description: Method required an authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '403':
+          description: Current user has no permissions for this URL/method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '429':
+          description: "This response indicates that the client must retry the request later. There are two possible reasons:\n  1. **Non-leader consumer instance**: The client is attempting to consume events as a non-leader instance. \n    Only the leader instance is allowed to consume events. \n    The client should retry after the time specified in the `Retry-After` header to attempt to become the leader.\n  2. **Rate limiting**: The client has exceeded the allowed rate of event consumption, either by sending too many poll requests or consuming too many events in a given period. \n    The client should wait before retrying, as specified in the `Retry-After` header.\n"
+          headers:
+            Retry-After:
+              description: The time in seconds to wait before retrying the poll request.
+              required: true
+              schema:
+                description: The time in seconds to wait before retrying the poll request.
+                type: integer
+          content: {}
+        '500':
+          description: Internal service error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - oauth2:
+        - urn:acronis.com:event_manager:{cti_query}:subscriber
+      tags:
+      - Events
+      summary: Fetch events
+      x-summary-source: derived
+components:
+  schemas:
+    error:
+      description: Base error object
+      example:
+        domain: EventManager
+        code: invalidEvent
+        error: Bad Request
+        context:
+          errors:
+          - event_id: 62d2afda-685e-457f-8624-92132d97a7ed
+            message: 'Invalid payload: tenant_id is required'
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        message:
+          description: human-readable message, describing the error.
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kb_link:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    ErrorMessage:
+      type: object
+      additionalProperties: false
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/error'
+    GetEventsResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - offset
+      - events
+      properties:
+        offset:
+          description: Latest offset of the subscriber. This is the offset that should be used in the next poll request.
+          type: integer
+          format: int64
+        events:
+          description: A batch of events starting from the cursor position for each partition.
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Event'
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - line_tag
+      - ser_code
+      - version
+      - build
+      - product
+      - os
+      properties:
+        line_tag:
+          type: string
+        ser_code:
+          type: string
+        version:
+          type: string
+        build:
+          type: string
+        product:
+          type: string
+        os:
+          type: string
+    Event:
+      description: 'Defines the structure of the event that has occurred.
+
+        Events will contain two types of information: the event data representing the occurrence and context metadata providing contextual information about the occurrence. A single occurrence may result in more than one event.
+
+        Events are limited to a maximum size of 64KB, which includes both headers and payload.
+
+        '
+      x-cti.cti:
+      - cti.a.p.em.event.v1.0
+      - cti.a.p.em.msg.v1.0
+      x-cti.final: false
+      example:
+        id: eb39471d-a1c5-44d4-8a2a-cb413d720e87
+        type: cti.a.p.em.event.v1.0~a.p.test.async.event.v1.0
+        time: '2022-03-31T10:43:21Z'
+        ingest_time: '2021-04-15T19:41:40.1007002Z'
+        previous: 1
+        sequence: 2
+        source: '123'
+        tenant_id: abbf321a-7d6a-49c9-8538-47db342d1638
+        data:
+          message: Hello, World!
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - type
+      - time
+      - source
+      - tenant_id
+      properties:
+        id:
+          description: "Immutable, producer-generated identifier of this event instance.  While a randomly generated UUID or a similar mechanism is recommended for system-wide uniqueness, it is not possible to guarantee that no other producer will generate the same ID.\nUniqueness scope - Strongly RECOMMENDED to be a randomly generated UUIDv4 so collisions across producers are practically negligible. - Consumers and downstream services MAY assume uniqueness of `id` within the scope of `(type, id)`. \n  However a better alternative is `(sequence, type)` combination for persistent topics.\n\nGeneration rules - MUST be assigned by the producer when the event is created and MUST NOT change thereafter. - MUST NOT be the nil UUID (`00000000-0000-0000-0000-000000000000`) and MUST NOT be empty. - SHOULD be lowercase canonical UUID text with hyphens.\n"
+          example: 10c8cd6b-a8b3-4bac-b12f-ceae89c5e43f
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        type:
+          description: The specific event type.
+          x-cti.id: true
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        time:
+          description: 'Precise time when event has occurred. The time is set by the producer and may be set as past or future time. The time should be in UTC and formatted as ISO 8601.
+
+            '
+          example: '2021-03-13T22:43:50.1004002Z'
+          type: string
+          format: date-time
+        ingest_time:
+          description: 'Time when the event was received by Event Manager and fully controlled by the Event Manager. The time should be in UTC and formatted as ISO 8601.
+
+            '
+          x-apis.writeable: false
+          example: '2021-04-15T19:41:40.1007002Z'
+          type: string
+          format: date-time
+        previous:
+          description: 'Identifies the sequence number of the directly preceding event in the ordered topic stream. This field is used to explicitly link events in sequence, facilitating tracking of event order and detection of any missing events.
+
+            This field is optional for unordered topics (e.g. topic.ordering == NONE)
+
+            '
+          type: integer
+          format: int64
+        sequence:
+          description: 'A unique identifier that represents the position of this event within the overall event stream. This sequence number is crucial for maintaining the order of events within ordered topics.
+
+            In ''PRODUCER'' ordering mode, this number is assigned by the event producer.
+
+            In ''EVENTMANAGER'' ordering mode, this number is assigned by the event manager.
+
+            This field is optional for unordered topics (e.g. topic.ordering == NONE)
+
+            '
+          type: integer
+          format: int64
+        source:
+          description: 'The source that produced the event, specified by type and ID. It can be any context filled by Producer.
+
+            This field is not being processed by Event Manager and it''s up to Producer to define what to be specified in the source field.
+
+            This field could be used for debugging purposes or as additional information for Consumer
+
+            '
+          example: com.acronis.eu2-cloud/account-server/
+          type: string
+          maxLength: 1024
+        subject:
+          description: 'ID of the specific object where event (e.g. state change notification) happened. For example, it can be a task id in the cti.a.p.em.event.v1.0~a.p.task.created.v1.0 event
+
+            It can be omitted for cases where the event is not related to a specific object.
+
+            '
+          x-cti.overridable: true
+          example: 152a71d6-51cd-11ec-bf63-0242ac130002
+          type: string
+          maxLength: 1024
+        subject_type:
+          description: 'CTI type of the subject. Required to provide granular access to events associated with specific subject type.
+
+            If `allowed_subject_types` is defined for event type field value should represent same or derived CTI type.
+
+            '
+          x-cti.reference: true
+          x-cti.overridable: true
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        tenant_id:
+          description: Acronis tenant ID that generated the event
+          example: d52a71d6-51cd-11ec-bf63-0242ac130002
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        client_id:
+          description: Acronis API client ID (or Agent ID) that generated the event. Can be used to isolate events for different agents or clients
+          example: a52a71d6-51cd-11ec-bf63-0242ac130002
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        trace_parent:
+          description: ID of event which caused this event to connect event reactions. Typically this uuid should reference to parent event id
+          example: a6771d65-51cd-11ec-bf63-0242ac130002
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        data_ref:
+          description: Payload data stored in some external place, i.e. to impose additional authorization, would be identical content to data
+          example: https://s3.eu4-cloud.acronis.com/payloads/presentation_1
+          type: string
+          maxLength: 1024
+        data: {}
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a service authorization.
+      flows:
+        password:
+          scopes:
+            urn:acronis.com:event_manager:{cti_query}:publisher: ''
+            urn:acronis.com:event_manager:{cti_query}:subscriber: ''
+            urn:acronis.com:audit:{role|permissions}: ''
+          tokenUrl: /bc/ipd/token
+        clientCredentials:
+          scopes:
+            urn:acronis.com:event_manager:{cti_query}:publisher: ''
+            urn:acronis.com:event_manager:{cti_query}:subscriber: ''
+            urn:acronis.com:audit:{role|permissions}: ''
+          tokenUrl: /bc/ipd/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com:event_manager:{cti_query}:publisher: ''
+            urn:acronis.com:event_manager:{cti_query}:subscriber: ''
+            urn:acronis.com:audit:{role|permissions}: ''
+          authorizationUrl: /bc/ipd/authorize
+          tokenUrl: /bc/ipd/token

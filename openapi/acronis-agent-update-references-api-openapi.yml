@@ -1,0 +1,331 @@
+openapi: 3.2.0
+info:
+  title: Agents Agent Update References API
+  version: '2'
+servers:
+- url: https://dev-cloud.acronis.com/api/agent_manager/v2
+  variables: {}
+tags:
+- name: Agent Update References
+paths:
+  /agent_update_references:
+    get:
+      operationId: FetchAgentUpdateReferenceByAttributes
+      description: 'Fetches reference to agent update package that matches specified update channel, OS family,
+
+        OS architecture and white-labeled flag attributes.'
+      parameters:
+      - name: update_channel
+        description: Update channel the agent update belongs to.
+        required: true
+        in: query
+        schema:
+          description: Update channel the agent update belongs to.
+          enum:
+          - CURRENT
+          - STABLE
+          type: string
+      - name: os_family
+        description: Name of operating system family the update was built for.
+        required: true
+        in: query
+        schema:
+          description: Name of operating system family the update was built for.
+          enum:
+          - WINDOWS
+          - LINUX
+          - MACOSX
+          - SOLARIS
+          type: string
+      - name: os_arch
+        description: CPU architecture of operating system the update was built for.
+        required: true
+        in: query
+        schema:
+          description: CPU architecture of operating system the update was built for.
+          enum:
+          - X86
+          - X64
+          - ARM
+          - ARM64
+          type: string
+      - name: white_labeled
+        description: Flag specifying whether information about the update package that installs an agent that does not contain references to Acronis as its manufacturer ought to be returned.
+        in: query
+        schema:
+          description: Flag specifying whether information about the update package that installs an agent that does not contain references to Acronis as its manufacturer ought to be returned.
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: Agent update reference was successfully fetched.
+          content:
+            application/json:
+              schema:
+                description: Agent update reference.
+                type: object
+                required:
+                - version
+                - os_family
+                - os_arch
+                - url
+                - white_labeled
+                - update_channel
+                properties:
+                  version:
+                    description: Version of the update package.
+                    type: object
+                    required:
+                    - build
+                    - release_id
+                    properties:
+                      build:
+                        description: Build number.
+                        example: '42'
+                        type: string
+                      release_id:
+                        description: Release identifier.
+                        example: 1.0.0
+                        type: string
+                      release_name:
+                        description: Human-readable release name.
+                        type: string
+                  os_family:
+                    description: Name of operating system family the update was built for.
+                    enum:
+                    - WINDOWS
+                    - LINUX
+                    - MACOSX
+                    - SOLARIS
+                    type: string
+                  os_arch:
+                    description: CPU architecture of operating system the update was built for.
+                    enum:
+                    - X86
+                    - X64
+                    - ARM
+                    - ARM64
+                    type: string
+                  url:
+                    description: The update package URL.
+                    type: string
+                  white_labeled:
+                    description: Flag specifying whether the update package installs an agent that does not contain references to Acronis as its manufacturer.
+                    type: boolean
+                  update_channel:
+                    description: Update channel the agent update belongs to.
+                    enum:
+                    - CURRENT
+                    - STABLE
+                    type: string
+        '400':
+          description: Request is malformed.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - BAD_REQUEST
+                    - BAD_UNATTENDED_AGENT_UPDATE_SETTINGS
+                    - UNMARSHALLING_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '401':
+          description: User authorization failed. There are many reasons for the error.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - UNAUTHORIZED_REQUEST
+                    - AUTHENTICATION_TIMEOUT
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - GENERAL
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '403':
+          description: Access was denied for roles a user plays in Platform.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - ACCESS_DENIED
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '404':
+          description: The requested entity cannot be found.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - AGENT_NOT_FOUND
+                    - AGENT_UNIT_NOT_FOUND
+                    - TENANT_NOT_FOUND
+                    - HARDWARE_NODE_NOT_FOUND
+                    - NOT_FOUND
+                    - UNATTENDED_AGENT_UPDATE_SETTINGS_NOT_FOUND
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+        '500':
+          description: Service encountered an unexpected condition that prevented it from fulfilling the request.
+          content:
+            application/json:
+              schema:
+                description: REST error object.
+                type: object
+                required:
+                - code
+                - domain
+                - debug
+                properties:
+                  code:
+                    description: Domain-specific error code.
+                    enum:
+                    - MARSHALLING_ERROR
+                    - DATABASE_ERROR
+                    - BAD_RESPONSE
+                    - COMMUNICATION_ERROR
+                    type: string
+                  domain:
+                    description: Business domain the error belongs to.
+                    enum:
+                    - AGENT_MANAGER
+                    type: string
+                  debug:
+                    description: Additional information about the error.
+                    type: object
+                    required:
+                    - msg
+                    properties:
+                      msg:
+                        description: Error description.
+                        type: string
+      security:
+      - oauth_2_0_user:
+        - urn:acronis.com::agent_manager::agent_update_reference_viewer
+        - urn:acronis.com::agent_manager::admin
+      tags:
+      - Agent Update References
+      summary: Fetch agent update reference by attributes
+      x-summary-source: derived
+components:
+  securitySchemes:
+    oauth_2_0_user:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization.
+      flows:
+        password:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          tokenUrl: /api/2/idp/token
+        clientCredentials:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::agent_manager::admin: ''
+            urn:acronis.com::agent_manager::agent_registrar: ''
+            urn:acronis.com::agent_manager::agent_unregistrar: ''
+            urn:acronis.com::agent_manager::agent_update_reference_viewer: ''
+            urn:acronis.com::agent_manager::agent_update_settings_modifier: ''
+            urn:acronis.com::agent_manager::agent_update_settings_viewer: ''
+            urn:acronis.com::agent_manager::agent_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token

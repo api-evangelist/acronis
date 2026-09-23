@@ -1,0 +1,616 @@
+openapi: 3.2.0
+info:
+  title: Account Management Infra API
+  version: '2'
+servers:
+- url: https://dev-cloud.acronis.com/api/2
+  variables: {}
+tags:
+- name: Infra
+paths:
+  /infra:
+    get:
+      operationId: FetchInfrastructuresBatch
+      description: Fetches batch of infrastructure components.
+      parameters:
+      - name: uuids
+        description: Comma-separated list of infrastructures' UUIDs.
+        required: true
+        in: query
+        schema:
+          description: Comma-separated list of infrastructures' UUIDs.
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed,248c535a-0ebe-11e7-a80e-bbdaa1d60c7c
+          type: string
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/infraBatch'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+        - urn:acronis.com::account-server::readonly_admin
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Infra
+      summary: Fetch infrastructures batch
+      x-summary-source: derived
+    post:
+      operationId: RegisterInfrastructure
+      description: Registers a new infrastructure component.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/infraPost'
+      responses:
+        '201':
+          description: Infrastructure component was successfully registered.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/infra'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Infra
+      summary: Register infrastructure
+      x-summary-source: derived
+  /infra/{infra_id}:
+    delete:
+      operationId: UnregisterInfrastructure
+      description: Unregisters infrastructure component.
+      parameters:
+      - name: force
+        description: 'If true, existing usage will be ignored in case there are no customer tenants having offering items associated with this infrastructure component turned on.
+
+          '
+        in: query
+        schema:
+          description: 'If true, existing usage will be ignored in case there are no customer tenants having offering items associated with this infrastructure component turned on.
+
+            '
+          type: boolean
+      - name: version
+        description: Growing number of object internal version.
+        required: true
+        in: query
+        schema:
+          description: Growing number of object internal version.
+          example: 1559561146223
+          type: integer
+      - name: infra_id
+        description: Infrastructure component ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Infrastructure component ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: Infrastructure component was successfully unregistered.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Infra
+      summary: Unregister infrastructure
+      x-summary-source: derived
+    put:
+      operationId: UpdateInfrastructure
+      description: Updates infrastructure component.
+      parameters:
+      - name: infra_id
+        description: Infrastructure component ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Infrastructure component ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/infraPut'
+      responses:
+        '200':
+          description: Infrastructure component was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/infra'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Infra
+      summary: Update infrastructure
+      x-summary-source: derived
+    get:
+      operationId: FetchInfrastructure
+      description: Fetches infrastructure component.
+      parameters:
+      - name: infra_id
+        description: Infrastructure component ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Infrastructure component ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/infra'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+        - urn:acronis.com::account-server::readonly_admin
+      tags:
+      - Infra
+      summary: Fetch infrastructure
+      x-summary-source: derived
+components:
+  schemas:
+    infraBatch:
+      example:
+        items:
+        - id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
+          owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+          location_id: f79546d7-d051-4e19-96f3-4cc68c2c5575
+          platform_owned: true
+          name: Infrastructure Component
+          url: acronis+fes://storage20.corp.acronis.com:44445
+          capabilities:
+          - backup
+          - files_cloud
+          content_url: https://browse.storage20.corp.acronis.com/
+          content_mobile_url: https://browse.storage20.corp.acronis.com/mobile/
+          backend_type: azure
+          version: 3
+        - id: 3d1efc54-4e9a-4db1-abe6-7d2aee50cead
+          owner_tenant_id: 3f545595-0e77-4a34-9259-dab5256f9559
+          location_id: bfdf24b0-5a72-49a8-a2bd-2fc7c085ff7b
+          platform_owned: false
+          name: DR Infrastructure Component
+          url: amazon+s3://dr.corp.acronis.com
+          capabilities:
+          - disaster_recovery
+          backend_type: acronis
+          version: 5
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/infra'
+    infra:
+      example:
+        id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
+        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+        location_id: f79546d7-d051-4e19-96f3-4cc68c2c5575
+        platform_owned: true
+        name: Infrastructure Component
+        url: acronis+fes://storage20.corp.acronis.com:44445
+        capabilities:
+        - backup
+        - disaster_recovery
+        content_url: https://browse.storage20.corp.acronis.com/
+        content_mobile_url: https://browse.storage20.corp.acronis.com/mobile/
+        backend_type: azure
+        version: 3
+        readonly: false
+      type: object
+      required:
+      - id
+      - owner_tenant_id
+      - location_id
+      - platform_owned
+      - name
+      - url
+      - capabilities
+      - backend_type
+      - version
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        owner_tenant_id:
+          $ref: '#/components/schemas/uuid'
+        location_id:
+          $ref: '#/components/schemas/uuid'
+        platform_owned:
+          description: Is infra component owned by Platform.
+          type: boolean
+        name:
+          description: Human-readable name of infrastructure component that will be displayed to the users.
+          type: string
+        url:
+          $ref: '#/components/schemas/link'
+        capabilities:
+          description: Capabilities of infrastructure component.
+          type: array
+          items:
+            $ref: '#/components/schemas/infraCap'
+        content_url:
+          $ref: '#/components/schemas/link'
+        content_mobile_url:
+          $ref: '#/components/schemas/link'
+        backend_type:
+          $ref: '#/components/schemas/backendType'
+        version:
+          description: Auto-incremented infrastructure component version.
+          type: integer
+        readonly:
+          description: True if infra details are accessible in a limited way, e.g. infra is owned by some ancestor.
+          type: boolean
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    infraPut:
+      example:
+        name: Infrastructure Component
+        url: acronis+fes://storage20.corp.acronis.com:44445
+        capabilities:
+        - files_cloud
+        content_url: https://browse.storage20.corp.acronis.com/
+        content_mobile_url: https://browse.storage20.corp.acronis.com/mobile/
+        backend_type: azure
+        version: 10
+      type: object
+      additionalProperties: false
+      required:
+      - version
+      properties:
+        name:
+          description: Human-readable name of infrastructure component that will be displayed to the users.
+          type: string
+        location_id:
+          $ref: '#/components/schemas/uuid'
+        url:
+          $ref: '#/components/schemas/link'
+        capabilities:
+          description: Capabilities of infrastructure component.
+          type: array
+          items:
+            $ref: '#/components/schemas/infraCap'
+        content_url:
+          $ref: '#/components/schemas/link'
+        content_mobile_url:
+          $ref: '#/components/schemas/link'
+        backend_type:
+          $ref: '#/components/schemas/backendType'
+        version:
+          description: Auto-incremented infrastructure component version.
+          type: integer
+    infraCap:
+      description: Capability of infrastructure component.
+      enum:
+      - backup
+      - disaster_recovery
+      - files_cloud
+      - vcd
+      type: string
+    infraPost:
+      example:
+        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+        location_id: bfdf24b0-5a72-49a8-a2bd-2fc7c085ff7b
+        name: Default Infrastructure Component
+        url: acronis+fes://storage20.acronis.com:44445
+        capabilities:
+        - backup
+        - disaster_recovery
+        content_url: https://browse.storage20.acronis.com/
+        content_mobile_url: https://browse.storage20.acronis.com/mobile/
+        backend_type: azure
+      type: object
+      additionalProperties: false
+      required:
+      - owner_tenant_id
+      - name
+      - url
+      - capabilities
+      properties:
+        owner_tenant_id:
+          $ref: '#/components/schemas/uuid'
+        location_id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          description: Human-readable name of infrastructure component that will be displayed to the users.
+          type: string
+        url:
+          $ref: '#/components/schemas/link'
+        capabilities:
+          description: Capabilities of infrastructure component.
+          type: array
+          items:
+            $ref: '#/components/schemas/infraCap'
+        content_url:
+          $ref: '#/components/schemas/link'
+        content_mobile_url:
+          $ref: '#/components/schemas/link'
+        backend_type:
+          $ref: '#/components/schemas/backendType'
+    backendType:
+      description: Storage backend type.
+      type:
+      - string
+      - 'null'
+    link:
+      description: URL.
+      type: string
+      pattern: ^[a-z0-9\+]+:\/\/[^\s\/$.?#].[^\s]*
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

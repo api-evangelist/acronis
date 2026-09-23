@@ -1,332 +1,2667 @@
 openapi: 3.2.0
 info:
-  title: Acronis Account Management Activities Tenants API
-  description: The Acronis Account Management API provides endpoints for managing tenants, users, OAuth clients, applications, licensing (offering items), usage reporting, infrastructure, and branding within the Acronis Cyber Protect Cloud platform.
-  version: '2.0'
-  contact:
-    name: Acronis Developer Portal
-    url: https://developer.acronis.com
-  x-generated-from: documentation
-  x-last-validated: '2026-04-19'
+  title: Account Management Tenants API
+  version: '2'
 servers:
-- url: https://{datacenter}.acronis.com/api/2
-  description: Acronis Cloud API - Account Management
-  variables:
-    datacenter:
-      default: eu2-cloud
-      description: Acronis datacenter region (e.g., us-cloud, eu2-cloud, au-cloud)
-security:
-- bearerAuth: []
+- url: https://dev-cloud.acronis.com/api/2
+  variables: {}
 tags:
 - name: Tenants
-  description: Tenant hierarchy management and configuration
 paths:
   /tenants:
     get:
-      operationId: listTenants
-      summary: Acronis List Tenants
-      description: List tenants in the hierarchy. Can filter by parent tenant UUID or retrieve by specific UUIDs.
-      tags:
-      - Tenants
+      operationId: FetchTenantsBatch
+      description: 'Available in cloud version only.
+
+
+        Fetches details about multiple tenants specified by their UUIDs or about child tenants of a specific tenant specified by its UUID.'
       parameters:
-      - name: parent_id
-        in: query
-        description: Filter tenants by parent tenant UUID
-        schema:
-          type: string
-          format: uuid
       - name: uuids
+        description: 'A filter by comma-separated list of tenants'' UUIDs. Maximum of 100 UUIDs.
+
+          Is mutually exclusive with `subtree_root_id` and `parent_id`.
+
+          '
         in: query
-        description: Comma-separated list of tenant UUIDs to retrieve
         schema:
+          description: 'A filter by comma-separated list of tenants'' UUIDs. Maximum of 100 UUIDs.
+
+            Is mutually exclusive with `subtree_root_id` and `parent_id`.
+
+            '
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed,248c535a-0ebe-11e7-a80e-bbdaa1d60c7c
           type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}(,[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})*'
+          minLength: 36
+      - name: parent_id
+        description: 'The UUID of a tenant which child tenants will be fetched.
+
+          Is mutually exclusive with `subtree_root_id` and `uuids`.
+
+          '
+        in: query
+        schema:
+          description: 'The UUID of a tenant which child tenants will be fetched.
+
+            Is mutually exclusive with `subtree_root_id` and `uuids`.
+
+            '
+          example: 370b7f6a-43ce-4028-ad69-ea47f7b04ee4
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
       - name: subtree_root_id
+        description: 'Filter to fetch tenants hierarchy starting from (including) the specified one. Sorting by tenant level is always assumed.
+
+          Is mutually exclusive with `uuids` and `parent_id`.
+
+          '
         in: query
-        description: Root tenant UUID for subtree traversal
         schema:
+          description: 'Filter to fetch tenants hierarchy starting from (including) the specified one. Sorting by tenant level is always assumed.
+
+            Is mutually exclusive with `uuids` and `parent_id`.
+
+            '
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed
           type: string
-          format: uuid
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: updated_since
+        description: A filter by tenants that were updated after the specified RFC3339 timestamp in UTC time zone.
+        in: query
+        schema:
+          description: A filter by tenants that were updated after the specified RFC3339 timestamp in UTC time zone.
+          example: '2016-02-28T16:41:41.090Z'
+          type: string
+          format: date-time
+      - name: limit
+        description: Number of elements to return in current offering items page of the response.
+        in: query
+        schema:
+          description: Number of elements to return in current offering items page of the response.
+          default: 5000
+          type: integer
+          minimum: 1
+      - name: after
+        description: 'Cursor to fetch the next tenants page. The cursor encodes all the filtering and sorting arguments, thus client does not need to provide all them for the next page, only cursor should be provided. Client can get the cursor from `paging.cursors.after` field of the previous page response.
+
+          '
+        in: query
+        schema:
+          description: 'Cursor to fetch the next tenants page. The cursor encodes all the filtering and sorting arguments, thus client does not need to provide all them for the next page, only cursor should be provided. Client can get the cursor from `paging.cursors.after` field of the previous page response.
+
+            '
+          type: string
+      - name: lod
+        description: 'A predefined level of details for the tenant object to return.
+
+
+          The following levels of details can be specified:
+
+          -   `stamps` - includes `id`, `parent_id`, `version`, `created_at`, `updated_at`, `deleted_at`, `contacts`, `offering_items`.
+
+          -   `basic` - includes all stamps fields plus `name`, `kind`, `enabled`.
+
+          -   `full` - includes all basic fields plus `customer_type`, `customer_id`, `brand_id`, `brand_uuid`, `brand_enabled`, `barrier`, `internal_tag`, `language`, `owner_id`, `has_children`, `default_idp_id`, `update_lock`, `ancestral_access`, `mfa_status`, `pricing_mode`, `contact`, `external_operation_status`, `production_start_date`.'
+        in: query
+        schema:
+          description: 'A predefined level of details for the tenant object to return.
+
+
+            The following levels of details can be specified:
+
+            -   `stamps` - includes `id`, `parent_id`, `version`, `created_at`, `updated_at`, `deleted_at`, `contacts`, `offering_items`.
+
+            -   `basic` - includes all stamps fields plus `name`, `kind`, `enabled`.
+
+            -   `full` - includes all basic fields plus `customer_type`, `customer_id`, `brand_id`, `brand_uuid`, `brand_enabled`, `barrier`, `internal_tag`, `language`, `owner_id`, `has_children`, `default_idp_id`, `update_lock`, `ancestral_access`, `mfa_status`, `pricing_mode`, `contact`, `external_operation_status`, `production_start_date`.'
+          default: full
+          enum:
+          - stamps
+          - basic
+          - full
+          type: string
+      - name: with_contacts
+        description: If true, all tenants' referencing contacts will be returned in the response.
+        in: query
+        schema:
+          description: If true, all tenants' referencing contacts will be returned in the response.
+          type: boolean
+      - name: with_offering_items
+        description: If true, only tenants with count offering items will be returned in the response.
+        in: query
+        schema:
+          description: If true, only tenants with count offering items will be returned in the response.
+          type: boolean
+      - name: with_infra_offering_items
+        description: If true, only tenants with infra offering items will be returned in the response.
+        in: query
+        schema:
+          description: If true, only tenants with infra offering items will be returned in the response.
+          type: boolean
+      - name: expand_offering_items
+        description: If true, all tenants' offering items will be returned in the response.
+        in: query
+        schema:
+          description: If true, all tenants' offering items will be returned in the response.
+          type: boolean
+      - name: include_relative_path
+        description: 'If true, fetches the hierarchy of tenants starting from (and including) the trustee tenant up to the tenants with the specified UUIDs. Only tenants in the path between the trustee and the target tenants will be returned.
+
+          Is mutually exclusive with `subtree_root_id` and `parent_id`.
+
+          '
+        in: query
+        schema:
+          description: 'If true, fetches the hierarchy of tenants starting from (and including) the trustee tenant up to the tenants with the specified UUIDs. Only tenants in the path between the trustee and the target tenants will be returned.
+
+            Is mutually exclusive with `subtree_root_id` and `parent_id`.
+
+            '
+          type: boolean
+      - name: allow_deleted
+        description: If true, deleted tenants may be returned.
+        in: query
+        schema:
+          description: If true, deleted tenants may be returned.
+          type: boolean
       responses:
         '200':
-          description: List of tenants
+          description: The request was successful.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TenantList'
-              examples:
-                ListTenants200Example:
-                  summary: Default listTenants 200 response
-                  x-microcks-default: true
-                  value:
-                    items:
-                    - id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-                      name: My Company
-                      kind: customer
-                      enabled: true
-                      parent_id: root-tenant-uuid
-                      created_at: '2025-03-15T14:30:00Z'
+                $ref: '#/components/schemas/tenantBatch'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
         '403':
-          $ref: '#/components/responses/Forbidden'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-    post:
-      operationId: createTenant
-      summary: Acronis Create Tenant
-      description: Create a new tenant as a child of an existing tenant.
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
       tags:
       - Tenants
+      summary: Fetch tenants batch
+      x-summary-source: derived
+    post:
+      operationId: CreateTenant
+      description: Creates a new tenant.
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TenantRequest'
-            examples:
-              CreateTenantRequestExample:
-                summary: Default createTenant request
-                x-microcks-default: true
-                value:
-                  name: New Partner Tenant
-                  kind: partner
-                  parent_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+              $ref: '#/components/schemas/tenantPost'
       responses:
         '201':
-          description: Tenant created
+          description: Tenant was successfully created.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tenant'
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                $ref: '#/components/schemas/tenant'
         '401':
-          $ref: '#/components/responses/Unauthorized'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-  /tenants/{tenant_id}:
-    get:
-      operationId: getTenant
-      summary: Acronis Get Tenant
-      description: Retrieve details about a specific tenant by ID.
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
       tags:
       - Tenants
+      summary: Create tenant
+      x-summary-source: derived
+  /tenants/applications:
+    get:
+      operationId: FetchTenantsApplicationsBatch
+      description: Fetches a batch of applications' UUIDs for the provided list of tenants.
       parameters:
-      - name: tenant_id
-        in: path
+      - name: tenants
+        description: A filter of applications by comma-separated list of tenants' UUIDs.
         required: true
+        in: query
         schema:
+          description: A filter of applications by comma-separated list of tenants' UUIDs.
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed,248c535a-0ebe-11e7-a80e-bbdaa1d60c7c
           type: string
-          format: uuid
-        description: Tenant UUID
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}(,[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})*'
+          minLength: 36
       responses:
         '200':
-          description: Tenant details
+          description: The request was successful.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tenant'
-        '404':
-          $ref: '#/components/responses/NotFound'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-    put:
-      operationId: updateTenant
-      summary: Acronis Update Tenant
-      description: Update tenant properties including name, contact, and enabled status.
+                $ref: '#/components/schemas/batchApplicationList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
       tags:
       - Tenants
+      summary: Fetch tenants applications batch
+      x-summary-source: derived
+  /tenants/offering_items:
+    get:
+      operationId: FetchTenantOfferingItemsBatch
+      description: Fetches a batch of the offering items with their states and associated quotas.
       parameters:
-      - name: tenant_id
-        in: path
+      - name: subtree_root_tenant_id
+        description: A filter by tenants tree starting from the specified tenant ID. Sorting by tenant level is always assumed.
         required: true
+        in: query
         schema:
+          description: A filter by tenants tree starting from the specified tenant ID. Sorting by tenant level is always assumed.
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed
           type: string
-          format: uuid
-        description: Tenant UUID
-      requestBody:
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: usage_names
+        description: A filter of offering items by comma-separated list of usage names.
+        in: query
+        schema:
+          description: A filter of offering items by comma-separated list of usage names.
+          example: storage,local_storage
+          type: string
+      - name: editions
+        description: A filter of offering items by comma-separated list of editions.
+        in: query
+        schema:
+          description: A filter of offering items by comma-separated list of editions.
+          example: standard,advanced,disaster_recovery
+          type: string
+      - name: offering_items
+        description: A filter of offering items by comma-separated offering item names.
+        in: query
+        schema:
+          description: A filter of offering items by comma-separated offering item names.
+          example: vms,workstations
+          type: string
+      - name: updated_since
+        description: A filter by offering items that were updated after the specified RFC3339 timestamp in UTC time zone.
+        in: query
+        schema:
+          description: A filter by offering items that were updated after the specified RFC3339 timestamp in UTC time zone.
+          example: '2016-02-28T16:41:41.090Z'
+          type: string
+          format: date-time
+      - name: limit
+        description: Number of elements to return in current offering items page of the response.
+        in: query
+        schema:
+          description: Number of elements to return in current offering items page of the response.
+          default: 5000
+          type: integer
+          minimum: 1
+      - name: after
+        description: 'Cursor to fetch the next offering items page. The cursor encodes all the filtering and sorting arguments, thus client does not need to provide all them for the next page, only cursor should be provided. Client can get the cursor from `paging.cursors.after` field of the previous page response.
+
+          '
+        in: query
+        schema:
+          description: 'Cursor to fetch the next offering items page. The cursor encodes all the filtering and sorting arguments, thus client does not need to provide all them for the next page, only cursor should be provided. Client can get the cursor from `paging.cursors.after` field of the previous page response.
+
+            '
+          type: string
+      - name: allow_deleted
+        description: If true, deleted offering items may be returned.
+        in: query
+        schema:
+          description: If true, deleted offering items may be returned.
+          type: boolean
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offeringItemList'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant offering items batch
+      x-summary-source: derived
+  /tenants/usages:
+    get:
+      operationId: FetchTenantsUsagesBatch
+      description: Fetches a batch of usages of the tenant.
+      parameters:
+      - name: tenants
+        description: A filter of usages by comma-separated list of tenants' UUIDs.
         required: true
+        in: query
+        schema:
+          description: A filter of usages by comma-separated list of tenants' UUIDs.
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed,248c535a-0ebe-11e7-a80e-bbdaa1d60c7c
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}(,[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})*'
+          minLength: 36
+      - name: usage_names
+        description: A filter of usages by comma-separated list of usage names.
+        in: query
+        schema:
+          description: A filter of usages by comma-separated list of usage names.
+          example: storage,local_storage
+          type: string
+      - name: editions
+        description: A filter of usages by comma-separated list of editions.
+        in: query
+        schema:
+          description: A filter of usages by comma-separated list of editions.
+          example: standard,advanced,disaster_recovery
+          type: string
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/batchUsageList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenants usages batch
+      x-summary-source: derived
+    put:
+      operationId: UpdateTenantsUsages
+      description: 'Updates the values of the usages specified in `usage_type` or
+
+        associated with the offering items specified in `offering_item`.
+
+
+        Depending on the combination of provided fields, the usage may be
+
+        reported either per tenant or per resource. See the descriptions of
+
+        the fields for more details.
+
+
+        Trustee is restricted either to be registered within root tenant kind or to have configured
+
+        CyberApp (origin_id) with fully provisioned auth-consents through Application Manager
+
+        Account server applications (not to be confused with CyberApps) are restricted
+
+        to the enablement of offering items with nested usage types marked with the acc-app (origin_id)
+
+
+        In case of failure the response body will contain a not-empty "error" field for each failed item.'
+      requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TenantRequest'
+              $ref: '#/components/schemas/usagePut'
       responses:
         '200':
-          description: Tenant updated
+          description: ''
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tenant'
-        '404':
-          $ref: '#/components/responses/NotFound'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-    delete:
-      operationId: deleteTenant
-      summary: Acronis Delete Tenant
-      description: Delete a tenant. The tenant must have no children or active services.
+                $ref: '#/components/schemas/usagePutResult'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::accounts::licensing_admin
+        - urn:acronis.com::accounts::usage_reporter
       tags:
       - Tenants
+      summary: Update tenants usages
+      x-summary-source: derived
+  /tenants/{tenant_id}:
+    delete:
+      operationId: DeleteTenant
+      description: Deletes a tenant by ID.
       parameters:
-      - name: tenant_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-        description: Tenant UUID
       - name: version
-        in: query
+        description: Growing number of object internal version.
         required: true
+        in: query
         schema:
+          description: Growing number of object internal version.
+          example: 1559561146223
           type: integer
-        description: Tenant version for optimistic concurrency
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
       responses:
         '204':
-          description: Tenant deleted
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '409':
-          $ref: '#/components/responses/Conflict'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
-  /search:
-    get:
-      operationId: search
-      summary: Acronis Search Tenants and Users
-      description: Search for tenants and users by name, email, or login across the accessible hierarchy.
-      tags:
-      - Tenants
-      parameters:
-      - name: query
-        in: query
-        required: true
-        schema:
-          type: string
-        description: Search query string
-      - name: tenant_id
-        in: query
-        schema:
-          type: string
-          format: uuid
-        description: Scope search to a specific tenant subtree
-      - name: limit
-        in: query
-        schema:
-          type: integer
-          default: 10
-        description: Maximum results to return
-      responses:
-        '200':
-          description: Search results
+          description: Tenant was successfully deleted.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SearchResults'
-      x-microcks-operation:
-        delay: 0
-        dispatcher: FALLBACK
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Tenants
+      summary: Delete tenant
+      x-summary-source: derived
+    put:
+      operationId: UpdateTenant
+      description: Updates a tenant by ID.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenantPut'
+      responses:
+        '200':
+          description: Tenant was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenant'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Tenants
+      summary: Update tenant
+      x-summary-source: derived
+    get:
+      operationId: FetchTenant
+      description: Fetches a tenant by ID.
+      parameters:
+      - name: embed_path
+        description: If true, tenant path will be embedded in the result.
+        in: query
+        schema:
+          description: If true, tenant path will be embedded in the result.
+          type: boolean
+      - name: allow_deleted
+        description: If true, deleted tenant may be returned.
+        in: query
+        schema:
+          description: If true, deleted tenant may be returned.
+          type: boolean
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenant'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant
+      x-summary-source: derived
+  /tenants/{tenant_id}/offering_items:
+    get:
+      operationId: FetchTenantOfferingItems
+      description: Fetches a list offering items with state and associated quotas.
+      parameters:
+      - name: infra_uuid
+        description: A filter by infrastructure UUID.
+        in: query
+        schema:
+          description: A filter by infrastructure UUID.
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: available_only
+        description: 'If true, return only infrastructures and offering items available for the enablement according to internal business rules.
+
+          '
+        in: query
+        schema:
+          description: 'If true, return only infrastructures and offering items available for the enablement according to internal business rules.
+
+            '
+          example: true, false, 0, 1
+          type: string
+      - name: for_ui
+        description: 'If true, the list of offering items will be returned in a form that is appropriate for the UI. Currently, offering items on a grace period will be filtered out.
+
+          '
+        in: query
+        schema:
+          description: 'If true, the list of offering items will be returned in a form that is appropriate for the UI. Currently, offering items on a grace period will be filtered out.
+
+            '
+          type: boolean
+      - name: edition
+        description: 'A filter of the offering items by edition.
+
+          If "*" is provided, all editions will be returned.
+
+          Offering items without an edition are not filtered out in any case.'
+        in: query
+        schema:
+          description: 'A filter of the offering items by edition.
+
+            If "*" is provided, all editions will be returned.
+
+            Offering items without an edition are not filtered out in any case.'
+          default: standard
+          example: '*'
+          type: string
+      - name: usage_names
+        description: A filter by comma-separated list of usage names.
+        in: query
+        schema:
+          description: A filter by comma-separated list of usage names.
+          example: storage,local_storage
+          type: string
+      - name: status
+        description: 'A filter by offering item status.
+
+
+          1 - active
+
+          0 - not active'
+        in: query
+        schema:
+          description: 'A filter by offering item status.
+
+
+            1 - active
+
+            0 - not active'
+          enum:
+          - 0
+          - 1
+          type: integer
+      - name: include_secondary
+        description: If true, secondary offering items will be included in the response.
+        in: query
+        schema:
+          description: If true, secondary offering items will be included in the response.
+          type: boolean
+      - name: type
+        description: A filter by offering item type.
+        in: query
+        schema:
+          description: A filter by offering item type.
+          enum:
+          - count
+          - feature
+          - infra
+          example: count
+          type: string
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offeringItemList'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '426':
+          description: Server refuses to fulfill the request using the current protocol
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant offering items
+      x-summary-source: derived
+    put:
+      operationId: SetTenantOfferingItems
+      description: Sets the states and quotas of the offering items for specified applications of the tenant.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenantOfferingItemsPut'
+      responses:
+        '200':
+          description: Offering Items states were successfully set.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offeringItemList'
+        '400':
+          description: Offering items states were not successfully set.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Tenants
+      summary: Set tenant offering items
+      x-summary-source: derived
+  /tenants/{tenant_id}/offering_items/available_for_child:
+    get:
+      operationId: FetchOfferingItemsAvailableForTenantChild
+      description: Fetches available offering items for a hypothetical child tenant with provided parameters.
+      parameters:
+      - name: kind
+        description: A kind of hypothetical child tenant for which available offering items will be returned.
+        in: query
+        schema:
+          description: A kind of hypothetical child tenant for which available offering items will be returned.
+          example: unit
+          type: string
+      - name: edition
+        description: 'A filter of the offering items by edition.
+
+          If "*" is provided, all editions will be returned.
+
+          Offering items without an edition are not filtered out in any case.'
+        in: query
+        schema:
+          description: 'A filter of the offering items by edition.
+
+            If "*" is provided, all editions will be returned.
+
+            Offering items without an edition are not filtered out in any case.'
+          default: standard
+          example: '*'
+          type: string
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offeringItemList'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch offering items available for tenant child
+      x-summary-source: derived
+  /tenants/{tenant_id}/offering_items/pricing:
+    get:
+      operationId: FetchTenantOfferingItemsPrices
+      description: Fetches a list of prices of the offering items for the tenant.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/oiPricingSettings'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant offering items prices
+      x-summary-source: derived
+    put:
+      operationId: UpdateTenantOfferingItemsPrices
+      description: Updates the prices of the offering items for the tenant.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/oiPricingSettingsPut'
+      responses:
+        '200':
+          description: Prices were successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/oiPricingSettings'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Tenants
+      summary: Update tenant offering items prices
+      x-summary-source: derived
+  /tenants/{tenant_id}/edition:
+    get:
+      operationId: PerformTenantEditionSwitchCheck
+      description: Performs edition switching check for the tenant.
+      parameters:
+      - name: target_edition
+        description: A target edition to switch to.
+        required: true
+        in: query
+        schema:
+          description: A target edition to switch to.
+          example: disaster_recovery
+          type: string
+      - name: application_id
+        description: Application UUID.
+        required: true
+        in: query
+        schema:
+          description: Application UUID.
+          type: string
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: Edition switch can be performed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/editionSwitchWarnings'
+        '400':
+          description: 'Edition switch cannot be performed due to unavailable offering items.
+
+            List of these offering items will be returned in `error.context`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Tenants
+      summary: Perform tenant edition switch check
+      x-summary-source: derived
+    put:
+      operationId: SwitchTenantEdition
+      description: Switches the edition for the tenant.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/editionSwitchPut'
+      responses:
+        '200':
+          description: Edition was successfully switched.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offeringItemList'
+        '400':
+          description: 'Edition was not switched due to unavailable offering items.
+
+            List of these offering items will be returned in `error.context`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Tenants
+      summary: Switch tenant edition
+      x-summary-source: derived
+  /tenants/{tenant_id}/registration_tokens:
+    get:
+      operationId: FetchRegistrationTokens_1
+      description: Fetches registration tokens.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/registrationTokensList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::oauth2_client_admin
+      tags:
+      - Tenants
+      summary: Fetch registration tokens 1
+      x-summary-source: derived
+    post:
+      operationId: CreateRegistrationToken_1
+      description: Creates registration token for the tenant.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registrationTokenPostV2'
+      responses:
+        '200':
+          description: Registration token was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/registrationToken'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::oauth2_client_admin
+      tags:
+      - Tenants
+      summary: Create registration token 1
+      x-summary-source: derived
+  /tenants/{tenant_id}/applications:
+    get:
+      operationId: FetchAvailableTenantApplications
+      description: Fetches a list of applications available to the tenant.
+      parameters:
+      - name: for_ui
+        description: 'If true, the list of applications will be returned in a form that is appropriate for the UI.
+
+          Currently, applications on a grace period will be filtered out.'
+        in: query
+        schema:
+          description: 'If true, the list of applications will be returned in a form that is appropriate for the UI.
+
+            Currently, applications on a grace period will be filtered out.'
+          type: boolean
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch available tenant applications
+      x-summary-source: derived
+  /tenants/{tenant_id}/users:
+    get:
+      operationId: FetchTenantUsers
+      description: Fetches a list of UUIDs of the tenant's users.
+      parameters:
+      - name: include_grand_children
+        description: 'If true for a customer tenant, the UUIDs of the users from all nested unit tenants will be included in the response.
+
+          If true for a non customer tenant, the UUIDs of the users from all nested folder tenants will be included in the response.'
+        in: query
+        schema:
+          description: 'If true for a customer tenant, the UUIDs of the users from all nested unit tenants will be included in the response.
+
+            If true for a non customer tenant, the UUIDs of the users from all nested folder tenants will be included in the response.'
+          default: false
+          type: boolean
+      - name: include_hidden
+        description: If true, hidden users may be included in the response.
+        in: query
+        schema:
+          description: If true, hidden users may be included in the response.
+          default: false
+          type: boolean
+      - name: order
+        description: 'Orders the result by one of parameters: `as_is`, `login`, `status`, `name`, `roles`, `level`, `usage`, `mfa_status`, `contact_types`.
+
+          Reverse order can be performed using the `-` operator before the parameter.
+
+
+          To order by `usage`, the usage name should be specified after a dot, e.g. `usage.workstations`.
+
+
+          For storage-dependent usages, the storage UUID is not required.
+
+
+          Default value is `name` - order by first name and last name or login if names were not provided.'
+        in: query
+        schema:
+          description: 'Orders the result by one of parameters: `as_is`, `login`, `status`, `name`, `roles`, `level`, `usage`, `mfa_status`, `contact_types`.
+
+            Reverse order can be performed using the `-` operator before the parameter.
+
+
+            To order by `usage`, the usage name should be specified after a dot, e.g. `usage.workstations`.
+
+
+            For storage-dependent usages, the storage UUID is not required.
+
+
+            Default value is `name` - order by first name and last name or login if names were not provided.'
+          default: name
+          example: -login
+          type: string
+      - name: allow_deleted
+        description: If true, deleted users may be returned.
+        in: query
+        schema:
+          description: If true, deleted users may be returned.
+          type: boolean
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant users
+      x-summary-source: derived
+  /tenants/{tenant_id}/children:
+    get:
+      operationId: FetchTenantChildren
+      description: Fetches a list of UUIDs of the tenant's children.
+      parameters:
+      - name: order
+        description: 'Orders the result by one of parameters: `as_is`, `name`, `status`, `usage`.
+
+          Reverse order can be performed using the `-` operator before the parameter.
+
+
+          For order by `usage`, the usage name should be specified after a dot, e.g. `usage.workstations`.
+
+
+          For storage-dependent usages, the storage UUID should be added after a dot, e.g. `usage.storage.c05d399b-ba6b-41e9-a638-cd7ffc7ec87a`.'
+        in: query
+        schema:
+          description: 'Orders the result by one of parameters: `as_is`, `name`, `status`, `usage`.
+
+            Reverse order can be performed using the `-` operator before the parameter.
+
+
+            For order by `usage`, the usage name should be specified after a dot, e.g. `usage.workstations`.
+
+
+            For storage-dependent usages, the storage UUID should be added after a dot, e.g. `usage.storage.c05d399b-ba6b-41e9-a638-cd7ffc7ec87a`.'
+          default: name
+          example: -status
+          type: string
+      - name: allow_deleted
+        description: If true, children may be returned.
+        in: query
+        schema:
+          description: If true, children may be returned.
+          type: boolean
+      - name: after
+        description: 'Cursor to fetch the next children page. The cursor encodes all the filtering and sorting arguments, thus client does not need to provide all them for the next page, only cursor should be provided. Client can get the cursor from `paging.cursors.after` field of the previous page response.
+
+          '
+        in: query
+        schema:
+          description: 'Cursor to fetch the next children page. The cursor encodes all the filtering and sorting arguments, thus client does not need to provide all them for the next page, only cursor should be provided. Client can get the cursor from `paging.cursors.after` field of the previous page response.
+
+            '
+          type: string
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant children
+      x-summary-source: derived
+  /tenants/{tenant_id}/reports:
+    get:
+      operationId: FetchTenantReports
+      description: Fetches a list of reports' UUIDs available to the tenant.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+        - urn:acronis.com::account-server::readonly_admin
+      tags:
+      - Tenants
+      summary: Fetch tenant reports
+      x-summary-source: derived
+  /tenants/{tenant_id}/locations:
+    get:
+      operationId: FetchTenantInfrastructureLocations
+      description: Fetches a list of infrastructure locations owned by the tenant.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/locationList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant infrastructure locations
+      x-summary-source: derived
+  /tenants/{tenant_id}/usages:
+    get:
+      operationId: FetchTenantUsages
+      description: Fetches a list of common usage metrics of the tenant.
+      parameters:
+      - name: usage_names
+        description: A filter by comma-separated list of usage names.
+        in: query
+        schema:
+          description: A filter by comma-separated list of usage names.
+          example: storage,local_storage
+          type: string
+      - name: editions
+        description: A filter by comma-separated list of editions.
+        in: query
+        schema:
+          description: A filter by comma-separated list of editions.
+          example: standard,advanced,disaster_recovery
+          type: string
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/usageList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant usages
+      x-summary-source: derived
+  /tenants/{tenant_id}/pricing:
+    get:
+      operationId: FetchTenantPricingSettings
+      description: Fetches pricing settings of the tenant.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenantPricingSettings'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant pricing settings
+      x-summary-source: derived
+    put:
+      operationId: UpdateTenantPricingSettings
+      description: Updates pricing settings of the tenant.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenantPricingSettingsPut'
+      responses:
+        '200':
+          description: Pricing settings was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenantPricingSettings'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Tenants
+      summary: Update tenant pricing settings
+      x-summary-source: derived
+  /tenants/{tenant_id}/brand:
+    delete:
+      operationId: DisableCustomBranding
+      description: Disables custom branding for the tenant.
+      parameters:
+      - name: version
+        description: Growing number of object internal version.
+        required: true
+        in: query
+        schema:
+          description: Growing number of object internal version.
+          example: 1559561146223
+          type: integer
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: Custom branding has been disabled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenant'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Tenants
+      summary: Disable custom branding
+      x-summary-source: derived
+    get:
+      operationId: FetchCustomBrandingOptions
+      description: Fetches branding options of the tenant.
+      parameters:
+      - name: effective
+        description: If true, parent tenant's brand will be returned
+        in: query
+        schema:
+          description: If true, parent tenant's brand will be returned
+          default: 0
+          type: integer
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenantBrandGetResponse'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch custom branding options
+      x-summary-source: derived
+    post:
+      operationId: EnableCustomBranding
+      description: 'Enables custom branding options for the tenant.
+
+
+        This operation cannot be performed on customer and unit tenants.'
+      parameters:
+      - name: version
+        description: Growing number of object internal version.
+        required: true
+        in: query
+        schema:
+          description: Growing number of object internal version.
+          example: 1559561146223
+          type: integer
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '201':
+          description: Custom branding has been enabled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenant'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Tenants
+      summary: Enable custom branding
+      x-summary-source: derived
+    put:
+      operationId: ModifyCustomBranding
+      description: Modifies custom branding options.
+      parameters:
+      - name: version
+        description: Growing number of object internal version.
+        required: true
+        in: query
+        schema:
+          description: Growing number of object internal version.
+          example: 1559561146223
+          type: integer
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenantBrandPutRequest'
+      responses:
+        '200':
+          description: Custom branding has been updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenant'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Tenants
+      summary: Modify custom branding
+      x-summary-source: derived
+  /tenants/{tenant_id}/brand/logo:
+    get:
+      operationId: FetchTenantBrandLogo
+      description: Fetches tenant's brand logo.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          headers:
+            Cache-Control:
+              schema:
+                example: max-age=86400, must-revalidate
+                type: string
+            Content-Length:
+              required: true
+              schema:
+                type: integer
+          content:
+            image/png:
+              schema: {}
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant brand logo
+      x-summary-source: derived
+    post:
+      operationId: UploadTenantBrandLogo
+      description: Uploads a new tenant's brand logo.
+      parameters:
+      - name: version
+        description: Growing number of object internal version.
+        required: true
+        in: query
+        schema:
+          description: Growing number of object internal version.
+          example: 1559561146223
+          type: integer
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: Content-Length
+        required: true
+        in: header
+        schema:
+          type: integer
+      requestBody:
+        content:
+          image/png:
+            schema: {}
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenant'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Tenants
+      summary: Upload tenant brand logo
+      x-summary-source: derived
+  /tenants/{tenant_id}/mfa/status:
+    put:
+      operationId: ManageTenantMFAStatus
+      description: 'Toggles MFA status for the tenant.
+
+        This operation cannot be performed on folder and unit tenants.'
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mfaTenantStatusPut'
+      responses:
+        '200':
+          description: MFA status was successfully changed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mfaTenantStatus'
+        '400':
+          description: Bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+      tags:
+      - Tenants
+      summary: Manage tenant MFA status
+      x-summary-source: derived
+    get:
+      operationId: FetchTenantMFAStatus
+      description: Provides MFA status for tenant and progress of TOTP enablement by users.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mfaTenantStatus'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Tenants
+      summary: Fetch tenant MFA status
+      x-summary-source: derived
+  /tenants/{tenant_id}/default_idp:
+    put:
+      operationId: UpdateTenantDefaultIdpId
+      description: Updates Tenant default_idp_id.
+      parameters:
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenantPutIdpId'
+      responses:
+        '200':
+          description: Tenant default_idp_id successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenant'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Tenants
+      summary: Update tenant default idp id
+      x-summary-source: derived
+  /tenants/{tenant_id}/restore:
+    post:
+      operationId: RestoreDeletedTenant
+      description: Restores previously soft deleted tenant.
+      parameters:
+      - name: force
+        description: 'Defines if tenant should be restored in in case of a conflict with another tenant or user who has taken the same name or login. In such a case restored tenant will have postfix added.
+
+          '
+        in: query
+        schema:
+          description: 'Defines if tenant should be restored in in case of a conflict with another tenant or user who has taken the same name or login. In such a case restored tenant will have postfix added.
+
+            '
+          type: boolean
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: Tenant was successfully restored.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Tenants
+      summary: Restore deleted tenant
+      x-summary-source: derived
 components:
-  responses:
-    Forbidden:
-      description: Forbidden - insufficient permissions
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request - invalid input
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized - missing or invalid authentication
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Conflict:
-      description: Conflict - resource state conflict
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    TenantList:
+    usagePutResult:
       type: object
+      required:
+      - items
       properties:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Tenant'
-        paging:
-          $ref: '#/components/schemas/Paging'
-    Tenant:
+            type: object
+            properties:
+              tenant_id:
+                description: Tenant ID. Empty in case of per-resource reporting.
+                type: string
+              resource_id:
+                description: Resource ID. Empty in case of per-tenant reporting.
+                type: string
+              usage_type:
+                description: Usage name. Empty in case of per-tenant reporting.
+                type: string
+              offering_item:
+                description: Offering item name. Empty in case of per-resource reporting.
+                type: string
+              infra_id:
+                description: Infrastructure component ID. Empty in case of per-resource reporting.
+                type: string
+              error:
+                $ref: '#/components/schemas/errorScheme'
+    batchApplicationList:
+      example:
+        items:
+        - tenant: 2b5172d7-4374-40db-8e11-08decbc53878
+          applications:
+          - 8aaf366b-fe24-4f25-93b3-bd729c86cc95
+          - aedde3dc-5954-448a-820a-0220cf32ecb1
+        - tenant: aedde3dc-5954-448a-820a-0220cf32ecb1
+          applications:
+          - aedde3dc-5954-448a-820a-0220cf32ecb1
       type: object
-      description: Acronis tenant representing a company, partner, or customer account
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - tenant
+            - applications
+            properties:
+              tenant:
+                $ref: '#/components/schemas/uuid'
+              applications:
+                type: array
+                items:
+                  $ref: '#/components/schemas/uuid'
+    tenantKind:
+      description: A tenant kind.
+      enum:
+      - root
+      - partner
+      - folder
+      - customer
+      - unit
+      type: string
+    tenantPost:
+      example:
+        name: The Qwerty Tenant
+        parent_id: fa6859a9-f5e1-4faf-a56c-5a0ae866dc4f
+        kind: partner
+        contact:
+          email: su@test.com
+          address1: Home
+          phone: '123456789'
+        customer_id: 123asd
+        internal_tag: null
+        language: pt_BR
+        settings:
+          enhanced_security: false
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - parent_id
+      - kind
+      properties:
+        name:
+          description: Human-readable name that will be displayed to the users.
+          type: string
+        parent_id:
+          $ref: '#/components/schemas/uuid'
+        kind:
+          $ref: '#/components/schemas/tenantKind'
+        contact:
+          $ref: '#/components/schemas/contactPut'
+        company_billing_contact:
+          $ref: '#/components/schemas/contactPut'
+        enabled:
+          description: Flag, indicates whether the tenant is enabled or disabled.
+          type: boolean
+        customer_id:
+          description: ID from external system; for reporting purposes.
+          type: string
+        internal_tag:
+          description: Internal tag. This field can have a null value.
+          type:
+          - string
+          - 'null'
+        language:
+          description: Preferred locale.
+          type: string
+        default_idp_id:
+          $ref: '#/components/schemas/uuid'
+        update_lock:
+          type: object
+          required:
+          - enabled
+          properties:
+            enabled:
+              description: If true, updating the tenant via API is not allowed to anyone except for users of the tenant that owns the lock.
+              type: boolean
+        ancestral_access:
+          description: Access to newly created tenant from ancestors.
+          type: boolean
+        settings:
+          type: object
+          properties:
+            enhanced_security:
+              description: Enables PCI DSS mode.
+              type: boolean
+    tenant:
+      title: Basic tenant schema
+      example:
+        id: f313ecf6-9256-4afd-9d47-72e032ee81d0
+        version: 2
+        name: The Qwerty Tenant
+        customer_type: enterprise
+        parent_id: fa6859a9-f5e1-4faf-a56c-5a0ae866dc4f
+        kind: partner
+        contact:
+          id: 27f6f164-63dd-47df-b5b6-83a0fd117beb
+          created_at: '2020-05-19T11:50:00'
+          updated_at: '2020-05-19T11:50:00'
+          types:
+          - legal
+          email: me@mysite.com
+          address1: '1440 River Drive #100'
+          address2: ''
+          country: USA
+          state: CA
+          zipcode: '12345'
+          city: Rivertown
+          phone: '123456789'
+          firstname: John
+          lastname: Doe
+          title: ''
+          website: ''
+          industry: ''
+          organization_size: ''
+          email_confirmed: false
+          aan: '111111'
+        contacts: []
+        enabled: true
+        created_at: '2016-06-22T18:25:16'
+        updated_at: '2016-06-22T18:25:16'
+        deleted_at: null
+        customer_id: 123asd
+        brand_id: 1
+        brand_uuid: 03fa8bf4-28f2-11e7-ba28-cbe99c3c450a
+        brand_enabled: true
+        internal_tag: null
+        language: en
+        owner_id: 03fa8bf4-28f2-11e7-ba28-cbe99c3c450a
+        has_children: true
+        ancestral_access: true
+        update_lock:
+          enabled: true
+          owner_id: 7decff12-ee1b-4f8d-b446-59610bfb9203
+        mfa_status: enabled
+        pricing_mode: production
+        production_start_date: null
+      type: object
+      required:
+      - id
+      - version
+      - created_at
+      - updated_at
+      - deleted_at
+      - name
+      - customer_type
+      - parent_id
+      - kind
+      - contact
+      - contacts
+      - enabled
+      - brand_id
+      - brand_enabled
+      - internal_tag
+      - language
+      - has_children
+      - update_lock
+      - ancestral_access
+      - mfa_status
+      - pricing_mode
       properties:
         id:
-          type: string
-          format: uuid
-          description: Tenant unique identifier
-          example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-        name:
-          type: string
-          description: Tenant display name
-          example: Acme Corporation
-        kind:
-          type: string
-          enum:
-          - root
-          - partner
-          - folder
-          - customer
-          - unit
-          description: Tenant type in the hierarchy
-          example: customer
-        enabled:
-          type: boolean
-          description: Whether the tenant is active
-          example: true
-        parent_id:
-          type: string
-          format: uuid
-          description: Parent tenant UUID
-        customer_type:
-          type: string
-          enum:
-          - default
-          - trial
-          description: Customer account type
-          example: default
-        created_at:
-          type: string
-          format: date-time
-          description: Tenant creation timestamp
-          example: '2025-03-15T14:30:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Last update timestamp
+          $ref: '#/components/schemas/uuid'
         version:
+          description: Auto-incremented entity version.
           type: integer
-          description: Optimistic concurrency version
-          example: 1
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        production_start_date:
+          description: Tenant trial expiration date.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        name:
+          description: Human-readable name that will be displayed to the users.
+          type: string
+        customer_type:
+          $ref: '#/components/schemas/customerType'
+        parent_id:
+          description: ID of parent tenant. For the real root tenant the parent_id is equal to its id
+          type: string
+        kind:
+          $ref: '#/components/schemas/tenantKind'
         contact:
-          $ref: '#/components/schemas/Contact'
-    Paging:
+          $ref: '#/components/schemas/items'
+        contacts:
+          description: Empty array by default. Will be populated with all referencing contacts if query param `with_contacts` is provided.
+          type: array
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/items'
+        enabled:
+          description: Flag, indicates whether the tenant is enabled or disabled.
+          type: boolean
+        customer_id:
+          description: ID from external system; for reporting purposes. This field can have a null value.
+          type:
+          - string
+          - 'null'
+        brand_id:
+          description: Brand id for API v1.
+          type:
+          - integer
+          - 'null'
+        brand_uuid:
+          $ref: '#/components/schemas/uuid'
+        brand_enabled:
+          description: Flag, indicates whether the branding is enabled or disabled on tenant.
+          type: boolean
+        internal_tag:
+          description: Internal tag. This field can have a null value.
+          type:
+          - string
+          - 'null'
+        language:
+          description: Tenant`s preferred language.
+          type: string
+        owner_id:
+          description: Identifier of personal tenant owner user. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        has_children:
+          description: Flag, indicates if tenant has children.
+          type: boolean
+        default_idp_id:
+          $ref: '#/components/schemas/uuid'
+        update_lock:
+          type: object
+          required:
+          - enabled
+          - owner_id
+          properties:
+            enabled:
+              description: If true, updating the tenant via API is not allowed to anyone except for users of the tenant that owns the lock.
+              type: boolean
+            owner_id:
+              description: ID of tenant that owns the lock (only users of this tenant can update the tenant in question). This field can have a null value.
+              allOf:
+              - $ref: '#/components/schemas/uuid'
+        ancestral_access:
+          description: Indicates whether tenant's indirect ancestors have access to it.
+          type: boolean
+        mfa_status:
+          description: Multi-factor authentication status of the tenant.
+          enum:
+          - disabled
+          - forcibly_disabled
+          - setup_required
+          - enabled
+          type: string
+        pricing_mode:
+          $ref: '#/components/schemas/pricingMode'
+        external_operation_status:
+          description: Indicates if some external operation in progress for this tenant.
+          enum:
+          - deleting
+          - recovering
+          type:
+          - string
+          - 'null'
+    paging:
+      title: Generic paging parameters schema
       type: object
       properties:
         cursors:
@@ -334,98 +2669,2004 @@ components:
           properties:
             after:
               type: string
-              description: Cursor for next page
-    Error:
+    tenantBrandGetResponse:
+      allOf:
+      - $ref: '#/components/schemas/brand'
+      - $ref: '#/components/schemas/smtp_settings'
+      example:
+        account_server_url: mc-cloud.acronis.com
+        backup_console_url: mc-cloud.acronis.com/bc
+        color: FFFFFF
+        color_scheme: default
+        company_name: acronis
+        help_url: api/ams/links/help
+        hide_predefined: 1
+        home_url: www.acronis.com
+        knowledgebase_url: kb.acronis.com/errorcode/
+        logotype: 2f8ad2e2-28f2-11e7-aad1-5ffe2ad47151
+        mobile_app_android_download_url: www.mobile.com/download
+        mobile_app_ios_download_url: www.mobile.com/download
+        owns_custom_legal_docs: true
+        white_labeled_agent: true
+        platform_terms_url: terms.acronis.com
+        privacy_policy_url: https://www.acronis.com/company/privacy.html
+        reg_server_url: https://rs.custom-cloud.acronis.com
+        router_url: cloud.acronis.com
+        agent_gateway_url: https://agents.custom-cloud.acronis.com
+        service_name: myservice
+        smtp_encryption: TLS
+        smtp_override: 1
+        smtp_password: ''
+        smtp_port: 465
+        smtp_reply_address: noreply@mycompany.com
+        smtp_server: smtp.mycompany.com
+        smtp_user: smtpuser
+        support_phone: +1 1111 1111111
+        support_url: support.acronis.com
+        terms_url: terms.acronis.com
+        upsell_url: www.partner.com/buy
+        user_guide_url: guide.acronis.com
       type: object
-      description: API error response
+    items:
+      type: object
       properties:
-        code:
-          type: integer
-          description: Error code
-          example: 400
-        message:
-          type: string
-          description: Human-readable error message
-          example: Invalid request parameters
-        details:
+        id:
+          $ref: '#/components/schemas/uuid'
+        created_at:
+          description: Date and time when contact was created.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        updated_at:
+          description: Last update timestamp, if contact has just been created - then is equal to `created_at`.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        types:
           type: array
+          minItems: 0
+          uniqueItems: true
           items:
+            enum:
+            - legal
+            - primary
+            - billing
+            - technical
+            - management
+            - company_billing
             type: string
-    Contact:
-      type: object
-      description: Contact information for a tenant
-      properties:
-        firstname:
-          type: string
-          example: John
-        lastname:
-          type: string
-          example: Smith
         email:
-          type: string
-          format: email
-          example: john.smith@example.com
-        phone:
-          type: string
-          example: +1-555-0100
+          $ref: '#/components/schemas/email'
         address1:
-          type: string
-          example: 123 Main Street
-        city:
-          type: string
-          example: Springfield
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        address2:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
         country:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        state:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        city:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        zipcode:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        phone:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        firstname:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        lastname:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        title:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        website:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        industry:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        organization_size:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        email_confirmed:
+          description: This field can have a null value.
+          type:
+          - boolean
+          - 'null'
+        aan:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+    smtp_settings:
+      description: SMTP settings schema.
+      type: object
+      properties:
+        smtp_override:
+          description: Binary flag that defines if default SMTP-server is overridden.
+          type: integer
+        smtp_reply_address:
+          description: SMTP reply address.
           type: string
-          example: US
-    TenantRequest:
+        smtp_server:
+          description: SMTP server address.
+          type: string
+        smtp_port:
+          description: SMTP server port.
+          type: integer
+        smtp_user:
+          description: SMTP serer user.
+          type: string
+        smtp_password:
+          description: SMTP user password. Hidden.
+          type: string
+        smtp_encryption:
+          description: SMTP server encryption algorithm.
+          enum:
+          - ''
+          - SSL
+          - TLS
+          type: string
+    uuidList:
+      example:
+        items:
+        - aa4f8923-8950-4804-8827-c6d78388e5b6
+        - 4eb7b320-48b4-4552-9bf8-f7482538da23
       type: object
       required:
-      - name
-      - kind
-      - parent_id
-      description: Request body for creating or updating a tenant
+      - items
       properties:
-        name:
-          type: string
-          description: Tenant display name
-          example: New Partner
-        kind:
-          type: string
-          enum:
-          - partner
-          - folder
-          - customer
-          - unit
-          description: Tenant type
-        parent_id:
-          type: string
-          format: uuid
-          description: Parent tenant UUID
-        enabled:
-          type: boolean
-          description: Whether the tenant should be enabled
-          example: true
-        contact:
-          $ref: '#/components/schemas/Contact'
-    SearchResults:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid_4'
+    tenantBrandPutRequest:
+      allOf:
+      - $ref: '#/components/schemas/brand'
+      - $ref: '#/components/schemas/smtp_settings'
+      example:
+        account_server_url: mc-cloud.acronis.com
+        color: FFFFFF
+        color_scheme: default
+        company_name: mycompany
+        help_url: help.acronis.com
+        home_url: www.baas.com
+        knowledgebase_url: kb.acronis.com/errorcode/
+        logotype: 2f8ad2e2-28f2-11e7-aad1-5ffe2ad47151
+        mobile_app_android_download_url: www.mobile.com/download
+        mobile_app_ios_download_url: www.mobile.com/download
+        owns_custom_legal_docs: false
+        white_labeled_agent: false
+        platform_terms_url: terms.acronis.com
+        privacy_policy_url: https://www.acronis.com/company/privacy.html
+        reg_server_url: https://rs.custom-cloud.acronis.com
+        router_url: cloud.acronis.com
+        agent_gateway_url: https://agents.custom-cloud.acronis.com
+        service_name: myservice
+        smtp_encryption: TLS
+        smtp_override: 1
+        smtp_password: '**********'
+        smtp_port: 465
+        smtp_reply_address: noreply@mycompany.com
+        smtp_server: smtp.mycompany.com
+        smtp_user: smtpuser
+        support_phone: +1 1111 1111111
+        support_url: support.acronis.com
+        terms_url: terms.acronis.com
+        upsell_url: www.partner.com/buy
+        user_guide_url: guide.acronis.com
       type: object
-      description: Search results containing matching tenants and users
+    tenantOfferingItemsPut:
+      example:
+        value:
+          offering_items:
+          - application_id: a9fd8016-0e00-4ade-949e-6efe8672dac0
+            name: vms
+            status: 1
+            quota:
+              value: 10
+              overage: 10
+              version: 1486479690324
+          - application_id: a9fd8016-0e00-4ade-949e-6efe8672dac0
+            name: workstations
+            status: 0
+          - application_id: a9fd8016-0e00-4ade-949e-6efe8672dac0
+            name: storage
+            infra_id: 4a2cbe2d-b7ab-4b17-9cba-10c7eb55de01
+            status: 1
+            quota:
+              value: 10000
+              overage: 100000
+              version: 1486479690324
+          - application_id: 71739a04-177f-4603-84ad-54a326ba76e4
+            name: fc_storage
+            infra_id: 4fff10c4-1378-4bfc-877d-b66a0f8805ed
+            status: 1
+            quota:
+              value: 100000
+              overage: 100000
+              version: 1486479690324
+          - application_id: 71739a04-177f-4603-84ad-54a326ba76e4
+            name: fc_seats
+            status: 1
+          check_usage: true
+      type: object
+      additionalProperties: false
+      required:
+      - offering_items
+      properties:
+        offering_items:
+          type: array
+          items:
+            type: object
+            required:
+            - application_id
+            - name
+            properties:
+              application_id:
+                $ref: '#/components/schemas/uuid'
+              name:
+                type: string
+              status:
+                description: 'Status of offering item: 1 - item turned on, 0 - off.'
+                enum:
+                - 0
+                - 1
+                type: integer
+              infra_id:
+                $ref: '#/components/schemas/uuid'
+              quota:
+                $ref: '#/components/schemas/quota'
+        check_usage:
+          description: If true, check whether offering items being turned off have no usage.
+          type: boolean
+    oiPricingSettings:
+      example:
+        items:
+        - application_id: b037d1f6-25cf-4a9c-98f1-d3e41c100948
+          name: storage
+          infra_id: 05348371-d95e-4cab-af2a-8e2cadafc30d
+          price: '0.05'
+          version: 1497533157730
+        - application_id: b037d1f6-25cf-4a9c-98f1-d3e41c100948
+          name: servers
+          price: '600'
+          version: 1497533157730
+      type: object
+      required:
+      - items
       properties:
         items:
           type: array
           items:
             type: object
-            additionalProperties: true
-        size:
+            required:
+            - application_id
+            - name
+            - price
+            - version
+            properties:
+              application_id:
+                $ref: '#/components/schemas/uuid'
+              infra_id:
+                $ref: '#/components/schemas/uuid'
+              name:
+                description: Usage name (type).
+                type: string
+              price:
+                description: Price of offering item. Passed as a string to preserve decimal accuracy.
+                type: string
+              version:
+                description: Auto-incremented entity version.
+                type: integer
+    quota:
+      type: object
+      additionalProperties: false
+      required:
+      - value
+      - overage
+      - version
+      properties:
+        value:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+        overage:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+        version:
+          description: Version of the quota. Equals to 0 if `value` and `overage` are `null`. Otherwise, contains the version number.
           type: integer
-          description: Total number of results
+          minimum: 0
+    items_3:
+      type: object
+      additionalProperties: false
+      required:
+      - application_id
+      - name
+      - edition
+      - usage_name
+      - tenant_id
+      - status
+      - type
+      - measurement_unit
+      properties:
+        application_id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        edition:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        usage_name:
+          type: string
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        status:
+          description: 'Status of offering item: 1 - item turned on, 0 - off.'
+          enum:
+          - 0
+          - 1
+          type: integer
+        locked:
+          description: If true, this item status cannot be changed.
+          type: boolean
+        quota:
+          $ref: '#/components/schemas/quota'
+        type:
+          $ref: '#/components/schemas/offeringItemType'
+        infra_id:
+          $ref: '#/components/schemas/uuid'
+        measurement_unit:
+          $ref: '#/components/schemas/measurementUnits'
+    registrationTokensList:
+      example:
+        items:
+        - id: 2
+          token: 27F9-5234-41C3
+          tenant_id: '11'
+          tenant_uuid: 4b07e4a1-a49b-4d4e-b8f2-253f1fef98ad
+          created_at: '2022-04-02T18:46:45Z'
+          expires_at: '2022-04-05T18:46:45Z'
+          scopes:
+          - urn:acronis.com:tenant-id:734fe814-748a-41cb-8a94-60e18fb3c442:backup_agent_admin
+          - urn:acronis.com::policy_management:4b07e4a1-a49b-4d4e-b8f2-253f1fef98ad|10858a46-db9b-4725-aa60-fff6252841fd:apply_revoke
+        - id: 3
+          token: F8CA-2DD1-41F1
+          tenant_id: '1363521'
+          tenant_uuid: 00bc0d4a-9879-40bf-823a-77c01b197dc1
+          created_at: '2022-04-02T18:57:46Z'
+          expires_at: '2022-04-05T18:57:46Z'
+          scopes:
+          - urn:acronis.com:tenant-id:1e3d306e-85ad-454c-b4f6-2bd73c83b9a1:backup_agent_admin
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/registrationToken'
+    brand:
+      description: Public brand schema.
+      type: object
+      properties:
+        support_phone:
+          description: Company support phone number.
+          type:
+          - string
+          - 'null'
+        id:
+          $ref: '#/components/schemas/uuid'
+        account_server_url:
+          description: Link to account server.
+          type:
+          - string
+          - 'null'
+        support_url:
+          description: Support page address.
+          type:
+          - string
+          - 'null'
+        mobile_app_android_download_url:
+          description: Link for Android mobile app download.
+          type:
+          - string
+          - 'null'
+        upsell_url:
+          description: Link for partner`s Buy page.
+          type:
+          - string
+          - 'null'
+        backup_console_url:
+          description: Link to Backup Console.
+          type: string
+        terms_url:
+          description: Company terms and conditions page url.
+          type:
+          - string
+          - 'null'
+        home_url:
+          description: Company web-site url.
+          type:
+          - string
+          - 'null'
+        knowledgebase_url:
+          description: Knowledge base url.
+          type:
+          - string
+          - 'null'
+        platform_terms_url:
+          description: Terms and conditions page for platform.
+          type:
+          - string
+          - 'null'
+        user_guide_url:
+          description: User guide url.
+          type:
+          - string
+          - 'null'
+        mobile_app_ios_download_url:
+          description: Link for iOS mobile app download.
+          type:
+          - string
+          - 'null'
+        color:
+          description: Brand color in RGB.
+          type:
+          - string
+          - 'null'
+        company_name:
+          description: Company name.
+          type:
+          - string
+          - 'null'
+        color_scheme:
+          description: Color scheme identifier.
+          type: string
+        logotype:
+          description: Logotype id.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        service_name:
+          description: Name of the service.
+          type:
+          - string
+          - 'null'
+        reg_server_url:
+          description: Registration server URL.
+          type:
+          - string
+          - 'null'
+        router_url:
+          description: Link to Management Console.
+          type:
+          - string
+          - 'null'
+        agent_gateway_url:
+          description: Agent gateway URL.
+          type:
+          - string
+          - 'null'
+        help_url:
+          description: Online help url.
+          type:
+          - string
+          - 'null'
+        privacy_policy_url:
+          description: Platform privacy policy.
+          type:
+          - string
+          - 'null'
+        owns_custom_legal_docs:
+          description: Flag that decides if brand owns custom terms urls.
+          type: boolean
+        white_labeled_agent:
+          description: Acronis branded or white labeled agent.
+          type: boolean
+    measurementUnits:
+      description: Measurement unit in which offering item's usages are kept.
+      enum:
+      - bytes
+      - quantity
+      - seconds
+      - n/a
+      type: string
+    mfaTenantStatusPut:
+      example:
+        enabled: true
+      type: object
+      additionalProperties: false
+      required:
+      - enabled
+      properties:
+        enabled:
+          description: Status of MFA for tenant.
+          type: boolean
+    locationList:
+      example:
+        locations:
+        - d9fd4cc3-4309-40a2-bd79-88da24a1c99d
+        - 7068976a-22c0-476e-ae3b-5f0469981ff1
+      type: object
+      properties:
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid'
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+    uuid_4:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    tenantBatch:
+      description: 'Batch response for tenants. The structure of items depends on the `lod` query parameter: stamps, basic, or full (default).'
+      type: object
+      required:
+      - timestamp
+      - items
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging'
+        timestamp:
+          $ref: '#/components/schemas/item1'
+        items:
+          description: Array of tenant objects. The fields returned depend on the `lod` query parameter.
+          type: array
+          items:
+            oneOf:
+            - title: Tenant stamps schema (lod=stamps)
+              description: Tenant object with minimal fields returned when lod=stamps is specified.
+              type: object
+              additionalProperties: false
+              required:
+              - id
+              - parent_id
+              - version
+              - created_at
+              - updated_at
+              - deleted_at
+              - contacts
+              - offering_items
+              properties:
+                id:
+                  $ref: '#/components/schemas/uuid'
+                parent_id:
+                  description: ID of parent tenant.
+                  type: string
+                version:
+                  description: Auto-incremented entity version.
+                  type: integer
+                created_at:
+                  $ref: '#/components/schemas/item1'
+                updated_at:
+                  $ref: '#/components/schemas/item1'
+                deleted_at:
+                  description: Soft deletion timestamp.
+                  allOf:
+                  - $ref: '#/components/schemas/item1'
+                contacts:
+                  description: Empty array by default. Will be populated with all referencing contacts if query param `with_contacts` is provided.
+                  type: array
+                  minItems: 0
+                  items:
+                    $ref: '#/components/schemas/items_2'
+                offering_items:
+                  description: Will be returned with all tenant offering items if query param `with_offering_items` is provided.
+                  type: array
+                  minItems: 0
+                  items:
+                    $ref: '#/components/schemas/items_3'
+            - title: Tenant basic schema (lod=basic)
+              description: Tenant object with basic fields returned when lod=basic is specified. Includes all stamps fields plus name, kind, enabled.
+              type: object
+              additionalProperties: false
+              required:
+              - id
+              - parent_id
+              - version
+              - created_at
+              - updated_at
+              - deleted_at
+              - contacts
+              - offering_items
+              - name
+              - kind
+              - enabled
+              properties:
+                id:
+                  $ref: '#/components/schemas/uuid'
+                parent_id:
+                  description: ID of parent tenant.
+                  type: string
+                version:
+                  description: Auto-incremented entity version.
+                  type: integer
+                created_at:
+                  $ref: '#/components/schemas/item1'
+                updated_at:
+                  $ref: '#/components/schemas/item1'
+                deleted_at:
+                  description: Soft deletion timestamp.
+                  allOf:
+                  - $ref: '#/components/schemas/item1'
+                contacts:
+                  description: Empty array by default. Will be populated with all referencing contacts if query param `with_contacts` is provided.
+                  type: array
+                  minItems: 0
+                  items:
+                    $ref: '#/components/schemas/items_2'
+                offering_items:
+                  description: Will be returned with all tenant offering items if query param `with_offering_items` is provided.
+                  type: array
+                  minItems: 0
+                  items:
+                    $ref: '#/components/schemas/items_3'
+                name:
+                  description: Human-readable name that will be displayed to the users.
+                  type: string
+                kind:
+                  $ref: '#/components/schemas/tenantKind'
+                enabled:
+                  description: Flag, indicates whether the tenant is enabled or disabled.
+                  type: boolean
+            - title: Tenant full schema (lod=full)
+              description: Tenant object with all fields returned when lod=full is specified (default).
+              type: object
+              additionalProperties: true
+              required:
+              - id
+              - parent_id
+              - version
+              - created_at
+              - updated_at
+              - deleted_at
+              - contacts
+              - offering_items
+              - name
+              - kind
+              - enabled
+              - customer_type
+              - brand_id
+              - brand_uuid
+              - brand_enabled
+              - barrier
+              - internal_tag
+              - language
+              - has_children
+              - default_idp_id
+              - update_lock
+              - ancestral_access
+              - mfa_status
+              - pricing_mode
+              - contact
+              properties:
+                id:
+                  $ref: '#/components/schemas/uuid'
+                parent_id:
+                  description: ID of parent tenant.
+                  type: string
+                version:
+                  description: Auto-incremented entity version.
+                  type: integer
+                created_at:
+                  $ref: '#/components/schemas/item1'
+                updated_at:
+                  $ref: '#/components/schemas/item1'
+                deleted_at:
+                  description: Soft deletion timestamp.
+                  allOf:
+                  - $ref: '#/components/schemas/item1'
+                contacts:
+                  description: Empty array by default. Will be populated with all referencing contacts if query param `with_contacts` is provided.
+                  type: array
+                  minItems: 0
+                  items:
+                    $ref: '#/components/schemas/items_2'
+                offering_items:
+                  description: Will be returned with all tenant offering items if query param `with_offering_items` is provided.
+                  type: array
+                  minItems: 0
+                  items:
+                    $ref: '#/components/schemas/items_3'
+                name:
+                  description: Human-readable name that will be displayed to the users.
+                  type: string
+                kind:
+                  $ref: '#/components/schemas/tenantKind'
+                enabled:
+                  description: Flag, indicates whether the tenant is enabled or disabled.
+                  type: boolean
+                customer_type:
+                  $ref: '#/components/schemas/customerType'
+                customer_id:
+                  description: ID from external system; for reporting purposes. This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+                brand_id:
+                  type:
+                  - integer
+                  - 'null'
+                brand_uuid:
+                  $ref: '#/components/schemas/uuid'
+                brand_enabled:
+                  description: Flag, indicates whether the branding is enabled or disabled on tenant.
+                  type: boolean
+                barrier:
+                  description: Shows the ancestor nesting level, ancestors above which will not have access to this tenant and its entities.
+                  type: integer
+                internal_tag:
+                  description: Internal tag. This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+                language:
+                  description: Tenant's preferred language.
+                  type: string
+                owner_id:
+                  description: Identifier of personal tenant owner user. This field can have a null value.
+                  allOf:
+                  - $ref: '#/components/schemas/uuid'
+                has_children:
+                  description: Flag, indicates if tenant has children.
+                  type: boolean
+                default_idp_id:
+                  $ref: '#/components/schemas/uuid'
+                update_lock:
+                  type: object
+                  required:
+                  - enabled
+                  - owner_id
+                  properties:
+                    enabled:
+                      description: If true, updating the tenant via API is not allowed to anyone except for users of the tenant that owns the lock.
+                      type: boolean
+                    owner_id:
+                      description: ID of tenant that owns the lock (only users of this tenant can update the tenant in question). This field can have a null value.
+                      allOf:
+                      - $ref: '#/components/schemas/uuid'
+                ancestral_access:
+                  description: Indicates whether tenant's indirect ancestors have access to it.
+                  type: boolean
+                mfa_status:
+                  description: Multi-factor authentication status of the tenant.
+                  enum:
+                  - disabled
+                  - forcibly_disabled
+                  - setup_required
+                  - enabled
+                  type: string
+                pricing_mode:
+                  $ref: '#/components/schemas/pricingMode'
+                contact:
+                  type: object
+                  required:
+                  - id
+                  - created_at
+                  - updated_at
+                  - types
+                  - email
+                  - firstname
+                  - lastname
+                  properties:
+                    id:
+                      $ref: '#/components/schemas/uuid'
+                    created_at:
+                      description: Date and time when contact was created.
+                      allOf:
+                      - $ref: '#/components/schemas/item1'
+                    updated_at:
+                      description: Last update timestamp, if contact has just been created - then is equal to `created_at`.
+                      allOf:
+                      - $ref: '#/components/schemas/item1'
+                    types:
+                      type: array
+                      minItems: 0
+                      uniqueItems: true
+                      items:
+                        enum:
+                        - legal
+                        - primary
+                        - billing
+                        - technical
+                        - management
+                        - company_billing
+                        type: string
+                    email:
+                      $ref: '#/components/schemas/email'
+                    address1:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    address2:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    country:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    state:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    city:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    zipcode:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    phone:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    firstname:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    lastname:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    title:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    website:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    industry:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    organization_size:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    email_confirmed:
+                      description: This field can have a null value.
+                      type:
+                      - boolean
+                      - 'null'
+                    aan:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    fax:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                    language:
+                      description: This field can have a null value.
+                      type:
+                      - string
+                      - 'null'
+                external_operation_status:
+                  description: Indicates if some external operation in progress for this tenant.
+                  enum:
+                  - deleting
+                  - recovering
+                  type:
+                  - string
+                  - 'null'
+                production_start_date:
+                  description: Tenant trial expiration date.
+                  allOf:
+                  - $ref: '#/components/schemas/item1'
+    items_2:
+      type: object
+      required:
+      - id
+      - created_at
+      - updated_at
+      - types
+      - email
+      - firstname
+      - lastname
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        created_at:
+          description: Date and time when contact was created.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        updated_at:
+          description: Last update timestamp, if contact has just been created - then is equal to `created_at`.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        tenant_id:
+          description: ID of tenant this contact belongs to.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        user_id:
+          description: ID of user this contact belongs to.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        types:
+          type: array
+          minItems: 0
+          uniqueItems: true
+          items:
+            enum:
+            - legal
+            - primary
+            - billing
+            - technical
+            - management
+            - company_billing
+            type: string
+        email:
+          $ref: '#/components/schemas/email'
+        address1:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        address2:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        country:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        state:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        city:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        zipcode:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        phone:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        firstname:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        lastname:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        title:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        website:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        industry:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        organization_size:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        email_confirmed:
+          description: This field can have a null value.
+          type:
+          - boolean
+          - 'null'
+        aan:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        fax:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        language:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        deleted_at:
+          description: Delete timestamp, if contact deleted, null otherwise
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        email_domain_type:
+          description: This field can have a null value.
+          enum:
+          - disposable
+          - public
+          - private
+          type:
+          - string
+          - 'null'
+    usagePut:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - usage_value
+            properties:
+              tenant_id:
+                description: Tenant ID (UUID). Required for per-tenant reporting.
+                type: string
+              resource_id:
+                description: Resource ID. Required for per-resource reporting.
+                type: string
+              usage_type:
+                description: 'A name of the usage. Required for per-resource reporting and per-tenant reporting by usage for some limited usages.
+
+
+                  Provided usage must represent a non-individual entity (f.e., `storage`, `compute_points`).
+
+
+                  This field is ignored if `offering_item` is specified.'
+                type: string
+              offering_item:
+                description: 'A name of the offering item. Required for per-tenant reporting by offering item.
+
+
+                  Provided offering item must be accountable.'
+                type: string
+              infra_id:
+                description: Infrastructure component ID (UUID). Required for per-tenant reporting by offering item of type `infra`.
+                type: string
+              usage_value:
+                type: integer
+    registrationToken:
+      example:
+        id: 2
+        token: 27F9-5234-41C3
+        tenant_id: '11'
+        tenant_uuid: 4b07e4a1-a49b-4d4e-b8f2-253f1fef98ad
+        created_at: '2022-04-02T18:46:45Z'
+        expires_at: '2022-04-05T18:46:45Z'
+        scopes:
+        - urn:acronis.com:tenant-id:734fe814-748a-41cb-8a94-60e18fb3c442:backup_agent_admin
+        - urn:acronis.com::policy_management:4b07e4a1-a49b-4d4e-b8f2-253f1fef98ad|10858a46-db9b-4725-aa60-fff6252841fd:apply_revoke
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - token
+      - created_at
+      - expires_at
+      - tenant_id
+      - scopes
+      properties:
+        id:
+          description: Initial registration token unique identifier.
+          type: integer
+        token:
+          description: Initial registration token.
+          type: string
+          pattern: '[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}'
+        created_at:
+          $ref: '#/components/schemas/item1'
+        expires_at:
+          $ref: '#/components/schemas/item1'
+        tenant_id:
+          description: Numeric identifier of the resource owner tenant.
+          type: string
+          pattern: \d+
+        tenant_uuid:
+          $ref: '#/components/schemas/uuid'
+        scopes:
+          description: 'Access scopes that are applied to the registered resource. The following access scope patterns are available:
+
+            - `urn:acronis.com:tenant-id:{personal_tenant_id}:backup_agent_admin` - binds the resource to the user by personal tenant ID specified in `{personal_tenant_id}`.
+
+            - `urn:acronis.com::policy_management:{tenant_id}|{policy_id}:apply_revoke` - applies a protection plan to a resource by policy ID specified in `{policy_id}` from a resource owner tenant specified in `{tenant_id}`.'
+          type: array
+          items:
+            type: string
+    usageOutput:
+      type: object
+      additionalProperties: false
+      required:
+      - application_id
+      - name
+      - edition
+      - usage_name
+      - type
+      - measurement_unit
+      - range_start
+      - value
+      properties:
+        application_id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        edition:
+          description: This field can have a null value.
+          type:
+          - string
+          - 'null'
+        usage_name:
+          type: string
+        type:
+          $ref: '#/components/schemas/offeringItemType'
+        measurement_unit:
+          $ref: '#/components/schemas/measurementUnits'
+        infra_id:
+          $ref: '#/components/schemas/uuid'
+        tenant_uuid:
+          $ref: '#/components/schemas/uuid'
+        tenant_id:
+          type: integer
+        range_start:
+          $ref: '#/components/schemas/item1'
+        absolute_value:
+          type: integer
+          minimum: 0
+        value:
+          type: integer
+          minimum: 0
+        offering_item:
+          type: object
+          required:
+          - status
+          properties:
+            status:
+              type: integer
+            quota:
+              $ref: '#/components/schemas/quota'
+    offeringItemType:
+      enum:
+      - count
+      - feature
+      - infra
+      type: string
+    editionSwitchPut:
+      example:
+        target_edition: disaster_recovery
+        application_id: c6ab7fb4-b461-4214-9257-86fbad8efb85
+      type: object
+      additionalProperties: false
+      required:
+      - target_edition
+      - application_id
+      properties:
+        target_edition:
+          description: Target edition to switch to.
+          type: string
+        application_id:
+          $ref: '#/components/schemas/uuid'
+    registrationTokenPostV2:
+      example:
+        expires_in: 3600
+        scopes:
+        - urn:acronis.com:tenant-id:734fe814-748a-41cb-8a94-60e18fb3c442:backup_agent_admin
+        - urn:acronis.com::policy_management:20435cc8-0b12-4b57-94c7-33afb28f0f34|10858a46-db9b-4725-aa60-fff6252841fd:apply_revoke
+      type: object
+      additionalProperties: false
+      required:
+      - expires_in
+      - scopes
+      properties:
+        expires_in:
+          description: Token expiration time in seconds. Should be less than or equal to one year.
+          type: integer
+        scopes:
+          description: 'Access scopes that are applied to the registered resource. The following access scope patterns are available:
+
+            - `urn:acronis.com:tenant-id:{personal_tenant_id}:backup_agent_admin` - binds the resource to the user by personal tenant ID specified in `{personal_tenant_id}`.
+
+            - `urn:acronis.com::policy_management:{tenant_id}|{policy_id}:apply_revoke` - applies a protection plan to a resource by policy ID specified in `{policy_id}` from a resource owner tenant specified in `{tenant_id}`.'
+          type: array
+          items:
+            type: string
+    tenantPut:
+      example:
+        name: Renamed Tenant
+        version: 1
+        brand_id: 1111
+        internal_tag: null
+        customer_id: null
+        parent_id: c4878582-6e14-451e-9bda-3ff899b3f700
+        kind: folder
+        language: en
+        contact:
+          firstname: New Name
+      type: object
+      additionalProperties: false
+      required:
+      - version
+      properties:
+        name:
+          description: Human-readable name that will be displayed to the users.
+          type: string
+        customer_type:
+          $ref: '#/components/schemas/customerType'
+        parent_id:
+          $ref: '#/components/schemas/uuid'
+        kind:
+          $ref: '#/components/schemas/tenantKind'
+        contact:
+          $ref: '#/components/schemas/contactPut'
+        enabled:
+          description: Flag, indicates whether the tenant is enabled or disabled.
+          type: boolean
+        customer_id:
+          description: ID from external system; for reporting purposes. This field can have a null value.
+          type:
+          - string
+          - 'null'
+        version:
+          description: Tenant`s version.
+          type: integer
+        brand_id:
+          description: Deprecated field. Brand cannot be changed using this.
+          type:
+          - integer
+          - 'null'
+        internal_tag:
+          description: Internal tag. This field can have a null value.
+          type:
+          - string
+          - 'null'
+        language:
+          description: Tenant`s preferred language.
+          type: string
+        default_idp_id:
+          $ref: '#/components/schemas/uuid'
+        update_lock:
+          type: object
+          required:
+          - enabled
+          properties:
+            enabled:
+              description: If true, updating the tenant via API is not allowed to anyone except for users of the tenant that owns the lock.
+              type: boolean
+        ancestral_access:
+          description: Indicates whether tenant's indirect ancestors have access to it.
+          type: boolean
+        external_operation_status:
+          description: External operation status.
+          enum:
+          - no_operation
+          - deleting
+          - recovering
+          type: string
+    tenantPricingSettingsPut:
+      example:
+        version: 1497533157730
+        mode: production
+        currency: USD
+      type: object
+      additionalProperties: false
+      required:
+      - version
+      properties:
+        mode:
+          $ref: '#/components/schemas/pricingMode'
+        currency:
+          description: Currency of all offering item prices for this tenant. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/currency'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+    tenantPutIdpId:
+      example:
+        version: 1
+        idp_id: c4878582-6e14-451e-9bda-3ff899b3f700
+        apply_to_children: true
+      type: object
+      additionalProperties: false
+      required:
+      - version
+      - idp_id
+      - apply_to_children
+      properties:
+        version:
+          description: Tenant`s version.
+          type: integer
+        idp_id:
+          $ref: '#/components/schemas/uuid'
+        apply_to_children:
+          description: If True - new default identity provider ID will be set to tenant's children as well
+          type: boolean
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    pricingMode:
+      description: Mode of tenant's pricing.
+      enum:
+      - trial
+      - production
+      - suspended
+      type: string
+    usageList:
+      example:
+        value:
+          items:
+          - application_id: c6ab7fb4-b461-4214-9257-86fbad8efb85
+            name: adv_vms
+            edition: advanced
+            usage_name: vms
+            type: count
+            measurement_unit: quantity
+            range_start: '2017-06-01T00:00:00'
+            absolute_value: 800
+            value: 800
+            offering_item:
+              status: 1
+              quota:
+                value: 10
+                overage: 10
+                version: 1486479690324
+          - application_id: c6ab7fb4-b461-4214-9257-86fbad8efb85
+            name: storage
+            edition: standard
+            usage_name: storage
+            type: infra
+            measurement_unit: bytes
+            infra_id: df476eec-c470-40b0-9b10-37223b7f4a2b
+            range_start: '2017-06-22T00:00:00'
+            absolute_value: 800
+            value: 800
+            offering_item:
+              status: 1
+              quota:
+                value: 1000
+                overage: 2000
+                version: 1486479690324
+          - application_id: c6ab7fb4-b461-4214-9257-86fbad8efb85
+            name: vm_storage
+            edition: standard
+            usage_name: vm_storage
+            range_start: '2017-06-01T00:00:00'
+            type: infra
+            measurement_unit: bytes
+            absolute_value: 100000
+            value: 100000
+      type: object
+      additionalProperties: false
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/usageOutput'
+    customerType:
+      description: A type of the customer.
+      enum:
+      - default
+      - enterprise
+      - consumer
+      - small_office
+      - ti_unified
+      type: string
+    oiPricingSettingsPut:
+      example:
+        items:
+        - application_id: b037d1f6-25cf-4a9c-98f1-d3e41c100948
+          name: storage
+          infra_id: 05348371-d95e-4cab-af2a-8e2cadafc30d
+          price: '0.05'
+          version: 1497533157730
+        - application_id: b037d1f6-25cf-4a9c-98f1-d3e41c100948
+          name: servers
+          price: '600'
+          version: 1497533157730
+        - application_id: b037d1f6-25cf-4a9c-98f1-d3e41c100948
+          name: vms
+          price: '0'
+          version: 1497533157730
+      type: object
+      additionalProperties: false
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - application_id
+            - name
+            - price
+            properties:
+              application_id:
+                $ref: '#/components/schemas/uuid'
+              infra_id:
+                $ref: '#/components/schemas/uuid'
+              name:
+                description: Usage name (type).
+                type: string
+              price:
+                description: Price of offering item. Passed as a string to preserve decimal accuracy.
+                type: string
+              version:
+                description: Auto-incremented entity version.
+                type: integer
+    currency:
+      description: Currency.
+      enum:
+      - AUD
+      - BRL
+      - CAD
+      - EUR
+      - CNY
+      - GBP
+      - JPY
+      - KZT
+      - NZD
+      - RUB
+      - USD
+      - ZAR
+      type: string
+    tenantPricingSettings:
+      example:
+        version: 1497533157730
+        mode: production
+        currency: USD
+        production_start_date: '2020-05-19T00:00:00'
+      type: object
+      required:
+      - mode
+      - currency
+      - version
+      - production_start_date
+      properties:
+        mode:
+          $ref: '#/components/schemas/pricingMode'
+        currency:
+          description: Currency of all offering item prices for this tenant. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/currency'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        production_start_date:
+          description: Production pricing mode start date (timestamp).
+          allOf:
+          - $ref: '#/components/schemas/item1'
+    batchUsageList:
+      example:
+        value:
+          items:
+          - tenant: 2b5172d7-4374-40db-8e11-08decbc53878
+            usages:
+            - application_id: c6ab7fb4-b461-4214-9257-86fbad8efb85
+              name: vms
+              edition: standard
+              usage_name: vms
+              range_start: '2017-06-01T00:00:00'
+              absolute_value: 800
+              value: 800
+              type: count
+              measurement_unit: quantity
+              offering_item:
+                status: 1
+                quota:
+                  value: 10
+                  overage: 10
+                  version: 1486479690324
+            - application_id: c6ab7fb4-b461-4214-9257-86fbad8efb85
+              name: vm_storage
+              edition: mixed
+              usage_name: vm_storage
+              type: infra
+              measurement_unit: bytes
+              range_start: '2017-06-01T00:00:00'
+              absolute_value: 100000
+              value: 100000
+          - tenant: aedde3dc-5954-448a-820a-0220cf32ecb1
+            usages:
+            - application_id: c6ab7fb4-b461-4214-9257-86fbad8efb85
+              name: adv_vms
+              edition: advanced
+              usage_name: vms
+              range_start: '2017-06-01T00:00:00'
+              absolute_value: 500
+              value: 500
+              type: count
+              measurement_unit: quantity
+              offering_item:
+                status: 1
+                quota:
+                  value: 11
+                  overage: 12
+                  version: 1486479690324
+            - application_id: c6ab7fb4-b461-4214-9257-86fbad8efb85
+              name: vm_storage
+              edition: mixed
+              usage_name: vm_storage
+              type: infra
+              measurement_unit: bytes
+              range_start: '2017-06-01T00:00:00'
+              absolute_value: 110000
+              value: 110000
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - tenant
+            - usages
+            properties:
+              tenant:
+                $ref: '#/components/schemas/uuid'
+              usages:
+                type: array
+                items:
+                  $ref: '#/components/schemas/usageOutput'
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    contactPut:
+      example:
+        tenant_id: f313ecf6-9256-4afd-9d47-72e032ee81d0
+        user_id: 1bfe361d-fcb8-43ff-8f43-9ecc29a08ea5
+        types:
+        - legal
+        - primary
+        - billing
+        - technical
+        - management
+        email: owner@mysite.com
+        address1: '1440 River Drive #100'
+        address2: ''
+        country: USA
+        state: CA
+        city: Rivertown
+        zipcode: '12345'
+        phone: '123456789'
+        firstname: Company
+        lastname: Owner
+        title: Mr.
+        website: www.mysite.com
+        industry: IT
+        organization_size: 50-100
+        email_confirmed: true
+        aan: '111111'
+        language: en
+        fax: 123 Example Street
+      type: object
+      additionalProperties: false
+      properties:
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        user_id:
+          $ref: '#/components/schemas/uuid'
+        types:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            enum:
+            - legal
+            - primary
+            - billing
+            - technical
+            - management
+            type: string
+        email:
+          $ref: '#/components/schemas/email'
+        address1:
+          type:
+          - string
+          - 'null'
+        address2:
+          type:
+          - string
+          - 'null'
+        country:
+          type:
+          - string
+          - 'null'
+        state:
+          type:
+          - string
+          - 'null'
+        city:
+          type:
+          - string
+          - 'null'
+        zipcode:
+          type:
+          - string
+          - 'null'
+        phone:
+          type:
+          - string
+          - 'null'
+        firstname:
+          type:
+          - string
+          - 'null'
+        lastname:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        website:
+          type:
+          - string
+          - 'null'
+        industry:
+          type:
+          - string
+          - 'null'
+        organization_size:
+          type:
+          - string
+          - 'null'
+        email_confirmed:
+          type:
+          - boolean
+          - 'null'
+        aan:
+          type:
+          - string
+          - 'null'
+        language:
+          type:
+          - string
+          - 'null'
+        fax:
+          type:
+          - string
+          - 'null'
+    email:
+      type: string
+      pattern: ^$|\S+@\S+
+    mfaTenantStatus:
+      example:
+        mfa_status: enabled
+        users_count: 100
+        users_with_totp_enabled_count: 20
+        update_allowed: true
+      type: object
+      required:
+      - mfa_status
+      - update_allowed
+      - users_count
+      - users_with_totp_enabled_count
+      properties:
+        mfa_status:
+          description: Status of MFA for tenant.
+          enum:
+          - disabled
+          - disable_in_progress
+          - enabled
+          type: string
+        users:
+          description: Total number of active users in this tenant (including child folders or units of the same organization).
+          type: integer
+        users_with_totp_enabled:
+          description: Number of users in this tenant (including child folders or units of the same organization) with TOTP configured.
+          type: integer
+        update_allowed:
+          description: True if logged in user can change MFA status for this tenant.
+          type: boolean
+        users_count: {}
+        users_with_totp_enabled_count: {}
+    offeringItemList:
+      example:
+        value:
+          timestamp: '2016-06-22T18:25:16'
+          items:
+          - application_id: a9fd8016-0e00-4ade-949e-6efe8672dac0
+            name: vms
+            edition: standard
+            usage_name: vms
+            tenant_id: f313ecf6-9256-4afd-9d47-72e032ee81d0
+            updated_at: '2016-06-22T18:25:16'
+            deleted_at: null
+            status: 1
+            locked: true
+            type: count
+            measurement_unit: quantity
+            quota:
+              value: 10
+              overage: 10
+              version: 1486479690324
+          - application_id: a9fd8016-0e00-4ade-949e-6efe8672dac0
+            name: dre_mobiles
+            edition: disaster_recovery
+            usage_name: mobiles
+            tenant_id: f313ecf6-9256-4afd-9d47-72e032ee81d0
+            updated_at: '2016-06-22T18:25:16'
+            deleted_at: null
+            status: 1
+            locked: false
+            type: count
+            measurement_unit: quantity
+            quota:
+              value: 10
+              overage: 10
+              version: 1486479690324
+          - application_id: a9fd8016-0e00-4ade-949e-6efe8672dac0
+            name: local_storage
+            edition: null
+            usage_name: local_storage
+            tenant_id: f313ecf6-9256-4afd-9d47-72e032ee81d0
+            updated_at: '2016-06-22T18:25:16'
+            deleted_at: null
+            status: 1
+            type: feature
+            measurement_unit: n/a
+          - application_id: a9fd8016-0e00-4ade-949e-6efe8672dac0
+            name: adv_storage
+            edition: advanced
+            usage_name: storage
+            tenant_id: f313ecf6-9256-4afd-9d47-72e032ee81d0
+            updated_at: '2016-06-22T18:25:16'
+            deleted_at: null
+            status: 1
+            locked: true
+            type: infra
+            measurement_unit: bytes
+            infra_id: ee978065-8caa-463d-82d7-47006376e7f2
+            quota:
+              value: 1000
+              overage: null
+              version: 1486479690324
+      type: object
+      required:
+      - timestamp
+      - items
+      properties:
+        paging:
+          $ref: '#/components/schemas/paging'
+        timestamp:
+          $ref: '#/components/schemas/item1'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/items_3'
+    editionSwitchWarnings:
+      example:
+        warnings:
+        - OldFeaturesBecomeUnavailable
+        - NewFeaturesBecomeAvailable
+        - SomePlansWillStopWorking
+        - AllDevicesWithBackupsPreserved
+        - UsageStatisticsWillMigrate
+        - AdvCyberProtectBecomeUnavailable
+      type: object
+      required:
+      - warnings
+      properties:
+        warnings:
+          description: Warning codes that should be displayed on edition switch.
+          type: array
+          items:
+            type: string
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-      description: OAuth2 bearer token obtained from /idp/token
     basicAuth:
       type: http
       scheme: basic
-      description: Base64-encoded client_id:client_secret
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

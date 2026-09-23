@@ -1,0 +1,567 @@
+openapi: 3.2.0
+info:
+  title: Account Management Locations API
+  version: '2'
+servers:
+- url: https://dev-cloud.acronis.com/api/2
+  variables: {}
+tags:
+- name: Locations
+paths:
+  /locations:
+    get:
+      operationId: FetchInfrastructuresLocationsBatch
+      description: Fetches a batch of infrastructure locations.
+      parameters:
+      - name: uuids
+        description: Comma-separated list of infrastructures locations' UUIDs.
+        required: true
+        in: query
+        schema:
+          description: Comma-separated list of infrastructures locations' UUIDs.
+          example: 1e4d7438-0ebe-11e7-b131-c7b5bde6feed,248c535a-0ebe-11e7-a80e-bbdaa1d60c7c
+          type: string
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/locationBatch'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+        - urn:acronis.com::account-server::readonly_admin
+      tags:
+      - Locations
+      summary: Fetch infrastructures locations batch
+      x-summary-source: derived
+    post:
+      operationId: CreateInfrastructuresLocation
+      description: Creates a new infrastructures location.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/locationPost'
+      responses:
+        '201':
+          description: Infrastructure location was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/location'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Locations
+      summary: Create infrastructures location
+      x-summary-source: derived
+  /locations/{location_id}:
+    delete:
+      operationId: DeleteInfrastructuresLocation
+      description: Deletes an infrastructure location by ID.
+      parameters:
+      - name: version
+        description: Growing number of object internal version.
+        required: true
+        in: query
+        schema:
+          description: Growing number of object internal version.
+          example: 1559561146223
+          type: integer
+      - name: location_id
+        description: Infrastructures location ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Infrastructures location ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: Infrastructure location was successfully removed.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Locations
+      summary: Delete infrastructures location
+      x-summary-source: derived
+    put:
+      operationId: UpdateInfrastructuresLocation
+      description: Updates an infrastructure location by ID.
+      parameters:
+      - name: location_id
+        description: Infrastructures location ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Infrastructures location ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/locationPut'
+      responses:
+        '200':
+          description: Infrastructure location was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/location'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '409':
+          description: Another object of the same type already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+      tags:
+      - Locations
+      summary: Update infrastructures location
+      x-summary-source: derived
+    get:
+      operationId: FetchInfrastructuresLocation
+      description: Fetches an infrastructure location by ID.
+      parameters:
+      - name: location_id
+        description: Infrastructures location ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Infrastructures location ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/location'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+        - urn:acronis.com::account-server::readonly_admin
+      tags:
+      - Locations
+      summary: Fetch infrastructures location
+      x-summary-source: derived
+  /locations/{location_id}/infra:
+    get:
+      operationId: FetchLocationInfrastructures
+      description: Fetches batch of infrastructure components of the provided location.
+      parameters:
+      - name: location_id
+        description: Infrastructures location ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Infrastructures location ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/infraList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - oauth2:
+        - urn:acronis.com::account-server::root_admin
+        - urn:acronis.com::account-server::partner_admin
+        - urn:acronis.com::account-server::company_admin
+        - urn:acronis.com::account-server::unit_admin
+        - urn:acronis.com::account-server::readonly_admin
+      tags:
+      - Locations
+      summary: Fetch location infrastructures
+      x-summary-source: derived
+components:
+  schemas:
+    location:
+      example:
+        id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
+        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+        platform_owned: true
+        name: Boston Infrastructure
+        version: 3
+        readonly: false
+      type: object
+      required:
+      - id
+      - owner_tenant_id
+      - platform_owned
+      - name
+      - version
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        owner_tenant_id:
+          $ref: '#/components/schemas/uuid'
+        platform_owned:
+          description: Is infra location owned by Platform.
+          type: boolean
+        name:
+          description: Human-readable name of infrastructure location that will be displayed to the users.
+          type: string
+        version:
+          description: Auto-incremented infrastructure location version.
+          type: integer
+        readonly:
+          description: True if location details are accessible in a limited way, e.g. location is owned by some ancestor.
+          type: boolean
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    infraList:
+      example:
+        infras:
+        - d9fd4cc3-4309-40a2-bd79-88da24a1c99d
+        - 7068976a-22c0-476e-ae3b-5f0469981ff1
+      type: object
+      properties:
+        infras:
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid'
+    locationPut:
+      example:
+        name: Boston Infrastructure
+        version: 10
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - version
+      properties:
+        name:
+          description: Human-readable name of infrastructure location that will be displayed to the users.
+          type: string
+        version:
+          description: Auto-incremented infrastructure location version.
+          type: integer
+    locationBatch:
+      example:
+        items:
+        - id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
+          owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+          platform_owned: true
+          name: Capetown Infrastructure
+          version: 3
+          readonly: false
+        - id: 3d1efc54-4e9a-4db1-abe6-7d2aee50cead
+          owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+          platform_owned: false
+          name: Singapore Infrastructure
+          version: 5
+          readonly: false
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/location'
+    locationPost:
+      example:
+        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+        name: Boston Infrastructure
+      type: object
+      additionalProperties: false
+      required:
+      - owner_tenant_id
+      - name
+      properties:
+        owner_tenant_id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          description: Human-readable name of infrastructure location that will be displayed to the users.
+          type: string
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

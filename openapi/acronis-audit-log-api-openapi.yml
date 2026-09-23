@@ -1,0 +1,403 @@
+openapi: 3.2.0
+info:
+  title: File Sync & Share Audit Log API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/fc/api/v1
+  variables: {}
+tags:
+- name: Audit Log
+paths:
+  /audit_log:
+    get:
+      operationId: Get audit log entries list
+      description: Gets a list of audit log entries
+      parameters:
+      - name: filter_user
+        description: 'Filter by user UUID
+
+
+          Set to `"-"` to return log entries not associated with a user'
+        required: false
+        in: query
+        schema:
+          description: 'Filter by user UUID
+
+
+            Set to `"-"` to return log entries not associated with a user'
+          type: string
+      - name: filter_share
+        description: 'Filter by shared folder UUID
+
+
+          Set to `"-"` to return log entries not associated with a shared folder'
+        required: false
+        in: query
+        schema:
+          description: 'Filter by shared folder UUID
+
+
+            Set to `"-"` to return log entries not associated with a shared folder'
+          type: string
+      - name: filter_node_uuid
+        description: 'Filter by node UUID
+
+
+          Set to `"-"` to return log entries not associated with a node'
+        required: false
+        in: query
+        schema:
+          description: 'Filter by node UUID
+
+
+            Set to `"-"` to return log entries not associated with a node'
+          type: string
+      - name: filter_severity
+        description: 'Filter by severity level
+
+
+          Severity levels are:
+
+
+          - `1` - Info
+
+          - `2` - Warning
+
+          - `3` - Error
+
+          - `4` - Fatal'
+        required: false
+        in: query
+        schema:
+          description: 'Filter by severity level
+
+
+            Severity levels are:
+
+
+            - `1` - Info
+
+            - `2` - Warning
+
+            - `3` - Error
+
+            - `4` - Fatal'
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          type: integer
+      - name: filter_text
+        description: Filter by text
+        required: false
+        in: query
+        schema:
+          description: Filter by text
+          type: string
+      - name: filter_from
+        description: Filter by date and time (on or after the specified datetime)
+        required: false
+        in: query
+        schema:
+          description: Filter by date and time (on or after the specified datetime)
+          type: string
+          format: date-time
+      - name: filter_to
+        description: Filter by date and time (on or before the specified datetime)
+        required: false
+        in: query
+        schema:
+          description: Filter by date and time (on or before the specified datetime)
+          type: string
+          format: date-time
+      - name: per_page
+        description: The number of items to be retrieved
+        required: false
+        in: query
+        schema:
+          description: The number of items to be retrieved
+          type: integer
+      - name: page
+        description: 'The page to return
+
+
+          Starts from 1'
+        required: false
+        in: query
+        schema:
+          description: 'The page to return
+
+
+            Starts from 1'
+          type: integer
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '200':
+          description: Successfully retrieved the list of audit log entries
+          content:
+            application/json:
+              schema:
+                example:
+                - uuid: 2057c38b-4dba-4fb3-bc83-f77562cac980
+                  code: 0
+                  created_at: '2019-06-25T13:25:36Z'
+                  text: Added new file 'file.txt'.
+                  severity: 1
+                  node_uuid: b8a80643-9d35-43dd-a7f6-c05aaf1d5606
+                  owner_uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                  node:
+                    uuid: b8a80643-9d35-43dd-a7f6-c05aaf1d5606
+                    name: file.txt
+                  user:
+                    uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                    name: user
+                    email: user@example.com
+                - uuid: c94ad17d-5727-41d9-ab15-cfc72349e555
+                  code: 0
+                  created_at: '2019-06-25T12:46:56Z'
+                  text: Added new share 'Folder'.
+                  severity: 1
+                  share_uuid: 444f4f94-9f0e-4183-9d47-b1804e819f61
+                  owner_uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                  share:
+                    uuid: 444f4f94-9f0e-4183-9d47-b1804e819f61
+                    name: Folder
+                  user:
+                    uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                    name: user
+                    email: user@example.com
+                - uuid: b2abe6d6-2077-41d6-937b-db76ea4bf839
+                  code: 0
+                  created_at: '2019-04-04T03:00:00Z'
+                  text: Log purge completed. 1 entries older than 2019-01-04 were purged from the log.
+                  severity: 1
+                - uuid: 61dd43d3-a0fe-4d65-9dc8-5ecfe7a070ce
+                  code: 0
+                  created_at: '2019-06-18T12:05:53Z'
+                  text: Error uploading file to repository
+                  severity: 3
+                  owner_uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                  user:
+                    uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                    name: user
+                    email: user@example.com
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLogEntry'
+        '206':
+          description: Successfully retrieved part of the list
+          headers:
+            Content-Range:
+              description: The range of returned items relative to the whole collection
+              required: true
+              schema:
+                description: The range of returned items relative to the whole collection
+                example: items 1-4/10
+                type: string
+          content:
+            application/json:
+              schema:
+                example:
+                - uuid: 2057c38b-4dba-4fb3-bc83-f77562cac980
+                  code: 0
+                  created_at: '2019-06-25T13:25:36Z'
+                  text: Added new file 'file.txt'.
+                  severity: 1
+                  node_uuid: b8a80643-9d35-43dd-a7f6-c05aaf1d5606
+                  owner_uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                  node:
+                    uuid: b8a80643-9d35-43dd-a7f6-c05aaf1d5606
+                    name: file.txt
+                  user:
+                    uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                    name: user
+                    email: user@example.com
+                - uuid: c94ad17d-5727-41d9-ab15-cfc72349e555
+                  code: 0
+                  created_at: '2019-06-25T12:46:56Z'
+                  text: Added new share 'Folder'.
+                  severity: 1
+                  share_uuid: 444f4f94-9f0e-4183-9d47-b1804e819f61
+                  owner_uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                  share:
+                    uuid: 444f4f94-9f0e-4183-9d47-b1804e819f61
+                    name: Folder
+                  user:
+                    uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                    name: user
+                    email: user@example.com
+                - uuid: b2abe6d6-2077-41d6-937b-db76ea4bf839
+                  code: 0
+                  created_at: '2019-04-04T03:00:00Z'
+                  text: Log purge completed. 1 entries older than 2019-01-04 were purged from the log.
+                  severity: 1
+                - uuid: 61dd43d3-a0fe-4d65-9dc8-5ecfe7a070ce
+                  code: 0
+                  created_at: '2019-06-18T12:05:53Z'
+                  text: Error uploading file to repository
+                  severity: 3
+                  owner_uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                  user:
+                    uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+                    name: user
+                    email: user@example.com
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLogEntry'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Audit Log
+      summary: Get audit log entries list
+      x-summary-source: derived
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
+    AuditLogEntry:
+      example:
+        uuid: 2057c38b-4dba-4fb3-bc83-f77562cac980
+        code: 0
+        created_at: '2019-06-25T13:25:36Z'
+        text: Added new file 'file.txt'.
+        severity: 1
+        node_uuid: b8a80643-9d35-43dd-a7f6-c05aaf1d5606
+        owner_uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+        node:
+          uuid: b8a80643-9d35-43dd-a7f6-c05aaf1d5606
+          name: file.txt
+        user:
+          uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+          name: user
+          email: user@example.com
+      type: object
+      required:
+      - uuid
+      - code
+      - created_at
+      - text
+      - severity
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UUID'
+        code:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        text:
+          type: string
+        severity:
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          type: integer
+        node_uuid:
+          $ref: '#/components/schemas/UUID'
+        share_uuid:
+          $ref: '#/components/schemas/UUID'
+        owner_uuid:
+          $ref: '#/components/schemas/UUID'
+        share:
+          type: object
+          required:
+          - uuid
+          - name
+          properties:
+            uuid:
+              $ref: '#/components/schemas/UUID'
+            name:
+              type: string
+        node:
+          type: object
+          required:
+          - uuid
+          - name
+          properties:
+            uuid:
+              $ref: '#/components/schemas/UUID'
+            name:
+              type: string
+        user:
+          type: object
+          required:
+          - uuid
+          - name
+          - email
+          properties:
+            uuid:
+              $ref: '#/components/schemas/UUID'
+            name:
+              type: string
+            email:
+              type: string
+    UUID:
+      description: Universally unique identifier
+      example: b8ccbf27-4e92-41a9-8b66-d78108985321
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+  securitySchemes:
+    oauth_2_0:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes: {}
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

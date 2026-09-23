@@ -1,0 +1,967 @@
+openapi: 3.2.0
+info:
+  title: File Sync & Share Settings API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/fc/api/v1
+  variables: {}
+tags:
+- name: Settings
+paths:
+  /settings/purging_policies:
+    get:
+      operationId: Get purging policies settings
+      description: Gets the purging policies settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '200':
+          description: Successfully retrieved the purging policies settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurgingPoliciesSettings'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Get purging policies settings
+      x-summary-source: derived
+    put:
+      operationId: Update purging policies settings
+      description: Updates purging policies settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                purging_policies_settings:
+                  purge_deleted_files_older_than_enabled: true
+                  purge_deleted_files_older_than_n: 2
+                  purge_deleted_files_older_than_units: weeks
+                  purge_revisions_older_than_enabled: true
+                  purge_revisions_older_than_n: 1
+                  purge_revisions_older_than_units: months
+                  keep_at_least_n_revisions_enabled: true
+                  keep_at_least_n_revisions: 3
+                  only_keep_n_revisions_enabled: true
+                  only_keep_n_revisions: 10
+                  allow_users_to_selectively_purge_revisions: true
+              type: object
+              required:
+              - purging_policies_settings
+              properties:
+                purging_policies_settings:
+                  type: object
+                  properties:
+                    purge_deleted_files_older_than_enabled:
+                      description: Whether to purge deleted files
+                      type: boolean
+                    purge_deleted_files_older_than_n:
+                      description: The number of time units for purging deleted files
+                      type: integer
+                      minimum: 1
+                    purge_deleted_files_older_than_units:
+                      description: The time unit for purging deleted files
+                      enum:
+                      - days
+                      - weeks
+                      - months
+                      type: string
+                    purge_revisions_older_than_enabled:
+                      description: Whether to purge previous revisions
+                      type: boolean
+                    purge_revisions_older_than_n:
+                      description: The number of time units for purging previous revisions
+                      type: integer
+                      minimum: 1
+                    purge_revisions_older_than_units:
+                      description: The time unit for purging previous revisions
+                      enum:
+                      - days
+                      - weeks
+                      - months
+                      type: string
+                    keep_at_least_n_revisions_enabled:
+                      description: Whether to keep a number of revisions regardless of their age
+                      type: boolean
+                    keep_at_least_n_revisions:
+                      description: The number of revisions to keep from purging
+                      type: integer
+                      minimum: 1
+                    only_keep_n_revisions_enabled:
+                      description: Whether to keep only a certain number of revisions
+                      type: boolean
+                    only_keep_n_revisions:
+                      description: The number of revisions to keep
+                      type: integer
+                      minimum: 1
+                    allow_users_to_selectively_purge_revisions:
+                      description: Whether to allow users to selectively purge revisions
+                      type: boolean
+      responses:
+        '204':
+          description: Successfully updated the purging policies settings
+          content: {}
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Update purging policies settings
+      x-summary-source: derived
+  /settings/server:
+    get:
+      operationId: Get server settings
+      description: Gets the server settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '200':
+          description: Successfully retrieved the server settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerSettings'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Get server settings
+      x-summary-source: derived
+    put:
+      operationId: Update server settings
+      description: Updates the server settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                server_settings:
+                  server_name: Acronis Files Protect
+                  root_web_address: https://dev-cloud.acronis.com
+                  default_locale: de
+                  session_timeout_in_minutes: 120
+                  notification_admin_enabled: true
+                  notification_admin_email: administrator1@example.com;administrator2@example.com
+                  notification_admin_frequency: 120
+              type: object
+              required:
+              - server_settings
+              properties:
+                server_settings:
+                  type: object
+                  properties:
+                    server_name:
+                      description: Cosmetic server name used for the website's title and in admin notification email messages
+                      type: string
+                    root_web_address:
+                      description: DNS name or IP address of the website
+                      type: string
+                    default_locale:
+                      description: Language for new Audit Log messages
+                      enum:
+                      - cs
+                      - de
+                      - en
+                      - es
+                      - fr
+                      - it
+                      - ja
+                      - ko
+                      - pl
+                      - ru
+                      - zh_tw
+                      - zh_cn
+                      type: string
+                    session_timeout_in_minutes:
+                      description: Lifespan of the session, in minutes
+                      type: integer
+                      minimum: 1
+                    notification_admin_enabled:
+                      description: Whether to send email summary of errors to administrator(s)
+                      type: boolean
+                    notification_admin_email:
+                      description: 'Email address(es) of administrators to receive summary of errors
+
+
+                        Separate email addresses with comma `,` or semicolon `;`'
+                      type: string
+                    notification_admin_frequency:
+                      description: Frequency of sending email summary of errors to administrator(s), in minutes
+                      type: integer
+                      minimum: 1
+      responses:
+        '204':
+          description: Successfully updated the server settings
+          content: {}
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Update server settings
+      x-summary-source: derived
+  /settings/audit_log:
+    get:
+      operationId: Get audit log settings
+      description: Gets the audit log settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '200':
+          description: Successfully retrieved the audit log settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogSettings'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Get audit log settings
+      x-summary-source: derived
+    put:
+      operationId: Update audit log settings
+      description: Updates the audit log settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                audit_log_settings:
+                  purge_logs_older_than_enabled: 'true'
+                  purge_logs_older_than_units: days
+                  purge_logs_older_than_n: 7
+              type: object
+              required:
+              - audit_log_settings
+              properties:
+                audit_log_settings:
+                  description: Audit log settings
+                  type: object
+                  properties:
+                    purge_logs_older_than_enabled:
+                      description: Whether to purge old logs
+                      enum:
+                      - 'true'
+                      - 'false'
+                      type: string
+                    purge_logs_older_than_units:
+                      description: The time unit for purging old logs
+                      enum:
+                      - days
+                      - weeks
+                      - months
+                      type: string
+                    purge_logs_older_than_n:
+                      description: The number of time units for purging old logs
+                      type: integer
+                      minimum: 1
+      responses:
+        '204':
+          description: Successfully updated the audit log settings
+          content: {}
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Update audit log settings
+      x-summary-source: derived
+  /settings/security:
+    get:
+      operationId: Get security settings
+      description: Gets the security settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '200':
+          description: Successfully retrieved the security settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecuritySettings'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Get security settings
+      x-summary-source: derived
+    put:
+      operationId: Update security settings
+      description: Updates the security settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                security_settings:
+                  allow_collaborators_to_invite: 'true'
+                  node_share_link_enable: 'true'
+                  node_share_link_allow_public_links: 'false'
+                  node_share_link_allow_login_links: 'true'
+                  node_share_link_single_use_only: 'false'
+                  node_share_link_ttl_range_enable: 'true'
+                  node_share_link_ttl_max: 30
+                  shared_folder_expiration_required: 'true'
+                  shared_folder_expiration_max_days: 30
+              type: object
+              required:
+              - security_settings
+              properties:
+                security_settings:
+                  type: object
+                  properties:
+                    allow_collaborators_to_invite:
+                      description: Whether to allow collaborators to invite other users to shared folders
+                      enum:
+                      - 'true'
+                      - 'false'
+                      type: string
+                    node_share_link_enable:
+                      description: Whether to allow single file sharing
+                      enum:
+                      - 'true'
+                      - 'false'
+                      type: string
+                    node_share_link_allow_public_links:
+                      description: Whether to allow public file links
+                      enum:
+                      - 'true'
+                      - 'false'
+                      type: string
+                    node_share_link_allow_login_links:
+                      description: Whether to allow login-required file links
+                      enum:
+                      - 'true'
+                      - 'false'
+                      type: string
+                    node_share_link_single_use_only:
+                      description: Whether to allow only single-use file links
+                      enum:
+                      - 'true'
+                      - 'false'
+                      type: string
+                    node_share_link_ttl_range_enable:
+                      description: Whether to require file links to expire
+                      enum:
+                      - 'true'
+                      - 'false'
+                      type: string
+                    node_share_link_ttl_max:
+                      description: Maximum expiration time for file links, in days
+                      type: integer
+                      minimum: 1
+                    shared_folder_expiration_required:
+                      description: Whether to require shared folders to expire
+                      enum:
+                      - 'true'
+                      - 'false'
+                      type: string
+                    shared_folder_expiration_max_days:
+                      description: Maximum expiration time for shared folders, in days
+                      type: integer
+                      minimum: 1
+      responses:
+        '204':
+          description: Successfully updated the security settings
+          content: {}
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Update security settings
+      x-summary-source: derived
+  /settings/web_preview:
+    get:
+      operationId: Get web preview settings
+      description: Gets the web preview settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      responses:
+        '200':
+          description: Successfully retrieved the web preview settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebPreviewSettings'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Get web preview settings
+      x-summary-source: derived
+    put:
+      operationId: Update web preview settings
+      description: Updates the web preview settings
+      parameters:
+      - name: tenant_id
+        description: 'UUID of a tenant in which context to perform the request in
+
+
+          If not specified the request is executed in the current user''s tenant context'
+        required: false
+        in: query
+        schema:
+          description: 'UUID of a tenant in which context to perform the request in
+
+
+            If not specified the request is executed in the current user''s tenant context'
+          example: b8ccbf27-4e92-41a9-8b66-d78108985321
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                settings:
+                  office_online_integration_enabled: true
+                  office_online_wopi_url: https://office-online.com
+                  office_online_type_of_use: viewing-editing
+                  office_online_additional_services_enabled: true
+                  office_online_allow_self_signed_certificates: false
+                  web_preview_enabled: true
+                  only_allow_not_converted: false
+                  max_cache_size_mb: 10000
+                  servlet_allow_self_signed_certificates: false
+                  generation_max_concurrent_calls: 1
+              type: object
+              required:
+              - settings
+              properties:
+                settings:
+                  type: object
+                  properties:
+                    office_online_integration_enabled:
+                      description: Whether to enable the Office Online integration
+                      type: boolean
+                    office_online_wopi_url:
+                      description: URL to use for contacting Office Online
+                      type: string
+                    office_online_type_of_use:
+                      description: The allowed type of usage for Office Online
+                      enum:
+                      - editing
+                      - viewing-editing
+                      type: string
+                    office_online_additional_services_enabled:
+                      description: 'Whether to enable additional services for Office Online
+
+
+                        Microsoft services for Bing spelling, proofing and Smart Lookup'
+                      type: boolean
+                    office_online_allow_self_signed_certificates:
+                      description: Whether to allow connections to Office Online using self-signed certificates
+                      type: boolean
+                    web_preview_enabled:
+                      description: Whether to enable the built-in document previewer
+                      type: boolean
+                    only_allow_not_converted:
+                      description: Whether to allow previewing only files that do not require conversion
+                      type: boolean
+                    max_cache_size_mb:
+                      description: Maximum allowed storage use for cached preview files, in MB
+                      type: integer
+                      minimum: 251
+                    servlet_allow_self_signed_certificates:
+                      description: Whether to allow connections to the web preview service using self-signed certificates
+                      type: boolean
+                    generation_max_concurrent_calls:
+                      description: Maximum allowed concurrent preview generation calls
+                      type: integer
+                      minimum: 1
+      responses:
+        '204':
+          description: Successfully updated the web preview settings
+          content: {}
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Administrative permissions required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - oauth_2_0: []
+      tags:
+      - Settings
+      summary: Update web preview settings
+      x-summary-source: derived
+components:
+  schemas:
+    SecuritySettings:
+      example:
+        allow_collaborators_to_invite: true
+        node_share_link_enable: false
+        node_share_link_allow_public_links: true
+        node_share_link_allow_login_links: true
+        node_share_link_single_use_only: false
+        node_share_link_ttl_range_enable: true
+        node_share_link_ttl_max: 365
+        shared_folder_expiration_required: false
+        shared_folder_expiration_max_days: 365
+      type: object
+      required:
+      - allow_collaborators_to_invite
+      - node_share_link_enable
+      - node_share_link_allow_public_links
+      - node_share_link_allow_login_links
+      - node_share_link_single_use_only
+      - node_share_link_ttl_range_enable
+      - node_share_link_ttl_max
+      - shared_folder_expiration_required
+      - shared_folder_expiration_max_days
+      properties:
+        allow_collaborators_to_invite:
+          type: boolean
+        node_share_link_enable:
+          type: boolean
+        node_share_link_allow_public_links:
+          type: boolean
+        node_share_link_allow_login_links:
+          type: boolean
+        node_share_link_single_use_only:
+          type: boolean
+        node_share_link_ttl_range_enable:
+          type: boolean
+        node_share_link_ttl_max:
+          type: integer
+        shared_folder_expiration_required:
+          type: boolean
+        shared_folder_expiration_max_days:
+          type: integer
+    Locale:
+      description: Locale code
+      enum:
+      - cs
+      - de
+      - en
+      - es
+      - fr
+      - it
+      - ja
+      - ko
+      - pl
+      - ru
+      - zh_tw
+      - zh_cn
+      type: string
+    WebPreviewSettings:
+      example:
+        office_online_integration_enabled: false
+        office_online_wopi_url: https://onenote.officeapps.live.com
+        office_online_type_of_use: editing
+        office_online_additional_services_enabled: false
+        office_online_allow_self_signed_certificates: false
+        web_preview_enabled: true
+        only_allow_not_converted: false
+        max_cache_size_mb: 2000
+        servlet_allow_self_signed_certificates: true
+        generation_max_concurrent_calls: 2
+      type: object
+      required:
+      - office_online_integration_enabled
+      - office_online_wopi_url
+      - office_online_type_of_use
+      - office_online_additional_services_enabled
+      - office_online_allow_self_signed_certificates
+      - web_preview_enabled
+      - only_allow_not_converted
+      - max_cache_size_mb
+      - servlet_allow_self_signed_certificates
+      - generation_max_concurrent_calls
+      properties:
+        office_online_integration_enabled:
+          type: boolean
+        office_online_wopi_url:
+          type: string
+        office_online_type_of_use:
+          enum:
+          - editing
+          - viewing-editing
+          type: string
+        office_online_additional_services_enabled:
+          type: boolean
+        office_online_allow_self_signed_certificates:
+          type: boolean
+        web_preview_enabled:
+          type: boolean
+        only_allow_not_converted:
+          type: boolean
+        max_cache_size_mb:
+          type: integer
+        servlet_allow_self_signed_certificates:
+          type: boolean
+        generation_max_concurrent_calls:
+          type: integer
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
+    PurgingPoliciesSettings:
+      example:
+        purge_deleted_files_older_than_enabled: false
+        purge_deleted_files_older_than_n: 2
+        purge_deleted_files_older_than_units: months
+        purge_revisions_older_than_enabled: false
+        purge_revisions_older_than_n: 1
+        purge_revisions_older_than_units: months
+        keep_at_least_n_revisions_enabled: false
+        keep_at_least_n_revisions: 5
+        only_keep_n_revisions_enabled: false
+        only_keep_n_revisions: 2
+        allow_users_to_selectively_purge_revisions: false
+      type: object
+      required:
+      - purge_deleted_files_older_than_enabled
+      - purge_deleted_files_older_than_n
+      - purge_deleted_files_older_than_units
+      - purge_revisions_older_than_enabled
+      - purge_revisions_older_than_n
+      - purge_revisions_older_than_units
+      - keep_at_least_n_revisions_enabled
+      - keep_at_least_n_revisions
+      - only_keep_n_revisions_enabled
+      - only_keep_n_revisions
+      - allow_users_to_selectively_purge_revisions
+      properties:
+        purge_deleted_files_older_than_enabled:
+          type: boolean
+        purge_deleted_files_older_than_n:
+          type: integer
+        purge_deleted_files_older_than_units:
+          enum:
+          - days
+          - weeks
+          - months
+          type: string
+        purge_revisions_older_than_enabled:
+          type: boolean
+        purge_revisions_older_than_n:
+          type: integer
+        purge_revisions_older_than_units:
+          enum:
+          - days
+          - weeks
+          - months
+          type: string
+        keep_at_least_n_revisions_enabled:
+          type: boolean
+        keep_at_least_n_revisions:
+          type: integer
+        only_keep_n_revisions_enabled:
+          type: boolean
+        only_keep_n_revisions:
+          type: integer
+        allow_users_to_selectively_purge_revisions:
+          type: boolean
+    AuditLogSettings:
+      example:
+        purge_logs_older_than_enabled: true
+        purge_logs_older_than_units: weeks
+        purge_logs_older_than_n: 3
+      type: object
+      required:
+      - purge_logs_older_than_enabled
+      - purge_logs_older_than_units
+      - purge_logs_older_than_n
+      properties:
+        purge_logs_older_than_enabled:
+          type: boolean
+        purge_logs_older_than_units:
+          enum:
+          - days
+          - weeks
+          - months
+          type: string
+        purge_logs_older_than_n:
+          type: integer
+    ServerSettings:
+      example:
+        server_name: Acronis Files Protect
+        root_web_address: https://dev-cloud.acronis.com
+        default_locale: en
+        session_timeout_in_minutes: 120
+        notification_admin_enabled: false
+        notification_admin_email: adminname@mycompany.com
+        notification_admin_frequency: 30
+      type: object
+      required:
+      - server_name
+      - root_web_address
+      - default_locale
+      - session_timeout_in_minutes
+      - notification_admin_enabled
+      - notification_admin_email
+      - notification_admin_frequency
+      properties:
+        server_name:
+          type: string
+        root_web_address:
+          type: string
+        default_locale:
+          $ref: '#/components/schemas/Locale'
+        session_timeout_in_minutes:
+          type: integer
+        notification_admin_enabled:
+          type: boolean
+        notification_admin_email:
+          type: string
+        notification_admin_frequency:
+          type: integer
+  securitySchemes:
+    oauth_2_0:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes: {}
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

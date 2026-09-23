@@ -1,0 +1,162 @@
+openapi: 3.2.0
+info:
+  title: PSA Statuses API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: Statuses
+paths:
+  /Statuses:
+    get:
+      operationId: Fetch statuses
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                - Statuses
+                properties:
+                  Statuses:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: false
+                      required:
+                      - Active
+                      - AllowInactive
+                      - ClassName
+                      - Id
+                      - IsStatusForClosedCall
+                      - LastChangeDate
+                      - Name
+                      - NextStatus
+                      - RequirePlanning
+                      - Sequence
+                      - StatusType
+                      - Tenant
+                      - Translation
+                      properties:
+                        Active:
+                          description: ''
+                          default: false
+                          type: boolean
+                        AllowInactive:
+                          description: ''
+                          default: false
+                          type: boolean
+                        ClassName:
+                          description: ''
+                          type: string
+                        Id:
+                          description: ''
+                          default: 00000000-0000-0000-0000-000000000000
+                          type: string
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        IsStatusForClosedCall:
+                          description: ''
+                          default: false
+                          type: boolean
+                        LastChangeDate:
+                          description: RFC3339-like date and time without timezone.
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+                        Name:
+                          description: ''
+                          type: string
+                        NextStatus:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        RequirePlanning:
+                          description: ''
+                          default: false
+                          type: boolean
+                        Sequence:
+                          description: ''
+                          default: 0
+                          type: integer
+                        StatusType:
+                          description: ''
+                          default: 0
+                          type: integer
+                        Tenant:
+                          description: ''
+                          default: 00000000-0000-0000-0000-000000000000
+                          type: string
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        Translation:
+                          description: ''
+                          type: string
+      security:
+      - oauth2: []
+      tags:
+      - Statuses
+      summary: Fetch statuses
+      x-summary-source: derived
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

@@ -1,0 +1,305 @@
+openapi: 3.2.0
+info:
+  title: Alert Manager Resource Status API
+  version: '1.0'
+servers:
+- url: https://dev-cloud.acronis.com/api/alert_manager/v1
+  variables: {}
+tags:
+- name: Resource Status
+paths:
+  /resource_status:
+    get:
+      operationId: Fetch resources containing the highest severity alerts
+      description: 'Fetches the resources'' statuses that contain the alerts with the highest severity found for the resources.
+
+        Resource with ID that was not found in `resourceId` parameter of any active alert considered to have the "ok" severity.
+
+
+        This endpoint may return multiple records for the same resource if it has multiple alerts with the same severity and the same creation time.'
+      parameters:
+      - name: id
+        description: 'IDs of the resources; if omitted, the response will contain statuses for all resources that have alerts.
+
+
+          For resources with multiple IDs, the client must specify resource''s IDs by using the `or()` operator:
+
+
+          * Example: `id=or(ID3,ID4,ID5)` - looks for status of a single resource
+
+
+          * Example: `id=ID1&id=or(ID3,ID4,ID5)&id=or(ID6,ID7)&id=ID8` - looks for status of four resources
+
+          '
+        in: query
+        schema:
+          description: 'IDs of the resources; if omitted, the response will contain statuses for all resources that have alerts.
+
+
+            For resources with multiple IDs, the client must specify resource''s IDs by using the `or()` operator:
+
+
+            * Example: `id=or(ID3,ID4,ID5)` - looks for status of a single resource
+
+
+            * Example: `id=ID1&id=or(ID3,ID4,ID5)&id=or(ID6,ID7)&id=ID8` - looks for status of four resources
+
+            '
+          type: array
+          items:
+            type: string
+      - name: embed_alert
+        description: If true, the entire alert object will be included in the response.
+        in: query
+        schema:
+          description: If true, the entire alert object will be included in the response.
+          default: false
+          type: boolean
+      responses:
+        '200':
+          description: List of alert grouping by resource IDs.
+          content:
+            application/json:
+              schema:
+                example:
+                  items:
+                  - id: 0A0E639A-4E27-4C61-AFFF-7BE314C30A33
+                    severity: critical
+                    alert:
+                      id: 01C2D69A-112B-4DE1-98AE-8688223C5F4B
+                      type: BackupFailed
+                      createdAt: '2021-04-02T22:16:16Z'
+                      severity: critical
+                      receivedAt: '2021-04-01T22:16:19.71025511Z'
+                      updatedAt: '2021-04-02T22:16:16.426961168Z'
+                      tenant:
+                        id: '56'
+                        locator: /1/10/20/30/
+                      details:
+                        activity:
+                          id: 9C3DE32F-DCB3-4106-9988-56BFF5A64D98
+                          type: 8F01AC13-F59E-4851-9204-DE1FD77E36B4
+                      category: Backup
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ResourceStatus'
+        '401':
+          description: Request is refused because authentication parameters are invalid.
+          content:
+            text/plain:
+              schema:
+                example: "<html>\n  <head>\n    <title>401 Authorization Required</title>\n  </head>\n  <body>\n    <center>\n      <h1>401 Authorization Required</h1>\n    </center>\n    <hr>\n    <center>nginx</center>\n  </body>\n</html>\n"
+        '403':
+          description: 'A security error due to an issue with tenant security claim: invalid tenant in the access token, tenant resolution failed and etc.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '414':
+          description: 'Too many resource IDs.
+
+            For cloud deployment there is no limitation.
+
+            For on-premise deployment known limits imposed by database engine are 32766 for SQLite and 2100 for MS SQL Server.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - oauth_2_0:
+        - urn:acronis.com::alert_manager::viewer
+      tags:
+      - Resource Status
+      summary: Fetch resources containing the highest severity alerts
+      x-summary-source: derived
+components:
+  schemas:
+    uuid:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    ResourceStatus:
+      type: object
+      required:
+      - id
+      - severity
+      properties:
+        id:
+          description: ID of the resource.
+          type: string
+        severity:
+          description: The highest severity of the alert for the resource.
+          enum:
+          - ok
+          - information
+          - warning
+          - error
+          - critical
+          type: string
+        alert:
+          description: The information about the most recent alert with the highest severity.
+          type: object
+          required:
+          - tenant
+          - id
+          - createdAt
+          - updatedAt
+          - details
+          - category
+          - severity
+          - receivedAt
+          - type
+          properties:
+            _sourceTimeStamp:
+              type: integer
+              format: int64
+            falsePositive:
+              description: Specifies whether alert is false positive or not.
+              type: boolean
+            _source:
+              description: An identifier of the alert producer.
+              type: string
+            tenant:
+              type: object
+              required:
+              - id
+              - locator
+              properties:
+                id:
+                  description: An identifier of the alert owner.
+                  type: string
+                locator:
+                  description: Ascending hierarchy of tenant IDs separated by '/'.
+                  example: /1/2/3/
+                  type: string
+            id:
+              $ref: '#/components/schemas/uuid'
+            createdAt:
+              description: A client-side date and time when alert was created. Equals to the `receivedAt` field if not set by client.
+              type: string
+              pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+){0,1}(Z|(\+|-)([01][0-9]|2[0-3]):([0-5][0-9]))$
+            updatedAt:
+              description: A date and time when the alert has been activated, deleted or dismissed.
+              type: string
+              pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+){0,1}(Z|(\+|-)([01][0-9]|2[0-3]):([0-5][0-9]))$
+            details:
+              description: 'Copy of context is merged to details.
+
+                Null if details and context are empty.
+
+                '
+              type: object
+            category:
+              description: Alert category.
+              type: string
+            severity:
+              description: Alert severity level.
+              enum:
+              - ok
+              - information
+              - warning
+              - error
+              - critical
+              type: string
+            deletedAt:
+              description: A date and time when the alert was dismissed.
+              type: string
+              pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+){0,1}(Z|(\+|-)([01][0-9]|2[0-3]):([0-5][0-9]))$
+            receivedAt:
+              description: A server-side date and time when the alert was received.
+              type: string
+              pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+){0,1}(Z|(\+|-)([01][0-9]|2[0-3]):([0-5][0-9]))$
+            type:
+              type: string
+            affinity:
+              description: Alert synchronization affinity (e.g., agent ID).
+              type: string
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    Error:
+      description: Base error object
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kbLink:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+  securitySchemes:
+    oauth_2_0:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::alert_manager::admin: ''
+            urn:acronis.com::alert_manager::viewer: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

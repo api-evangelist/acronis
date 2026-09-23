@@ -1,0 +1,335 @@
+openapi: 3.2.0
+info:
+  title: Event Manager Topics API
+  description: Event Manager API describes the interface for event publishing and subscription management.
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/event_manager/v1
+  variables: {}
+tags:
+- name: Topics
+paths:
+  /topics:
+    get:
+      operationId: Fetch topics
+      description: Fetch a list of all available topics that client is allowed to publish or subscribe to.
+      parameters:
+      - name: topic_id
+        description: Optional. Specific topic ID to fetch. Wildcard is not supported.
+        in: query
+        schema:
+          description: Optional. Specific topic ID to fetch. Wildcard is not supported.
+          x-cti.reference: cti.a.p.em.topic.v1.0
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        x-cti.reference: cti.a.p.em.topic.v1.0
+      responses:
+        '200':
+          description: List of topics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Topic'
+        '401':
+          description: Method required an authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '403':
+          description: Current user has no permissions for this URL/method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '500':
+          description: Internal service error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - oauth2:
+        - urn:acronis.com:event_manager:{cti_query}:publisher
+        - urn:acronis.com:event_manager:{cti_query}:subscriber
+      tags:
+      - Topics
+      summary: Fetch topics
+      x-summary-source: derived
+  /topics/offsets:
+    get:
+      operationId: Fetch topic offsets
+      description: Fetch the latest offset for a specific topic, providing a global view of the current stream state.
+      parameters:
+      - name: topic_id
+        description: Required, Topic ID to fetch the offset for.
+        required: true
+        in: query
+        schema:
+          description: Required, Topic ID to fetch the offset for.
+          x-cti.reference: cti.a.p.em.topic.v1.0
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        x-cti.reference: cti.a.p.em.topic.v1.0
+      - name: position
+        description: 'Required, the position to fetch the offset for.
+
+          '
+        required: true
+        in: query
+        schema:
+          description: 'Required, the position to fetch the offset for.
+
+            '
+          enum:
+          - EARLIEST
+          - TIMESTAMP
+          - CURRENT
+          type: string
+      - name: timestamp
+        description: 'Required for timestamp positions. Fetch the offset position to the neares future from a specific time. The timestamp is specified in ISO 8601 format using the RFC 3339 profile.
+
+          '
+        in: query
+        schema:
+          description: 'Required for timestamp positions. Fetch the offset position to the neares future from a specific time. The timestamp is specified in ISO 8601 format using the RFC 3339 profile.
+
+            '
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTopicsOffsetResponse'
+        '401':
+          description: Method required an authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '403':
+          description: Current user has no permissions for this URL/method
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '500':
+          description: Internal service error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - oauth2:
+        - urn:acronis.com:event_manager:{cti_query}:publisher
+        - urn:acronis.com:event_manager:{cti_query}:subscriber
+      tags:
+      - Topics
+      summary: Fetch topic offsets
+      x-summary-source: derived
+components:
+  schemas:
+    duration_iso:
+      description: 'Duration format compliant to [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Durations). See regex with unit tests [here](https://regex101.com/r/A2fis4).
+
+        '
+      type: string
+      pattern: ^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$
+    error:
+      description: Base error object
+      example:
+        domain: EventManager
+        code: invalidEvent
+        error: Bad Request
+        context:
+          errors:
+          - event_id: 62d2afda-685e-457f-8624-92132d97a7ed
+            message: 'Invalid payload: tenant_id is required'
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        message:
+          description: human-readable message, describing the error.
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kb_link:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    GetTopicsOffsetResponse:
+      type: object
+      required:
+      - topic_id
+      - offset
+      properties:
+        topic_id:
+          description: Identifier of the topic.
+          x-cti.reference: cti.a.p.em.topic.v1.0
+          example: cti.a.p.em.topic.v1.0~a.p.tenant.v1.0
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        offset:
+          description: Requested offset sequence number.
+          type: integer
+          format: int64
+    ErrorMessage:
+      type: object
+      additionalProperties: false
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/error'
+    INFINITE:
+      description: 'The retention period for events within this topic on event archive side is infinite.
+
+        '
+      enum:
+      - INFINITE
+      type: string
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - line_tag
+      - ser_code
+      - version
+      - build
+      - product
+      - os
+      properties:
+        line_tag:
+          type: string
+        ser_code:
+          type: string
+        version:
+          type: string
+        build:
+          type: string
+        product:
+          type: string
+        os:
+          type: string
+    Topic:
+      description: 'Event topic is a stream of events of the same or different types sharing the same delivery, ordering, consolidation & retention rules.
+
+        '
+      x-cti.cti: cti.a.p.em.topic.v1.0
+      x-cti.final: false
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - description
+      - persistency
+      - ordering
+      - producer_consolidation
+      - archive_consolidation
+      - retention
+      properties:
+        id:
+          description: The topic id is an identifier of a stream of events in publishing and subscribe semantics
+          x-cti.id: true
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        description:
+          description: description of topic purpose and usage
+          x-cti.description: true
+          type: string
+        persistency:
+          description: "true - events are persisted by Event Manager, Consumers will be able to fetch events that happened before the subscription\n       (see the `archive_consolidation` and retention parameters)\nfalse - events are not persisted and ordering is not strict. Consumers will see only events that happened\n        after consumer created subscription in the Event Manager (Delivery Manager service).\n        Events can be lost in Event Manager in case of restarts or if consumer was not able to receive events within\n        some reasonable time interval and events retention happened in the Event Delivery manager\n"
+          type: boolean
+        ordering:
+          description: "PRODUCER     - Events must be ordered by Producer, Ingest Manager only validates event sequence id and ensures there are no lost events in the stream.\n               The 'producer' mode is supposed to be used if producer can fully control events sequence, typically it means all the 'producer'\n               instances are sharing the same database.\n\nEVENTMANAGER - events are ordered by Event Manager (Ingest Manager). This mode is useful for multi-Producer case\n               when there is no single Producer' database and so there is no way to guarantee events ordering across multiple Producers\n\nNONE         - No events ordering. Suitable for audit-kind events from different sources\n"
+          enum:
+          - NONE
+          - PRODUCER
+          - EVENTMANAGER
+          type: string
+        producer_consolidation:
+          description: "The `producer_consolidation` attribute reflects events consolidation mode on the Producer side, i.e. actual behavior\nof the service rather than configurable parameter:\n\nNONE - no consolidation happens and events are stored independently only\n\nTTS - in addition to raw independent events there will be one more stream of events consolidated by type, tenantid\n      and subject so the latest event with the same type, tenantid and subject will be stored without any retention\n\nFor topics that contain notification events reflecting state changes of long-lived objects (such as tenants, users,\nsettings, workloads, policies, etc.), it is typical ho have `producer_consolidation` set to `TTS`. Such configuration\nallows the event stream to serve dual purposes: notifying state changes and enabling full event stream replay\n(reconciliation) by clients.\n\nFor short-lived objects that have their own retention policies, such as tasks, activities, alerts and such,\nit is typical to have `producer_consolidation` set to `NONE` and `retention` similar to the retention time\nof the event origin object.\n"
+          default: NONE
+          enum:
+          - NONE
+          - TTS
+          type: string
+        archive_consolidation:
+          description: "The `archive_consolidation` attribute defines events consolidation mode on the Event Archive side:\n\nNONE - no consolidation happens and events are stored independently only with appropriate retention\n\nTTS  - event with the same type (T), tenantid (T) and subject (S) will be stored without any retention\n       (i.e. will overwrite prev event with the same type, tenantid and subject eventually)\n\nThe `TTS` `archive_consolidation` can be typically used for topics that contain notification events reflecting\nstate changes of long-lived objects (such as tenants, users, settings, workloads, policies, etc.). It would\nallow the event stream to serve dual purposes: notifying state changes and enabling full event stream replay\n(reconciliation) by clients.\n\nFor short-lived objects that have their own retention policies, such as tasks, activities, alerts and such,\nit is advisable to set `archive_consolidation` to `NONE` and `retention` similar to the retention time\nof the event origin object.\n"
+          default: NONE
+          enum:
+          - NONE
+          - TTS
+          type: string
+        retention:
+          description: 'Specifies the retention period for events within this topic on event archive side.
+
+
+            The retention duration begins from the moment an event is received by the Event Manager. Events older than the
+
+            specified duration are eligible for deletion by the retention job. Must be a valid ISO 8601 duration or
+
+            ''INFINITE''.
+
+
+            This property is ignored if `archive_consolidation` is set to `TTS`, in this case retention effectively is
+
+            equal to ''INFINITE''
+
+
+            It''s recommended to have retention period comparable to the object''s lifetime to enable clients to use a single
+
+            mechanism for both change state notifications and full event stream replay (reconciliation).
+
+            '
+          anyOf:
+          - $ref: '#/components/schemas/duration_iso'
+          - $ref: '#/components/schemas/INFINITE'
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a service authorization.
+      flows:
+        password:
+          scopes:
+            urn:acronis.com:event_manager:{cti_query}:publisher: ''
+            urn:acronis.com:event_manager:{cti_query}:subscriber: ''
+            urn:acronis.com:audit:{role|permissions}: ''
+          tokenUrl: /bc/ipd/token
+        clientCredentials:
+          scopes:
+            urn:acronis.com:event_manager:{cti_query}:publisher: ''
+            urn:acronis.com:event_manager:{cti_query}:subscriber: ''
+            urn:acronis.com:audit:{role|permissions}: ''
+          tokenUrl: /bc/ipd/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com:event_manager:{cti_query}:publisher: ''
+            urn:acronis.com:event_manager:{cti_query}:subscriber: ''
+            urn:acronis.com:audit:{role|permissions}: ''
+          authorizationUrl: /bc/ipd/authorize
+          tokenUrl: /bc/ipd/token

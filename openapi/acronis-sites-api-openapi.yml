@@ -1,0 +1,1300 @@
+openapi: 3.2.0
+info:
+  title: Disaster Recovery Sites API
+  version: v2
+servers:
+- url: https://dev-cloud.acronis.com/api/dr/v2
+  variables: {}
+tags:
+- name: Sites
+paths:
+  /sites:
+    get:
+      operationId: Fetch disaster recovery sites
+      description: Fetches the list of disaster recovery sites.
+      parameters:
+      - name: allow_deleted
+        description: Includes resources that are marked as deleted in the request result.
+        required: false
+        in: query
+        schema:
+          description: Includes resources that are marked as deleted in the request result.
+          default: false
+          example: true
+          type: boolean
+      - name: limit
+        description: Maximum number of items to fetch per page. Mutually exclusive with the 'before' and 'after' parameters.
+        required: false
+        in: query
+        schema:
+          description: Maximum number of items to fetch per page. Mutually exclusive with the 'before' and 'after' parameters.
+          default: 10
+          type: integer
+          minimum: 1
+          maximum: 50
+      - name: after
+        description: Token from the 'after' field in the previous response. It contains a cursor that points to the next page of the requested collection. Mutually exclusive with the 'limit' and 'before' parameters. If provided, all other query parameters will be ignored.
+        required: false
+        in: query
+        schema:
+          description: Token from the 'after' field in the previous response. It contains a cursor that points to the next page of the requested collection. Mutually exclusive with the 'limit' and 'before' parameters. If provided, all other query parameters will be ignored.
+          default: 'null'
+          example: eyJSJdfQ
+          type: string
+          minLength: 1
+      - name: before
+        description: Token from the 'before' field in the previous response. It contains a cursor that points to the previous page of the requested collection. Mutually exclusive with the 'limit' and 'after' parameters. If provided, all other query parameters will be ignored.
+        required: false
+        in: query
+        schema:
+          description: Token from the 'before' field in the previous response. It contains a cursor that points to the previous page of the requested collection. Mutually exclusive with the 'limit' and 'after' parameters. If provided, all other query parameters will be ignored.
+          default: 'null'
+          example: eyJSJdfQ
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                - items
+                properties:
+                  items:
+                    description: List of the disaster recovery sites.
+                    type: array
+                    minItems: 0
+                    items:
+                      type: object
+                      required:
+                      - default
+                      - failover_readiness
+                      - status
+                      - tenant_uuid
+                      - uuid
+                      properties:
+                        default:
+                          description: This property determines if the disaster recovery site is set as default. You can have only one default disaster recovery site at a time.
+                          type: boolean
+                        deleted_at:
+                          description: Deletion date of the disaster recovery site.
+                          type: string
+                          format: date-time
+                        failover_readiness:
+                          description: 'Failover readiness status of the disaster recovery site. This property can have the following values: OK - ready for failover; WARNING - proceed with caution; or ERROR - not ready for failover.'
+                          enum:
+                          - ERROR
+                          - OK
+                          - WARNING
+                          type: string
+                        status:
+                          description: The status of the disaster recovery site.
+                          enum:
+                          - DEPROVISIONING
+                          - PROVISIONING
+                          - PROVISIONED
+                          type: string
+                        task_uuid:
+                          $ref: '#/components/schemas/tenant_uuid'
+                        tenant_uuid:
+                          $ref: '#/components/schemas/tenant_uuid'
+                        uuid:
+                          $ref: '#/components/schemas/tenant_uuid'
+                        _links:
+                          description: Links and actions related to the disaster recovery site.
+                          type: array
+                          minItems: 1
+                          items:
+                            oneOf:
+                            - description: Link to the Connectivity page of the disaster recovery site. The link must be opened in a web browser.
+                              type: object
+                              required:
+                              - rel
+                              - type
+                              - href
+                              properties:
+                                rel:
+                                  description: Identifier of the link to the Connectivity page of the disaster recovery site.
+                                  enum:
+                                  - DR_SITE_CONNECTIVITY_PAGE
+                                  type: string
+                                type:
+                                  description: Media type of the linked resource.
+                                  type: string
+                                href:
+                                  description: URL to access the Connectivity page of the disaster recovery site.
+                                  type: string
+                                  format: uri
+                        _issues:
+                          description: Issues of the disaster recovery site.
+                          type: array
+                          minItems: 0
+                          items:
+                            description: Describes a single issue (constraint violation).
+                            oneOf:
+                            - oneOf:
+                              - description: Issue that causes the failover readiness to be in the 'WARNING' state.
+                                allOf:
+                                - description: Describes a single issue (constraint violation).
+                                  type: object
+                                  required:
+                                  - target
+                                  - severity
+                                  - error
+                                  properties:
+                                    link:
+                                      description: Name or ID of the link for which the issue is returned.
+                                      type: string
+                                    domain:
+                                      description: Domain from which the constraint originates.
+                                      enum:
+                                      - Access
+                                      - Licensing
+                                      - DisasterRecovery
+                                      type: string
+                                    target:
+                                      description: Path to or ID of the sub-resource that is linked to the issue. May be required for composite resources.
+                                      type: string
+                                    severity:
+                                      description: Severity of the issue.
+                                      enum:
+                                      - warning
+                                      - WARNING
+                                      - error
+                                      - ERROR
+                                      type: string
+                                    error:
+                                      $ref: '#/components/schemas/item0_18'
+                                - type: object
+                                  required:
+                                  - target
+                                  - severity
+                                  - error
+                                  properties:
+                                    domain:
+                                      description: Disaster Recovery domain.
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    target:
+                                      description: UUID of the disaster recovery site on which the issue occurred.
+                                      type: string
+                                    severity:
+                                      description: Severity of the issue.
+                                      enum:
+                                      - WARNING
+                                      type: string
+                                    error:
+                                      oneOf:
+                                      - description: No VPN appliance is registered for the DR site with Site-to-Site VPN connectivity.
+                                        allOf:
+                                        - $ref: '#/components/schemas/item0_18'
+                                        - type: object
+                                          required:
+                                          - domain
+                                          - code
+                                          properties:
+                                            domain:
+                                              enum:
+                                              - DisasterRecovery
+                                              type: string
+                                            code:
+                                              enum:
+                                              - VPNS2SApplianceNotRegistered
+                                              type: string
+                                      - description: VPN appliance error. This might happen when the last report from the VPN appliance was received too long ago or if the VPN appliance reported an error.
+                                        allOf:
+                                        - $ref: '#/components/schemas/item0_18'
+                                        - type: object
+                                          required:
+                                          - domain
+                                          - code
+                                          properties:
+                                            domain:
+                                              enum:
+                                              - DisasterRecovery
+                                              type: string
+                                            code:
+                                              enum:
+                                              - VPNS2SApplianceUnreachable
+                                              type: string
+                                      - description: The VPN tunnel between the VPN gateway and the VPN appliance cannot be established for the DR site with Site-to-Site VPN connectivity.
+                                        allOf:
+                                        - $ref: '#/components/schemas/item0_18'
+                                        - type: object
+                                          required:
+                                          - domain
+                                          - code
+                                          properties:
+                                            domain:
+                                              enum:
+                                              - DisasterRecovery
+                                              type: string
+                                            code:
+                                              enum:
+                                              - VPNS2SConnectionFailure
+                                              type: string
+                                      - description: No IPSec tunnels are configured for the DR site with IPSec VPN connectivity.
+                                        allOf:
+                                        - $ref: '#/components/schemas/item0_18'
+                                        - type: object
+                                          required:
+                                          - domain
+                                          - code
+                                          properties:
+                                            domain:
+                                              enum:
+                                              - DisasterRecovery
+                                              type: string
+                                            code:
+                                              enum:
+                                              - VPNIPSecNotConfigured
+                                              type: string
+                                      - description: At least one of the IPSec tunnels could not be established.
+                                        allOf:
+                                        - $ref: '#/components/schemas/item0_18'
+                                        - type: object
+                                          required:
+                                          - domain
+                                          - code
+                                          properties:
+                                            domain:
+                                              enum:
+                                              - DisasterRecovery
+                                              type: string
+                                            code:
+                                              enum:
+                                              - VPNIPSecConnectionError
+                                              type: string
+                                      - description: You have reached the "Disaster recovery storage" quota. To increase the quota, contact the Support team.
+                                        allOf:
+                                        - $ref: '#/components/schemas/item0_18'
+                                        - type: object
+                                          required:
+                                          - domain
+                                          - code
+                                          properties:
+                                            domain:
+                                              enum:
+                                              - DisasterRecovery
+                                              type: string
+                                            code:
+                                              enum:
+                                              - QuotaReachedDrStorage
+                                              type: string
+                                      - description: You have reached the "Cloud servers" quota. To increase the quota, contact the Support team.
+                                        allOf:
+                                        - $ref: '#/components/schemas/item0_18'
+                                        - type: object
+                                          required:
+                                          - domain
+                                          - code
+                                          properties:
+                                            domain:
+                                              enum:
+                                              - DisasterRecovery
+                                              type: string
+                                            code:
+                                              enum:
+                                              - QuotaReachedCloudServers
+                                              type: string
+                                      - description: You have reached the "Compute points" quota. To increase the quota, contact the Support team.
+                                        allOf:
+                                        - $ref: '#/components/schemas/item0_18'
+                                        - type: object
+                                          required:
+                                          - domain
+                                          - code
+                                          properties:
+                                            domain:
+                                              enum:
+                                              - DisasterRecovery
+                                              type: string
+                                            code:
+                                              enum:
+                                              - QuotaReachedComputePoints
+                                              type: string
+                                type: object
+                              - description: Issue that causes the failover readiness to be in the 'ERROR' state.
+                                type: object
+                                required:
+                                - target
+                                - severity
+                                - error
+                                properties:
+                                  domain:
+                                    description: Domain from which the constraint originates.
+                                    enum:
+                                    - DisasterRecovery
+                                    type: string
+                                  target:
+                                    description: UUID of the DR site on which the issue occurred.
+                                    type: string
+                                  severity:
+                                    description: Severity of the issue.
+                                    enum:
+                                    - ERROR
+                                    type: string
+                                  error:
+                                    oneOf:
+                                    - description: You cannot perform any operations because the DR site is being deployed or removed.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - SiteNotReady
+                                            type: string
+                                    - description: The "DR and Direct Backup to Azure" quota is not enabled for your tenant. To enable the quota, contact the Support team.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - SubscriptionNotFoundAzureDR
+                                            type: string
+                                    - description: The "Disaster recovery storage" quota is not enabled for your tenant. To enable the quota, contact the Support team.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - SubscriptionNotFoundDrStorage
+                                            type: string
+                                    - description: The "Compute points" quota is not enabled for your tenant. To enable the quota, contact the Support team.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - SubscriptionNotFoundComputePoints
+                                            type: string
+                                    - description: The "Cloud servers" quota is not enabled for your tenant. To enable the quota, contact the Support team.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - SubscriptionNotFoundCloudServers
+                                            type: string
+                                    - description: You exceeded the "DR and Direct Backup to Azure" quota. As a result, the DR functionality was disabled on some protected servers. To increase the quota, contact the Support team.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - QuotaExceededAzureDR
+                                            type: string
+                                    - description: There are no available compute points for testing the Disaster Recovery functionality. {{additionalComputePoints}} additional compute points will be added next month. To enable the complete functionality, contact your partner and activate the Disaster Recovery service.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        - context
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - QuotaExceededBaseDR
+                                            type: string
+                                          context:
+                                            type: object
+                                            required:
+                                            - additionalComputePoints
+                                            properties:
+                                              additionalComputePoints:
+                                                type: integer
+                                                minimum: 0
+                                    - description: You have exceeded the "Cloud servers" quota. To increase the quota, contact the Support team.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - QuotaExceededCloudServers
+                                            type: string
+                                    - description: You have exceeded the "Compute points" quota. To increase the quota, contact the Support team.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - QuotaExceededComputePoints
+                                            type: string
+                                    - description: VPN gateway error. This might happen when the last report from the VPN gateway was received too long ago or if the VPN gateway reported an error.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - VPNGatewayUnreachable
+                                            type: string
+                                    - description: The operation cannot be performed due to an issue with the cloud connection agent in public cloud connection '{{connectionName}}'. Please go to Infrastructure > Public clouds, select the corresponding cloud connection, click Renew access, and follow the instructions. If the issue persists, contact support.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        - context
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - CloudConnectionIssue
+                                            type: string
+                                          context:
+                                            type: object
+                                            required:
+                                            - connectionName
+                                            properties:
+                                              connectionName:
+                                                type: string
+                                              issueCodes:
+                                                type: array
+                                                items:
+                                                  type: string
+                                    - description: The operation cannot be performed due to an issue with the cloud connection agent in public cloud connection '{{connectionName}}'. Please go to Infrastructure > Public clouds, select the corresponding cloud connection, click Renew access, and follow the instructions. If the issue persists, contact support.
+                                      allOf:
+                                      - $ref: '#/components/schemas/item0_18'
+                                      - type: object
+                                        required:
+                                        - domain
+                                        - code
+                                        - context
+                                        properties:
+                                          domain:
+                                            enum:
+                                            - DisasterRecovery
+                                            type: string
+                                          code:
+                                            enum:
+                                            - CloudConnectionWorkerIssue
+                                            type: string
+                                          context:
+                                            type: object
+                                            required:
+                                            - connectionName
+                                            properties:
+                                              connectionName:
+                                                type: string
+                                              issueCodes:
+                                                type: array
+                                                items:
+                                                  type: string
+                              type: object
+                  paging:
+                    description: Response properties related to the pagination.
+                    type: object
+                    additionalProperties: false
+                    required:
+                    - count
+                    - total
+                    properties:
+                      count:
+                        description: Number of items fetched for the current page.
+                        type: integer
+                        minimum: 0
+                      cursors:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          after:
+                            description: Cursor that points to the next page with results, if available.
+                            type: string
+                          before:
+                            description: Cursor that points to the previous page with results, if available.
+                            type: string
+                      total:
+                        description: Total amount of items to fetch.
+                        type: integer
+                        minimum: 0
+        '400':
+          description: The request could not be validated against the RAML schema.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '401':
+          description: The request was denied because the bearer access token was invalid or missing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '403':
+          description: The request was denied because the bearer access token did not have the required privileges.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '429':
+          description: The response status code indicates that the service is overloaded and you must wait before the next request.
+          headers:
+            Retry-After:
+              description: The time (in seconds) that the client must wait before the next request.
+              required: true
+              schema:
+                description: The time (in seconds) that the client must wait before the next request.
+                type: integer
+                minimum: 1
+                maximum: 3600
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '500':
+          description: An internal server error occurred while processing the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '504':
+          description: Gateway time-out.
+          content: {}
+      security:
+      - oauth2:
+        - dr_service::admin
+        - dr::support_operator
+        - protection::readonly
+      tags:
+      - Sites
+      summary: Fetch disaster recovery sites
+      x-summary-source: derived
+  /sites/{uuid}:
+    get:
+      operationId: Fetch disaster recovery site by UUID
+      description: Fetches the details of the disaster recovery site.
+      parameters:
+      - name: allow_deleted
+        description: Includes resources that are marked as deleted in the request result.
+        required: false
+        in: query
+        schema:
+          description: Includes resources that are marked as deleted in the request result.
+          default: false
+          example: true
+          type: boolean
+      - name: uuid
+        description: A unique identifier of the disaster recovery site.
+        required: true
+        in: path
+        schema:
+          description: A unique identifier of the disaster recovery site.
+          example: 6782e594-781d-4ad2-b8ca-25a0c40f9938
+          type: string
+          pattern: ^[a-zA-Z0-9-]+$
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - default
+                - failover_readiness
+                - status
+                - tenant_uuid
+                - uuid
+                properties:
+                  default:
+                    description: This property determines if the disaster recovery site is set as default. You can have only one default disaster recovery site at a time.
+                    type: boolean
+                  deleted_at:
+                    description: Deletion date of the disaster recovery site.
+                    type: string
+                    format: date-time
+                  failover_readiness:
+                    description: 'Failover readiness status of the disaster recovery site. This property can have the following values: OK - ready for failover; WARNING - proceed with caution; or ERROR - not ready for failover.'
+                    enum:
+                    - ERROR
+                    - OK
+                    - WARNING
+                    type: string
+                  status:
+                    description: The status of the disaster recovery site.
+                    enum:
+                    - DEPROVISIONING
+                    - PROVISIONING
+                    - PROVISIONED
+                    type: string
+                  task_uuid:
+                    $ref: '#/components/schemas/tenant_uuid_19'
+                  tenant_uuid:
+                    $ref: '#/components/schemas/tenant_uuid_19'
+                  uuid:
+                    $ref: '#/components/schemas/tenant_uuid_19'
+                  _links:
+                    description: Links and actions related to the disaster recovery site.
+                    type: array
+                    minItems: 1
+                    items:
+                      oneOf:
+                      - description: Link to the Connectivity page of the disaster recovery site. The link must be opened in a web browser.
+                        type: object
+                        required:
+                        - rel
+                        - type
+                        - href
+                        properties:
+                          rel:
+                            description: Identifier of the link to the Connectivity page of the disaster recovery site.
+                            enum:
+                            - DR_SITE_CONNECTIVITY_PAGE
+                            type: string
+                          type:
+                            description: Media type of the linked resource.
+                            type: string
+                          href:
+                            description: URL to access the Connectivity page of the disaster recovery site.
+                            type: string
+                            format: uri
+                  _issues:
+                    description: Issues of the disaster recovery site.
+                    type: array
+                    minItems: 0
+                    items:
+                      description: Describes a single issue (constraint violation).
+                      oneOf:
+                      - oneOf:
+                        - description: Issue that causes the failover readiness to be in the 'WARNING' state.
+                          allOf:
+                          - description: Describes a single issue (constraint violation).
+                            type: object
+                            required:
+                            - target
+                            - severity
+                            - error
+                            properties:
+                              link:
+                                description: Name or ID of the link for which the issue is returned.
+                                type: string
+                              domain:
+                                description: Domain from which the constraint originates.
+                                enum:
+                                - Access
+                                - Licensing
+                                - DisasterRecovery
+                                type: string
+                              target:
+                                description: Path to or ID of the sub-resource that is linked to the issue. May be required for composite resources.
+                                type: string
+                              severity:
+                                description: Severity of the issue.
+                                enum:
+                                - warning
+                                - WARNING
+                                - error
+                                - ERROR
+                                type: string
+                              error:
+                                $ref: '#/components/schemas/item0_20'
+                          - type: object
+                            required:
+                            - target
+                            - severity
+                            - error
+                            properties:
+                              domain:
+                                description: Disaster Recovery domain.
+                                enum:
+                                - DisasterRecovery
+                                type: string
+                              target:
+                                description: UUID of the disaster recovery site on which the issue occurred.
+                                type: string
+                              severity:
+                                description: Severity of the issue.
+                                enum:
+                                - WARNING
+                                type: string
+                              error:
+                                oneOf:
+                                - description: No VPN appliance is registered for the DR site with Site-to-Site VPN connectivity.
+                                  allOf:
+                                  - $ref: '#/components/schemas/item0_20'
+                                  - type: object
+                                    required:
+                                    - domain
+                                    - code
+                                    properties:
+                                      domain:
+                                        enum:
+                                        - DisasterRecovery
+                                        type: string
+                                      code:
+                                        enum:
+                                        - VPNS2SApplianceNotRegistered
+                                        type: string
+                                - description: VPN appliance error. This might happen when the last report from the VPN appliance was received too long ago or if the VPN appliance reported an error.
+                                  allOf:
+                                  - $ref: '#/components/schemas/item0_20'
+                                  - type: object
+                                    required:
+                                    - domain
+                                    - code
+                                    properties:
+                                      domain:
+                                        enum:
+                                        - DisasterRecovery
+                                        type: string
+                                      code:
+                                        enum:
+                                        - VPNS2SApplianceUnreachable
+                                        type: string
+                                - description: The VPN tunnel between the VPN gateway and the VPN appliance cannot be established for the DR site with Site-to-Site VPN connectivity.
+                                  allOf:
+                                  - $ref: '#/components/schemas/item0_20'
+                                  - type: object
+                                    required:
+                                    - domain
+                                    - code
+                                    properties:
+                                      domain:
+                                        enum:
+                                        - DisasterRecovery
+                                        type: string
+                                      code:
+                                        enum:
+                                        - VPNS2SConnectionFailure
+                                        type: string
+                                - description: No IPSec tunnels are configured for the DR site with IPSec VPN connectivity.
+                                  allOf:
+                                  - $ref: '#/components/schemas/item0_20'
+                                  - type: object
+                                    required:
+                                    - domain
+                                    - code
+                                    properties:
+                                      domain:
+                                        enum:
+                                        - DisasterRecovery
+                                        type: string
+                                      code:
+                                        enum:
+                                        - VPNIPSecNotConfigured
+                                        type: string
+                                - description: At least one of the IPSec tunnels could not be established.
+                                  allOf:
+                                  - $ref: '#/components/schemas/item0_20'
+                                  - type: object
+                                    required:
+                                    - domain
+                                    - code
+                                    properties:
+                                      domain:
+                                        enum:
+                                        - DisasterRecovery
+                                        type: string
+                                      code:
+                                        enum:
+                                        - VPNIPSecConnectionError
+                                        type: string
+                                - description: You have reached the "Disaster recovery storage" quota. To increase the quota, contact the Support team.
+                                  allOf:
+                                  - $ref: '#/components/schemas/item0_20'
+                                  - type: object
+                                    required:
+                                    - domain
+                                    - code
+                                    properties:
+                                      domain:
+                                        enum:
+                                        - DisasterRecovery
+                                        type: string
+                                      code:
+                                        enum:
+                                        - QuotaReachedDrStorage
+                                        type: string
+                                - description: You have reached the "Cloud servers" quota. To increase the quota, contact the Support team.
+                                  allOf:
+                                  - $ref: '#/components/schemas/item0_20'
+                                  - type: object
+                                    required:
+                                    - domain
+                                    - code
+                                    properties:
+                                      domain:
+                                        enum:
+                                        - DisasterRecovery
+                                        type: string
+                                      code:
+                                        enum:
+                                        - QuotaReachedCloudServers
+                                        type: string
+                                - description: You have reached the "Compute points" quota. To increase the quota, contact the Support team.
+                                  allOf:
+                                  - $ref: '#/components/schemas/item0_20'
+                                  - type: object
+                                    required:
+                                    - domain
+                                    - code
+                                    properties:
+                                      domain:
+                                        enum:
+                                        - DisasterRecovery
+                                        type: string
+                                      code:
+                                        enum:
+                                        - QuotaReachedComputePoints
+                                        type: string
+                          type: object
+                        - description: Issue that causes the failover readiness to be in the 'ERROR' state.
+                          type: object
+                          required:
+                          - target
+                          - severity
+                          - error
+                          properties:
+                            domain:
+                              description: Domain from which the constraint originates.
+                              enum:
+                              - DisasterRecovery
+                              type: string
+                            target:
+                              description: UUID of the DR site on which the issue occurred.
+                              type: string
+                            severity:
+                              description: Severity of the issue.
+                              enum:
+                              - ERROR
+                              type: string
+                            error:
+                              oneOf:
+                              - description: You cannot perform any operations because the DR site is being deployed or removed.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - SiteNotReady
+                                      type: string
+                              - description: The "DR and Direct Backup to Azure" quota is not enabled for your tenant. To enable the quota, contact the Support team.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - SubscriptionNotFoundAzureDR
+                                      type: string
+                              - description: The "Disaster recovery storage" quota is not enabled for your tenant. To enable the quota, contact the Support team.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - SubscriptionNotFoundDrStorage
+                                      type: string
+                              - description: The "Compute points" quota is not enabled for your tenant. To enable the quota, contact the Support team.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - SubscriptionNotFoundComputePoints
+                                      type: string
+                              - description: The "Cloud servers" quota is not enabled for your tenant. To enable the quota, contact the Support team.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - SubscriptionNotFoundCloudServers
+                                      type: string
+                              - description: You exceeded the "DR and Direct Backup to Azure" quota. As a result, the DR functionality was disabled on some protected servers. To increase the quota, contact the Support team.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - QuotaExceededAzureDR
+                                      type: string
+                              - description: There are no available compute points for testing the Disaster Recovery functionality. {{additionalComputePoints}} additional compute points will be added next month. To enable the complete functionality, contact your partner and activate the Disaster Recovery service.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  - context
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - QuotaExceededBaseDR
+                                      type: string
+                                    context:
+                                      type: object
+                                      required:
+                                      - additionalComputePoints
+                                      properties:
+                                        additionalComputePoints:
+                                          type: integer
+                                          minimum: 0
+                              - description: You have exceeded the "Cloud servers" quota. To increase the quota, contact the Support team.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - QuotaExceededCloudServers
+                                      type: string
+                              - description: You have exceeded the "Compute points" quota. To increase the quota, contact the Support team.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - QuotaExceededComputePoints
+                                      type: string
+                              - description: VPN gateway error. This might happen when the last report from the VPN gateway was received too long ago or if the VPN gateway reported an error.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - VPNGatewayUnreachable
+                                      type: string
+                              - description: The operation cannot be performed due to an issue with the cloud connection agent in public cloud connection '{{connectionName}}'. Please go to Infrastructure > Public clouds, select the corresponding cloud connection, click Renew access, and follow the instructions. If the issue persists, contact support.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  - context
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - CloudConnectionIssue
+                                      type: string
+                                    context:
+                                      type: object
+                                      required:
+                                      - connectionName
+                                      properties:
+                                        connectionName:
+                                          type: string
+                                        issueCodes:
+                                          type: array
+                                          items:
+                                            type: string
+                              - description: The operation cannot be performed due to an issue with the cloud connection agent in public cloud connection '{{connectionName}}'. Please go to Infrastructure > Public clouds, select the corresponding cloud connection, click Renew access, and follow the instructions. If the issue persists, contact support.
+                                allOf:
+                                - $ref: '#/components/schemas/item0_20'
+                                - type: object
+                                  required:
+                                  - domain
+                                  - code
+                                  - context
+                                  properties:
+                                    domain:
+                                      enum:
+                                      - DisasterRecovery
+                                      type: string
+                                    code:
+                                      enum:
+                                      - CloudConnectionWorkerIssue
+                                      type: string
+                                    context:
+                                      type: object
+                                      required:
+                                      - connectionName
+                                      properties:
+                                        connectionName:
+                                          type: string
+                                        issueCodes:
+                                          type: array
+                                          items:
+                                            type: string
+                        type: object
+        '400':
+          description: The request could not be validated against the RAML schema.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '401':
+          description: The request was denied because the bearer access token was invalid or missing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '403':
+          description: The request was denied because the bearer access token did not have the required privileges.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '429':
+          description: The response status code indicates that the service is overloaded and you must wait before the next request.
+          headers:
+            Retry-After:
+              description: The time (in seconds) that the client must wait before the next request.
+              required: true
+              schema:
+                description: The time (in seconds) that the client must wait before the next request.
+                type: integer
+                minimum: 1
+                maximum: 3600
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '500':
+          description: An internal server error occurred while processing the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_api_response'
+        '504':
+          description: Gateway time-out.
+          content: {}
+      security:
+      - oauth2:
+        - dr_service::admin
+        - dr::support_operator
+        - protection::readonly
+      tags:
+      - Sites
+      summary: Fetch disaster recovery site by UUID
+      x-summary-source: derived
+components:
+  schemas:
+    item0_18: {}
+    tenant_uuid:
+      title: UUID
+      description: Universally unique object identifier.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    tenant_uuid_19:
+      title: UUID
+      description: Universally unique object identifier.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    item0_20: {}
+    error_api_response:
+      type: object
+      required:
+      - error
+      properties:
+        error: {}
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth 2.0 security scheme definition for a user authorization
+      flows:
+        password:
+          scopes:
+            acep::consumer: ''
+            dr::support_operator: ''
+            dr_backup_processor: ''
+            dr_service::admin: ''
+            dr_service::vpn_appliance: ''
+            dr_service::vpn_server: ''
+            partner_admin: ''
+            protection::readonly: ''
+            root_admin: ''
+            resource_manager::admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        clientCredentials:
+          scopes:
+            acep::consumer: ''
+            dr::support_operator: ''
+            dr_backup_processor: ''
+            dr_service::admin: ''
+            dr_service::vpn_appliance: ''
+            dr_service::vpn_server: ''
+            partner_admin: ''
+            protection::readonly: ''
+            root_admin: ''
+            resource_manager::admin: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            acep::consumer: ''
+            dr::support_operator: ''
+            dr_backup_processor: ''
+            dr_service::admin: ''
+            dr_service::vpn_appliance: ''
+            dr_service::vpn_server: ''
+            partner_admin: ''
+            protection::readonly: ''
+            root_admin: ''
+            resource_manager::admin: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token

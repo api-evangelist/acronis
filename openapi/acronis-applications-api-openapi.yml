@@ -1,0 +1,793 @@
+openapi: 3.2.0
+info:
+  title: Account Management Applications API
+  version: '2'
+servers:
+- url: https://dev-cloud.acronis.com/api/2
+  variables: {}
+tags:
+- name: Applications
+paths:
+  /applications:
+    get:
+      operationId: FetchApplications
+      description: Fetches a list of all registered applications.
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/applicationsList'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Applications
+      summary: Fetch applications
+      x-summary-source: derived
+  /applications/{application_id}:
+    get:
+      operationId: FetchApplication
+      description: Fetches the information about the application by ID.
+      parameters:
+      - name: application_id
+        description: Application ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Application ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/application'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Applications
+      summary: Fetch application
+      x-summary-source: derived
+  /applications/{application_id}/bindings/tenants/{tenant_id}:
+    post:
+      operationId: TurnOnTenantApplication
+      description: Turns the application on for the tenant.
+      parameters:
+      - name: application_id
+        description: Application ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Application ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: Application was successfully turned on.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Applications
+      summary: Turn on tenant application
+      x-summary-source: derived
+    delete:
+      operationId: TurnOffTenantApplication
+      description: Turns the application off for the tenant.
+      parameters:
+      - name: application_id
+        description: Application ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Application ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      responses:
+        '204':
+          description: Application was successfully turned off.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Applications
+      summary: Turn off tenant application
+      x-summary-source: derived
+  /applications/{application_id}/settings/tenants/{tenant_id}/{setting_name}:
+    delete:
+      operationId: DeleteTenantApplicationSetting
+      description: 'Deletes own setting of the tenant''s application.
+
+        The setting will be inherited from parent tenants when deleted.'
+      parameters:
+      - name: application_id
+        description: Application ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Application ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: setting_name
+        description: A name of the application's setting.
+        required: true
+        in: path
+        schema:
+          description: A name of the application's setting.
+          type: string
+      responses:
+        '204':
+          description: Own application setting was successfully deleted.
+          content: {}
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Applications
+      summary: Delete tenant application setting
+      x-summary-source: derived
+    put:
+      operationId: UpdateTenantApplicationSetting
+      description: Updates a setting of the tenant's application.
+      parameters:
+      - name: application_id
+        description: Application ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Application ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: setting_name
+        description: A name of the application's setting.
+        required: true
+        in: path
+        schema:
+          description: A name of the application's setting.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/settingPut'
+      responses:
+        '200':
+          description: Own setting was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/setting'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '415':
+          description: Requested type in the `Accept` request header is not supported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_admin
+      tags:
+      - Applications
+      summary: Update tenant application setting
+      x-summary-source: derived
+    get:
+      operationId: FetchTenantApplicationSetting
+      description: Fetches a setting of the tenant's application.
+      parameters:
+      - name: application_id
+        description: Application ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Application ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: tenant_id
+        description: Tenant ID (UUID).
+        required: true
+        in: path
+        schema:
+          description: Tenant ID (UUID).
+          type: string
+          pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+          minLength: 36
+          maxLength: 36
+      - name: setting_name
+        description: A name of the application's setting.
+        required: true
+        in: path
+        schema:
+          description: A name of the application's setting.
+          type: string
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/setting'
+        '401':
+          description: Method required an authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '403':
+          description: Current user is not authorized to access this endpoint or its method.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorScheme'
+      security:
+      - basicAuth: []
+      - oauth2:
+        - urn:acronis.com::account-server::tenant_viewer
+      tags:
+      - Applications
+      summary: Fetch tenant application setting
+      x-summary-source: derived
+components:
+  schemas:
+    application:
+      example:
+        id: 8aaf366b-fe24-4f25-93b3-bd729c86cc95
+        name: Acronis Backup Cloud
+        type: backup
+        api_base_url: /bc
+        usages:
+        - workstations
+        - vms
+      type: object
+      required:
+      - id
+      - name
+      - type
+      - usages
+      - api_base_url
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          description: Human-readable name that will be displayed to the users.
+          type: string
+        type:
+          $ref: '#/components/schemas/applicationType'
+        usages:
+          description: Available usages for this application.
+          type: array
+          items:
+            description: Usage name.
+            type: string
+        api_base_url:
+          description: Base URL for application's HTTP API.
+          type: string
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    applicationType:
+      description: A type of application.
+      enum:
+      - backup
+      - files_cloud
+      - monitoring
+      - storage
+      - platform
+      - hci
+      - physical_data_shipping
+      - notary
+      type: string
+    applicationsList:
+      example:
+        items:
+        - type: backup
+          api_base_url: /bc/
+          name: Backup
+          id: 6e6d758d-8e74-3ae3-ac84-50eb0dff12eb
+          usages:
+          - assigned_compute_points
+          - child_storages
+          - cloud_to_cloud_backup
+          - compute_points
+          - dr_cloud_servers
+          - dr_internet_access
+          - dr_storage
+          - google_drive_storage
+          - google_mail_storage
+          - google_team_drive_storage
+          - group_mailbox_storage
+          - group_site_storage
+          - gsuite_seats
+          - local_storage
+          - mailbox_instance_size
+          - mailbox_storage
+          - mailboxes
+          - mobile_storage
+          - mobiles
+          - onedrive_storage
+          - public_ips
+          - server_storage
+          - servers
+          - sharepoint_online_site_storage
+          - site_collection_storage
+          - storage
+          - total_storage
+          - universal_devices
+          - universal_devices_storage
+          - virtualhost_storage
+          - virtualhosts
+          - vm_storage
+          - vms
+          - website_storage
+          - websites
+          - win_server_essentials
+          - win_server_essentials_storage
+          - workstation_storage
+          - workstations
+        - type: physical_data_shipping
+          api_base_url: /pds/
+          name: Physical Data Shipping
+          id: b71b2c18-590a-303c-9d5a-8444fbe713ac
+          usages:
+          - drives_shipped_from_cloud
+          - drives_shipped_to_cloud
+        - type: files_cloud
+          api_base_url: /fc/
+          name: File Sync & Share
+          id: dfd85a5f-a464-32ab-81fd-99bcc66a070f
+          usages:
+          - fc_child_storages
+          - fc_seats
+          - fc_storage
+          - fc_total_storage
+        - type: notary
+          api_base_url: /notary/console
+          name: Notary
+          id: f9c5744e-bd1a-36b6-b0f0-ecd7483e1796
+          usages:
+          - esignatures
+          - esignatures_api
+          - notarizations
+          - notarizations_api
+          - notarizations_total
+          - notary_storage
+        - type: hci
+          api_base_url: /hci/
+          name: Acronis Storage SPLA
+          id: cc29685d-a9ca-3e87-a83d-069f18b588f0
+          usages:
+          - hci_cifs_storage
+          - hci_compute_points
+          - hci_iscsi_storage
+          - hci_nfs_storage
+          - hci_s3_storage
+          - hci_storage
+          - hci_total_cifs_storage
+          - hci_total_compute_points
+          - hci_total_iscsi_storage
+          - hci_total_nfs_storage
+          - hci_total_s3_storage
+          - hci_total_storage
+          - hci_total_vm_provisioned_cpu
+          - hci_total_vm_provisioned_ram
+          - hci_total_vm_storage
+          - hci_total_vtl_storage
+          - hci_vm_provisioned_cpu
+          - hci_vm_provisioned_ram
+          - hci_vm_storage
+          - hci_vtl_storage
+        - type: platform
+          api_base_url: /mc/
+          name: Management Portal
+          id: 7459244f-68f3-3bf4-9f53-5f63ecc1d91f
+          usages: []
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/application'
+    setting:
+      example:
+        value:
+          name: setting_1
+          application_id: 2f2a4239-f140-4337-a107-bed298fed3f1
+          own:
+            value: new_stuff
+            lock: false
+            exclusive: false
+          effective:
+            owner:
+              type: tenant
+              id: 81129b10-9f2a-4ee7-bf90-8698c4af055c
+            value: old_Stuff
+            lock: false
+      type: object
+      required:
+      - name
+      - effective
+      properties:
+        name:
+          description: Name of the setting, for internal use by the platform and applications. Serves as the setting's ID.
+          type: string
+        application_id:
+          $ref: '#/components/schemas/uuid'
+        own:
+          description: Data which was set for this tenant.
+          type:
+          - object
+          - 'null'
+          required:
+          - value
+          - lock
+          - exclusive
+          properties:
+            value:
+              description: Value of the setting. This field can have a null value.
+              oneOf:
+              - type: string
+              - type: boolean
+              - type: number
+              - type: object
+            lock:
+              description: Flag that controls whether the value can be overridden at another tenant's level.
+              default: false
+              type: boolean
+            exclusive:
+              description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
+              default: false
+              type: boolean
+        effective:
+          description: Inherited data. This field can have a null value.
+          type:
+          - object
+          - 'null'
+          properties:
+            owner:
+              type: object
+              required:
+              - type
+              - id
+              properties:
+                type:
+                  description: Type of object where this value is defined.
+                  enum:
+                  - tenant
+                  - user
+                  type: string
+                id:
+                  $ref: '#/components/schemas/uuid'
+            value:
+              description: Value of the setting. This field can have a null value.
+              oneOf:
+              - type: string
+              - type: boolean
+              - type: number
+              - type: object
+            lock:
+              description: Flag that controls whether the value can be overridden at another tenant's level.
+              type: boolean
+    settingPut:
+      example:
+        value:
+          value: qwerty
+          lock: false
+      type: object
+      additionalProperties: false
+      properties:
+        value:
+          description: Value of the setting.
+          oneOf:
+          - type: string
+          - type: boolean
+          - type: number
+          - type: object
+        lock:
+          description: Flag that controls whether the value can be overridden at another tenant's level.
+          type: boolean
+        exclusive:
+          description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
+          type: boolean
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          authorizationUrl: /api/2/idp/authorize
+          tokenUrl: /api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::account-server::root_admin: ''
+            urn:acronis.com::account-server::partner_admin: ''
+            urn:acronis.com::account-server::company_admin: ''
+            urn:acronis.com::account-server::unit_admin: ''
+            urn:acronis.com::account-server::readonly_admin: ''
+            urn:acronis.com::account-server::tenant_admin: ''
+            urn:acronis.com::account-server::tenant_viewer: ''
+            urn:acronis.com::account-server::user_admin: ''
+            urn:acronis.com::account-server::replication_manager: ''
+            urn:acronis.com::account-server::managed_clients_admin: ''
+            urn:acronis.com::account-server::oauth2_client_admin: ''
+            urn:acronis.com::account-server::legal_docs_signer: ''
+            urn:acronis.com::accounts::email_token_requester: ''
+            urn:acronis.com::accounts::licensing_admin: ''
+            urn:acronis.com::accounts::usage_reporter: ''
+            urn:acronis.com::backup::backup_user: ''
+            urn:acronis.com::backup::protection_admin: ''
+            urn:acronis.com::files_cloud::sync_share_user: ''
+            urn:acronis.com::acep::consumer: ''
+            urn:acronis.com::account-server::security_groups_admin: ''
+            urn:acronis.com::account-server::security_groups_viewer: ''
+            urn:acronis.com::account-server::token_introspector: ''
+            urn:acronis.com::account-server::custom_role_manager: ''
+            urn:acronis.com::account-server::custom_role_viewer: ''
+          tokenUrl: /api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

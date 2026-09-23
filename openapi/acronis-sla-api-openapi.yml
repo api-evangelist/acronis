@@ -1,0 +1,216 @@
+openapi: 3.2.0
+info:
+  title: PSA SLA API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: SLA
+paths:
+  /SLA:
+    get:
+      operationId: Fetch Service Level Agreements (SLA)
+      parameters:
+      - name: Active
+        description: ''
+        in: query
+        schema:
+          type:
+          - boolean
+          - 'null'
+      - name: Name
+        description: ''
+        in: query
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: Page
+        description: ''
+        required: true
+        in: query
+        schema:
+          description: ''
+          type: integer
+      - name: ShortName
+        description: ''
+        in: query
+        schema:
+          description: ''
+          type: string
+      - name: SortColumn
+        description: ''
+        in: query
+        schema:
+          description: ''
+          enum:
+          - Name
+          type: string
+      - name: SortDirection
+        description: ''
+        in: query
+        schema:
+          description: ''
+          enum:
+          - Asc
+          - Desc
+          type: string
+      - name: PageSize
+        description: ''
+        required: true
+        in: query
+        schema:
+          description: ''
+          default: 0
+          type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  SLAPagedSearchResult:
+                    SLAs:
+                    - Id: 00000000-0000-0000-0000-000000000000
+                      Name: ''
+                      Active: false
+                      ShortName: ''
+                      ResponseTime: 0
+                      FeedbackInterval: 0
+                      IsUsed: false
+                    Paging:
+                      AmountRecordsFound: 0
+                      AmountOfPages: 0
+                type: object
+                additionalProperties: false
+                required:
+                - SLAPagedSearchResult
+                properties:
+                  SLAPagedSearchResult:
+                    type: object
+                    additionalProperties: false
+                    required:
+                    - SLAs
+                    - Paging
+                    properties:
+                      SLAs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SLA'
+                      Paging:
+                        $ref: '#/components/schemas/Paging'
+      security:
+      - oauth2: []
+      tags:
+      - SLA
+      summary: Fetch service level agreements (SLA)
+      x-summary-source: derived
+components:
+  schemas:
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
+    SLA:
+      type: object
+      additionalProperties: false
+      required:
+      - Active
+      - FeedbackInterval
+      - Id
+      - IsUsed
+      - Name
+      - ResponseTime
+      - ShortName
+      properties:
+        Active:
+          description: ''
+          type: boolean
+        FeedbackInterval:
+          description: ''
+          type: integer
+        Id:
+          description: ''
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        IsUsed:
+          description: ''
+          type: boolean
+        Name:
+          description: ''
+          type: string
+        ResponseTime:
+          description: ''
+          type: integer
+        ShortName:
+          description: ''
+          type: string
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

@@ -1,0 +1,519 @@
+openapi: 3.2.0
+info:
+  title: PSA Contracts API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: Contracts
+paths:
+  /Contracts:
+    put:
+      operationId: Create or update Contract
+      description: Creates or updates a Contract
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                ContractParts: []
+                StartDate: '2024-07-02T06:07:43.603Z'
+                IsSalesOrContract: true
+                Name: ContractName
+                Customer: 9e145169-059d-422d-80eb-07356e9611a8
+                CustomerName: =CUstomer Sync=
+                DefaultSLA: 5784e627-29db-4ba1-8437-5862027bcf1a
+                Street: '1'
+                HouseNo: '1'
+                HouseNoAdd: null
+                Zipcode: '1'
+                City: '1'
+                StateCountry: b4c87080-7c8c-45e0-8867-a714ffc79b7d
+                BuildingName: null
+                SendInvoiceByEmail: false
+                ContactEmail: customer.sync@gmail.com
+                Country: d46c54bd-1704-4a55-bb76-fc03073669a0
+                BillingEntity: f5124299-aaee-4c8f-b80a-9b28647c5353
+                PaymentIntervalInMonths: '1'
+                BillInAdvance: 'true'
+                Incasso: 'false'
+                EndDate: '2050-01-01'
+                StartDateTmp: '2024-07-02'
+                EndDateTmp: '2050-01-01'
+              type: object
+              additionalProperties: false
+              required:
+              - Name
+              - StartDate
+              properties:
+                BillInAdvance:
+                  description: Defines a billing method for the contract.
+                  default: false
+                  type: boolean
+                BillingEntity:
+                  description: Defines a billing entity for the contract billing.
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                BlockHours:
+                  description: Defines whether support block hours are included (1) into the contract, or not (0).
+                  default: false
+                  type: boolean
+                BlockHoursNumber:
+                  type:
+                  - integer
+                  - 'null'
+                BuildingName:
+                  description: 'Defines customer''s address information to be used on the invoice:  building name.'
+                  type: string
+                City:
+                  description: 'Defines customer''s address information to be used on the invoice:  city.'
+                  type: string
+                ContactEmail:
+                  description: Contact email for the contract.
+                  type: string
+                ContractParts:
+                  description: Contract's parts - list of contract products.
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ContractPart'
+                Customer:
+                  description: Customer ID.
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                EndDate:
+                  description: Contract's end date. Need to describe how to proceed with "Forever" end date. We have this check-box in UI.
+                  default: '0001-01-01T00:00:00Z'
+                  type: string
+                  format: date-time
+                HouseNo:
+                  type:
+                  - string
+                  - 'null'
+                HouseNoAdd:
+                  type:
+                  - string
+                  - 'null'
+                KeepRemainingHours:
+                  description: Defines a retainer option, remaining (unused) hours are kept for the next billing period (1), or dropped (0).
+                  default: false
+                  type: boolean
+                Name:
+                  type:
+                  - string
+                  - 'null'
+                PaymentIntervalInMonths:
+                  description: Defines an invoice interval for the contract.
+                  default: 0
+                  type: integer
+                ProRated:
+                  description: Defines whether proration for the contract billing is enabled (1), or not (0).
+                  default: false
+                  type: boolean
+                ReferenceNumber:
+                  type:
+                  - string
+                  - 'null'
+                RenewalThreshold:
+                  type:
+                  - integer
+                  - 'null'
+                Retainer:
+                  description: Defines whether the contract is a retainer and block hours are billed every month / quarter / half year / year (1), or not (0).
+                  default: false
+                  type: boolean
+                SendInvoiceByEmail:
+                  description: Defines a delivery method for generated invoices.
+                  default: false
+                  type: boolean
+                StartDate:
+                  description: Contract's start date.
+                  default: '0001-01-01T00:00:00Z'
+                  type: string
+                  format: date-time
+                StateCountry:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                Street:
+                  type:
+                  - string
+                  - 'null'
+                Zipcode:
+                  type:
+                  - string
+                  - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  contractId: 00000000-0000-0000-0000-000000000000
+                type: object
+                additionalProperties: false
+                required:
+                - contractId
+                properties:
+                  contractId:
+                    $ref: '#/components/schemas/Guid'
+      security:
+      - oauth2: []
+      tags:
+      - Contracts
+      summary: Create or update contract
+      x-summary-source: derived
+    get:
+      operationId: Fetches Contracts by customer ID
+      parameters:
+      - name: id
+        description: The customer ID.
+        required: true
+        in: query
+        schema:
+          description: The customer ID.
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  contracts:
+                  - Id: 00000000-0000-0000-0000-000000000000
+                    Name: ''
+                    StartDate: '0001-01-01T00:00:00Z'
+                    EndDate: '0001-01-01T00:00:00Z'
+                    Customer: 00000000-0000-0000-0000-000000000000
+                    Street: ''
+                    BuildingName: ''
+                    HouseNo: ''
+                    HouseNoAdd: ''
+                    City: ''
+                    StateCountry: null
+                    Zipcode: ''
+                    ReferenceNumber: ''
+                    Incasso: false
+                    BillInAdvance: false
+                    PaymentIntervalInMonths: 0
+                    ContactEmail: ''
+                    Contact: ''
+                    SendInvoiceByEmail: false
+                    ContractParts: []
+                    BlockHours: false
+                    BlockHoursNumber: null
+                    RenewalThreshold: null
+                    BillingEntity: 00000000-0000-0000-0000-000000000000
+                    Retainer: false
+                    KeepRemainingHours: false
+                    ProRated: false
+                    CustomFields:
+                    - CustomFieldId: 00000000-0000-0000-0000-000000000000
+                      Name: ''
+                      Type: 1
+                      Active: false
+                      Required: false
+                      SortNumber: 0
+                      CustomFieldValueId: 00000000-0000-0000-0000-000000000000
+                      EntityId: 00000000-0000-0000-0000-000000000000
+                      Value: ''
+                type: object
+                additionalProperties: false
+                required:
+                - contracts
+                properties:
+                  contracts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Contract'
+      security:
+      - oauth2: []
+      tags:
+      - Contracts
+      summary: Fetches contracts by customer ID
+      x-summary-source: derived
+components:
+  schemas:
+    Contract:
+      type: object
+      additionalProperties: false
+      required:
+      - BillInAdvance
+      - BillingEntity
+      - BlockHours
+      - BlockHoursNumber
+      - BuildingName
+      - City
+      - ContactEmail
+      - ContractParts
+      - Customer
+      - EndDate
+      - HouseNo
+      - HouseNoAdd
+      - KeepRemainingHours
+      - Name
+      - PaymentIntervalInMonths
+      - ProRated
+      - ReferenceNumber
+      - RenewalThreshold
+      - Retainer
+      - SendInvoiceByEmail
+      - StartDate
+      - StateCountry
+      - Street
+      - Zipcode
+      properties:
+        BillInAdvance:
+          description: Defines a billing method for the contract.
+          type: boolean
+        BillingEntity:
+          description: Defines a billing entity for the contract billing.
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        BlockHours:
+          description: Defines whether support block hours are included (1) into the contract, or not (0).
+          type: boolean
+        BlockHoursNumber:
+          type:
+          - integer
+          - 'null'
+        BuildingName:
+          description: 'Defines customer''s address information to be used on the invoice:  building name.'
+          type: string
+        City:
+          description: 'Defines customer''s address information to be used on the invoice:  city.'
+          type: string
+        ContactEmail:
+          description: Contact email for the contract.
+          type: string
+        ContractParts:
+          description: Contract's parts - list of contract products.
+          type: array
+          items:
+            $ref: '#/components/schemas/ContractPart'
+        Customer:
+          description: Customer ID.
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        EndDate:
+          description: Contract's end date.
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        HouseNo:
+          description: 'Defines customer''s address information to be used on the invoice:  street number.'
+          type: string
+        HouseNoAdd:
+          description: 'Defines customer''s address information to be used on the invoice:  building number.'
+          type: string
+        KeepRemainingHours:
+          description: Defines a retainer option, remaining (unused) hours are kept for the next billing period (1), or dropped (0).
+          type: boolean
+        Name:
+          description: Contract name.
+          type: string
+        PaymentIntervalInMonths:
+          description: Defines an invoice interval for the contract.
+          type: integer
+        ProRated:
+          description: Defines whether proration for the contract billing is enabled (1), or not (0).
+          type: boolean
+        ReferenceNumber:
+          description: Contract's reference number.
+          type: string
+        RenewalThreshold:
+          type:
+          - integer
+          - 'null'
+        Retainer:
+          description: Defines whether the contract is a retainer and block hours are billed every month / quarter / half year / year (1), or not (0).
+          type: boolean
+        SendInvoiceByEmail:
+          description: Defines a delivery method for generated invoices.
+          type: boolean
+        StartDate:
+          description: Contract's start date.
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        StateCountry:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        Street:
+          description: 'Defines customer''s address information to be used on the invoice:  street.'
+          type: string
+        Zipcode:
+          description: 'Defines customer''s address information to be used on the invoice:  ZIP or postal code.'
+          type: string
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    DatetimeNoTZ:
+      description: RFC3339-like date and time without timezone.
+      type: string
+      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+    ContractPart:
+      type: object
+      additionalProperties: false
+      required:
+      - APIConnection
+      - ActualQuantity
+      - AutomaticUpdate
+      - Contract
+      - ContractPartType
+      - Description
+      - Discount
+      - DiscountReason
+      - EndDate
+      - Id
+      - IsReadOnly
+      - MachinesCount
+      - MinBillableQuantity
+      - Price
+      - Product
+      - ProductName
+      - Quantity
+      - ServiceLevelAgreement
+      - ServiceObjectGroup
+      - ShowUsersOnInvoice
+      - StartDate
+      - SubscriptionType
+      - TrialPeriod
+      - UserType
+      - VARConnection
+      - VARGroup
+      properties:
+        APIConnection:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        ActualQuantity:
+          type: number
+        AutomaticUpdate:
+          type: boolean
+        Contract:
+          $ref: '#/components/schemas/Guid'
+        ContractPartType:
+          $ref: '#/components/schemas/Guid'
+        Description:
+          type: string
+        Discount:
+          type: number
+        DiscountReason:
+          type: string
+        EndDate:
+          $ref: '#/components/schemas/DatetimeNoTZ'
+        Id:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        IsReadOnly:
+          type: boolean
+        MachinesCount:
+          type:
+          - integer
+          - 'null'
+        MinBillableQuantity:
+          type: number
+        Price:
+          type: number
+        Product:
+          $ref: '#/components/schemas/Guid'
+        ProductName:
+          type: string
+        Quantity:
+          type: number
+        ServiceLevelAgreement:
+          $ref: '#/components/schemas/Guid'
+        ServiceObjectGroup:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        ShowUsersOnInvoice:
+          type: boolean
+        StartDate:
+          $ref: '#/components/schemas/DatetimeNoTZ'
+        SubscriptionType:
+          $ref: '#/components/schemas/Guid'
+        TrialPeriod:
+          type: integer
+        UserType:
+          type: integer
+        VARConnection:
+          $ref: '#/components/schemas/Guid'
+        VARGroup:
+          $ref: '#/components/schemas/Guid'
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

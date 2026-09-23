@@ -1,0 +1,649 @@
+openapi: 3.2.0
+info:
+  title: PSA Call API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: Call
+paths:
+  /Call:
+    put:
+      operationId: Create ticket
+      description: Creates a ticket.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                BillTheCustomer: true
+                BillingActivityType: 493a36c9-4cd2-4b89-a693-99ac067d6776
+                BusinessUnit: 25080d45-fc3f-4928-b861-681ba7d5b2e1
+                BusinessUnitName: Support group
+                Category: 7f8320eb-d653-40ae-9d57-1257bead1a29
+                CategoryName: Default Sub-category
+                Client: eb090e85-8357-4fa3-a9bd-afaad51d030f
+                ClientName: cstmr_001 admin
+                CurrentDate: '2024-08-09T12:46:18.813Z'
+                Customer: 2962473b-50df-4e53-a8d3-0068bbdb54d3
+                CustomerName: cstmr_001
+                UpdateEmailRecipients: 1
+                FilesForEmailAttachment: []
+                FilesForEmailAttachmentOnCreateTicket: []
+                InternalActions: null
+                InternalNotes: null
+                IsIctService: false
+                ContractPart: null
+                Manager: be2236fa-df17-4c61-8adb-f5667a343362
+                ManagerName: cstmr_001  Manager
+                NextContactDate: '2024-08-09'
+                Message: ''
+                PhoneNumber: '12311111'
+                Planned: null
+                PlannedTicket:
+                  PlannedDate: ''
+                  StartHour: '2024-08-09T15:44:20.936Z'
+                  StartHourstamp: 944
+                  Hours: 1
+                  Minutes: null
+                Priority: 683a47ec-e57c-43a5-ba10-2ccdc03fd331
+                ReportedByUser: df068165-248c-43c5-bf5d-db9cd1f3188e
+                ServiceLevelAgreement: 63b75905-10d4-44e9-ba1e-7aa2eff4100b
+                Status: 4feaaa86-8757-44d6-a8d6-99fdf9f8ce4d
+                SupportUser: df068165-248c-43c5-bf5d-db9cd1f3188e
+                UpdateUser: df068165-248c-43c5-bf5d-db9cd1f3188e
+                UpdateUserName: Partner Administrator
+                TicketProducts: []
+                Title: Test
+                UTCNextContactDate: '2024-08-09T15:44:20.936Z'
+                autoPauseCheck: null
+                elapsedHours: '00'
+                elapsedMinutes: '01'
+                elapsedSeconds: 116
+                isStreaming: true
+                CustomFields: []
+              type: object
+              additionalProperties: false
+              required:
+              - Title
+              - UpdateType
+              properties:
+                APIConnection:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                BillTheCustomer:
+                  description: Defines whether ticket time should be marked as billable (1) or not billable (0).
+                  default: false
+                  type: boolean
+                BusinessUnit:
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                Category:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                Client:
+                  description: Defines a customer ID for a ticket.
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                ContractPart:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                ElapsedSeconds:
+                  default: 0
+                  type: integer
+                ExternalReferenceNumber:
+                  type: string
+                ExternalStatus:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                ExternalTicketType:
+                  type:
+                  - integer
+                  - 'null'
+                ExternalType:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                ExternalUpdateId:
+                  type:
+                  - integer
+                  - 'null'
+                Files:
+                  description: Defines attachments for a ticket.
+                  type: array
+                  items:
+                    type: object
+                Followers:
+                  type:
+                  - string
+                  - 'null'
+                InternalActions:
+                  type:
+                  - string
+                  - 'null'
+                InternalNotes:
+                  type:
+                  - string
+                  - 'null'
+                IsIctService:
+                  description: 'Defines a type of work for a ticket: ICT service (1) or managed service  (0).'
+                  default: false
+                  type: boolean
+                Manager:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                MessageToCustomer:
+                  type:
+                  - string
+                  - 'null'
+                NextContactDate:
+                  type:
+                  - string
+                  - 'null'
+                  format: date
+                PhoneNumber:
+                  type:
+                  - string
+                  - 'null'
+                Planned:
+                  type:
+                  - boolean
+                  - 'null'
+                PreviousEmailId:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                PreviousSupportUser:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                Priority:
+                  description: Defines a priority ID for a ticket.
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                ReportedByUser:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                SenderEmailAddress:
+                  type:
+                  - string
+                  - 'null'
+                ServiceLevelAgreement:
+                  description: Defines a SLA ID for a ticket.
+                  default: 00000000-0000-0000-0000-000000000000
+                  type: string
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                ServiceObject:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                SupportUser:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                TicketProducts:
+                  type: array
+                  items:
+                    type: object
+                Title:
+                  description: Defines a ticket title.
+                  type: string
+                UpdateEmailRecipients:
+                  description: '* None = 0
+
+                    * Client = 1
+
+                    * Manager = 4
+
+                    * Supplier = 8
+
+                    '
+                  default: 0
+                  enum:
+                  - 0
+                  - 1
+                  - 4
+                  - 8
+                  type: integer
+                UpdateType:
+                  description: '* Customer = 0
+
+                    * SupportUser = 1
+
+                    '
+                  default: 0
+                  enum:
+                  - 0
+                  - 1
+                  type: integer
+                UpdateUser:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                WebUrl:
+                  type:
+                  - string
+                  - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  id: 8f3325a1-6639-4376-8ecf-e9fd936c8251
+                type: object
+                additionalProperties: false
+                required:
+                - id
+                properties:
+                  id:
+                    $ref: '#/components/schemas/Guid'
+      security:
+      - oauth2: []
+      tags:
+      - Call
+      summary: Create ticket
+      x-summary-source: derived
+    get:
+      operationId: Fetch ticket
+      description: Fetches a ticket by ID.
+      parameters:
+      - name: id
+        description: The customer ID.
+        required: true
+        in: query
+        schema:
+          description: The customer ID.
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  Call:
+                  - Updates: []
+                    AmountOfPagesFound: 0
+                    AmountOfRecordsFound: 0
+                    LastThreeCalls: []
+                    TicketProducts: []
+                    Id: 00000000-0000-0000-0000-000000000000
+                    Tenant: 00000000-0000-0000-0000-000000000000
+                    Title: ''
+                    Client: 00000000-0000-0000-0000-000000000000
+                    ClientName: ''
+                    Customer: 00000000-0000-0000-0000-000000000000
+                    CustomerName: ''
+                    SupportUser: 00000000-0000-0000-0000-000000000000
+                    SupportUserName: ''
+                    SupportUserDeleted: null
+                    ClientDeleted: null
+                    ManagerDeleted: null
+                    UpdateUser: 00000000-0000-0000-0000-000000000000
+                    Manager: 00000000-0000-0000-0000-000000000000
+                    ManagerName: ''
+                    BusinessUnit: 00000000-0000-0000-0000-000000000000
+                    BusinessUnitName: ''
+                    Priority: 00000000-0000-0000-0000-000000000000
+                    PriorityName: ''
+                    Status: 00000000-0000-0000-0000-000000000000
+                    StatusName: ''
+                    StatusTranslatedName: ''
+                    Category: null
+                    CategoryName: ''
+                    ServiceLevelAgreement: 00000000-0000-0000-0000-000000000000
+                    ServiceLevelAgreementName: ''
+                    Followers: ''
+                    ServiceObject: null
+                    ServiceObjectName: ''
+                    IsIctService: false
+                    PhoneNumber: ''
+                    ReferenceNumber: ''
+                    ExternalReferenceNumber: ''
+                    Reason: ''
+                    Grade: null
+                    TotalTimeSpent: null
+                    Planned: false
+                    PlannedTicket: {}
+                    ContractPart: null
+                    APIConnection: null
+                    ClientDocumentation: ''
+                    ExternalStatus: null
+                    ExternalType: null
+                    ExternalTicketType: null
+                    HelpdeskPlans: null
+                    ExternalDeviceId: ''
+                    ExternalGroupId: ''
+                    AutoPause: null
+                    RatedBy: ''
+                    DateLastUpdate: '0001-01-01T00:00:00Z'
+                    SlaBreachDate: '0001-01-01T00:00:00Z'
+                    StatusClassName: ''
+                    ExternalStatusName: ''
+                    IsContinuumTicket: false
+                    EmailCustomer: false
+                    BillTheCustomer: false
+                    ProjectTicketSolved: false
+                    ContinuumTicket: false
+                    IsQuoteTicket: false
+                    IsQuotePurchaseOrderTicket: false
+                    RelatedCalls: []
+                    CustomerPhoneNumber: ''
+                    CallContact: {}
+                type: object
+                additionalProperties: false
+                required:
+                - Call
+                properties:
+                  Call:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: false
+                      required:
+                      - AmountOfRecordsFound
+                      - UpdateEmailRecipients
+                      - AmountOfPagesFound
+                      - Title
+                      properties:
+                        AmountOfRecordsFound:
+                          type: integer
+                        Followers:
+                          type:
+                          - string
+                          - 'null'
+                        PhoneNumber:
+                          description: 'Defines contacts information for a customer''s user: phone number.'
+                          type: string
+                        PreviousEmailId:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        TicketProducts:
+                          description: ''
+                          type: array
+                          items:
+                            type: object
+                        ElapsedSeconds:
+                          default: 0
+                          type: integer
+                        Category:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        SenderEmailAddress:
+                          type:
+                          - string
+                          - 'null'
+                        Planned:
+                          type:
+                          - boolean
+                          - 'null'
+                        UpdateType:
+                          description: '* Customer = 0
+
+                            * SupportUser = 1
+
+                            '
+                          default: 0
+                          enum:
+                          - 0
+                          - 1
+                          type: integer
+                        ExternalUpdateId:
+                          type:
+                          - integer
+                          - 'null'
+                        ExternalTicketType:
+                          type:
+                          - integer
+                          - 'null'
+                        InternalActions:
+                          description: 'Optional internal information for a ticket: actions.'
+                          type: string
+                        Client:
+                          description: Defines a customer ID for a ticket.
+                          default: 00000000-0000-0000-0000-000000000000
+                          type: string
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        MessageToCustomer:
+                          type:
+                          - string
+                          - 'null'
+                        NextContactDate:
+                          type:
+                          - string
+                          - 'null'
+                          format: date
+                        WebUrl:
+                          type:
+                          - string
+                          - 'null'
+                        ContractPart:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        BillTheCustomer:
+                          description: Defines whether ticket time should be marked as billable (1) or not billable (0).
+                          default: false
+                          type: boolean
+                        Priority:
+                          description: Defines a priority ID for a ticket.
+                          default: 00000000-0000-0000-0000-000000000000
+                          type: string
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        UpdateEmailRecipients:
+                          description: '* None = 0
+
+                            * Client = 1
+
+                            * Manager = 4
+
+                            * Supplier = 8
+
+                            '
+                          default: 0
+                          enum:
+                          - 0
+                          - 1
+                          - 4
+                          - 8
+                          type: integer
+                        ExternalStatus:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        UpdateUser:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        SupportUser:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        ServiceLevelAgreement:
+                          description: Defines a SLA ID for a ticket.
+                          default: 00000000-0000-0000-0000-000000000000
+                          type: string
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        ServiceObject:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        IsIctService:
+                          description: 'Defines a type of work for a ticket: ICT service (1) or managed service  (0).'
+                          default: false
+                          type: boolean
+                        Manager:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        AmountOfPagesFound:
+                          type: integer
+                        Files:
+                          description: Defines attachments for a ticket.
+                          type: array
+                          items:
+                            type: object
+                        APIConnection:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        ExternalReferenceNumber:
+                          type:
+                          - string
+                          - 'null'
+                        ReportedByUser:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        Title:
+                          type:
+                          - string
+                          - 'null'
+                        InternalNotes:
+                          type:
+                          - string
+                          - 'null'
+                        PreviousSupportUser:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        ExternalType:
+                          example: 00000000-0000-0000-0000-000000000000
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                        BusinessUnit:
+                          default: 00000000-0000-0000-0000-000000000000
+                          type: string
+                          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      security:
+      - oauth2: []
+      tags:
+      - Call
+      summary: Fetch ticket
+      x-summary-source: derived
+components:
+  schemas:
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private

@@ -1,0 +1,489 @@
+openapi: 3.2.0
+info:
+  title: PSA Product API
+  version: v1
+servers:
+- url: https://dev-cloud.acronis.com/api/advanced-automation/v1
+  variables: {}
+tags:
+- name: Product
+paths:
+  /Product:
+    put:
+      operationId: Create product
+      description: Creates a product.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                Active: true
+                Cost: 20
+                Description: Test-Product-API-Documentation-Description
+                Name: Test-Product-API-Documentation
+                Price: 100
+                ProductForActivityBasedTicketBilling: false
+                ProjectProduct: false
+                Taxable: true
+                ViewInContract: false
+              type: object
+              additionalProperties: false
+              required:
+              - Name
+              - Price
+              properties:
+                Active:
+                  description: Defines whether the product is available for sales (true) or not (false).
+                  default: false
+                  type: boolean
+                Taxable:
+                  description: Defines whether the product is a subject for taxes (true) or not (false).
+                  default: false
+                  type: boolean
+                Name:
+                  description: Defines the product name.
+                  type: string
+                  maxLength: 255
+                Description:
+                  type:
+                  - string
+                  - 'null'
+                Price:
+                  description: Defines an end user price for a single product item.
+                  default: 0
+                  type: number
+                Cost:
+                  description: Defines a cost of a single product item for the partner.
+                  default: 0
+                  type: number
+                ViewInContract:
+                  description: Defines whether product can be used in contracts for the recurring billing (true) or not (false).
+                  default: false
+                  type: boolean
+                ProductForActivityBasedTicketBilling:
+                  description: Defines whether product can be used as an hourly rate for the ticket time billing (true) or not (false).
+                  default: false
+                  type: boolean
+                Ledger:
+                  example: 00000000-0000-0000-0000-000000000000
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+                CreationDate:
+                  description: RFC3339-like date and time without timezone.
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+                LastChangeDate:
+                  description: RFC3339-like date and time without timezone.
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+                VAR:
+                  description: 'Defines whether the product is resold (true) or not (false). Used for analytic purposes (VAR = value-added reseller).
+
+
+                    An example of a VAR product can be a 3rd party vendor license, e.g. Acronis. Project hours or Support hours are typically not VAR products.
+
+                    '
+                  default: false
+                  type: boolean
+                TicketProduct:
+                  description: Defines whether product can be sold in service desk tickets as a part of support activity, e.g., Security expert hours for consultancy.
+                  default: false
+                  type: boolean
+                PriceAdjustable:
+                  description: Defines whether the ticket product price can be manually adjusted by engineers from a ticket (true) or not (false).
+                  default: false
+                  type: boolean
+                ProjectProduct:
+                  description: Defines whether product can be used in projects for the project billing (true) or not (false).
+                  default: false
+                  type: boolean
+                ProjectProductPriceAdjustable:
+                  description: Defines whether the project product price can be manually adjusted by engineers from a project (true) or not (false).
+                  type: boolean
+                ExternalIdNumber:
+                  description: Defines the product ID in 3rd party systems for a product mapping, e.g. in 3rd party accounting platform.
+                  type: string
+                  maxLength: 100
+                SKU:
+                  description: Defines a SKU code for the project.
+                  type: string
+                  maxLength: 20
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+      security:
+      - oauth2:
+        - urn:acronis.com::advanced_automation::advanced_automation_admin
+        - urn:acronis.com::advanced_automation::advanced_automation_finance
+        - urn:acronis.com::advanced_automation::advanced_automation_engineer
+        - urn:acronis.com::advanced_automation::advanced_automation_finance_manager
+        - urn:acronis.com::advanced_automation::advanced_automation_sales
+      tags:
+      - Product
+      summary: Create product
+      x-summary-source: derived
+    get:
+      operationId: Fetch products
+      description: Fetches information about the products either by GUID or by filtering parameters.
+      responses:
+        '200':
+          description: The request was successful.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/Product'
+                - $ref: '#/components/schemas/GetProductSearchResponse'
+      security:
+      - oauth2:
+        - urn:acronis.com::advanced_automation::advanced_automation_admin
+        - urn:acronis.com::advanced_automation::advanced_automation_finance
+        - urn:acronis.com::advanced_automation::advanced_automation_engineer
+        - urn:acronis.com::advanced_automation::advanced_automation_finance_manager
+        - urn:acronis.com::advanced_automation::advanced_automation_sales
+      tags:
+      - Product
+      summary: Fetch products
+      x-summary-source: derived
+components:
+  schemas:
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
+    GetProductSearchResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - products
+      properties:
+        products:
+          type: object
+          additionalProperties: false
+          required:
+          - Result
+          properties:
+            Result:
+              type: object
+              additionalProperties: false
+              required:
+              - Products
+              - Paging
+              properties:
+                Products:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductPartial'
+                Paging:
+                  $ref: '#/components/schemas/Paging'
+    ProductPartial:
+      type: object
+      additionalProperties: false
+      required:
+      - Id
+      - Active
+      - Name
+      - Description
+      - Price
+      - Cost
+      - ViewInContract
+      - Ledger
+      - LastChangeDate
+      - ExternalIdNumber
+      - AcronisId
+      properties:
+        Id:
+          $ref: '#/components/schemas/Guid'
+        Active:
+          type: boolean
+        Name:
+          type: string
+        Description:
+          type:
+          - string
+          - 'null'
+        Price:
+          type: number
+        Cost:
+          type: number
+        ViewInContract:
+          type: boolean
+        Ledger:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        LastChangeDate:
+          description: RFC3339-like date and time without timezone.
+          type:
+          - string
+          - 'null'
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        ExternalIdNumber:
+          type:
+          - string
+          - 'null'
+        AcronisId:
+          type:
+          - string
+          - 'null'
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    DatetimeNoTZ:
+      description: RFC3339-like date and time without timezone.
+      type: string
+      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+    Product:
+      example:
+        Id: cbbf9a00-019e-4af8-beb1-76d3fdb73058
+        Tenant: 10f7e7cf-0aef-48d0-9ef6-abe96e18e70c
+        Active: true
+        Taxable: true
+        Name: Test-Product-API-Documentation
+        InternalName: null
+        Description: Test-Product-API-Documentation-Description
+        InternalDescription: null
+        Price: 100
+        Cost: 20
+        ViewInContract: false
+        ProductForActivityBasedTicketBilling: false
+        Ledger: null
+        CreationDate: '2024-07-18T14:51:35.69'
+        LastChangeDate: '2024-07-18T00:00:00'
+        VAR: false
+        TicketProduct: false
+        PriceAdjustable: false
+        ProjectProductPriceAdjustable: false
+        ExternalIdNumber: null
+        ProjectProduct: false
+        SKU: null
+        AcronisId: null
+        InUseInSales: false
+        InUseInTickets: false
+        InUseInContracts: false
+        InUseInProjects: false
+        InUseInTicketBilling: false
+        InUseInBundles: false
+        InUseInQuoteTemplates: false
+        InUse: false
+        LedgerNumber: null
+        IsDefault: false
+        LedgerDescription: null
+        CustomFields: null
+      type: object
+      additionalProperties: false
+      required:
+      - InUseInTickets
+      - LastChangeDate
+      - Ledger
+      - Description
+      - InUseInBundles
+      - Id
+      - Cost
+      - LedgerNumber
+      - ProductForActivityBasedTicketBilling
+      - InternalDescription
+      - InUseInProjects
+      - Price
+      - CreationDate
+      - ProjectProduct
+      - Name
+      - ProjectProductPriceAdjustable
+      - InUseInSales
+      - InUse
+      - InUseInTicketBilling
+      - Tenant
+      - InUseInContracts
+      - InUseInQuoteTemplates
+      - VAR
+      - ExternalIdNumber
+      - AcronisId
+      - ViewInContract
+      - Active
+      - CustomFields
+      - LedgerDescription
+      - Taxable
+      - PriceAdjustable
+      - SKU
+      - IsDefault
+      - InternalName
+      - TicketProduct
+      properties:
+        InUseInTickets:
+          type: boolean
+        LastChangeDate:
+          description: RFC3339-like date and time without timezone.
+          type:
+          - string
+          - 'null'
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        Ledger:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        Description:
+          type:
+          - string
+          - 'null'
+        InUseInBundles:
+          type: boolean
+        Id:
+          $ref: '#/components/schemas/Guid'
+        Cost:
+          type: number
+        LedgerNumber:
+          type:
+          - string
+          - 'null'
+        ProductForActivityBasedTicketBilling:
+          type: boolean
+        InternalDescription:
+          type:
+          - string
+          - 'null'
+        InUseInProjects:
+          type: boolean
+        Price:
+          type: number
+        CreationDate:
+          $ref: '#/components/schemas/DatetimeNoTZ'
+        ProjectProduct:
+          type:
+          - boolean
+          - 'null'
+        Name:
+          type: string
+        ProjectProductPriceAdjustable:
+          type: boolean
+        InUseInSales:
+          type: boolean
+        InUse:
+          type: boolean
+        InUseInTicketBilling:
+          type: boolean
+        Tenant:
+          $ref: '#/components/schemas/Guid'
+        InUseInContracts:
+          type: boolean
+        InUseInQuoteTemplates:
+          type: boolean
+        VAR:
+          type: boolean
+        ExternalIdNumber:
+          type:
+          - string
+          - 'null'
+        AcronisId:
+          type:
+          - string
+          - 'null'
+        ViewInContract:
+          type: boolean
+        Active:
+          type: boolean
+        CustomFields:
+          type:
+          - array
+          - 'null'
+          items: {}
+        LedgerDescription:
+          type:
+          - string
+          - 'null'
+        Taxable:
+          type: boolean
+        PriceAdjustable:
+          type: boolean
+        SKU:
+          type:
+          - string
+          - 'null'
+        IsDefault:
+          type: boolean
+        InternalName:
+          type:
+          - string
+          - 'null'
+        TicketProduct:
+          type: boolean
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: A description of the security scheme.
+      flows:
+        clientCredentials:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        password:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+        authorizationCode:
+          scopes:
+            urn:acronis.com::advanced_automation::advanced_automation_client: ''
+            urn:acronis.com::advanced_automation::advanced_automation_client_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_admin: ''
+            urn:acronis.com::advanced_automation::advanced_automation_director: ''
+            urn:acronis.com::advanced_automation::advanced_automation_engineer: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance: ''
+            urn:acronis.com::advanced_automation::advanced_automation_finance_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_group_manager: ''
+            urn:acronis.com::advanced_automation::advanced_automation_hr: ''
+            urn:acronis.com::advanced_automation::advanced_automation_sales: ''
+          authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
+          tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-roles:
+- name: public
+  id: '1'
+  description: public role
+  x-tags:
+  - public
+- name: private
+  id: '2'
+  description: private role
+  x-tags:
+  - private
