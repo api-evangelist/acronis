@@ -10,7 +10,7 @@ tags:
 paths:
   /effective_price_lists:
     get:
-      operationId: Fetch tenant's price lists
+      operationId: FetchTenant'sPriceLists
       description: Returns a tenant's price lists for one or more months.
       parameters:
       - name: tenant_id
@@ -158,6 +158,8 @@ paths:
       - Effective Price Lists
       summary: Fetch tenant's price lists
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch tenant's price lists
 components:
   schemas:
     BadRequestError:
@@ -186,6 +188,43 @@ components:
           description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
           enum:
           - GENERAL
+          type: string
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+        kb_link:
+          $ref: '#/components/schemas/kbLinkInfo'
+        message:
+          description: human-readable message, describing the error.
+          type: string
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+    UnauthorizedRequestError:
+      description: Authorization failed
+      example:
+        domain: ACCESS
+        code: UNAUTHORIZED_REQUEST
+      type: object
+      additionalProperties: false
+      required:
+      - code
+      - domain
+      properties:
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          enum:
+          - UNAUTHORIZED_REQUEST
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          enum:
+          - ACCESS
           type: string
         debug:
           $ref: '#/components/schemas/debugInfo'
@@ -237,66 +276,6 @@ components:
         message:
           description: human-readable message, describing the error.
           type: string
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - line_tag
-      - ser_code
-      - version
-      - build
-      - product
-      - os
-      properties:
-        line_tag:
-          type: string
-        ser_code:
-          type: string
-        version:
-          type: string
-        build:
-          type: string
-        product:
-          type: string
-        os:
-          type: string
-    UnauthorizedRequestError:
-      description: Authorization failed
-      example:
-        domain: ACCESS
-        code: UNAUTHORIZED_REQUEST
-      type: object
-      additionalProperties: false
-      required:
-      - code
-      - domain
-      properties:
-        reason:
-          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
-          type: string
-        context:
-          description: Error context dictionary
-          type: object
-        code:
-          description: Error id or code, unique in the domain. Same as in 'reason' field
-          enum:
-          - UNAUTHORIZED_REQUEST
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
-          enum:
-          - ACCESS
-          type: string
-        debug:
-          $ref: '#/components/schemas/debugInfo'
-        kb_link:
-          $ref: '#/components/schemas/kbLinkInfo'
-        message:
-          description: human-readable message, describing the error.
-          type: string
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
     InternalServerError:
       description: "Server encountered an unexpected condition that prevented it from \nfulfilling the request. Use as a base for more granular code and context definitions\n"
       example:
@@ -330,6 +309,29 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         message:
           description: human-readable message, describing the error.
+          type: string
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - line_tag
+      - ser_code
+      - version
+      - build
+      - product
+      - os
+      properties:
+        line_tag:
+          type: string
+        ser_code:
+          type: string
+        version:
+          type: string
+        build:
+          type: string
+        product:
+          type: string
+        os:
           type: string
   securitySchemes:
     oauth_2_0_user:

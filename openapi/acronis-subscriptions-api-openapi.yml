@@ -11,7 +11,7 @@ tags:
 paths:
   /subscriptions:
     post:
-      operationId: Create event subscription
+      operationId: CreateEventSubscription
       description: Create a new event subscription based on the provided criteria, such as topic, cti filter, and optional filters.
       requestBody:
         content:
@@ -56,9 +56,11 @@ paths:
       - Subscriptions
       summary: Create event subscription
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create event subscription
   /subscriptions/offset:
     get:
-      operationId: Fetch subscription offset
+      operationId: FetchSubscriptionOffset
       description: Fetch the current offset for a subscriber, indicating the position up to which events have been acknowledged.
       parameters:
       - name: subscription_id
@@ -101,27 +103,20 @@ paths:
       - Subscriptions
       summary: Fetch subscription offset
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch subscription offset
 components:
   schemas:
-    GetSubscriptionOffsetResponse:
-      type: object
-      additionalProperties: false
-      required:
-      - subscription_id
-      - offset
-      properties:
-        subscription_id:
-          description: Unique identifier of the subscription.
-          example: fd02a25c-fcb0-42a0-a5ce-56c1131db356
-          type: string
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        offset:
-          description: Latest committed offset of the subscriber.
-          type: integer
-          format: int64
     debugInfo:
       description: Error debug information (map type)
       type: object
+    CTIWildcard:
+      description: 'CTI with wildcard support, where the wildcard `*` can only be used as the final character of a segment.
+
+        '
+      type: string
+      pattern: ^cti((\.([a-z][a-z0-9_]*))|\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?(~(([a-z][a-z0-9_]*)|([a-z][a-z0-9_]*)\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?)*\*$|^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+      maxLength: 1024
     error:
       description: Base error object
       example:
@@ -156,6 +151,22 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
+    GetSubscriptionOffsetResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - subscription_id
+      - offset
+      properties:
+        subscription_id:
+          description: Unique identifier of the subscription.
+          example: fd02a25c-fcb0-42a0-a5ce-56c1131db356
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        offset:
+          description: Latest committed offset of the subscriber.
+          type: integer
+          format: int64
     ErrorMessage:
       type: object
       additionalProperties: false
@@ -164,30 +175,7 @@ components:
       properties:
         error:
           $ref: '#/components/schemas/error'
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - line_tag
-      - ser_code
-      - version
-      - build
-      - product
-      - os
-      properties:
-        line_tag:
-          type: string
-        ser_code:
-          type: string
-        version:
-          type: string
-        build:
-          type: string
-        product:
-          type: string
-        os:
-          type: string
-    PostSubscriptionRequest:
+    GetSubscriptionResponse:
       type: object
       additionalProperties: false
       required:
@@ -271,14 +259,30 @@ components:
           maxItems: 32
           items:
             $ref: '#/components/schemas/CTIWildcard'
-    CTIWildcard:
-      description: 'CTI with wildcard support, where the wildcard `*` can only be used as the final character of a segment.
-
-        '
-      type: string
-      pattern: ^cti((\.([a-z][a-z0-9_]*))|\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?(~(([a-z][a-z0-9_]*)|([a-z][a-z0-9_]*)\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?)*\*$|^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
-      maxLength: 1024
-    GetSubscriptionResponse:
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - line_tag
+      - ser_code
+      - version
+      - build
+      - product
+      - os
+      properties:
+        line_tag:
+          type: string
+        ser_code:
+          type: string
+        version:
+          type: string
+        build:
+          type: string
+        product:
+          type: string
+        os:
+          type: string
+    PostSubscriptionRequest:
       type: object
       additionalProperties: false
       required:

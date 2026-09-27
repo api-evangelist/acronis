@@ -10,7 +10,7 @@ tags:
 paths:
   /alerts:
     post:
-      operationId: Create an alert
+      operationId: CreateAnAlert
       description: Creates and activates an alert.
       requestBody:
         content:
@@ -350,8 +350,10 @@ paths:
       - Alerts
       summary: Create an alert
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create an alert
     get:
-      operationId: Fetch all alerts
+      operationId: FetchAllAlerts
       description: Fetches all alerts by optional filtering parameters.
       parameters:
       - name: limit
@@ -862,8 +864,10 @@ paths:
       - Alerts
       summary: Fetch all alerts
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch all alerts
     delete:
-      operationId: Dismiss the alerts by filter
+      operationId: DismissTheAlertsByFilter
       description: 'Dismisses the alerts by optional filtering parameters. Alerts will be dismissed even if they have the `orphaned` flag.
 
         Note that if no filter is provided all alerts within the tenant scope will be dismissed.'
@@ -1212,9 +1216,11 @@ paths:
       - Alerts
       summary: Dismiss the alerts by filter
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Dismiss the alerts by filter
   /alerts/{id}:
     get:
-      operationId: Fetch an alert by ID
+      operationId: FetchAnAlertByID
       description: Fetches the information about the alert by ID.
       parameters:
       - name: show_deleted
@@ -1272,8 +1278,10 @@ paths:
       - Alerts
       summary: Fetch an alert by ID
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch an alert by ID
     delete:
-      operationId: Dismiss an alert by ID
+      operationId: DismissAnAlertByID
       description: Dismisses an alert by ID.
       parameters:
       - name: id
@@ -1321,9 +1329,11 @@ paths:
       - Alerts
       summary: Dismiss an alert by ID
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Dismiss an alert by ID
   /alerts/{id}/false_positive:
     patch:
-      operationId: Mark alert as false positive
+      operationId: MarkAlertAsFalsePositive
       description: Marks or unmarks alert as false positive.
       parameters:
       - name: id
@@ -1385,11 +1395,22 @@ paths:
       - Alerts
       summary: Mark alert as false positive
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Mark alert as false positive
 components:
   schemas:
-    cursor:
-      description: Specific location in some collection.
-      type: string
+    Context:
+      description: '**Deprecated.** Value of unique key for alerts with current type.
+
+        Parameters of object can be only strings.
+
+        Variable structure of context is specified with custom types.
+
+        '
+      type: object
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     AlertView:
       description: View of alert in responses.
       example:
@@ -1485,15 +1506,14 @@ components:
         falsePositive:
           description: Specifies whether alert is false positive or not.
           type: boolean
-    Context:
-      description: '**Deprecated.** Value of unique key for alerts with current type.
-
-        Parameters of object can be only strings.
-
-        Variable structure of context is specified with custom types.
-
-        '
+    cursors:
+      description: Cursors before and after the current page.
       type: object
+      properties:
+        before:
+          $ref: '#/components/schemas/cursor'
+        after:
+          $ref: '#/components/schemas/cursor'
     paging:
       description: Paging format.
       type: object
@@ -1502,32 +1522,6 @@ components:
       properties:
         cursors:
           $ref: '#/components/schemas/cursors'
-    uuid:
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
-      properties:
-        lineTag:
-          type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
-          type: integer
-        product:
-          type: string
-        os:
-          type: string
     Error:
       description: Base error object
       type: object
@@ -1551,6 +1545,35 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
+    cursor:
+      description: Specific location in some collection.
+      type: string
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    uuid:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
     AlertID:
       example:
         id: BACA9625-A993-4722-B03F-F2807C85E76F
@@ -1560,17 +1583,6 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/uuid'
-    cursors:
-      description: Cursors before and after the current page.
-      type: object
-      properties:
-        before:
-          $ref: '#/components/schemas/cursor'
-        after:
-          $ref: '#/components/schemas/cursor'
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
   securitySchemes:
     oauth_2_0:
       type: oauth2

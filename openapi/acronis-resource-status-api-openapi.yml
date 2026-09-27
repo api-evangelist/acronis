@@ -10,7 +10,7 @@ tags:
 paths:
   /resource_status:
     get:
-      operationId: Fetch resources containing the highest severity alerts
+      operationId: FetchResourcesContainingTheHighestSeverityAlerts
       description: 'Fetches the resources'' statuses that contain the alerts with the highest severity found for the resources.
 
         Resource with ID that was not found in `resourceId` parameter of any active alert considered to have the "ok" severity.
@@ -121,11 +121,59 @@ paths:
       - Resource Status
       summary: Fetch resources containing the highest severity alerts
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch resources containing the highest severity alerts
 components:
   schemas:
-    uuid:
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+    Error:
+      description: Base error object
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kbLink:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
     ResourceStatus:
       type: object
       required:
@@ -222,55 +270,9 @@ components:
             affinity:
               description: Alert synchronization affinity (e.g., agent ID).
               type: string
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
-      properties:
-        lineTag:
-          type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
-          type: integer
-        product:
-          type: string
-        os:
-          type: string
-    Error:
-      description: Base error object
-      type: object
-      required:
-      - domain
-      - code
-      properties:
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
-          type: string
-        code:
-          description: Error id or code, unique in the domain. Same as in 'reason' field
-          type: string
-        reason:
-          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
-          type: string
-        context:
-          description: Error context dictionary
-          type: object
-        kbLink:
-          $ref: '#/components/schemas/kbLinkInfo'
-        debug:
-          $ref: '#/components/schemas/debugInfo'
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
+    uuid:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
   securitySchemes:
     oauth_2_0:
       type: oauth2

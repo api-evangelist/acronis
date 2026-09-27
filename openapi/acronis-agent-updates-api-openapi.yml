@@ -106,6 +106,30 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    AgentUpdateSettings:
+      type: object
+      description: Configuration for automatic agent updates
+      properties:
+        update_channel:
+          type: string
+          enum:
+          - CURRENT
+          - STABLE
+          description: Update channel to use
+          example: STABLE
+        automatic:
+          type: boolean
+          description: Whether updates should be applied automatically
+          example: true
+        maintenance_window:
+          $ref: '#/components/schemas/MaintenanceWindow'
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     MaintenanceWindow:
       type: object
       description: Time window for restricting automatic updates
@@ -131,30 +155,6 @@ components:
             - SATURDAY
             - SUNDAY
           description: Days when maintenance window applies
-    AgentUpdateSettings:
-      type: object
-      description: Configuration for automatic agent updates
-      properties:
-        update_channel:
-          type: string
-          enum:
-          - CURRENT
-          - STABLE
-          description: Update channel to use
-          example: STABLE
-        automatic:
-          type: boolean
-          description: Whether updates should be applied automatically
-          example: true
-        maintenance_window:
-          $ref: '#/components/schemas/MaintenanceWindow'
-    Error:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
   responses:
     BadRequest:
       description: Bad request

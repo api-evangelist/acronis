@@ -284,6 +284,51 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    backendType:
+      description: Storage backend type.
+      type:
+      - string
+      - 'null'
+    infraPost:
+      example:
+        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+        location_id: bfdf24b0-5a72-49a8-a2bd-2fc7c085ff7b
+        name: Default Infrastructure Component
+        url: acronis+fes://storage20.acronis.com:44445
+        capabilities:
+        - backup
+        - disaster_recovery
+        content_url: https://browse.storage20.acronis.com/
+        content_mobile_url: https://browse.storage20.acronis.com/mobile/
+        backend_type: azure
+      type: object
+      additionalProperties: false
+      required:
+      - owner_tenant_id
+      - name
+      - url
+      - capabilities
+      properties:
+        owner_tenant_id:
+          $ref: '#/components/schemas/uuid'
+        location_id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          description: Human-readable name of infrastructure component that will be displayed to the users.
+          type: string
+        url:
+          $ref: '#/components/schemas/link'
+        capabilities:
+          description: Capabilities of infrastructure component.
+          type: array
+          items:
+            $ref: '#/components/schemas/infraCap'
+        content_url:
+          $ref: '#/components/schemas/link'
+        content_mobile_url:
+          $ref: '#/components/schemas/link'
+        backend_type:
+          $ref: '#/components/schemas/backendType'
     infraBatch:
       example:
         items:
@@ -377,11 +422,18 @@ components:
         readonly:
           description: True if infra details are accessible in a limited way, e.g. infra is owned by some ancestor.
           type: boolean
-    uuid:
+    infraCap:
+      description: Capability of infrastructure component.
+      enum:
+      - backup
+      - disaster_recovery
+      - files_cloud
+      - vcd
       type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
+    link:
+      description: URL.
+      type: string
+      pattern: ^[a-z0-9\+]+:\/\/[^\s\/$.?#].[^\s]*
     infraPut:
       example:
         name: Infrastructure Component
@@ -418,63 +470,11 @@ components:
         version:
           description: Auto-incremented infrastructure component version.
           type: integer
-    infraCap:
-      description: Capability of infrastructure component.
-      enum:
-      - backup
-      - disaster_recovery
-      - files_cloud
-      - vcd
+    uuid:
       type: string
-    infraPost:
-      example:
-        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
-        location_id: bfdf24b0-5a72-49a8-a2bd-2fc7c085ff7b
-        name: Default Infrastructure Component
-        url: acronis+fes://storage20.acronis.com:44445
-        capabilities:
-        - backup
-        - disaster_recovery
-        content_url: https://browse.storage20.acronis.com/
-        content_mobile_url: https://browse.storage20.acronis.com/mobile/
-        backend_type: azure
-      type: object
-      additionalProperties: false
-      required:
-      - owner_tenant_id
-      - name
-      - url
-      - capabilities
-      properties:
-        owner_tenant_id:
-          $ref: '#/components/schemas/uuid'
-        location_id:
-          $ref: '#/components/schemas/uuid'
-        name:
-          description: Human-readable name of infrastructure component that will be displayed to the users.
-          type: string
-        url:
-          $ref: '#/components/schemas/link'
-        capabilities:
-          description: Capabilities of infrastructure component.
-          type: array
-          items:
-            $ref: '#/components/schemas/infraCap'
-        content_url:
-          $ref: '#/components/schemas/link'
-        content_mobile_url:
-          $ref: '#/components/schemas/link'
-        backend_type:
-          $ref: '#/components/schemas/backendType'
-    backendType:
-      description: Storage backend type.
-      type:
-      - string
-      - 'null'
-    link:
-      description: URL.
-      type: string
-      pattern: ^[a-z0-9\+]+:\/\/[^\s\/$.?#].[^\s]*
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
     errorScheme:
       type: object
       required:

@@ -10,7 +10,7 @@ tags:
 paths:
   /status:
     get:
-      operationId: Fetch alerts grouped by scope
+      operationId: FetchAlertsGroupedByScope
       description: Returns the last of the most critical alerts grouped by selected scope.
       parameters:
       - name: scope_key
@@ -142,48 +142,13 @@ paths:
       - Status
       summary: Fetch alerts grouped by scope
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch alerts grouped by scope
 components:
   schemas:
     debugInfo:
       description: Error debug information (map type)
       type: object
-    ScopeStatus:
-      description: Status of the selected scope.
-      type: object
-      required:
-      - scope
-      - status
-      properties:
-        scope:
-          description: 'Value of scope. Contains values of context or searchable details.
-
-            '
-          type: object
-        status:
-          $ref: '#/components/schemas/Status'
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
-      properties:
-        lineTag:
-          type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
-          type: integer
-        product:
-          type: string
-        os:
-          type: string
     Error:
       description: Base error object
       type: object
@@ -207,6 +172,29 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
     Status:
       description: 'Status of any scope that represents the last alert with the highest severity in the scope.
 
@@ -241,6 +229,20 @@ components:
         details:
           description: Details about the alert.
           type: object
+    ScopeStatus:
+      description: Status of the selected scope.
+      type: object
+      required:
+      - scope
+      - status
+      properties:
+        scope:
+          description: 'Value of scope. Contains values of context or searchable details.
+
+            '
+          type: object
+        status:
+          $ref: '#/components/schemas/Status'
   securitySchemes:
     oauth_2_0:
       type: oauth2

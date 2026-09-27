@@ -92,6 +92,45 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
     global_search:
       example:
         items:
@@ -187,45 +226,6 @@ components:
       pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
       minLength: 19
       maxLength: 32
-    errorScheme:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - domain
-          - message
-          - details
-          properties:
-            code:
-              oneOf:
-              - type: string
-              - type: integer
-            context:
-              type: object
-            domain:
-              description: This field can have a null value.
-              type:
-              - string
-              - 'null'
-            message:
-              type: string
-            details:
-              description: Additional info.
-              type: object
-              properties:
-                info:
-                  description: This field can have a null value.
-                  type:
-                  - string
-                  - 'null'
-            data:
-              type: array
-              items:
-                type: string
   securitySchemes:
     basicAuth:
       type: http

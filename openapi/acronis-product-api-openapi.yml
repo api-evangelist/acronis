@@ -10,7 +10,7 @@ tags:
 paths:
   /Product:
     put:
-      operationId: Create product
+      operationId: CreateProduct
       description: Creates a product.
       requestBody:
         content:
@@ -132,8 +132,10 @@ paths:
       - Product
       summary: Create product
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create product
     get:
-      operationId: Fetch products
+      operationId: FetchProducts
       description: Fetches information about the products either by GUID or by filtering parameters.
       responses:
         '200':
@@ -155,103 +157,10 @@ paths:
       - Product
       summary: Fetch products
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch products
 components:
   schemas:
-    Paging:
-      type: object
-      additionalProperties: false
-      required:
-      - AmountTotalItems
-      - AmountRecordsFound
-      - AmountOfPages
-      properties:
-        AmountTotalItems:
-          type: integer
-        AmountRecordsFound:
-          type: integer
-        AmountOfPages:
-          type: integer
-    GetProductSearchResponse:
-      type: object
-      additionalProperties: false
-      required:
-      - products
-      properties:
-        products:
-          type: object
-          additionalProperties: false
-          required:
-          - Result
-          properties:
-            Result:
-              type: object
-              additionalProperties: false
-              required:
-              - Products
-              - Paging
-              properties:
-                Products:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/ProductPartial'
-                Paging:
-                  $ref: '#/components/schemas/Paging'
-    ProductPartial:
-      type: object
-      additionalProperties: false
-      required:
-      - Id
-      - Active
-      - Name
-      - Description
-      - Price
-      - Cost
-      - ViewInContract
-      - Ledger
-      - LastChangeDate
-      - ExternalIdNumber
-      - AcronisId
-      properties:
-        Id:
-          $ref: '#/components/schemas/Guid'
-        Active:
-          type: boolean
-        Name:
-          type: string
-        Description:
-          type:
-          - string
-          - 'null'
-        Price:
-          type: number
-        Cost:
-          type: number
-        ViewInContract:
-          type: boolean
-        Ledger:
-          example: 00000000-0000-0000-0000-000000000000
-          type:
-          - string
-          - 'null'
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-        LastChangeDate:
-          description: RFC3339-like date and time without timezone.
-          type:
-          - string
-          - 'null'
-          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
-        ExternalIdNumber:
-          type:
-          - string
-          - 'null'
-        AcronisId:
-          type:
-          - string
-          - 'null'
-    Guid:
-      example: 00000000-0000-0000-0000-000000000000
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
     DatetimeNoTZ:
       description: RFC3339-like date and time without timezone.
       type: string
@@ -431,6 +340,101 @@ components:
           - 'null'
         TicketProduct:
           type: boolean
+    ProductPartial:
+      type: object
+      additionalProperties: false
+      required:
+      - Id
+      - Active
+      - Name
+      - Description
+      - Price
+      - Cost
+      - ViewInContract
+      - Ledger
+      - LastChangeDate
+      - ExternalIdNumber
+      - AcronisId
+      properties:
+        Id:
+          $ref: '#/components/schemas/Guid'
+        Active:
+          type: boolean
+        Name:
+          type: string
+        Description:
+          type:
+          - string
+          - 'null'
+        Price:
+          type: number
+        Cost:
+          type: number
+        ViewInContract:
+          type: boolean
+        Ledger:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        LastChangeDate:
+          description: RFC3339-like date and time without timezone.
+          type:
+          - string
+          - 'null'
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        ExternalIdNumber:
+          type:
+          - string
+          - 'null'
+        AcronisId:
+          type:
+          - string
+          - 'null'
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
+    GetProductSearchResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - products
+      properties:
+        products:
+          type: object
+          additionalProperties: false
+          required:
+          - Result
+          properties:
+            Result:
+              type: object
+              additionalProperties: false
+              required:
+              - Products
+              - Paging
+              properties:
+                Products:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ProductPartial'
+                Paging:
+                  $ref: '#/components/schemas/Paging'
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
   securitySchemes:
     oauth2:
       type: oauth2

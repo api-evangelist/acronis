@@ -10,7 +10,7 @@ tags:
 paths:
   /archives:
     get:
-      operationId: Fetch archives
+      operationId: FetchArchives
       description: Fetches a list of archives.
       x-ExtJS: VaultManager.ListArchives
       parameters:
@@ -783,8 +783,10 @@ paths:
       - Archives
       summary: Fetch archives
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch archives
     delete:
-      operationId: Delete archives
+      operationId: DeleteArchives
       description: Deletes archives containing selected resources.
       x-ExtJS: VaultManager.DeleteResourceArchives
       parameters:
@@ -861,9 +863,11 @@ paths:
       - Archives
       summary: Delete archives
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete archives
   /archives/{archiveID}/backups:
     get:
-      operationId: Fetch archive backups
+      operationId: FetchArchiveBackups
       description: Fetches a list of backups within the archive.
       x-ExtJS: VaultManager.ListArchiveBackups
       parameters:
@@ -1880,115 +1884,10 @@ paths:
       - Archives
       summary: Fetch archive backups
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch archive backups
 components:
   schemas:
-    items_4:
-      description: Archive type.
-      enum:
-      - unknown
-      - file
-      - image
-      - vss_application
-      - msexchange
-      - msexchange_doc
-      - mssql
-      - oracle
-      - ad
-      - empty
-      type: string
-    tapes_for_restore:
-      type: array
-      items:
-        $ref: '#/components/schemas/archive_id'
-    storage_type_2:
-      description: Vault storage type.
-      enum:
-      - unknown
-      - local_folder
-      - network_share
-      - ftp
-      - sftp
-      - cd
-      - tape
-      - storage_server
-      - asz
-      - removable_drive
-      - online
-      - nfs_share
-      - esx
-      - local_abgw
-      - microsoft_azure
-      - amazon_s3
-      - s3_compatible
-      type: string
-    archive_id:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
-    uuid:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
-    tenant_id:
-      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
-      oneOf:
-      - $ref: '#/components/schemas/archive_id'
-      - description: Numeric identifier.
-        type: string
-        pattern: ^\d+$
-    storage_type:
-      description: Vault storage type.
-      enum:
-      - unknown
-      - local_folder
-      - network_share
-      - ftp
-      - sftp
-      - cd
-      - tape
-      - storage_server
-      - asz
-      - removable_drive
-      - online
-      - nfs_share
-      - esx
-      - local_abgw
-      - microsoft_azure
-      - amazon_s3
-      - s3_compatible
-      type: string
-    items:
-      description: Backup type.
-      enum:
-      - full
-      - incremental
-      - differential
-      - unknown
-      - cdp
-      type: string
-    items_1:
-      description: Reason why Backup was created.
-      enum:
-      - patch_management
-      type: string
-    items_5:
-      description: Format of archive.
-      enum:
-      - '11'
-      - '12'
-      - alwaysIncremental
-      type: string
-    vault_id:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
-    checksum_validation:
-      description: Value of backup validation status.
-      enum:
-      - SUCCESS
-      - FAILURE
-      - CANCELLED
-      type: string
     items_3:
       title: Volume
       description: Volume description.
@@ -2010,6 +1909,92 @@ components:
         mount_strid:
           description: String identifier of the volume.
           type: string
+    storage_type:
+      description: Vault storage type.
+      enum:
+      - unknown
+      - local_folder
+      - network_share
+      - ftp
+      - sftp
+      - cd
+      - tape
+      - storage_server
+      - asz
+      - removable_drive
+      - online
+      - nfs_share
+      - esx
+      - local_abgw
+      - microsoft_azure
+      - amazon_s3
+      - s3_compatible
+      type: string
+    items_5:
+      description: Format of archive.
+      enum:
+      - '11'
+      - '12'
+      - alwaysIncremental
+      type: string
+    items_4:
+      description: Archive type.
+      enum:
+      - unknown
+      - file
+      - image
+      - vss_application
+      - msexchange
+      - msexchange_doc
+      - mssql
+      - oracle
+      - ad
+      - empty
+      type: string
+    archive_id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    checksum_validation:
+      description: Value of backup validation status.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
+      type: string
+    items_1:
+      description: Reason why Backup was created.
+      enum:
+      - patch_management
+      type: string
+    vault_id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    tapes_for_restore:
+      type: array
+      items:
+        $ref: '#/components/schemas/archive_id'
+    tenant_id:
+      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+      oneOf:
+      - $ref: '#/components/schemas/archive_id'
+      - description: Numeric identifier.
+        type: string
+        pattern: ^\d+$
+    items:
+      description: Backup type.
+      enum:
+      - full
+      - incremental
+      - differential
+      - unknown
+      - cdp
+      type: string
+    uuid:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
     datetime_fn:
       description: 'A filter by date and time in RFC 3339 format with the support
 
@@ -2028,6 +2013,27 @@ components:
         * `ge` - greater than or equals
 
         '
+      type: string
+    storage_type_2:
+      description: Vault storage type.
+      enum:
+      - unknown
+      - local_folder
+      - network_share
+      - ftp
+      - sftp
+      - cd
+      - tape
+      - storage_server
+      - asz
+      - removable_drive
+      - online
+      - nfs_share
+      - esx
+      - local_abgw
+      - microsoft_azure
+      - amazon_s3
+      - s3_compatible
       type: string
   securitySchemes:
     oauth2:

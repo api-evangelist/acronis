@@ -10,7 +10,7 @@ tags:
 paths:
   /backed_up_resources:
     get:
-      operationId: Fetch backed up resources
+      operationId: FetchBackedUpResources
       description: Fetches a list of backed up resources.
       x-ExtJS: VaultManager.ListBackedUpResources
       parameters:
@@ -209,6 +209,8 @@ paths:
       - Backed Up Resources
       summary: Fetch backed up resources
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch backed up resources
 components:
   securitySchemes:
     oauth2:

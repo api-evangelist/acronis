@@ -10,7 +10,7 @@ tags:
 paths:
   /storage_nodes:
     get:
-      operationId: Fetch registered storage nodes
+      operationId: FetchRegisteredStorageNodes
       description: 'Available in on-premises version only.
 
 
@@ -93,8 +93,10 @@ paths:
       - Storage Nodes
       summary: Fetch registered storage nodes
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch registered storage nodes
     post:
-      operationId: Register storage node_1
+      operationId: RegisterStorageNode_1
       description: 'Available in on-premises version only.
 
 
@@ -141,9 +143,11 @@ paths:
       - Storage Nodes
       summary: Register storage node 1
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Register storage node_1
   /storage_nodes/{storageNodeID}/checkuser:
     post:
-      operationId: Check user access
+      operationId: CheckUserAccess
       description: 'Available in on-premises version only.
 
 
@@ -194,9 +198,11 @@ paths:
       - Storage Nodes
       summary: Check user access
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Check user access
   /storage_nodes/{storageNodeID}/check_location:
     post:
-      operationId: Find vault by path
+      operationId: FindVaultByPath
       description: 'Available in on-premises version only.
 
 
@@ -250,8 +256,14 @@ paths:
       - Storage Nodes
       summary: Find vault by path
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Find vault by path
 components:
   schemas:
+    id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
     find_location:
       description: Checks if the path provided contains a vault.
       example:
@@ -295,10 +307,6 @@ components:
       properties:
         session_id:
           $ref: '#/components/schemas/id'
-    id:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
   securitySchemes:
     oauth2:
       type: oauth2

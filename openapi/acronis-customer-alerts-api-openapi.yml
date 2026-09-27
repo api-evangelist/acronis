@@ -10,7 +10,7 @@ tags:
 paths:
   /customer_alerts:
     get:
-      operationId: Fetch alerts grouped per customer
+      operationId: FetchAlertsGroupedPerCustomer
       description: 'Fetches alerts of the specified customers.
 
         This API uses extended barrier mode by default.'
@@ -414,8 +414,13 @@ paths:
       - Customer Alerts
       summary: Fetch alerts grouped per customer
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch alerts grouped per customer
 components:
   schemas:
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     AlertView:
       description: View of alert in responses.
       example:
@@ -511,32 +516,19 @@ components:
         falsePositive:
           description: Specifies whether alert is false positive or not.
           type: boolean
-    uuid:
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    kbLinkInfo:
-      description: Components for kblink
+    CustomerAlerts:
       type: object
       required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
+      - customer_id
+      - alerts
       properties:
-        lineTag:
+        customer_id:
+          description: Customer ID.
           type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
-          type: integer
-        product:
-          type: string
-        os:
-          type: string
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertView'
     Error:
       description: Base error object
       type: object
@@ -560,22 +552,32 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    CustomerAlerts:
+    kbLinkInfo:
+      description: Components for kblink
       type: object
       required:
-      - customer_id
-      - alerts
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
       properties:
-        customer_id:
-          description: Customer ID.
+        lineTag:
           type: string
-        alerts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertView'
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    uuid:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
   securitySchemes:
     oauth_2_0:
       type: oauth2

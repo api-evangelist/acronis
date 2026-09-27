@@ -10,7 +10,7 @@ tags:
 paths:
   /SchedulerTickets:
     put:
-      operationId: Update Ticket
+      operationId: UpdateTicket
       description: Covers ticket updates management
       requestBody:
         content:
@@ -43,8 +43,10 @@ paths:
       - SchedulerTickets
       summary: Update ticket
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Update Ticket
     get:
-      operationId: Fetch Ticket updates
+      operationId: FetchTicketUpdates
       description: Covers ticket updates management
       parameters:
       - name: endDate
@@ -160,6 +162,8 @@ paths:
       - SchedulerTickets
       summary: Fetch ticket updates
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch Ticket updates
 components:
   schemas:
     Paging:

@@ -10,7 +10,7 @@ tags:
 paths:
   /ContractPart:
     put:
-      operationId: Create or update a Contract Part
+      operationId: CreateOrUpdateAContractPart
       description: Creates or updates a contract part.
       requestBody:
         content:
@@ -93,8 +93,10 @@ paths:
       - ContractPart
       summary: Create or update a contract part
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create or update a Contract Part
     get:
-      operationId: Fetch Contract Part
+      operationId: FetchContractPart
       description: Fetches a contract part by Contract ID.
       parameters:
       - name: contract
@@ -158,8 +160,10 @@ paths:
       - ContractPart
       summary: Fetch contract part
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch Contract Part
     delete:
-      operationId: Delete Contract Part
+      operationId: DeleteContractPart
       description: Deletes a Contract Part by ID
       parameters:
       - name: id
@@ -183,8 +187,18 @@ paths:
       - ContractPart
       summary: Delete contract part
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete Contract Part
 components:
   schemas:
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    DatetimeNoTZ:
+      description: RFC3339-like date and time without timezone.
+      type: string
+      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
     ContractPart:
       type: object
       additionalProperties: false
@@ -282,14 +296,6 @@ components:
           $ref: '#/components/schemas/Guid'
         VARGroup:
           $ref: '#/components/schemas/Guid'
-    Guid:
-      example: 00000000-0000-0000-0000-000000000000
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-    DatetimeNoTZ:
-      description: RFC3339-like date and time without timezone.
-      type: string
-      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
   securitySchemes:
     oauth2:
       type: oauth2

@@ -10,7 +10,7 @@ tags:
 paths:
   /UploadedFiles:
     get:
-      operationId: Fetch helpdesk attachment
+      operationId: FetchHelpdeskAttachment
       description: Lists attachments available for a ticket
       parameters:
       - name: customer
@@ -54,6 +54,8 @@ paths:
       - UploadedFiles
       summary: Fetch helpdesk attachment
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch helpdesk attachment
 components:
   schemas:
     Guid:

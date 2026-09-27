@@ -422,11 +422,6 @@ components:
         api_base_url:
           description: Base URL for application's HTTP API.
           type: string
-    uuid:
-      type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
     applicationType:
       description: A type of application.
       enum:
@@ -439,6 +434,50 @@ components:
       - physical_data_shipping
       - notary
       type: string
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
     applicationsList:
       example:
         items:
@@ -551,6 +590,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/application'
+    settingPut:
+      example:
+        value:
+          value: qwerty
+          lock: false
+      type: object
+      additionalProperties: false
+      properties:
+        value:
+          description: Value of the setting.
+          oneOf:
+          - type: string
+          - type: boolean
+          - type: number
+          - type: object
+        lock:
+          description: Flag that controls whether the value can be overridden at another tenant's level.
+          type: boolean
+        exclusive:
+          description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
+          type: boolean
     setting:
       example:
         value:
@@ -631,66 +691,6 @@ components:
             lock:
               description: Flag that controls whether the value can be overridden at another tenant's level.
               type: boolean
-    settingPut:
-      example:
-        value:
-          value: qwerty
-          lock: false
-      type: object
-      additionalProperties: false
-      properties:
-        value:
-          description: Value of the setting.
-          oneOf:
-          - type: string
-          - type: boolean
-          - type: number
-          - type: object
-        lock:
-          description: Flag that controls whether the value can be overridden at another tenant's level.
-          type: boolean
-        exclusive:
-          description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
-          type: boolean
-    errorScheme:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - domain
-          - message
-          - details
-          properties:
-            code:
-              oneOf:
-              - type: string
-              - type: integer
-            context:
-              type: object
-            domain:
-              description: This field can have a null value.
-              type:
-              - string
-              - 'null'
-            message:
-              type: string
-            details:
-              description: Additional info.
-              type: object
-              properties:
-                info:
-                  description: This field can have a null value.
-                  type:
-                  - string
-                  - 'null'
-            data:
-              type: array
-              items:
-                type: string
   securitySchemes:
     basicAuth:
       type: http

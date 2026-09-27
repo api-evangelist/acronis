@@ -10,7 +10,7 @@ tags:
 paths:
   /devices:
     get:
-      operationId: Get devices list
+      operationId: GetDevicesList
       description: Gets a list of devices
       parameters:
       - name: per_page
@@ -85,9 +85,11 @@ paths:
       - Devices
       summary: Get devices list
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Get devices list
   /devices/{device_uuid}:
     get:
-      operationId: Get device information
+      operationId: GetDeviceInformation
       description: Gets information about a device
       parameters:
       - name: tenant_id
@@ -139,8 +141,10 @@ paths:
       - Devices
       summary: Get device information
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Get device information
     put:
-      operationId: Update device
+      operationId: UpdateDevice
       description: Updates a device
       parameters:
       - name: tenant_id
@@ -206,8 +210,10 @@ paths:
       - Devices
       summary: Update device
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Update device
     delete:
-      operationId: Delete device
+      operationId: DeleteDevice
       description: Deletes a device
       parameters:
       - name: tenant_id
@@ -256,30 +262,10 @@ paths:
       - Devices
       summary: Delete device
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete device
 components:
   schemas:
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
     Device:
       description: Device used by users to access the service
       type: object
@@ -357,6 +343,28 @@ components:
             remove:
               description: Remove URL
               type: string
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
   securitySchemes:
     oauth_2_0:
       type: oauth2

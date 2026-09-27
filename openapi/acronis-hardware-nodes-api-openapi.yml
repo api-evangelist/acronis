@@ -497,6 +497,20 @@ components:
         tenant_id:
           description: Tenant ID of the node owner.
           type: string
+    HardwareNodeList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/HardwareNode_2'
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     HardwareNode_2:
       type: object
       description: Physical or virtual hardware node managed by Acronis
@@ -516,20 +530,6 @@ components:
         tenant_id:
           type: string
           format: uuid
-    HardwareNodeList:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/HardwareNode_2'
-    Error:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
   responses:
     NotFound:
       description: Not found

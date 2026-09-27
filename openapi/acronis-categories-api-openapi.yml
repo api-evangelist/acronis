@@ -10,7 +10,7 @@ tags:
 paths:
   /categories:
     get:
-      operationId: Fetch categories
+      operationId: FetchCategories
       description: Fetches a list of enabled categories.
       parameters:
       - name: include_disabled
@@ -60,44 +60,13 @@ paths:
       - Categories
       summary: Fetch categories
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch categories
 components:
   schemas:
-    Category:
-      description: An information about the alert category or alert type category.
+    debugInfo:
+      description: Error debug information (map type)
       type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        disabled:
-          type: boolean
-        alias:
-          description: Alert category name alias.
-          type: string
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
-      properties:
-        lineTag:
-          type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
-          type: integer
-        product:
-          type: string
-        os:
-          type: string
     Error:
       description: Base error object
       type: object
@@ -121,9 +90,42 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    debugInfo:
-      description: Error debug information (map type)
+    kbLinkInfo:
+      description: Components for kblink
       type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    Category:
+      description: An information about the alert category or alert type category.
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        disabled:
+          type: boolean
+        alias:
+          description: Alert category name alias.
+          type: string
   securitySchemes:
     oauth_2_0:
       type: oauth2

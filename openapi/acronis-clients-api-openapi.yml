@@ -261,73 +261,45 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    clientBatch:
-      example:
-        items:
-        - client_id: 4557d5f5-7881-54f4-83a5-212f19d355c1
-          client_secret_expires_at: 0
-          type: api_client
-          tenant_id: 0a305354-6efc-4b81-858d-2ae5dd1f08b1
-          data:
-            client_name: backup_api_gateway
-          token_endpoint_auth_method: client_secret_basic
-          created_at: '2023-07-06T16:26:33Z'
-          created_by: ab9ae709-0d00-521a-8be3-7891b1041e18
-          last_access_at: '2023-07-28T14:16:19Z'
-          last_access_from_ip: 10.233.106.171
-          status: enabled
-          redirect_uris:
-          - /bc/api/gateway/cb
-          - /bc/api/gateway/cb:ui
-        - client_id: 3663410d-4b70-4860-860c-8db82bffab8e
-          client_secret_expires_at: 0
-          type: managed_client
-          tenant_id: 48f86be5-c628-49c3-8575-62e78f54e4eb
-          data:
-            client_name: Some application client
-            origin_dc_id: ff7625c0-d649-445c-a2b3-9b59e66bfc2d
-          token_endpoint_auth_method: client_secret_basic
-          created_at: '2019-08-24T01:23:15'
-          created_by: ab9d9f43-f9aa-4f83-9409-5547172daa27
-          last_access_at: '2023-07-20T16:11:01Z'
-          last_access_from_ip: 10.233.106.172
-          status: enabled
-          origin_id: 72403667-8e45-4dd9-bcbc-3e6047b98b3d
+    errorScheme:
       type: object
       required:
-      - items
+      - error
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/client'
-    clientPut:
-      example:
-        data:
-          client_name: Some application client
-        status: disabled
-        redirect_uris:
-        - com.acronis.abc://oauth
-      type: object
-      additionalProperties: false
-      properties:
-        data:
-          description: Additional metadata that will be updated.
+        error:
           type: object
-        status:
-          description: Client status - either enabled or disabled. Disabled clients can no longer be used to receive Access Tokens.
-          enum:
-          - enabled
-          - disabled
-          type: string
-        redirect_uris:
-          description: List of possible redirect uris.
-          type: array
-          items:
-            type: string
-        origin_id:
-          description: Client origin ID.
-          type: string
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
     clientPostResult:
       title: Post client result schema
       example:
@@ -406,11 +378,6 @@ components:
         origin_id:
           description: Client origin ID.
           type: string
-    uuid:
-      type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
     client:
       title: Basic client schema
       example:
@@ -495,12 +462,6 @@ components:
         origin_id:
           description: Client origin ID.
           type: string
-    item1:
-      description: RFC3339 Formatted date.
-      type: string
-      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
-      minLength: 19
-      maxLength: 32
     clientPost:
       example:
         type: managed_client
@@ -543,45 +504,84 @@ components:
         origin_id:
           description: Client origin ID.
           type: string
-    errorScheme:
+    clientPut:
+      example:
+        data:
+          client_name: Some application client
+        status: disabled
+        redirect_uris:
+        - com.acronis.abc://oauth
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          description: Additional metadata that will be updated.
+          type: object
+        status:
+          description: Client status - either enabled or disabled. Disabled clients can no longer be used to receive Access Tokens.
+          enum:
+          - enabled
+          - disabled
+          type: string
+        redirect_uris:
+          description: List of possible redirect uris.
+          type: array
+          items:
+            type: string
+        origin_id:
+          description: Client origin ID.
+          type: string
+    clientBatch:
+      example:
+        items:
+        - client_id: 4557d5f5-7881-54f4-83a5-212f19d355c1
+          client_secret_expires_at: 0
+          type: api_client
+          tenant_id: 0a305354-6efc-4b81-858d-2ae5dd1f08b1
+          data:
+            client_name: backup_api_gateway
+          token_endpoint_auth_method: client_secret_basic
+          created_at: '2023-07-06T16:26:33Z'
+          created_by: ab9ae709-0d00-521a-8be3-7891b1041e18
+          last_access_at: '2023-07-28T14:16:19Z'
+          last_access_from_ip: 10.233.106.171
+          status: enabled
+          redirect_uris:
+          - /bc/api/gateway/cb
+          - /bc/api/gateway/cb:ui
+        - client_id: 3663410d-4b70-4860-860c-8db82bffab8e
+          client_secret_expires_at: 0
+          type: managed_client
+          tenant_id: 48f86be5-c628-49c3-8575-62e78f54e4eb
+          data:
+            client_name: Some application client
+            origin_dc_id: ff7625c0-d649-445c-a2b3-9b59e66bfc2d
+          token_endpoint_auth_method: client_secret_basic
+          created_at: '2019-08-24T01:23:15'
+          created_by: ab9d9f43-f9aa-4f83-9409-5547172daa27
+          last_access_at: '2023-07-20T16:11:01Z'
+          last_access_from_ip: 10.233.106.172
+          status: enabled
+          origin_id: 72403667-8e45-4dd9-bcbc-3e6047b98b3d
       type: object
       required:
-      - error
+      - items
       properties:
-        error:
-          type: object
-          required:
-          - code
-          - domain
-          - message
-          - details
-          properties:
-            code:
-              oneOf:
-              - type: string
-              - type: integer
-            context:
-              type: object
-            domain:
-              description: This field can have a null value.
-              type:
-              - string
-              - 'null'
-            message:
-              type: string
-            details:
-              description: Additional info.
-              type: object
-              properties:
-                info:
-                  description: This field can have a null value.
-                  type:
-                  - string
-                  - 'null'
-            data:
-              type: array
-              items:
-                type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/client'
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
   securitySchemes:
     basicAuth:
       type: http

@@ -10,7 +10,7 @@ tags:
 paths:
   /Statuses:
     get:
-      operationId: Fetch statuses
+      operationId: FetchStatuses
       responses:
         '200':
           description: ''
@@ -103,6 +103,8 @@ paths:
       - Statuses
       summary: Fetch statuses
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch statuses
 components:
   securitySchemes:
     oauth2:

@@ -145,6 +145,66 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    registrationTokensList:
+      example:
+        items:
+        - id: 2
+          token: 27F9-5234-41C3
+          tenant_id: '11'
+          tenant_uuid: 4b07e4a1-a49b-4d4e-b8f2-253f1fef98ad
+          created_at: '2022-04-02T18:46:45Z'
+          expires_at: '2022-04-05T18:46:45Z'
+          scopes:
+          - urn:acronis.com:tenant-id:734fe814-748a-41cb-8a94-60e18fb3c442:backup_agent_admin
+          - urn:acronis.com::policy_management:4b07e4a1-a49b-4d4e-b8f2-253f1fef98ad|10858a46-db9b-4725-aa60-fff6252841fd:apply_revoke
+        - id: 3
+          token: F8CA-2DD1-41F1
+          tenant_id: '1363521'
+          tenant_uuid: 00bc0d4a-9879-40bf-823a-77c01b197dc1
+          created_at: '2022-04-02T18:57:46Z'
+          expires_at: '2022-04-05T18:57:46Z'
+          scopes:
+          - urn:acronis.com:tenant-id:1e3d306e-85ad-454c-b4f6-2bd73c83b9a1:backup_agent_admin
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/registrationToken'
+    registrationTokenPost:
+      example:
+        tenant_id: 72acaf6a-b15a-11e6-80f5-76304dec7eb7
+        expires_in: 3600
+        scopes:
+        - urn:acronis.com:tenant-id:734fe814-748a-41cb-8a94-60e18fb3c442:backup_agent_admin
+      type: object
+      additionalProperties: false
+      required:
+      - expires_in
+      - scopes
+      properties:
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        expires_in:
+          description: Token expiration time in seconds. Should be less than or equal to one year.
+          type: integer
+        scopes:
+          description: 'Access scopes that are applied to the registered resource. The following access scope patterns are available:
+
+            - `urn:acronis.com:tenant-id:{personal_tenant_id}:backup_agent_admin` - binds the resource to the user by personal tenant ID specified in `{personal_tenant_id}`.
+
+            - `urn:acronis.com::policy_management:{tenant_id}|{policy_id}:apply_revoke` - applies a protection plan to a resource by policy ID specified in `{policy_id}` from a resource owner tenant specified in `{tenant_id}`.'
+          type: array
+          items:
+            type: string
     registrationToken:
       example:
         id: 2
@@ -197,66 +257,6 @@ components:
       pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
       minLength: 36
       maxLength: 36
-    registrationTokenPost:
-      example:
-        tenant_id: 72acaf6a-b15a-11e6-80f5-76304dec7eb7
-        expires_in: 3600
-        scopes:
-        - urn:acronis.com:tenant-id:734fe814-748a-41cb-8a94-60e18fb3c442:backup_agent_admin
-      type: object
-      additionalProperties: false
-      required:
-      - expires_in
-      - scopes
-      properties:
-        tenant_id:
-          $ref: '#/components/schemas/uuid'
-        expires_in:
-          description: Token expiration time in seconds. Should be less than or equal to one year.
-          type: integer
-        scopes:
-          description: 'Access scopes that are applied to the registered resource. The following access scope patterns are available:
-
-            - `urn:acronis.com:tenant-id:{personal_tenant_id}:backup_agent_admin` - binds the resource to the user by personal tenant ID specified in `{personal_tenant_id}`.
-
-            - `urn:acronis.com::policy_management:{tenant_id}|{policy_id}:apply_revoke` - applies a protection plan to a resource by policy ID specified in `{policy_id}` from a resource owner tenant specified in `{tenant_id}`.'
-          type: array
-          items:
-            type: string
-    registrationTokensList:
-      example:
-        items:
-        - id: 2
-          token: 27F9-5234-41C3
-          tenant_id: '11'
-          tenant_uuid: 4b07e4a1-a49b-4d4e-b8f2-253f1fef98ad
-          created_at: '2022-04-02T18:46:45Z'
-          expires_at: '2022-04-05T18:46:45Z'
-          scopes:
-          - urn:acronis.com:tenant-id:734fe814-748a-41cb-8a94-60e18fb3c442:backup_agent_admin
-          - urn:acronis.com::policy_management:4b07e4a1-a49b-4d4e-b8f2-253f1fef98ad|10858a46-db9b-4725-aa60-fff6252841fd:apply_revoke
-        - id: 3
-          token: F8CA-2DD1-41F1
-          tenant_id: '1363521'
-          tenant_uuid: 00bc0d4a-9879-40bf-823a-77c01b197dc1
-          created_at: '2022-04-02T18:57:46Z'
-          expires_at: '2022-04-05T18:57:46Z'
-          scopes:
-          - urn:acronis.com:tenant-id:1e3d306e-85ad-454c-b4f6-2bd73c83b9a1:backup_agent_admin
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/registrationToken'
-    item1:
-      description: RFC3339 Formatted date.
-      type: string
-      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
-      minLength: 19
-      maxLength: 32
     errorScheme:
       type: object
       required:

@@ -10,7 +10,7 @@ tags:
 paths:
   /DownloadInvoice:
     get:
-      operationId: Download invoice
+      operationId: DownloadInvoice
       description: Downloads an Invoice based on its ID.
       parameters:
       - name: id
@@ -35,6 +35,8 @@ paths:
       - DownloadInvoice
       summary: Download invoice
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Download invoice
 components:
   securitySchemes:
     oauth2:

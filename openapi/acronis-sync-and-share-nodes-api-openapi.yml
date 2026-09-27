@@ -10,7 +10,7 @@ tags:
 paths:
   /sync_and_share_nodes:
     post:
-      operationId: Create folder
+      operationId: CreateFolder
       description: 'Creates a folder by name or path
 
 
@@ -290,9 +290,11 @@ paths:
       - Sync And Share Nodes
       summary: Create folder
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create folder
   /sync_and_share_nodes/{node_uuid}:
     get:
-      operationId: Get file or folder information
+      operationId: GetFileOrFolderInformation
       description: Gets information about a file/folder
       parameters:
       - name: node_uuid
@@ -322,8 +324,10 @@ paths:
       - Sync And Share Nodes
       summary: Get file or folder information
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Get file or folder information
     put:
-      operationId: Update file or folder
+      operationId: UpdateFileOrFolder
       description: Updates a file/folder
       parameters:
       - name: node_uuid
@@ -370,8 +374,10 @@ paths:
       - Sync And Share Nodes
       summary: Update file or folder
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Update file or folder
     delete:
-      operationId: Delete file or folder
+      operationId: DeleteFileOrFolder
       description: Deletes a file/folder
       parameters:
       - name: node_uuid
@@ -398,9 +404,11 @@ paths:
       - Sync And Share Nodes
       summary: Delete file or folder
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete file or folder
   /sync_and_share_nodes/{node_uuid}/contents:
     get:
-      operationId: Get files and folders list
+      operationId: GetFilesAndFoldersList
       description: Gets a list of files and folders within a folder
       parameters:
       - name: per_page
@@ -577,9 +585,11 @@ paths:
       - Sync And Share Nodes
       summary: Get files and folders list
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Get files and folders list
   /sync_and_share_nodes/{node_uuid}/revisions:
     get:
-      operationId: Get file or folder revisions list
+      operationId: GetFileOrFolderRevisionsList
       description: Gets a list of all revisions of a file/folder
       parameters:
       - name: node_uuid
@@ -640,9 +650,11 @@ paths:
       - Sync And Share Nodes
       summary: Get file or folder revisions list
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Get file or folder revisions list
   /sync_and_share_nodes/{node_uuid}/revisions/{revision_number}:
     post:
-      operationId: Restore file revision
+      operationId: RestoreFileRevision
       description: 'Restores specific revision of a file
 
 
@@ -693,9 +705,11 @@ paths:
       - Sync And Share Nodes
       summary: Restore file revision
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Restore file revision
   /sync_and_share_nodes/{node_uuid}/download:
     get:
-      operationId: Get file or folder contents
+      operationId: GetFileOrFolderContents
       description: 'Downloads a file/folder
 
 
@@ -753,9 +767,11 @@ paths:
       - Sync And Share Nodes
       summary: Get file or folder contents
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Get file or folder contents
   /sync_and_share_nodes/{node_uuid}/upload:
     post:
-      operationId: Upload file
+      operationId: UploadFile
       description: 'Uploads a file
 
 
@@ -849,9 +865,11 @@ paths:
       - Sync And Share Nodes
       summary: Upload file
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Upload file
   /sync_and_share_nodes/{node_uuid}/copy:
     post:
-      operationId: Copy file or folder
+      operationId: CopyFileOrFolder
       description: Copies a file/folder
       parameters:
       - name: node_uuid
@@ -902,9 +920,11 @@ paths:
       - Sync And Share Nodes
       summary: Copy file or folder
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Copy file or folder
   /sync_and_share_nodes/{node_uuid}/move:
     post:
-      operationId: Move file or folder
+      operationId: MoveFileOrFolder
       description: Moves a file/folder
       parameters:
       - name: node_uuid
@@ -955,9 +975,11 @@ paths:
       - Sync And Share Nodes
       summary: Move file or folder
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Move file or folder
   /sync_and_share_nodes/{node_uuid}/links:
     post:
-      operationId: Create file link
+      operationId: CreateFileLink
       description: 'Creates a file link
 
 
@@ -1071,9 +1093,11 @@ paths:
       - Sync And Share Nodes
       summary: Create file link
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create file link
   /sync_and_share_nodes/{node_uuid}/links/{link_id}:
     put:
-      operationId: Update file link
+      operationId: UpdateFileLink
       description: Updates a file link
       parameters:
       - name: node_uuid
@@ -1144,9 +1168,11 @@ paths:
       - Sync And Share Nodes
       summary: Update file link
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Update file link
   /sync_and_share_nodes/{node_uuid}/members:
     get:
-      operationId: Get members list
+      operationId: GetMembersList
       description: Gets a list of folder members
       parameters:
       - name: per_page
@@ -1214,8 +1240,10 @@ paths:
       - Sync And Share Nodes
       summary: Get members list
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Get members list
     post:
-      operationId: Create folder member
+      operationId: CreateFolderMember
       description: Creates a folder member
       parameters:
       - name: node_uuid
@@ -1306,8 +1334,10 @@ paths:
       - Sync And Share Nodes
       summary: Create folder member
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create folder member
     delete:
-      operationId: Delete all members
+      operationId: DeleteAllMembers
       description: Deletes all members
       parameters:
       - name: node_uuid
@@ -1334,9 +1364,11 @@ paths:
       - Sync And Share Nodes
       summary: Delete all members
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete all members
   /sync_and_share_nodes/{node_uuid}/members/{member_id}:
     get:
-      operationId: Get member information
+      operationId: GetMemberInformation
       description: Gets information about a member
       parameters:
       - name: node_uuid
@@ -1373,8 +1405,10 @@ paths:
       - Sync And Share Nodes
       summary: Get member information
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Get member information
     put:
-      operationId: Update member
+      operationId: UpdateMember
       description: Updates a member
       parameters:
       - name: node_uuid
@@ -1442,8 +1476,10 @@ paths:
       - Sync And Share Nodes
       summary: Update member
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Update member
     delete:
-      operationId: Delete member
+      operationId: DeleteMember
       description: Deletes a member
       parameters:
       - name: node_uuid
@@ -1477,9 +1513,11 @@ paths:
       - Sync And Share Nodes
       summary: Delete member
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete member
   /sync_and_share_nodes/{node_uuid}/sync_status:
     post:
-      operationId: Create sync status
+      operationId: CreateSyncStatus
       description: 'Creates a sync status
 
 
@@ -1509,8 +1547,10 @@ paths:
       - Sync And Share Nodes
       summary: Create sync status
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create sync status
     delete:
-      operationId: Delete sync status
+      operationId: DeleteSyncStatus
       description: 'Deletes a sync status
 
 
@@ -1540,30 +1580,15 @@ paths:
       - Sync And Share Nodes
       summary: Delete sync status
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Delete sync status
 components:
   schemas:
-    ConflictErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
+    UUID:
+      description: Universally unique identifier
+      example: b8ccbf27-4e92-41a9-8b66-d78108985321
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
     Member:
       description: Member of a shared folder
       type: object
@@ -1619,318 +1644,6 @@ components:
             read_only:
               description: Whether the `read_only` permission can be changed
               type: boolean
-    FileLink:
-      example:
-        id: 252
-        node_uuid: b8a80643-9d35-43dd-a7f6-c05aaf1d5606
-        access_restriction: shared
-        download_url: https://dev-cloud.acronis.com/fc/t/f4cvit1j
-        sharing_user_uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
-        ttl: 7
-        single_use: false
-        emails:
-        - user1@example.com
-        - user2@example.com
-        download_count: 0
-        token: 2e5193c4-4fb5-4c39-a4aa-11fce808d841
-        created_at: '2019-06-24T13:21:12Z'
-        updated_at: '2019-06-24T13:21:12Z'
-      type: object
-      required:
-      - id
-      - node_uuid
-      - access_restriction
-      - download_url
-      - sharing_user_uuid
-      - ttl
-      - single_use
-      - emails
-      - download_count
-      - token
-      - created_at
-      - updated_at
-      properties:
-        id:
-          type: integer
-        node_uuid:
-          $ref: '#/components/schemas/UUID'
-        access_restriction:
-          enum:
-          - public
-          - access
-          - shared
-          type: string
-        download_url:
-          type: string
-        sharing_user_uuid:
-          $ref: '#/components/schemas/UUID'
-        ttl:
-          type: integer
-        single_use:
-          type: boolean
-        emails:
-          type: array
-          items:
-            type: string
-        download_count:
-          type: integer
-        expired_at:
-          type: string
-          format: date-time
-        deleted_at:
-          type: string
-          format: date-time
-        token:
-          $ref: '#/components/schemas/UUID'
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-    FileNode:
-      description: Single revision of a file
-      type: object
-      required:
-      - owner
-      - parents
-      - name
-      - office_online_permissions
-      - synced
-      - parent_uuid
-      - read_only
-      - has_shared_child_nodes
-      - is_shared
-      - has_writable_children
-      - actions
-      - file_modification_date
-      - permissions
-      - path
-      - uuid
-      - is_directory
-      - owner_email
-      - checksum
-      - is_deleted
-      - has_active_links
-      properties:
-        size:
-          description: Size of the node
-          type: integer
-          format: int64
-        owner:
-          description: Information about the owner of the node
-          type: object
-          required:
-          - uuid
-          - name
-          - email
-          properties:
-            uuid:
-              $ref: '#/components/schemas/UUID'
-            name:
-              type: string
-            email:
-              type: string
-        parents:
-          description: 'Parent nodes of the current node
-
-
-            The nodes are hierarchically ordered and include the current node'
-          type: array
-          items:
-            type: object
-            required:
-            - name
-            - uuid
-            - is_root
-            properties:
-              name:
-                type: string
-              uuid:
-                $ref: '#/components/schemas/NodeUUID'
-              is_root:
-                type: boolean
-        name:
-          description: Name of the node
-          type: string
-          minLength: 1
-        office_online_permissions:
-          description: Node permissions related to Office Online
-          type: object
-          required:
-          - can_create_files_into
-          - can_be_previewed
-          - can_be_edited
-          properties:
-            can_create_files_into:
-              type: boolean
-            can_be_previewed:
-              type: boolean
-            can_be_edited:
-              type: boolean
-        synced:
-          description: Sync status of the node
-          enum:
-          - not_synced
-          - sync_2_way
-          type: string
-        parent_uuid:
-          description: Unique identifier of the parent node
-          type: string
-          pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        read_only:
-          description: Whether the node is read-only
-          type: boolean
-        has_shared_child_nodes:
-          description: Whether any of the node's child nodes have been shared
-          type: boolean
-        is_shared:
-          description: Whether the node has been shared
-          type: boolean
-        preview_type:
-          type:
-          - string
-          - 'null'
-        has_writable_children:
-          description: Whether the node has writable child nodes
-          type: boolean
-        actions:
-          description: Relative URLs to actions that can be performed on the node
-          type: object
-          properties:
-            download:
-              description: Download URL
-              type: string
-            upload:
-              description: Upload URL
-              type: string
-            preview:
-              description: Preview URL
-              type: string
-        file_modification_date:
-          description: Modification date of the node
-          type: string
-          format: date-time
-        expiration_date:
-          description: Date when the shared access to the node will expire
-          type: string
-          format: date-time
-        permissions:
-          description: Permissions for the current user related to the node
-          type: object
-          required:
-          - can_be_renamed
-          - can_be_unsubscribed
-          - can_be_restored
-          - can_create_folders_into
-          - can_be_copied
-          - can_create_files_into
-          - can_view_members
-          - can_be_synced_2_way
-          - can_be_deleted
-          - can_be_synced_1_way
-          - can_be_moved
-          - can_be_shared
-          - can_be_shared_via_link
-          - can_invite
-          - can_be_downloaded
-          - can_selectively_purge_revisions
-          properties:
-            can_be_renamed:
-              description: Whether the node can be renamed
-              type: boolean
-            can_be_unsubscribed:
-              description: 'Whether the node can be unsubscribed from
-
-
-                Users can unsubscribe from nodes shared to them'
-              type: boolean
-            can_be_restored:
-              description: Whether a deleted node can be restored
-              type: boolean
-            can_create_folders_into:
-              description: Whether new folders can be created in this node
-              type: boolean
-            can_be_copied:
-              description: Whether the node can be copied
-              type: boolean
-            can_create_files_into:
-              description: Whether new files can be created in this node
-              type: boolean
-            can_view_members:
-              description: Whether members of this node can be viewed
-              type: boolean
-            can_be_synced_2_way:
-              description: Whether the node can be 2-way synced
-              type: boolean
-            can_be_deleted:
-              description: Whether the node can be deleted
-              type: boolean
-            can_be_synced_1_way:
-              description: Whether the node can be 1-way synced
-              type: boolean
-            can_be_moved:
-              description: Whether the node can be moved
-              type: boolean
-            can_be_shared:
-              description: Whether the node node can be shared to other users
-              type: boolean
-            can_be_shared_via_link:
-              description: Whether the node can be shared via file link
-              type: boolean
-            can_invite:
-              description: Whether new members can be invited to this node
-              type: boolean
-            can_be_downloaded:
-              description: Whether the node can be downloaded
-              type: boolean
-            can_selectively_purge_revisions:
-              description: Whether revisions of this node can be permanently deleted
-              type: boolean
-        path:
-          description: Path to the node
-          type: string
-        uuid:
-          description: Unique identifier of the node
-          type: string
-          pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        is_directory:
-          description: Whether the node is a directory or a file
-          type: boolean
-        owner_email:
-          description: Email of the node's owner
-          type: string
-        checksum:
-          description: MD5 checksum of the node
-          type: string
-        is_deleted:
-          description: Whether the node is deleted
-          type: boolean
-        has_active_links:
-          description: Whether the node has any active links
-          type: boolean
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
     Node:
       description: Single revision of a file or folder
       type: object
@@ -2152,6 +1865,327 @@ components:
             preview:
               description: Preview URL
               type: string
+    NodeUUID:
+      description: 'Node unique identifier
+
+
+        - UUID for any user nodes
+
+        - `0` for the root node'
+      type: string
+      pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    FileLink:
+      example:
+        id: 252
+        node_uuid: b8a80643-9d35-43dd-a7f6-c05aaf1d5606
+        access_restriction: shared
+        download_url: https://dev-cloud.acronis.com/fc/t/f4cvit1j
+        sharing_user_uuid: 0254fc28-1676-4f22-b530-f4f3bd9e7e45
+        ttl: 7
+        single_use: false
+        emails:
+        - user1@example.com
+        - user2@example.com
+        download_count: 0
+        token: 2e5193c4-4fb5-4c39-a4aa-11fce808d841
+        created_at: '2019-06-24T13:21:12Z'
+        updated_at: '2019-06-24T13:21:12Z'
+      type: object
+      required:
+      - id
+      - node_uuid
+      - access_restriction
+      - download_url
+      - sharing_user_uuid
+      - ttl
+      - single_use
+      - emails
+      - download_count
+      - token
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: integer
+        node_uuid:
+          $ref: '#/components/schemas/UUID'
+        access_restriction:
+          enum:
+          - public
+          - access
+          - shared
+          type: string
+        download_url:
+          type: string
+        sharing_user_uuid:
+          $ref: '#/components/schemas/UUID'
+        ttl:
+          type: integer
+        single_use:
+          type: boolean
+        emails:
+          type: array
+          items:
+            type: string
+        download_count:
+          type: integer
+        expired_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+        token:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ConflictErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
+    FileNode:
+      description: Single revision of a file
+      type: object
+      required:
+      - owner
+      - parents
+      - name
+      - office_online_permissions
+      - synced
+      - parent_uuid
+      - read_only
+      - has_shared_child_nodes
+      - is_shared
+      - has_writable_children
+      - actions
+      - file_modification_date
+      - permissions
+      - path
+      - uuid
+      - is_directory
+      - owner_email
+      - checksum
+      - is_deleted
+      - has_active_links
+      properties:
+        size:
+          description: Size of the node
+          type: integer
+          format: int64
+        owner:
+          description: Information about the owner of the node
+          type: object
+          required:
+          - uuid
+          - name
+          - email
+          properties:
+            uuid:
+              $ref: '#/components/schemas/UUID'
+            name:
+              type: string
+            email:
+              type: string
+        parents:
+          description: 'Parent nodes of the current node
+
+
+            The nodes are hierarchically ordered and include the current node'
+          type: array
+          items:
+            type: object
+            required:
+            - name
+            - uuid
+            - is_root
+            properties:
+              name:
+                type: string
+              uuid:
+                $ref: '#/components/schemas/NodeUUID'
+              is_root:
+                type: boolean
+        name:
+          description: Name of the node
+          type: string
+          minLength: 1
+        office_online_permissions:
+          description: Node permissions related to Office Online
+          type: object
+          required:
+          - can_create_files_into
+          - can_be_previewed
+          - can_be_edited
+          properties:
+            can_create_files_into:
+              type: boolean
+            can_be_previewed:
+              type: boolean
+            can_be_edited:
+              type: boolean
+        synced:
+          description: Sync status of the node
+          enum:
+          - not_synced
+          - sync_2_way
+          type: string
+        parent_uuid:
+          description: Unique identifier of the parent node
+          type: string
+          pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        read_only:
+          description: Whether the node is read-only
+          type: boolean
+        has_shared_child_nodes:
+          description: Whether any of the node's child nodes have been shared
+          type: boolean
+        is_shared:
+          description: Whether the node has been shared
+          type: boolean
+        preview_type:
+          type:
+          - string
+          - 'null'
+        has_writable_children:
+          description: Whether the node has writable child nodes
+          type: boolean
+        actions:
+          description: Relative URLs to actions that can be performed on the node
+          type: object
+          properties:
+            download:
+              description: Download URL
+              type: string
+            upload:
+              description: Upload URL
+              type: string
+            preview:
+              description: Preview URL
+              type: string
+        file_modification_date:
+          description: Modification date of the node
+          type: string
+          format: date-time
+        expiration_date:
+          description: Date when the shared access to the node will expire
+          type: string
+          format: date-time
+        permissions:
+          description: Permissions for the current user related to the node
+          type: object
+          required:
+          - can_be_renamed
+          - can_be_unsubscribed
+          - can_be_restored
+          - can_create_folders_into
+          - can_be_copied
+          - can_create_files_into
+          - can_view_members
+          - can_be_synced_2_way
+          - can_be_deleted
+          - can_be_synced_1_way
+          - can_be_moved
+          - can_be_shared
+          - can_be_shared_via_link
+          - can_invite
+          - can_be_downloaded
+          - can_selectively_purge_revisions
+          properties:
+            can_be_renamed:
+              description: Whether the node can be renamed
+              type: boolean
+            can_be_unsubscribed:
+              description: 'Whether the node can be unsubscribed from
+
+
+                Users can unsubscribe from nodes shared to them'
+              type: boolean
+            can_be_restored:
+              description: Whether a deleted node can be restored
+              type: boolean
+            can_create_folders_into:
+              description: Whether new folders can be created in this node
+              type: boolean
+            can_be_copied:
+              description: Whether the node can be copied
+              type: boolean
+            can_create_files_into:
+              description: Whether new files can be created in this node
+              type: boolean
+            can_view_members:
+              description: Whether members of this node can be viewed
+              type: boolean
+            can_be_synced_2_way:
+              description: Whether the node can be 2-way synced
+              type: boolean
+            can_be_deleted:
+              description: Whether the node can be deleted
+              type: boolean
+            can_be_synced_1_way:
+              description: Whether the node can be 1-way synced
+              type: boolean
+            can_be_moved:
+              description: Whether the node can be moved
+              type: boolean
+            can_be_shared:
+              description: Whether the node node can be shared to other users
+              type: boolean
+            can_be_shared_via_link:
+              description: Whether the node can be shared via file link
+              type: boolean
+            can_invite:
+              description: Whether new members can be invited to this node
+              type: boolean
+            can_be_downloaded:
+              description: Whether the node can be downloaded
+              type: boolean
+            can_selectively_purge_revisions:
+              description: Whether revisions of this node can be permanently deleted
+              type: boolean
+        path:
+          description: Path to the node
+          type: string
+        uuid:
+          description: Unique identifier of the node
+          type: string
+          pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        is_directory:
+          description: Whether the node is a directory or a file
+          type: boolean
+        owner_email:
+          description: Email of the node's owner
+          type: string
+        checksum:
+          description: MD5 checksum of the node
+          type: string
+        is_deleted:
+          description: Whether the node is deleted
+          type: boolean
+        has_active_links:
+          description: Whether the node has any active links
+          type: boolean
     NodeRevision:
       example:
         node_uuid: 444f4f94-9f0e-4183-9d47-b1804e819f61
@@ -2218,20 +2252,28 @@ components:
               type: string
             email:
               type: string
-    NodeUUID:
-      description: 'Node unique identifier
-
-
-        - UUID for any user nodes
-
-        - `0` for the root node'
-      type: string
-      pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    UUID:
-      description: Universally unique identifier
-      example: b8ccbf27-4e92-41a9-8b66-d78108985321
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
   securitySchemes:
     oauth_2_0:
       type: oauth2

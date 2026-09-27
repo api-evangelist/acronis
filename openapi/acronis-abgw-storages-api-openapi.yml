@@ -10,7 +10,7 @@ tags:
 paths:
   /abgw_storages/{storageID}:
     delete:
-      operationId: Unregister storage
+      operationId: UnregisterStorage
       description: 'Available in on-premises version only.
 
 
@@ -52,12 +52,10 @@ paths:
       - Abgw Storages
       summary: Unregister storage
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Unregister storage
 components:
   schemas:
-    item1:
-      description: Numeric identifier.
-      type: string
-      pattern: ^\d+$
     id:
       description: Universally unique identifier.
       type: string
@@ -66,6 +64,10 @@ components:
       description: Universally unique identifier.
       type: string
       format: uuid
+    item1:
+      description: Numeric identifier.
+      type: string
+      pattern: ^\d+$
   securitySchemes:
     oauth2:
       type: oauth2

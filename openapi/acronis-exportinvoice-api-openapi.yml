@@ -10,7 +10,7 @@ tags:
 paths:
   /ExportInvoice:
     post:
-      operationId: Export invoices
+      operationId: ExportInvoices
       description: Exports Invoices based on IDs and format type and sets their `Exported` flag and sets or updates `ExportedDate`.
       parameters:
       - name: ids
@@ -48,6 +48,8 @@ paths:
       - ExportInvoice
       summary: Export invoices
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Export invoices
 components:
   schemas:
     Guid:

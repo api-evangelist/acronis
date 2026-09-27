@@ -10,7 +10,7 @@ tags:
 paths:
   /Priorities:
     get:
-      operationId: Fetch ticket priorities
+      operationId: FetchTicketPriorities
       responses:
         '200':
           description: ''
@@ -101,6 +101,8 @@ paths:
       - Priorities
       summary: Fetch ticket priorities
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch ticket priorities
 components:
   securitySchemes:
     oauth2:

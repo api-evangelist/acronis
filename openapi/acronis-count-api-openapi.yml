@@ -10,7 +10,7 @@ tags:
 paths:
   /count:
     get:
-      operationId: Fetch alert counters
+      operationId: FetchAlertCounters
       description: Fetches the alert counters that may be grouped by optional parameters.
       parameters:
       - name: embed_tenants
@@ -83,32 +83,20 @@ paths:
       - Count
       summary: Fetch alert counters
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch alert counters
 components:
   schemas:
-    TenantCountResult:
-      description: Alert counters for a tenant.
+    debugInfo:
+      description: Error debug information (map type)
       type: object
-      required:
-      - locator
-      - id
-      - total
-      properties:
-        locator:
-          description: Locator of a tenant.
-          type: string
-        severitiesAndTypes:
-          $ref: '#/components/schemas/SeveritiesAndTypesEmbed'
-        severities:
-          $ref: '#/components/schemas/SeveritiesEmbed'
-        categories:
-          $ref: '#/components/schemas/CategoriesEmbed'
-        id:
-          description: Identifier of a tenant.
-          type: string
-        types:
-          $ref: '#/components/schemas/TypesEmbed'
-        total:
-          type: integer
+    TypesEmbed:
+      description: 'Alert counters per alert type. Object keys are identifiers of alert
+
+        types, values are counters of alerts of these types.
+
+        '
+      type: object
     CountPerType:
       description: Alert counters per type while grouping by severity as well.
       type: object
@@ -140,23 +128,6 @@ components:
             $ref: '#/components/schemas/TenantCountResult'
         total:
           type: integer
-    SeveritiesAndTypesEmbed:
-      description: Alert counters grouped by severity and then by type.
-      type: object
-      required:
-      - information
-      - warning
-      - error
-      - critical
-      properties:
-        information:
-          $ref: '#/components/schemas/CountPerType'
-        warning:
-          $ref: '#/components/schemas/CountPerType'
-        error:
-          $ref: '#/components/schemas/CountPerType'
-        critical:
-          $ref: '#/components/schemas/CountPerType'
     Error:
       description: Base error object
       type: object
@@ -180,6 +151,23 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
+    SeveritiesEmbed:
+      description: Alert counters per severity.
+      type: object
+      required:
+      - information
+      - warning
+      - error
+      - critical
+      properties:
+        information:
+          type: integer
+        warning:
+          type: integer
+        error:
+          type: integer
+        critical:
+          type: integer
     kbLinkInfo:
       description: Components for kblink
       type: object
@@ -203,8 +191,8 @@ components:
           type: string
         os:
           type: string
-    SeveritiesEmbed:
-      description: Alert counters per severity.
+    SeveritiesAndTypesEmbed:
+      description: Alert counters grouped by severity and then by type.
       type: object
       required:
       - information
@@ -213,13 +201,13 @@ components:
       - critical
       properties:
         information:
-          type: integer
+          $ref: '#/components/schemas/CountPerType'
         warning:
-          type: integer
+          $ref: '#/components/schemas/CountPerType'
         error:
-          type: integer
+          $ref: '#/components/schemas/CountPerType'
         critical:
-          type: integer
+          $ref: '#/components/schemas/CountPerType'
     CategoriesEmbed:
       description: 'Alert counters per alert category. Object keys are identifiers of alert
 
@@ -227,16 +215,30 @@ components:
 
         '
       type: object
-    debugInfo:
-      description: Error debug information (map type)
+    TenantCountResult:
+      description: Alert counters for a tenant.
       type: object
-    TypesEmbed:
-      description: 'Alert counters per alert type. Object keys are identifiers of alert
-
-        types, values are counters of alerts of these types.
-
-        '
-      type: object
+      required:
+      - locator
+      - id
+      - total
+      properties:
+        locator:
+          description: Locator of a tenant.
+          type: string
+        severitiesAndTypes:
+          $ref: '#/components/schemas/SeveritiesAndTypesEmbed'
+        severities:
+          $ref: '#/components/schemas/SeveritiesEmbed'
+        categories:
+          $ref: '#/components/schemas/CategoriesEmbed'
+        id:
+          description: Identifier of a tenant.
+          type: string
+        types:
+          $ref: '#/components/schemas/TypesEmbed'
+        total:
+          type: integer
   securitySchemes:
     oauth_2_0:
       type: oauth2

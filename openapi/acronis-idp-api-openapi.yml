@@ -592,15 +592,142 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    tenantKind:
-      description: A tenant kind.
-      enum:
-      - root
-      - partner
-      - folder
-      - customer
-      - unit
-      type: string
+    userNotifications:
+      description: User notifications.
+      type: array
+      items:
+        enum:
+        - maintenance
+        - quota
+        - reports
+        - backup_error
+        - backup_warning
+        - backup_info
+        - backup_daily_report
+        - backup_critical
+        - device_control_warning
+        - certificate_management_error
+        - certificate_management_warning
+        - certificate_management_info
+        type: string
+    tokenIntrospectionResponse:
+      example:
+        active: true
+        token_type: access_token
+        exp: 1721745289
+        aud: mc-global.do.acronis.fun
+        jti: ded74262-94ab-490a-b852-0214fe09a7ad
+        iss: https://mc-global.do.acronis.fun/bc
+        sub: f5c64710-6726-5fea-97fd-b2263b9c4d8b
+        sub_type: c2c_backup_manager
+        client_id: f5c64710-6726-5fea-97fd-b2263b9c4d8b
+        owner_tuid: 7fce5f09-2e4b-4c26-8311-31a361c13190
+        scope:
+        - tid: '1'
+          tuid: 7fce5f09-2e4b-4c26-8311-31a361c13190
+          rn: task_manager
+          rp: queue_c2c_acc_registration
+          role: consumer
+        - tid: '1'
+          tuid: 7fce5f09-2e4b-4c26-8311-31a361c13190
+          rn: credentials_store
+          role: consumer
+      type: object
+      required:
+      - active
+      properties:
+        active:
+          type: boolean
+        token_type:
+          type: string
+        exp:
+          type: integer
+        aud:
+          type: string
+        jti:
+          type: string
+        iss:
+          type: string
+        sub:
+          type: string
+        sub_type:
+          type: string
+        client_id:
+          type: string
+        owner_tuid:
+          type: string
+        scope:
+          type: array
+          items:
+            type: object
+            properties:
+              tuid:
+                type: string
+              tid:
+                type: string
+              role:
+                type: string
+              rn:
+                type: string
+              rs:
+                type: string
+              rp:
+                type: string
+    items_1:
+      type: object
+      required:
+      - id
+      - version
+      - created_at
+      - updated_at
+      - deleted_at
+      - trustee_id
+      - trustee_type
+      - issuer_id
+      - tenant_id
+      - role_id
+      properties:
+        id:
+          description: Access policy unique identifier.
+          type: string
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        trustee_id:
+          description: Unique identifier of the Subject for whom access policy is granted.
+          type: string
+        trustee_type:
+          description: Type of the Subject for whom access policy is granted.
+          enum:
+          - user
+          - user_group
+          - client
+          type: string
+        issuer_id:
+          description: Issuer unique identifier.
+          type: string
+        tenant_id:
+          description: Tenant unique identifier.
+          type: string
+        resource_server_id:
+          description: Tenant unique identifier.
+          type: string
+        resource_namespace:
+          description: Resource namespace.
+          type: string
+        resource_path:
+          description: Resource path.
+          type: string
+        role_id:
+          $ref: '#/components/schemas/userRole'
     items:
       type: object
       properties:
@@ -704,6 +831,162 @@ components:
           type:
           - string
           - 'null'
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    deviceAuthorizationResponse:
+      example:
+        device_code: qVqLLfXHCdFS7nT4M_WI-_hMGXaxzylUBhqZ-CXUPGd-g4B5CFQfgrrDFtHqxSX4
+        user_code: RDRD-WNDB
+        verification_uri: http://127.0.0.1:61827/abc
+        verification_uri_complete: http://127.0.0.1:61827/abc?code=RDRD-WNDB
+        expires_in: 30
+        interval: 100
+      type: object
+      required:
+      - device_code
+      - user_code
+      - verification_uri
+      properties:
+        device_code:
+          description: The device verification code.
+          type: string
+        user_code:
+          description: The end-user verification code.
+          type: string
+        verification_uri:
+          description: The end-user verification URI.
+          type: string
+        verification_uri_complete:
+          description: A verification URI that includes the `user_code`.
+          type: string
+        expires_in:
+          description: The lifetime in seconds of the `device_code` and `user_code`.
+          type: integer
+        interval:
+          description: The minimum interval time in seconds for the client polling requests to the token endpoint.
+          type: integer
+    token:
+      example:
+        access_token: nowhere_to_apply
+        token_type: bearer
+        expires_in: 600
+        expires_on: 1388444763
+        id_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.....
+        refresh_token: OhYc9oko5ej9
+      type: object
+      required:
+      - access_token
+      - token_type
+      - id_token
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        expires_on:
+          type: integer
+        id_token:
+          type: string
+        refresh_token:
+          type: string
+    idpOttLoginPost:
+      example:
+        ott: dGhpcyBpcyB0ZXN0IG9uZS10aW1lIHRva2Vu
+      type: object
+      additionalProperties: false
+      required:
+      - ott
+      properties:
+        ott:
+          type: string
+    userRole:
+      description: Name of the user role.
+      enum:
+      - root_admin
+      - partner_admin
+      - company_admin
+      - unit_admin
+      - readonly_admin
+      - protection_admin
+      - protection_ro_admin
+      - restore_operator
+      - backup_user
+      - sync_share_admin
+      - sync_share_user
+      - sync_share_guest
+      - pds_operator
+      - pds_support
+      - notary_admin
+      - notary_user
+      - hci_admin
+      - omnivoice_admin
+      - omnivoice_user
+      - greathorn_admin
+      - greathorn_user
+      - greathorn_analyst
+      - greathorn_client_manager
+      type: string
+    revokeError:
+      type: object
+      required:
+      - error
+      - error_description
+      properties:
+        error:
+          enum:
+          - invalid_client
+          - invalid_request
+          - unsupported_token_type
+          type: string
+        error_description:
+          type: string
+    pricingMode:
+      description: Mode of tenant's pricing.
+      enum:
+      - trial
+      - production
+      - suspended
+      type: string
+    tokenError:
+      type: object
+      required:
+      - error
+      - error_description
+      properties:
+        error:
+          enum:
+          - totp_setup_required
+          - totp_required
+          - invalid_totp
+          - access_denied
+          - invalid_request
+          type: string
+        error_description:
+          type: string
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    idpOtt:
+      example:
+        ott: dGhpcyBpcyB0ZXN0IG9uZS10aW1lIHRva2Vu
+      type: object
+      required:
+      - ott
+      properties:
+        ott:
+          description: A base64-encoded one-time token.
+          type: string
+    email:
+      type: string
+      pattern: ^$|\S+@\S+
     idpOttPost:
       example:
         login: user@mail.org
@@ -742,133 +1025,6 @@ components:
           type: string
         tenant_uuid:
           $ref: '#/components/schemas/uuid'
-    business_types:
-      description: Business types.
-      type: array
-      items:
-        enum:
-        - buyer
-        type: string
-    userNotifications:
-      description: User notifications.
-      type: array
-      items:
-        enum:
-        - maintenance
-        - quota
-        - reports
-        - backup_error
-        - backup_warning
-        - backup_info
-        - backup_daily_report
-        - backup_critical
-        - device_control_warning
-        - certificate_management_error
-        - certificate_management_warning
-        - certificate_management_info
-        type: string
-    idpOtt:
-      example:
-        ott: dGhpcyBpcyB0ZXN0IG9uZS10aW1lIHRva2Vu
-      type: object
-      required:
-      - ott
-      properties:
-        ott:
-          description: A base64-encoded one-time token.
-          type: string
-    token:
-      example:
-        access_token: nowhere_to_apply
-        token_type: bearer
-        expires_in: 600
-        expires_on: 1388444763
-        id_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.....
-        refresh_token: OhYc9oko5ej9
-      type: object
-      required:
-      - access_token
-      - token_type
-      - id_token
-      properties:
-        access_token:
-          type: string
-        token_type:
-          type: string
-        expires_in:
-          type: integer
-        expires_on:
-          type: integer
-        id_token:
-          type: string
-        refresh_token:
-          type: string
-    userRole:
-      description: Name of the user role.
-      enum:
-      - root_admin
-      - partner_admin
-      - company_admin
-      - unit_admin
-      - readonly_admin
-      - protection_admin
-      - protection_ro_admin
-      - restore_operator
-      - backup_user
-      - sync_share_admin
-      - sync_share_user
-      - sync_share_guest
-      - pds_operator
-      - pds_support
-      - notary_admin
-      - notary_user
-      - hci_admin
-      - omnivoice_admin
-      - omnivoice_user
-      - greathorn_admin
-      - greathorn_user
-      - greathorn_analyst
-      - greathorn_client_manager
-      type: string
-    errorScheme:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - domain
-          - message
-          - details
-          properties:
-            code:
-              oneOf:
-              - type: string
-              - type: integer
-            context:
-              type: object
-            domain:
-              description: This field can have a null value.
-              type:
-              - string
-              - 'null'
-            message:
-              type: string
-            details:
-              description: Additional info.
-              type: object
-              properties:
-                info:
-                  description: This field can have a null value.
-                  type:
-                  - string
-                  - 'null'
-            data:
-              type: array
-              items:
-                type: string
     user:
       example:
         id: 948efcf2-b740-4c40-bb2d-4e4a46adfd87
@@ -1037,19 +1193,13 @@ components:
           $ref: '#/components/schemas/pricingMode'
         brand_id:
           $ref: '#/components/schemas/uuid'
-    item1:
-      description: RFC3339 Formatted date.
-      type: string
-      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
-      minLength: 19
-      maxLength: 32
-    pricingMode:
-      description: Mode of tenant's pricing.
-      enum:
-      - trial
-      - production
-      - suspended
-      type: string
+    business_types:
+      description: Business types.
+      type: array
+      items:
+        enum:
+        - buyer
+        type: string
     deviceAuthorizationApprovalResponse:
       example:
         client_id: fa6859a9-f5e1-4faf-a56c-5a0ae866dc4f
@@ -1084,204 +1234,54 @@ components:
         is_current_tenant:
           description: True if the tenant ID provided by ApiGW is in the path of the scoped tenant ID; false otherwise.
           type: boolean
-    tokenIntrospectionResponse:
-      example:
-        active: true
-        token_type: access_token
-        exp: 1721745289
-        aud: mc-global.do.acronis.fun
-        jti: ded74262-94ab-490a-b852-0214fe09a7ad
-        iss: https://mc-global.do.acronis.fun/bc
-        sub: f5c64710-6726-5fea-97fd-b2263b9c4d8b
-        sub_type: c2c_backup_manager
-        client_id: f5c64710-6726-5fea-97fd-b2263b9c4d8b
-        owner_tuid: 7fce5f09-2e4b-4c26-8311-31a361c13190
-        scope:
-        - tid: '1'
-          tuid: 7fce5f09-2e4b-4c26-8311-31a361c13190
-          rn: task_manager
-          rp: queue_c2c_acc_registration
-          role: consumer
-        - tid: '1'
-          tuid: 7fce5f09-2e4b-4c26-8311-31a361c13190
-          rn: credentials_store
-          role: consumer
-      type: object
-      required:
-      - active
-      properties:
-        active:
-          type: boolean
-        token_type:
-          type: string
-        exp:
-          type: integer
-        aud:
-          type: string
-        jti:
-          type: string
-        iss:
-          type: string
-        sub:
-          type: string
-        sub_type:
-          type: string
-        client_id:
-          type: string
-        owner_tuid:
-          type: string
-        scope:
-          type: array
-          items:
-            type: object
-            properties:
-              tuid:
-                type: string
-              tid:
-                type: string
-              role:
-                type: string
-              rn:
-                type: string
-              rs:
-                type: string
-              rp:
-                type: string
-    items_1:
-      type: object
-      required:
-      - id
-      - version
-      - created_at
-      - updated_at
-      - deleted_at
-      - trustee_id
-      - trustee_type
-      - issuer_id
-      - tenant_id
-      - role_id
-      properties:
-        id:
-          description: Access policy unique identifier.
-          type: string
-        version:
-          description: Auto-incremented entity version.
-          type: integer
-        created_at:
-          $ref: '#/components/schemas/item1'
-        updated_at:
-          $ref: '#/components/schemas/item1'
-        deleted_at:
-          description: Soft deletion timestamp.
-          allOf:
-          - $ref: '#/components/schemas/item1'
-        trustee_id:
-          description: Unique identifier of the Subject for whom access policy is granted.
-          type: string
-        trustee_type:
-          description: Type of the Subject for whom access policy is granted.
-          enum:
-          - user
-          - user_group
-          - client
-          type: string
-        issuer_id:
-          description: Issuer unique identifier.
-          type: string
-        tenant_id:
-          description: Tenant unique identifier.
-          type: string
-        resource_server_id:
-          description: Tenant unique identifier.
-          type: string
-        resource_namespace:
-          description: Resource namespace.
-          type: string
-        resource_path:
-          description: Resource path.
-          type: string
-        role_id:
-          $ref: '#/components/schemas/userRole'
-    uuid:
+    tenantKind:
+      description: A tenant kind.
+      enum:
+      - root
+      - partner
+      - folder
+      - customer
+      - unit
       type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
-    idpOttLoginPost:
-      example:
-        ott: dGhpcyBpcyB0ZXN0IG9uZS10aW1lIHRva2Vu
-      type: object
-      additionalProperties: false
-      required:
-      - ott
-      properties:
-        ott:
-          type: string
-    email:
-      type: string
-      pattern: ^$|\S+@\S+
-    deviceAuthorizationResponse:
-      example:
-        device_code: qVqLLfXHCdFS7nT4M_WI-_hMGXaxzylUBhqZ-CXUPGd-g4B5CFQfgrrDFtHqxSX4
-        user_code: RDRD-WNDB
-        verification_uri: http://127.0.0.1:61827/abc
-        verification_uri_complete: http://127.0.0.1:61827/abc?code=RDRD-WNDB
-        expires_in: 30
-        interval: 100
-      type: object
-      required:
-      - device_code
-      - user_code
-      - verification_uri
-      properties:
-        device_code:
-          description: The device verification code.
-          type: string
-        user_code:
-          description: The end-user verification code.
-          type: string
-        verification_uri:
-          description: The end-user verification URI.
-          type: string
-        verification_uri_complete:
-          description: A verification URI that includes the `user_code`.
-          type: string
-        expires_in:
-          description: The lifetime in seconds of the `device_code` and `user_code`.
-          type: integer
-        interval:
-          description: The minimum interval time in seconds for the client polling requests to the token endpoint.
-          type: integer
-    tokenError:
+    errorScheme:
       type: object
       required:
       - error
-      - error_description
       properties:
         error:
-          enum:
-          - totp_setup_required
-          - totp_required
-          - invalid_totp
-          - access_denied
-          - invalid_request
-          type: string
-        error_description:
-          type: string
-    revokeError:
-      type: object
-      required:
-      - error
-      - error_description
-      properties:
-        error:
-          enum:
-          - invalid_client
-          - invalid_request
-          - unsupported_token_type
-          type: string
-        error_description:
-          type: string
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
   securitySchemes:
     basicAuth:
       type: http

@@ -10,7 +10,7 @@ tags:
 paths:
   /storage_usage_stats:
     get:
-      operationId: Fetch storage usage stats
+      operationId: FetchStorageUsageStats
       description: Fetches the storage usage counters per tenant.
       x-ExtJS: VaultManager.StorageUsageItems
       responses:
@@ -75,6 +75,8 @@ paths:
       - Storage Usage Stats
       summary: Fetch storage usage stats
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch storage usage stats
 components:
   securitySchemes:
     oauth2:

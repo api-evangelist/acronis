@@ -10,7 +10,7 @@ tags:
 paths:
   /sites:
     get:
-      operationId: Fetch disaster recovery sites
+      operationId: FetchDisasterRecoverySites
       description: Fetches the list of disaster recovery sites.
       parameters:
       - name: allow_deleted
@@ -649,9 +649,11 @@ paths:
       - Sites
       summary: Fetch disaster recovery sites
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch disaster recovery sites
   /sites/{uuid}:
     get:
-      operationId: Fetch disaster recovery site by UUID
+      operationId: FetchDisasterRecoverySiteByUUID
       description: Fetches the details of the disaster recovery site.
       parameters:
       - name: allow_deleted
@@ -1233,15 +1235,16 @@ paths:
       - Sites
       summary: Fetch disaster recovery site by UUID
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch disaster recovery site by UUID
 components:
   schemas:
-    item0_18: {}
-    tenant_uuid:
+    tenant_uuid_19:
       title: UUID
       description: Universally unique object identifier.
       type: string
       pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    tenant_uuid_19:
+    tenant_uuid:
       title: UUID
       description: Universally unique object identifier.
       type: string
@@ -1253,6 +1256,7 @@ components:
       - error
       properties:
         error: {}
+    item0_18: {}
   securitySchemes:
     oauth2:
       type: oauth2

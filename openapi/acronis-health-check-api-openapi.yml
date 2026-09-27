@@ -10,7 +10,7 @@ tags:
 paths:
   /healthcheck:
     get:
-      operationId: Health check
+      operationId: HealthCheck
       description: Health check route. Returns basic information about service.
       responses:
         '200':
@@ -21,6 +21,8 @@ paths:
       - Health Check
       summary: Health check
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Health check
 components:
   securitySchemes:
     oauth2:

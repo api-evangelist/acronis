@@ -10,7 +10,7 @@ tags:
 paths:
   /search_index_size_stats/{tenantID}:
     get:
-      operationId: Fetch archive search index size stats
+      operationId: FetchArchiveSearchIndexSizeStats
       description: Fetches a list of archives and their search index sizes for the tenant.
       x-ExtJS: VaultManager.SearchIndexSize
       parameters:
@@ -58,12 +58,10 @@ paths:
       - Search Index Size Stats
       summary: Fetch archive search index size stats
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch archive search index size stats
 components:
   schemas:
-    item1:
-      description: Numeric identifier.
-      type: string
-      pattern: ^\d+$
     id:
       description: Universally unique identifier.
       type: string
@@ -73,6 +71,10 @@ components:
       oneOf:
       - $ref: '#/components/schemas/id'
       - $ref: '#/components/schemas/item1'
+    item1:
+      description: Numeric identifier.
+      type: string
+      pattern: ^\d+$
   securitySchemes:
     oauth2:
       type: oauth2

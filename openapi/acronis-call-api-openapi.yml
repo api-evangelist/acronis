@@ -10,7 +10,7 @@ tags:
 paths:
   /Call:
     put:
-      operationId: Create ticket
+      operationId: CreateTicket
       description: Creates a ticket.
       requestBody:
         content:
@@ -279,8 +279,10 @@ paths:
       - Call
       summary: Create ticket
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create ticket
     get:
-      operationId: Fetch ticket
+      operationId: FetchTicket
       description: Fetches a ticket by ID.
       parameters:
       - name: id
@@ -585,6 +587,8 @@ paths:
       - Call
       summary: Fetch ticket
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch ticket
 components:
   schemas:
     Guid:

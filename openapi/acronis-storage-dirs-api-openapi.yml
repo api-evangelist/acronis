@@ -10,7 +10,7 @@ tags:
 paths:
   /storage_dirs/{storageID}:
     get:
-      operationId: Fetch storage folders
+      operationId: FetchStorageFolders
       description: 'Available in on-premises version only.
 
 
@@ -65,9 +65,11 @@ paths:
       - Storage Dirs
       summary: Fetch storage folders
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch storage folders
   /storage_dirs/{storageID}/{path}:
     get:
-      operationId: Fetch storage folders in path
+      operationId: FetchStorageFoldersInPath
       description: 'Available in on-premises version only.
 
 
@@ -125,6 +127,8 @@ paths:
       - Storage Dirs
       summary: Fetch storage folders in path
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch storage folders in path
 components:
   schemas:
     uuid:

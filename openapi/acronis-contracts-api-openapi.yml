@@ -10,7 +10,7 @@ tags:
 paths:
   /Contracts:
     put:
-      operationId: Create or update Contract
+      operationId: CreateOrUpdateContract
       description: Creates or updates a Contract
       requestBody:
         content:
@@ -168,8 +168,10 @@ paths:
       - Contracts
       summary: Create or update contract
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Create or update Contract
     get:
-      operationId: Fetches Contracts by customer ID
+      operationId: FetchesContractsByCustomerID
       parameters:
       - name: id
         description: The customer ID.
@@ -240,6 +242,8 @@ paths:
       - Contracts
       summary: Fetches contracts by customer ID
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetches Contracts by customer ID
 components:
   schemas:
     Contract:

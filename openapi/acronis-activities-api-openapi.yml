@@ -20,7 +20,7 @@ tags:
 paths:
   /activities:
     get:
-      operationId: Fetch a list of activities
+      operationId: FetchAListOfActivities
       description: 'Fetches a list of activities.
 
 
@@ -305,12 +305,14 @@ paths:
       - Activities
       summary: Fetch a list of activities
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch a list of activities
     servers:
     - url: https://dev-cloud.acronis.com/api/task_manager/v2
       variables: {}
   /activities/{activity-id}:
     get:
-      operationId: Fetch an activity
+      operationId: FetchAnActivity
       description: Fetches an activity by provided activity ID.
       x-AllowedTo:
       - task_manager::admin
@@ -366,6 +368,8 @@ paths:
       - Activities
       summary: Fetch an activity
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch an activity
     servers:
     - url: https://dev-cloud.acronis.com/api/task_manager/v2
       variables: {}
@@ -406,67 +410,26 @@ paths:
           description: Acronis datacenter region
 components:
   schemas:
-    tenant:
-      description: A tenant identity.
+    progress:
+      description: A progress value.
       type: object
       required:
-      - id
-      - uuid
+      - total
       properties:
-        id:
-          $ref: '#/components/schemas/string64'
-        uuid:
-          $ref: '#/components/schemas/uuid'
-        name:
-          type: string
-        locator:
-          description: A hierarchical tenant identifier in the following format - `/root-id/unit-id/sub-unit-id/tenant-id/`.
-          type: string
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
-      properties:
-        lineTag:
-          type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
+        current:
           type: integer
-        product:
-          type: string
-        os:
-          type: string
-    string64:
-      description: A string that may contain up to 64 characters.
-      type: string
-    executionBottleneck:
-      description: An execution bottleneck. The sum of all field values must equal 100.
-      type: object
-      properties:
-        source:
-          description: Bottleneck score when reading data.
+        bytesProcessed:
           type: integer
-          minimum: 0
-          maximum: 100
-        destination:
-          description: Bottleneck score when writing data.
+        processingSpeed:
+          type: number
+        leftTime:
+          $ref: '#/components/schemas/duration'
+        bytesSaved:
           type: integer
-          minimum: 0
-          maximum: 100
-        processing:
-          description: Bottleneck score during data processing on executor side.
+        bottleneck:
+          $ref: '#/components/schemas/executionBottleneck'
+        total:
           type: integer
-          minimum: 0
-          maximum: 100
     actor:
       description: An actor identity.
       type: object
@@ -477,25 +440,26 @@ components:
           $ref: '#/components/schemas/string64'
         clusterId:
           $ref: '#/components/schemas/string64'
+    string256:
+      description: A string that may contain up to 256 characters.
+      type: string
     blob:
       description: Arbitrary data.
-    resultCode:
+    executionState:
+      description: An execution state.
       enum:
-      - ok
-      - error
-      - warning
-      - cancelled
-      - abandoned
-      - timedout
+      - enqueued
+      - assigned
+      - started
+      - paused
+      - completed
       type: string
-    levelOfDetailSingleEntity:
-      enum:
-      - tiny
-      - short
-      - long
-      - full
-      - debug
+    uuid:
       type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     activity_2:
       description: The activity object.
       type: object
@@ -580,38 +544,6 @@ components:
         type:
           description: The type of the activity that is defined by the user.
           type: string
-    executionState:
-      description: An execution state.
-      enum:
-      - enqueued
-      - assigned
-      - started
-      - paused
-      - completed
-      type: string
-    time:
-      description: Time in RFC3339 format.
-      type: string
-    progress:
-      description: A progress value.
-      type: object
-      required:
-      - total
-      properties:
-        current:
-          type: integer
-        bytesProcessed:
-          type: integer
-        processingSpeed:
-          type: number
-        leftTime:
-          $ref: '#/components/schemas/duration'
-        bytesSaved:
-          type: integer
-        bottleneck:
-          $ref: '#/components/schemas/executionBottleneck'
-        total:
-          type: integer
     domainError:
       description: Base error object
       type: object
@@ -635,31 +567,35 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    levelOfDetail:
-      enum:
-      - tiny
-      - short
-      - long
-      - full
-      - debug
-      - count
-      type: string
-    executionResult:
-      description: An execution result.
+    kbLinkInfo:
+      description: Components for kblink
       type: object
       required:
-      - code
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
       properties:
-        code:
-          $ref: '#/components/schemas/resultCode'
-        error:
-          $ref: '#/components/schemas/domainError'
-        warnings:
-          type: array
-          items:
-            $ref: '#/components/schemas/domainError'
-        payload:
-          $ref: '#/components/schemas/blob'
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    string64:
+      description: A string that may contain up to 64 characters.
+      type: string
+    duration:
+      description: Duration in the human-readable format like "1m", "10s", "1h25m43s" where "m" = "minutes", "s" = "seconds", "h" = "hours".
+      type: string
     activity:
       description: The activity object.
       type: object
@@ -744,27 +680,86 @@ components:
         type:
           description: The type of the activity that is defined by the user.
           type: string
-    duration:
-      description: Duration in the human-readable format like "1m", "10s", "1h25m43s" where "m" = "minutes", "s" = "seconds", "h" = "hours".
+    resultCode:
+      enum:
+      - ok
+      - error
+      - warning
+      - cancelled
+      - abandoned
+      - timedout
       type: string
-    uuid:
+    levelOfDetailSingleEntity:
+      enum:
+      - tiny
+      - short
+      - long
+      - full
+      - debug
       type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    string256:
-      description: A string that may contain up to 256 characters.
+    time:
+      description: Time in RFC3339 format.
       type: string
-    debugInfo:
-      description: Error debug information (map type)
+    tenant:
+      description: A tenant identity.
       type: object
-    ActivityList:
-      type: object
+      required:
+      - id
+      - uuid
       properties:
-        items:
+        id:
+          $ref: '#/components/schemas/string64'
+        uuid:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        locator:
+          description: A hierarchical tenant identifier in the following format - `/root-id/unit-id/sub-unit-id/tenant-id/`.
+          type: string
+    levelOfDetail:
+      enum:
+      - tiny
+      - short
+      - long
+      - full
+      - debug
+      - count
+      type: string
+    executionResult:
+      description: An execution result.
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/resultCode'
+        error:
+          $ref: '#/components/schemas/domainError'
+        warnings:
           type: array
           items:
-            $ref: '#/components/schemas/Activity'
-        paging:
-          type: object
+            $ref: '#/components/schemas/domainError'
+        payload:
+          $ref: '#/components/schemas/blob'
+    executionBottleneck:
+      description: An execution bottleneck. The sum of all field values must equal 100.
+      type: object
+      properties:
+        source:
+          description: Bottleneck score when reading data.
+          type: integer
+          minimum: 0
+          maximum: 100
+        destination:
+          description: Bottleneck score when writing data.
+          type: integer
+          minimum: 0
+          maximum: 100
+        processing:
+          description: Bottleneck score during data processing on executor side.
+          type: integer
+          minimum: 0
+          maximum: 100
     Error:
       type: object
       properties:
@@ -817,15 +812,24 @@ components:
         completedAt:
           type: string
           format: date-time
+    ActivityList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+        paging:
+          type: object
   responses:
-    NotFound:
-      description: Not found
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
+    NotFound:
+      description: Not found
       content:
         application/json:
           schema:

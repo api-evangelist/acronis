@@ -10,7 +10,7 @@ tags:
 paths:
   /InvoiceOverview:
     post:
-      operationId: Update invoice
+      operationId: UpdateInvoice
       requestBody:
         content:
           application/json:
@@ -38,8 +38,10 @@ paths:
       - InvoiceOverview
       summary: Update invoice
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Update invoice
     get:
-      operationId: Fetch invoice
+      operationId: FetchInvoice
       parameters:
       - name: Customer
         description: Customer (GUID)
@@ -204,26 +206,10 @@ paths:
       - InvoiceOverview
       summary: Fetch invoice
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Fetch invoice
 components:
   schemas:
-    Guid:
-      example: 00000000-0000-0000-0000-000000000000
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-    Paging:
-      type: object
-      additionalProperties: false
-      required:
-      - AmountTotalItems
-      - AmountRecordsFound
-      - AmountOfPages
-      properties:
-        AmountTotalItems:
-          type: integer
-        AmountRecordsFound:
-          type: integer
-        AmountOfPages:
-          type: integer
     Invoice:
       type: object
       additionalProperties: false
@@ -369,6 +355,24 @@ components:
           description: ''
           default: 0
           type: number
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
   securitySchemes:
     oauth2:
       type: oauth2
