@@ -155,46 +155,6 @@ paths:
       x-operation-id-original: Delete tax
 components:
   schemas:
-    TaxRequestPayload:
-      type: object
-      additionalProperties: false
-      required:
-      - Name
-      properties:
-        Active:
-          description: ''
-          default: false
-          type: boolean
-        AllowInactive:
-          description: ''
-          default: false
-          type: boolean
-        Code:
-          type:
-          - string
-          - 'null'
-        Id:
-          description: ''
-          default: 00000000-0000-0000-0000-000000000000
-          type: string
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-        IsDefault:
-          description: ''
-          default: false
-          type: boolean
-        Name:
-          type:
-          - string
-          - 'null'
-        Tenant:
-          description: ''
-          default: 00000000-0000-0000-0000-000000000000
-          type: string
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-        Value:
-          description: ''
-          default: 0
-          type: number
     Guid:
       example: 00000000-0000-0000-0000-000000000000
       type: string
@@ -239,6 +199,46 @@ components:
           pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
         Value:
           description: ''
+          type: number
+    TaxRequestPayload:
+      type: object
+      additionalProperties: false
+      required:
+      - Name
+      properties:
+        Active:
+          description: ''
+          default: false
+          type: boolean
+        AllowInactive:
+          description: ''
+          default: false
+          type: boolean
+        Code:
+          type:
+          - string
+          - 'null'
+        Id:
+          description: ''
+          default: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        IsDefault:
+          description: ''
+          default: false
+          type: boolean
+        Name:
+          type:
+          - string
+          - 'null'
+        Tenant:
+          description: ''
+          default: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        Value:
+          description: ''
+          default: 0
           type: number
   securitySchemes:
     oauth2:

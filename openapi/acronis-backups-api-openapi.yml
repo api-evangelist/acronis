@@ -1151,27 +1151,13 @@ paths:
       x-operation-id-original: Delete backups
 components:
   schemas:
-    items_3:
-      title: Volume
-      description: Volume description.
-      type: object
-      additionalProperties: false
-      properties:
-        free_space:
-          description: Free volume space in bytes.
-          type: integer
-        is_bootable:
-          type: boolean
-        is_system:
-          type: boolean
-        name:
-          type: string
-        size:
-          description: Volume size in bytes.
-          type: integer
-        mount_strid:
-          description: String identifier of the volume.
-          type: string
+    tenant_id:
+      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+      oneOf:
+      - $ref: '#/components/schemas/archive_id'
+      - description: Numeric identifier.
+        type: string
+        pattern: ^\d+$
     storage_type:
       description: Vault storage type.
       enum:
@@ -1197,57 +1183,6 @@ components:
       description: Universally unique identifier.
       type: string
       format: uuid
-    checksum_validation:
-      description: Value of backup validation status.
-      enum:
-      - SUCCESS
-      - FAILURE
-      - CANCELLED
-      type: string
-    items_1:
-      description: Reason why Backup was created.
-      enum:
-      - patch_management
-      type: string
-    tapes_for_restore:
-      type: array
-      items:
-        $ref: '#/components/schemas/archive_id'
-    tenant_id:
-      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
-      oneOf:
-      - $ref: '#/components/schemas/archive_id'
-      - description: Numeric identifier.
-        type: string
-        pattern: ^\d+$
-    items:
-      description: Backup type.
-      enum:
-      - full
-      - incremental
-      - differential
-      - unknown
-      - cdp
-      type: string
-    datetime_fn:
-      description: 'A filter by date and time in RFC 3339 format with the support
-
-        for comparison operators.
-
-
-        Available operators:
-
-
-        * `lt` - less than
-
-        * `gt` - greater than
-
-        * `le` - less than or equals
-
-        * `ge` - greater than or equals
-
-        '
-      type: string
     storage_type_2:
       description: Vault storage type.
       enum:
@@ -1268,6 +1203,71 @@ components:
       - microsoft_azure
       - amazon_s3
       - s3_compatible
+      type: string
+    tapes_for_restore:
+      type: array
+      items:
+        $ref: '#/components/schemas/archive_id'
+    items_1:
+      description: Reason why Backup was created.
+      enum:
+      - patch_management
+      type: string
+    datetime_fn:
+      description: 'A filter by date and time in RFC 3339 format with the support
+
+        for comparison operators.
+
+
+        Available operators:
+
+
+        * `lt` - less than
+
+        * `gt` - greater than
+
+        * `le` - less than or equals
+
+        * `ge` - greater than or equals
+
+        '
+      type: string
+    items:
+      description: Backup type.
+      enum:
+      - full
+      - incremental
+      - differential
+      - unknown
+      - cdp
+      type: string
+    items_3:
+      title: Volume
+      description: Volume description.
+      type: object
+      additionalProperties: false
+      properties:
+        free_space:
+          description: Free volume space in bytes.
+          type: integer
+        is_bootable:
+          type: boolean
+        is_system:
+          type: boolean
+        name:
+          type: string
+        size:
+          description: Volume size in bytes.
+          type: integer
+        mount_strid:
+          description: String identifier of the volume.
+          type: string
+    checksum_validation:
+      description: Value of backup validation status.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
       type: string
   securitySchemes:
     oauth2:

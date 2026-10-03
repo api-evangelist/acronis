@@ -433,106 +433,38 @@ paths:
           description: Acronis datacenter region
 components:
   schemas:
-    progress:
-      description: A progress value.
+    message:
+      description: A message to pass through.
       type: object
       required:
-      - total
+      - key
       properties:
-        current:
-          type: integer
-        bytesProcessed:
-          type: integer
-        processingSpeed:
-          type: number
-        leftTime:
-          $ref: '#/components/schemas/duration'
-        bytesSaved:
-          type: integer
-        bottleneck:
-          $ref: '#/components/schemas/executionBottleneck'
-        total:
-          type: integer
-    task:
-      description: The task object.
-      type: object
-      required:
-      - state
-      - id
-      - issuer
-      - cancelRequested
-      - enqueuedAt
-      - updatedAt
-      - assignCount
-      properties:
-        state:
-          $ref: '#/components/schemas/executionState'
-        result:
-          $ref: '#/components/schemas/executionResult'
-        id:
-          description: Server-generated unique numeric identifier for the task object.
-          type: integer
-        startedAt:
-          $ref: '#/components/schemas/time'
-        completedAt:
-          $ref: '#/components/schemas/time'
-        issuer:
-          description: The entity that created the task.
+        key:
+          description: Message key.
+          type: string
+        context:
+          description: Context dictionary.
           type: object
-          required:
-          - id
-          properties:
-            id:
-              $ref: '#/components/schemas/string64'
-            clusterId:
-              $ref: '#/components/schemas/string64'
-        cancelRequested:
-          description: Whether the task was requested to be cancelled.
-          type: boolean
-        blockers:
-          description: A list of reasons why the task cannot be completed without a user input.
-          type: array
-          items:
-            $ref: '#/components/schemas/blocker'
-        enqueuedAt:
-          $ref: '#/components/schemas/time'
-        updatedAt:
-          $ref: '#/components/schemas/time'
-        executor:
-          description: The identity of the executor.
-          type: object
-          required:
-          - id
-          properties:
-            id:
-              $ref: '#/components/schemas/string64'
-            clusterId:
-              $ref: '#/components/schemas/string64'
-        assignCount:
-          description: Current count of the assignments.
-          type: integer
-        assignedAt:
-          $ref: '#/components/schemas/time'
-    string256:
-      description: A string that may contain up to 256 characters.
-      type: string
-    blob:
-      description: Arbitrary data.
-    executionState:
-      description: An execution state.
-      enum:
-      - enqueued
-      - assigned
-      - started
-      - paused
-      - completed
-      type: string
     uuid:
       type: string
       pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
+    levelOfDetail:
+      enum:
+      - tiny
+      - short
+      - long
+      - full
+      - debug
+      - count
+      type: string
+    levelOfDetailSingleEntity:
+      enum:
+      - tiny
+      - short
+      - long
+      - full
+      - debug
+      type: string
     domainError:
       description: Base error object
       type: object
@@ -556,65 +488,112 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    kbLinkInfo:
-      description: Components for kblink
+    executionResult:
+      description: An execution result.
       type: object
       required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
+      - code
       properties:
-        lineTag:
-          type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
+        code:
+          $ref: '#/components/schemas/resultCode'
+        error:
+          $ref: '#/components/schemas/domainError'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/domainError'
+        payload:
+          $ref: '#/components/schemas/blob'
+    time:
+      description: Time in RFC3339 format.
+      type: string
+    blob:
+      description: Arbitrary data.
+    executionState:
+      description: An execution state.
+      enum:
+      - enqueued
+      - assigned
+      - started
+      - paused
+      - completed
+      type: string
+    blocker:
+      description: The task blocker object.
+      type: object
+      required:
+      - taskId
+      - tenant
+      - id
+      - issue
+      properties:
+        taskId:
           type: integer
-        product:
-          type: string
-        os:
-          type: string
-    string64:
-      description: A string that may contain up to 64 characters.
-      type: string
-    duration:
-      description: Duration in the human-readable format like "1m", "10s", "1h25m43s" where "m" = "minutes", "s" = "seconds", "h" = "hours".
-      type: string
-    message:
-      description: A message to pass through.
-      type: object
-      required:
-      - key
-      properties:
-        key:
-          description: Message key.
-          type: string
-        context:
-          description: Context dictionary.
+        tenant:
+          $ref: '#/components/schemas/tenant'
+        id:
+          description: Unique numeric identifier for the task blocker object (server-generated).
+          type: integer
+        possibleSolutions:
+          description: Possible solutions of blocker.
+          type: array
+          items:
+            $ref: '#/components/schemas/message'
+        issue:
+          description: A reason why the task cannot be completed without a user input.
           type: object
-    taskPriority:
-      description: The task priority.
-      enum:
-      - low
-      - belowNormal
-      - normal
-      - aboveNormal
-      - high
+          required:
+          - key
+          properties:
+            key:
+              description: Message key.
+              type: string
+            context:
+              description: Context dictionary.
+              type: object
+        uuid:
+          description: Universally unique identifier for the task blocker object. If not set, it will be automatically generated by the server.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        solution:
+          description: A solution provided by the user.
+          type: object
+          required:
+          - key
+          properties:
+            key:
+              description: Message key.
+              type: string
+            context:
+              description: Context dictionary.
+              type: object
+        activityId:
+          type: integer
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+    string256:
+      description: A string that may contain up to 256 characters.
       type: string
-    resultCode:
-      enum:
-      - ok
-      - error
-      - warning
-      - cancelled
-      - abandoned
-      - timedout
-      type: string
+    executionBottleneck:
+      description: An execution bottleneck. The sum of all field values must equal 100.
+      type: object
+      properties:
+        source:
+          description: Bottleneck score when reading data.
+          type: integer
+          minimum: 0
+          maximum: 100
+        destination:
+          description: Bottleneck score when writing data.
+          type: integer
+          minimum: 0
+          maximum: 100
+        processing:
+          description: Bottleneck score during data processing on executor side.
+          type: integer
+          minimum: 0
+          maximum: 100
     task_1:
       description: The task object.
       type: object
@@ -776,16 +755,63 @@ components:
             clusterId:
               description: The ID of the cluster that is bound to the task.
               type: string
-    levelOfDetailSingleEntity:
+    resultCode:
       enum:
-      - tiny
-      - short
-      - long
-      - full
-      - debug
+      - ok
+      - error
+      - warning
+      - cancelled
+      - abandoned
+      - timedout
       type: string
-    time:
-      description: Time in RFC3339 format.
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    duration:
+      description: Duration in the human-readable format like "1m", "10s", "1h25m43s" where "m" = "minutes", "s" = "seconds", "h" = "hours".
+      type: string
+    progress:
+      description: A progress value.
+      type: object
+      required:
+      - total
+      properties:
+        current:
+          type: integer
+        bytesProcessed:
+          type: integer
+        processingSpeed:
+          type: number
+        leftTime:
+          $ref: '#/components/schemas/duration'
+        bytesSaved:
+          type: integer
+        bottleneck:
+          $ref: '#/components/schemas/executionBottleneck'
+        total:
+          type: integer
+    string64:
+      description: A string that may contain up to 64 characters.
       type: string
     tenant:
       description: A tenant identity.
@@ -803,108 +829,87 @@ components:
         locator:
           description: A hierarchical tenant identifier in the following format - `/root-id/unit-id/sub-unit-id/tenant-id/`.
           type: string
-    levelOfDetail:
-      enum:
-      - tiny
-      - short
-      - long
-      - full
-      - debug
-      - count
-      type: string
-    executionResult:
-      description: An execution result.
+    task:
+      description: The task object.
       type: object
       required:
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/resultCode'
-        error:
-          $ref: '#/components/schemas/domainError'
-        warnings:
-          type: array
-          items:
-            $ref: '#/components/schemas/domainError'
-        payload:
-          $ref: '#/components/schemas/blob'
-    blocker:
-      description: The task blocker object.
-      type: object
-      required:
-      - taskId
-      - tenant
+      - state
       - id
-      - issue
+      - issuer
+      - cancelRequested
+      - enqueuedAt
+      - updatedAt
+      - assignCount
       properties:
-        taskId:
-          type: integer
-        tenant:
-          $ref: '#/components/schemas/tenant'
+        state:
+          $ref: '#/components/schemas/executionState'
+        result:
+          $ref: '#/components/schemas/executionResult'
         id:
-          description: Unique numeric identifier for the task blocker object (server-generated).
+          description: Server-generated unique numeric identifier for the task object.
           type: integer
-        possibleSolutions:
-          description: Possible solutions of blocker.
+        startedAt:
+          $ref: '#/components/schemas/time'
+        completedAt:
+          $ref: '#/components/schemas/time'
+        issuer:
+          description: The entity that created the task.
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              $ref: '#/components/schemas/string64'
+            clusterId:
+              $ref: '#/components/schemas/string64'
+        cancelRequested:
+          description: Whether the task was requested to be cancelled.
+          type: boolean
+        blockers:
+          description: A list of reasons why the task cannot be completed without a user input.
           type: array
           items:
-            $ref: '#/components/schemas/message'
-        issue:
-          description: A reason why the task cannot be completed without a user input.
+            $ref: '#/components/schemas/blocker'
+        enqueuedAt:
+          $ref: '#/components/schemas/time'
+        updatedAt:
+          $ref: '#/components/schemas/time'
+        executor:
+          description: The identity of the executor.
           type: object
           required:
-          - key
+          - id
           properties:
-            key:
-              description: Message key.
-              type: string
-            context:
-              description: Context dictionary.
-              type: object
-        uuid:
-          description: Universally unique identifier for the task blocker object. If not set, it will be automatically generated by the server.
-          type: string
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        solution:
-          description: A solution provided by the user.
+            id:
+              $ref: '#/components/schemas/string64'
+            clusterId:
+              $ref: '#/components/schemas/string64'
+        assignCount:
+          description: Current count of the assignments.
+          type: integer
+        assignedAt:
+          $ref: '#/components/schemas/time'
+    taskPriority:
+      description: The task priority.
+      enum:
+      - low
+      - belowNormal
+      - normal
+      - aboveNormal
+      - high
+      type: string
+    TaskList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        paging:
           type: object
-          required:
-          - key
           properties:
-            key:
-              description: Message key.
-              type: string
-            context:
-              description: Context dictionary.
+            cursors:
               type: object
-        activityId:
-          type: integer
-    executionBottleneck:
-      description: An execution bottleneck. The sum of all field values must equal 100.
-      type: object
-      properties:
-        source:
-          description: Bottleneck score when reading data.
-          type: integer
-          minimum: 0
-          maximum: 100
-        destination:
-          description: Bottleneck score when writing data.
-          type: integer
-          minimum: 0
-          maximum: 100
-        processing:
-          description: Bottleneck score during data processing on executor side.
-          type: integer
-          minimum: 0
-          maximum: 100
-    Error:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     Task:
       type: object
       description: A top-level Acronis backup or protection task
@@ -974,18 +979,13 @@ components:
         tenant_id:
           type: string
           format: uuid
-    TaskList:
+    Error:
       type: object
       properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Task'
-        paging:
-          type: object
-          properties:
-            cursors:
-              type: object
+        code:
+          type: integer
+        message:
+          type: string
   responses:
     NotFound:
       description: Not found
@@ -993,14 +993,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
+    Forbidden:
+      description: Forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Forbidden
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:

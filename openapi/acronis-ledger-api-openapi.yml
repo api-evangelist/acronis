@@ -83,85 +83,6 @@ paths:
       x-operation-id-original: Fetch ledger
 components:
   schemas:
-    LedgerPartial:
-      type: object
-      additionalProperties: false
-      required:
-      - Active
-      - CreationDate
-      - Description
-      - ExternalId
-      - Id
-      - Number
-      properties:
-        Active:
-          description: ''
-          type: boolean
-        CreationDate:
-          description: ''
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
-        Description:
-          type:
-          - string
-          - 'null'
-        ExternalId:
-          type:
-          - string
-          - 'null'
-        Id:
-          description: ''
-          example: 00000000-0000-0000-0000-000000000000
-          type: string
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-        Number:
-          description: ''
-          type: string
-    GetLedgersSearchResponse:
-      example:
-        Ledgers:
-        - Id: 00000000-0000-0000-0000-000000000000
-          Number: ''
-          Description: ''
-          Active: true
-          CreationDate: '0001-01-01T00:00:00Z'
-          ExternalId: ''
-        - Id: 00000000-0000-0000-0000-000000000000
-          Number: ''
-          Description: ''
-          Active: true
-          CreationDate: '0001-01-01T00:00:00Z'
-          ExternalId: ''
-        Paging:
-          AmountTotalItems: 0
-          AmountRecordsFound: 0
-          AmountOfPages: 0
-      type: object
-      additionalProperties: false
-      required:
-      - Ledgers
-      - Paging
-      properties:
-        Ledgers:
-          type: array
-          items:
-            $ref: '#/components/schemas/LedgerPartial'
-        Paging:
-          $ref: '#/components/schemas/Paging'
-    Paging:
-      type: object
-      additionalProperties: false
-      required:
-      - AmountTotalItems
-      - AmountRecordsFound
-      - AmountOfPages
-      properties:
-        AmountTotalItems:
-          type: integer
-        AmountRecordsFound:
-          type: integer
-        AmountOfPages:
-          type: integer
     Ledger:
       example:
         Id: 65ea810d-7059-4199-8b01-813e9255bc86
@@ -223,6 +144,85 @@ components:
         AllowInactive:
           description: ''
           type: boolean
+    GetLedgersSearchResponse:
+      example:
+        Ledgers:
+        - Id: 00000000-0000-0000-0000-000000000000
+          Number: ''
+          Description: ''
+          Active: true
+          CreationDate: '0001-01-01T00:00:00Z'
+          ExternalId: ''
+        - Id: 00000000-0000-0000-0000-000000000000
+          Number: ''
+          Description: ''
+          Active: true
+          CreationDate: '0001-01-01T00:00:00Z'
+          ExternalId: ''
+        Paging:
+          AmountTotalItems: 0
+          AmountRecordsFound: 0
+          AmountOfPages: 0
+      type: object
+      additionalProperties: false
+      required:
+      - Ledgers
+      - Paging
+      properties:
+        Ledgers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LedgerPartial'
+        Paging:
+          $ref: '#/components/schemas/Paging'
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
+    LedgerPartial:
+      type: object
+      additionalProperties: false
+      required:
+      - Active
+      - CreationDate
+      - Description
+      - ExternalId
+      - Id
+      - Number
+      properties:
+        Active:
+          description: ''
+          type: boolean
+        CreationDate:
+          description: ''
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        Description:
+          type:
+          - string
+          - 'null'
+        ExternalId:
+          type:
+          - string
+          - 'null'
+        Id:
+          description: ''
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        Number:
+          description: ''
+          type: string
   securitySchemes:
     oauth2:
       type: oauth2

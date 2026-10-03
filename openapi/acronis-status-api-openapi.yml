@@ -149,29 +149,20 @@ components:
     debugInfo:
       description: Error debug information (map type)
       type: object
-    Error:
-      description: Base error object
+    ScopeStatus:
+      description: Status of the selected scope.
       type: object
       required:
-      - domain
-      - code
+      - scope
+      - status
       properties:
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
-          type: string
-        code:
-          description: Error id or code, unique in the domain. Same as in 'reason' field
-          type: string
-        reason:
-          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
-          type: string
-        context:
-          description: Error context dictionary
+        scope:
+          description: 'Value of scope. Contains values of context or searchable details.
+
+            '
           type: object
-        kbLink:
-          $ref: '#/components/schemas/kbLinkInfo'
-        debug:
-          $ref: '#/components/schemas/debugInfo'
+        status:
+          $ref: '#/components/schemas/Status'
     kbLinkInfo:
       description: Components for kblink
       type: object
@@ -195,6 +186,29 @@ components:
           type: string
         os:
           type: string
+    Error:
+      description: Base error object
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kbLink:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
     Status:
       description: 'Status of any scope that represents the last alert with the highest severity in the scope.
 
@@ -229,20 +243,6 @@ components:
         details:
           description: Details about the alert.
           type: object
-    ScopeStatus:
-      description: Status of the selected scope.
-      type: object
-      required:
-      - scope
-      - status
-      properties:
-        scope:
-          description: 'Value of scope. Contains values of context or searchable details.
-
-            '
-          type: object
-        status:
-          $ref: '#/components/schemas/Status'
   securitySchemes:
     oauth_2_0:
       type: oauth2

@@ -2075,55 +2075,6 @@ paths:
       x-operation-id-original: Stop failover on cloud server
 components:
   schemas:
-    item0_13: {}
-    item0_2:
-      description: Describes a single issue (constraint violation).
-      type: object
-      required:
-      - target
-      - severity
-      - error
-      properties:
-        link:
-          description: Name or ID of the link for which the issue is returned.
-          type: string
-        domain:
-          description: Domain from which the constraint originates.
-          enum:
-          - Access
-          - Licensing
-          - DisasterRecovery
-          type: string
-        target:
-          description: Path to or ID of the sub-resource that is linked to the issue. May be required for composite resources.
-          type: string
-        severity:
-          description: Severity of the issue.
-          enum:
-          - warning
-          - WARNING
-          - error
-          - ERROR
-          type: string
-        error:
-          $ref: '#/components/schemas/item0_3'
-    ServerNotReady_17:
-      description: The operation is not applicable to cloud servers in this state.
-      allOf:
-      - $ref: '#/components/schemas/item0_13'
-      - type: object
-        required:
-        - domain
-        - code
-        properties:
-          domain:
-            enum:
-            - DisasterRecovery
-            type: string
-          code:
-            enum:
-            - ServerNotReady
-            type: string
     VPNGatewayUnreachable:
       description: VPN gateway error. This might happen when the last report from the VPN gateway was received too long ago or if the VPN gateway reported an error.
       allOf:
@@ -2141,174 +2092,10 @@ components:
             enum:
             - VPNGatewayUnreachable
             type: string
-    item0_3: {}
-    backup_id:
-      title: ID
-      description: Generic object identifier.
-      type: string
-      pattern: ^[a-zA-Z0-9-@]+$
-    item2:
-      description: Link that fetches the list of recovery points that are available for the cloud server recovery and failover.
-      type: object
-      required:
-      - rel
-      - type
-      - href
-      properties:
-        rel:
-          description: Identifier of the link that fetches the list of recovery points that are available for the cloud server recovery and failover.
-          enum:
-          - DR_CLOUD_SERVER_RECOVERY_POINTS
-          type: string
-        type:
-          description: Media type of the linked resource.
-          type: string
-        href:
-          description: URL from which the GET request fetches the list of recovery points that are available for the cloud server recovery and failover.
-          type: string
-          format: uri
-    error_api_response:
-      type: object
-      required:
-      - error
-      properties:
-        error: {}
-    NotAllowed:
-      description: Method specified in REST request is not allowed.
-      allOf:
-      - $ref: '#/components/schemas/item0_3'
-      - type: object
-        required:
-        - domain
-        - code
-        - context
-        properties:
-          domain:
-            enum:
-            - DisasterRecovery
-            type: string
-          code:
-            enum:
-            - NotAllowed
-            type: string
-          context: {}
-    vault_id:
-      title: ID
-      description: Generic object identifier.
-      type: string
-      pattern: ^[a-zA-Z0-9-@]+$
-    item1_6:
-      description: Link to the page with the remote console of the cloud server. The link must be opened in a web browser.
-      type: object
-      required:
-      - rel
-      - type
-      - href
-      properties:
-        rel:
-          description: Identifier of the link to the page with the remote console of the cloud server.
-          enum:
-          - DR_CLOUD_SERVER_REMOTE_CONSOLE_PAGE
-          type: string
-        type:
-          description: Media type of the linked resource.
-          type: string
-        href:
-          description: URL of the page with the remote console of the cloud server.
-          type: string
-          format: uri
-    last_task_uuid:
-      title: UUID
-      description: Universally unique object identifier.
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    last_task_uuid_10:
-      title: UUID
-      description: Universally unique object identifier.
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    ResourceBusy:
-      description: The resource is busy, another task is currently in progress. Try again later.
-      allOf:
-      - $ref: '#/components/schemas/item0_3'
-      - type: object
-        required:
-        - domain
-        - code
-        - context
-        properties:
-          domain:
-            enum:
-            - DisasterRecovery
-            type: string
-          code:
-            enum:
-            - ResourceBusy
-            type: string
-          context:
-            type: object
-            required:
-            - resource_id
-            - task_uuids
-            properties:
-              resource_id:
-                type: string
-              task_uuids:
-                type: array
-                items:
-                  $ref: '#/components/schemas/last_task_uuid'
-    recovery_point_9:
-      description: Composite identifier of a recovery point.
-      type: object
-      additionalProperties: false
-      required:
-      - archive_id
-      - backup_id
-      - vault_id
-      properties:
-        archive_id:
-          $ref: '#/components/schemas/vault_id_4'
-        backup_id:
-          $ref: '#/components/schemas/vault_id_4'
-        vault_id:
-          $ref: '#/components/schemas/vault_id_4'
-    item0_8:
-      description: Issue with the unavailability of the remote VM console of the cloud server.
-      allOf:
-      - $ref: '#/components/schemas/item0_11'
-      - type: object
-        required:
-        - target
-        - severity
-        - error
-        properties:
-          domain:
-            description: Disaster Recovery domain.
-            enum:
-            - DisasterRecovery
-            type: string
-          link:
-            description: Name of the affected link.
-            enum:
-            - DR_CLOUD_SERVER_REMOTE_CONSOLE_PAGE
-            type: string
-          target:
-            description: UUID of the cloud server on which the issue occurred.
-            type: string
-          severity:
-            description: Severity of the issue.
-            enum:
-            - ERROR
-            type: string
-          error:
-            oneOf:
-            - $ref: '#/components/schemas/SiteNotReady_12'
-            - $ref: '#/components/schemas/ServerNotReady_17'
-      type: object
-    ServerNotReady:
+    ServerNotReady_17:
       description: The operation is not applicable to cloud servers in this state.
       allOf:
-      - $ref: '#/components/schemas/item0_3'
+      - $ref: '#/components/schemas/item0_13'
       - type: object
         required:
         - domain
@@ -2322,23 +2109,11 @@ components:
             enum:
             - ServerNotReady
             type: string
-    SiteNotReady:
-      description: You cannot perform any operations because the DR site is being deployed or removed.
-      allOf:
-      - $ref: '#/components/schemas/item0_3'
-      - type: object
-        required:
-        - domain
-        - code
-        properties:
-          domain:
-            enum:
-            - DisasterRecovery
-            type: string
-          code:
-            enum:
-            - SiteNotReady
-            type: string
+    vault_id_4:
+      title: ID
+      description: Generic object identifier.
+      type: string
+      pattern: ^[a-zA-Z0-9-@]+$
     item2_7:
       description: Link that fetches the list of recovery points that are available for the cloud server recovery and failover.
       type: object
@@ -2359,8 +2134,9 @@ components:
           description: URL from which the GET request fetches the list of recovery points that are available for the cloud server recovery and failover.
           type: string
           format: uri
-    item1:
-      description: Link to the page with the remote console of the cloud server. The link must be opened in a web browser.
+    item0_13: {}
+    item2:
+      description: Link that fetches the list of recovery points that are available for the cloud server recovery and failover.
       type: object
       required:
       - rel
@@ -2368,15 +2144,81 @@ components:
       - href
       properties:
         rel:
-          description: Identifier of the link to the page with the remote console of the cloud server.
+          description: Identifier of the link that fetches the list of recovery points that are available for the cloud server recovery and failover.
           enum:
-          - DR_CLOUD_SERVER_REMOTE_CONSOLE_PAGE
+          - DR_CLOUD_SERVER_RECOVERY_POINTS
           type: string
         type:
           description: Media type of the linked resource.
           type: string
         href:
-          description: URL of the page with the remote console of the cloud server.
+          description: URL from which the GET request fetches the list of recovery points that are available for the cloud server recovery and failover.
+          type: string
+          format: uri
+    backup_id:
+      title: ID
+      description: Generic object identifier.
+      type: string
+      pattern: ^[a-zA-Z0-9-@]+$
+    NotAllowed:
+      description: Method specified in REST request is not allowed.
+      allOf:
+      - $ref: '#/components/schemas/item0_3'
+      - type: object
+        required:
+        - domain
+        - code
+        - context
+        properties:
+          domain:
+            enum:
+            - DisasterRecovery
+            type: string
+          code:
+            enum:
+            - NotAllowed
+            type: string
+          context: {}
+    last_task_uuid_10:
+      title: UUID
+      description: Universally unique object identifier.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    item0_3: {}
+    vault_id:
+      title: ID
+      description: Generic object identifier.
+      type: string
+      pattern: ^[a-zA-Z0-9-@]+$
+    last_task_uuid:
+      title: UUID
+      description: Universally unique object identifier.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    error_api_response:
+      type: object
+      required:
+      - error
+      properties:
+        error: {}
+    item0:
+      description: Link to the cloud server configuration page. The link must be opened in a web browser.
+      type: object
+      required:
+      - rel
+      - type
+      - href
+      properties:
+        rel:
+          description: Identifier of the link to the cloud server configuration page.
+          enum:
+          - DR_CLOUD_SERVER_PAGE
+          type: string
+        type:
+          description: Media type of the linked resource.
+          type: string
+        href:
+          description: URL of the cloud server configuration page.
           type: string
           format: uri
     item0_11:
@@ -2410,6 +2252,71 @@ components:
           type: string
         error:
           $ref: '#/components/schemas/item0_13'
+    VPNGatewayUnreachable_14:
+      description: VPN gateway error. This might happen when the last report from the VPN gateway was received too long ago or if the VPN gateway reported an error.
+      allOf:
+      - $ref: '#/components/schemas/item0_13'
+      - type: object
+        required:
+        - domain
+        - code
+        properties:
+          domain:
+            enum:
+            - DisasterRecovery
+            type: string
+          code:
+            enum:
+            - VPNGatewayUnreachable
+            type: string
+    item0_8:
+      description: Issue with the unavailability of the remote VM console of the cloud server.
+      allOf:
+      - $ref: '#/components/schemas/item0_11'
+      - type: object
+        required:
+        - target
+        - severity
+        - error
+        properties:
+          domain:
+            description: Disaster Recovery domain.
+            enum:
+            - DisasterRecovery
+            type: string
+          link:
+            description: Name of the affected link.
+            enum:
+            - DR_CLOUD_SERVER_REMOTE_CONSOLE_PAGE
+            type: string
+          target:
+            description: UUID of the cloud server on which the issue occurred.
+            type: string
+          severity:
+            description: Severity of the issue.
+            enum:
+            - ERROR
+            type: string
+          error:
+            oneOf:
+            - $ref: '#/components/schemas/SiteNotReady_12'
+            - $ref: '#/components/schemas/ServerNotReady_17'
+      type: object
+    recovery_point_9:
+      description: Composite identifier of a recovery point.
+      type: object
+      additionalProperties: false
+      required:
+      - archive_id
+      - backup_id
+      - vault_id
+      properties:
+        archive_id:
+          $ref: '#/components/schemas/vault_id_4'
+        backup_id:
+          $ref: '#/components/schemas/vault_id_4'
+        vault_id:
+          $ref: '#/components/schemas/vault_id_4'
     NotAllowed_15:
       description: Method specified in REST request is not allowed.
       allOf:
@@ -2429,27 +2336,61 @@ components:
             - NotAllowed
             type: string
           context: {}
-    VPNGatewayUnreachable_14:
-      description: VPN gateway error. This might happen when the last report from the VPN gateway was received too long ago or if the VPN gateway reported an error.
-      allOf:
-      - $ref: '#/components/schemas/item0_13'
-      - type: object
-        required:
-        - domain
-        - code
-        properties:
-          domain:
-            enum:
-            - DisasterRecovery
-            type: string
-          code:
-            enum:
-            - VPNGatewayUnreachable
-            type: string
-    SiteNotReady_12:
+    item0_2:
+      description: Describes a single issue (constraint violation).
+      type: object
+      required:
+      - target
+      - severity
+      - error
+      properties:
+        link:
+          description: Name or ID of the link for which the issue is returned.
+          type: string
+        domain:
+          description: Domain from which the constraint originates.
+          enum:
+          - Access
+          - Licensing
+          - DisasterRecovery
+          type: string
+        target:
+          description: Path to or ID of the sub-resource that is linked to the issue. May be required for composite resources.
+          type: string
+        severity:
+          description: Severity of the issue.
+          enum:
+          - warning
+          - WARNING
+          - error
+          - ERROR
+          type: string
+        error:
+          $ref: '#/components/schemas/item0_3'
+    item1_6:
+      description: Link to the page with the remote console of the cloud server. The link must be opened in a web browser.
+      type: object
+      required:
+      - rel
+      - type
+      - href
+      properties:
+        rel:
+          description: Identifier of the link to the page with the remote console of the cloud server.
+          enum:
+          - DR_CLOUD_SERVER_REMOTE_CONSOLE_PAGE
+          type: string
+        type:
+          description: Media type of the linked resource.
+          type: string
+        href:
+          description: URL of the page with the remote console of the cloud server.
+          type: string
+          format: uri
+    SiteNotReady:
       description: You cannot perform any operations because the DR site is being deployed or removed.
       allOf:
-      - $ref: '#/components/schemas/item0_13'
+      - $ref: '#/components/schemas/item0_3'
       - type: object
         required:
         - domain
@@ -2463,10 +2404,10 @@ components:
             enum:
             - SiteNotReady
             type: string
-    ResourceBusy_16:
+    ResourceBusy:
       description: The resource is busy, another task is currently in progress. Try again later.
       allOf:
-      - $ref: '#/components/schemas/item0_13'
+      - $ref: '#/components/schemas/item0_3'
       - type: object
         required:
         - domain
@@ -2492,9 +2433,9 @@ components:
               task_uuids:
                 type: array
                 items:
-                  $ref: '#/components/schemas/last_task_uuid_10'
-    item0_5:
-      description: Link to the cloud server configuration page. The link must be opened in a web browser.
+                  $ref: '#/components/schemas/last_task_uuid'
+    item1:
+      description: Link to the page with the remote console of the cloud server. The link must be opened in a web browser.
       type: object
       required:
       - rel
@@ -2502,23 +2443,67 @@ components:
       - href
       properties:
         rel:
-          description: Identifier of the link to the cloud server configuration page.
+          description: Identifier of the link to the page with the remote console of the cloud server.
           enum:
-          - DR_CLOUD_SERVER_PAGE
+          - DR_CLOUD_SERVER_REMOTE_CONSOLE_PAGE
           type: string
         type:
           description: Media type of the linked resource.
           type: string
         href:
-          description: URL of the cloud server configuration page.
+          description: URL of the page with the remote console of the cloud server.
           type: string
           format: uri
-    vault_id_4:
-      title: ID
-      description: Generic object identifier.
-      type: string
-      pattern: ^[a-zA-Z0-9-@]+$
-    item0:
+    ServerNotReady:
+      description: The operation is not applicable to cloud servers in this state.
+      allOf:
+      - $ref: '#/components/schemas/item0_3'
+      - type: object
+        required:
+        - domain
+        - code
+        properties:
+          domain:
+            enum:
+            - DisasterRecovery
+            type: string
+          code:
+            enum:
+            - ServerNotReady
+            type: string
+    SiteNotReady_12:
+      description: You cannot perform any operations because the DR site is being deployed or removed.
+      allOf:
+      - $ref: '#/components/schemas/item0_13'
+      - type: object
+        required:
+        - domain
+        - code
+        properties:
+          domain:
+            enum:
+            - DisasterRecovery
+            type: string
+          code:
+            enum:
+            - SiteNotReady
+            type: string
+    recovery_point:
+      description: Composite identifier of a recovery point.
+      type: object
+      additionalProperties: false
+      required:
+      - archive_id
+      - backup_id
+      - vault_id
+      properties:
+        archive_id:
+          $ref: '#/components/schemas/vault_id'
+        backup_id:
+          $ref: '#/components/schemas/vault_id'
+        vault_id:
+          $ref: '#/components/schemas/vault_id'
+    item0_5:
       description: Link to the cloud server configuration page. The link must be opened in a web browser.
       type: object
       required:
@@ -2571,21 +2556,36 @@ components:
             - $ref: '#/components/schemas/SiteNotReady'
             - $ref: '#/components/schemas/ServerNotReady'
       type: object
-    recovery_point:
-      description: Composite identifier of a recovery point.
-      type: object
-      additionalProperties: false
-      required:
-      - archive_id
-      - backup_id
-      - vault_id
-      properties:
-        archive_id:
-          $ref: '#/components/schemas/vault_id'
-        backup_id:
-          $ref: '#/components/schemas/vault_id'
-        vault_id:
-          $ref: '#/components/schemas/vault_id'
+    ResourceBusy_16:
+      description: The resource is busy, another task is currently in progress. Try again later.
+      allOf:
+      - $ref: '#/components/schemas/item0_13'
+      - type: object
+        required:
+        - domain
+        - code
+        - context
+        properties:
+          domain:
+            enum:
+            - DisasterRecovery
+            type: string
+          code:
+            enum:
+            - ResourceBusy
+            type: string
+          context:
+            type: object
+            required:
+            - resource_id
+            - task_uuids
+            properties:
+              resource_id:
+                type: string
+              task_uuids:
+                type: array
+                items:
+                  $ref: '#/components/schemas/last_task_uuid_10'
   securitySchemes:
     oauth2:
       type: oauth2

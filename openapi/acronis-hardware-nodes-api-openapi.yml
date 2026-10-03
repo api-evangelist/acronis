@@ -504,13 +504,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HardwareNode_2'
-    Error:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     HardwareNode_2:
       type: object
       description: Physical or virtual hardware node managed by Acronis
@@ -530,6 +523,13 @@ components:
         tenant_id:
           type: string
           format: uuid
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
   responses:
     NotFound:
       description: Not found

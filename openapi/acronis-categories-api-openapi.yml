@@ -67,29 +67,19 @@ components:
     debugInfo:
       description: Error debug information (map type)
       type: object
-    Error:
-      description: Base error object
+    Category:
+      description: An information about the alert category or alert type category.
       type: object
       required:
-      - domain
-      - code
+      - name
       properties:
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+        name:
           type: string
-        code:
-          description: Error id or code, unique in the domain. Same as in 'reason' field
+        disabled:
+          type: boolean
+        alias:
+          description: Alert category name alias.
           type: string
-        reason:
-          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
-          type: string
-        context:
-          description: Error context dictionary
-          type: object
-        kbLink:
-          $ref: '#/components/schemas/kbLinkInfo'
-        debug:
-          $ref: '#/components/schemas/debugInfo'
     kbLinkInfo:
       description: Components for kblink
       type: object
@@ -113,19 +103,29 @@ components:
           type: string
         os:
           type: string
-    Category:
-      description: An information about the alert category or alert type category.
+    Error:
+      description: Base error object
       type: object
       required:
-      - name
+      - domain
+      - code
       properties:
-        name:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
           type: string
-        disabled:
-          type: boolean
-        alias:
-          description: Alert category name alias.
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
           type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kbLink:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
   securitySchemes:
     oauth_2_0:
       type: oauth2

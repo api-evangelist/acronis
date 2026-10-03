@@ -315,6 +315,40 @@ paths:
       x-operation-id-original: Delete Sales item
 components:
   schemas:
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    DatetimeNoTZ:
+      description: RFC3339-like date and time without timezone.
+      type: string
+      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+    Address:
+      type: object
+      additionalProperties: false
+      required:
+      - Street
+      - HouseNo
+      - HouseNoAdd
+      - Zipcode
+      - City
+      - Country
+      - StateCountry
+      properties:
+        Street:
+          type: string
+        HouseNo:
+          type: string
+        HouseNoAdd:
+          type: string
+        Zipcode:
+          type: string
+        City:
+          type: string
+        Country:
+          type: string
+        StateCountry:
+          type: string
     SalesItemProductsPartial:
       type: object
       additionalProperties: false
@@ -342,40 +376,6 @@ components:
           - 'null'
         Price:
           type: number
-    Guid:
-      example: 00000000-0000-0000-0000-000000000000
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-    Address:
-      type: object
-      additionalProperties: false
-      required:
-      - Street
-      - HouseNo
-      - HouseNoAdd
-      - Zipcode
-      - City
-      - Country
-      - StateCountry
-      properties:
-        Street:
-          type: string
-        HouseNo:
-          type: string
-        HouseNoAdd:
-          type: string
-        Zipcode:
-          type: string
-        City:
-          type: string
-        Country:
-          type: string
-        StateCountry:
-          type: string
-    DatetimeNoTZ:
-      description: RFC3339-like date and time without timezone.
-      type: string
-      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
   securitySchemes:
     oauth2:
       type: oauth2

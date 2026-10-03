@@ -179,32 +179,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/registrationToken'
-    registrationTokenPost:
-      example:
-        tenant_id: 72acaf6a-b15a-11e6-80f5-76304dec7eb7
-        expires_in: 3600
-        scopes:
-        - urn:acronis.com:tenant-id:734fe814-748a-41cb-8a94-60e18fb3c442:backup_agent_admin
-      type: object
-      additionalProperties: false
-      required:
-      - expires_in
-      - scopes
-      properties:
-        tenant_id:
-          $ref: '#/components/schemas/uuid'
-        expires_in:
-          description: Token expiration time in seconds. Should be less than or equal to one year.
-          type: integer
-        scopes:
-          description: 'Access scopes that are applied to the registered resource. The following access scope patterns are available:
-
-            - `urn:acronis.com:tenant-id:{personal_tenant_id}:backup_agent_admin` - binds the resource to the user by personal tenant ID specified in `{personal_tenant_id}`.
-
-            - `urn:acronis.com::policy_management:{tenant_id}|{policy_id}:apply_revoke` - applies a protection plan to a resource by policy ID specified in `{policy_id}` from a resource owner tenant specified in `{tenant_id}`.'
-          type: array
-          items:
-            type: string
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
     registrationToken:
       example:
         id: 2
@@ -252,11 +231,32 @@ components:
           type: array
           items:
             type: string
-    uuid:
-      type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
+    registrationTokenPost:
+      example:
+        tenant_id: 72acaf6a-b15a-11e6-80f5-76304dec7eb7
+        expires_in: 3600
+        scopes:
+        - urn:acronis.com:tenant-id:734fe814-748a-41cb-8a94-60e18fb3c442:backup_agent_admin
+      type: object
+      additionalProperties: false
+      required:
+      - expires_in
+      - scopes
+      properties:
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        expires_in:
+          description: Token expiration time in seconds. Should be less than or equal to one year.
+          type: integer
+        scopes:
+          description: 'Access scopes that are applied to the registered resource. The following access scope patterns are available:
+
+            - `urn:acronis.com:tenant-id:{personal_tenant_id}:backup_agent_admin` - binds the resource to the user by personal tenant ID specified in `{personal_tenant_id}`.
+
+            - `urn:acronis.com::policy_management:{tenant_id}|{policy_id}:apply_revoke` - applies a protection plan to a resource by policy ID specified in `{policy_id}` from a resource owner tenant specified in `{tenant_id}`.'
+          type: array
+          items:
+            type: string
     errorScheme:
       type: object
       required:

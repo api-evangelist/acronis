@@ -29,40 +29,6 @@ paths:
       x-operation-id-original: Fetch ledgers
 components:
   schemas:
-    LedgerPartial:
-      type: object
-      additionalProperties: false
-      required:
-      - Active
-      - CreationDate
-      - Description
-      - ExternalId
-      - Id
-      - Number
-      properties:
-        Active:
-          description: ''
-          type: boolean
-        CreationDate:
-          description: ''
-          type: string
-          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
-        Description:
-          type:
-          - string
-          - 'null'
-        ExternalId:
-          type:
-          - string
-          - 'null'
-        Id:
-          description: ''
-          example: 00000000-0000-0000-0000-000000000000
-          type: string
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-        Number:
-          description: ''
-          type: string
     GetLedgersSearchResponse:
       example:
         Ledgers:
@@ -108,6 +74,40 @@ components:
           type: integer
         AmountOfPages:
           type: integer
+    LedgerPartial:
+      type: object
+      additionalProperties: false
+      required:
+      - Active
+      - CreationDate
+      - Description
+      - ExternalId
+      - Id
+      - Number
+      properties:
+        Active:
+          description: ''
+          type: boolean
+        CreationDate:
+          description: ''
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        Description:
+          type:
+          - string
+          - 'null'
+        ExternalId:
+          type:
+          - string
+          - 'null'
+        Id:
+          description: ''
+          example: 00000000-0000-0000-0000-000000000000
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        Number:
+          description: ''
+          type: string
   securitySchemes:
     oauth2:
       type: oauth2

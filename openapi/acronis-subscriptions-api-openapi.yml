@@ -110,47 +110,6 @@ components:
     debugInfo:
       description: Error debug information (map type)
       type: object
-    CTIWildcard:
-      description: 'CTI with wildcard support, where the wildcard `*` can only be used as the final character of a segment.
-
-        '
-      type: string
-      pattern: ^cti((\.([a-z][a-z0-9_]*))|\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?(~(([a-z][a-z0-9_]*)|([a-z][a-z0-9_]*)\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?)*\*$|^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
-      maxLength: 1024
-    error:
-      description: Base error object
-      example:
-        domain: EventManager
-        code: invalidEvent
-        error: Bad Request
-        context:
-          errors:
-          - event_id: 62d2afda-685e-457f-8624-92132d97a7ed
-            message: 'Invalid payload: tenant_id is required'
-      type: object
-      required:
-      - domain
-      - code
-      properties:
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
-          type: string
-        code:
-          description: Error id or code, unique in the domain. Same as in 'reason' field
-          type: string
-        message:
-          description: human-readable message, describing the error.
-          type: string
-        reason:
-          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
-          type: string
-        context:
-          description: Error context dictionary
-          type: object
-        kb_link:
-          $ref: '#/components/schemas/kbLinkInfo'
-        debug:
-          $ref: '#/components/schemas/debugInfo'
     GetSubscriptionOffsetResponse:
       type: object
       additionalProperties: false
@@ -167,14 +126,6 @@ components:
           description: Latest committed offset of the subscriber.
           type: integer
           format: int64
-    ErrorMessage:
-      type: object
-      additionalProperties: false
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/error'
     GetSubscriptionResponse:
       type: object
       additionalProperties: false
@@ -259,6 +210,13 @@ components:
           maxItems: 32
           items:
             $ref: '#/components/schemas/CTIWildcard'
+    CTIWildcard:
+      description: 'CTI with wildcard support, where the wildcard `*` can only be used as the final character of a segment.
+
+        '
+      type: string
+      pattern: ^cti((\.([a-z][a-z0-9_]*))|\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?(~(([a-z][a-z0-9_]*)|([a-z][a-z0-9_]*)\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?)*\*$|^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+      maxLength: 1024
     kbLinkInfo:
       description: Components for kblink
       type: object
@@ -282,6 +240,48 @@ components:
           type: string
         os:
           type: string
+    error:
+      description: Base error object
+      example:
+        domain: EventManager
+        code: invalidEvent
+        error: Bad Request
+        context:
+          errors:
+          - event_id: 62d2afda-685e-457f-8624-92132d97a7ed
+            message: 'Invalid payload: tenant_id is required'
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        message:
+          description: human-readable message, describing the error.
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kb_link:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    ErrorMessage:
+      type: object
+      additionalProperties: false
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/error'
     PostSubscriptionRequest:
       type: object
       additionalProperties: false

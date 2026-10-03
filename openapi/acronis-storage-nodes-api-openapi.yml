@@ -260,10 +260,6 @@ paths:
       x-operation-id-original: Find vault by path
 components:
   schemas:
-    id:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
     find_location:
       description: Checks if the path provided contains a vault.
       example:
@@ -278,6 +274,20 @@ components:
           type: string
         protected_storage:
           $ref: '#/components/schemas/protected_storage'
+    uuid:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    protected_storage:
+      type: object
+      additionalProperties: false
+      properties:
+        session_id:
+          $ref: '#/components/schemas/id'
     id_response:
       type: object
       additionalProperties: false
@@ -297,16 +307,6 @@ components:
         uri:
           description: URI in Protected storage.
           type: string
-    uuid:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
-    protected_storage:
-      type: object
-      additionalProperties: false
-      properties:
-        session_id:
-          $ref: '#/components/schemas/id'
   securitySchemes:
     oauth2:
       type: oauth2

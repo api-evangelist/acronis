@@ -162,40 +162,6 @@ paths:
       x-operation-id-original: Fetch tenant's price lists
 components:
   schemas:
-    BadRequestError:
-      description: Request is malformed
-      example:
-        domain: GENERAL
-        code: BAD_REQUEST_ERROR
-      type: object
-      additionalProperties: false
-      required:
-      - code
-      - domain
-      properties:
-        reason:
-          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
-          type: string
-        context:
-          description: Error context dictionary
-          type: object
-        code:
-          description: Error id or code, unique in the domain. Same as in 'reason' field
-          enum:
-          - BAD_REQUEST_ERROR
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
-          enum:
-          - GENERAL
-          type: string
-        debug:
-          $ref: '#/components/schemas/debugInfo'
-        kb_link:
-          $ref: '#/components/schemas/kbLinkInfo'
-        message:
-          description: human-readable message, describing the error.
-          type: string
     debugInfo:
       description: Error debug information (map type)
       type: object
@@ -276,6 +242,29 @@ components:
         message:
           description: human-readable message, describing the error.
           type: string
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - line_tag
+      - ser_code
+      - version
+      - build
+      - product
+      - os
+      properties:
+        line_tag:
+          type: string
+        ser_code:
+          type: string
+        version:
+          type: string
+        build:
+          type: string
+        product:
+          type: string
+        os:
+          type: string
     InternalServerError:
       description: "Server encountered an unexpected condition that prevented it from \nfulfilling the request. Use as a base for more granular code and context definitions\n"
       example:
@@ -310,28 +299,39 @@ components:
         message:
           description: human-readable message, describing the error.
           type: string
-    kbLinkInfo:
-      description: Components for kblink
+    BadRequestError:
+      description: Request is malformed
+      example:
+        domain: GENERAL
+        code: BAD_REQUEST_ERROR
       type: object
+      additionalProperties: false
       required:
-      - line_tag
-      - ser_code
-      - version
-      - build
-      - product
-      - os
+      - code
+      - domain
       properties:
-        line_tag:
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
           type: string
-        ser_code:
+        context:
+          description: Error context dictionary
+          type: object
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          enum:
+          - BAD_REQUEST_ERROR
           type: string
-        version:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          enum:
+          - GENERAL
           type: string
-        build:
-          type: string
-        product:
-          type: string
-        os:
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+        kb_link:
+          $ref: '#/components/schemas/kbLinkInfo'
+        message:
+          description: human-readable message, describing the error.
           type: string
   securitySchemes:
     oauth_2_0_user:

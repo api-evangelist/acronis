@@ -1244,19 +1244,19 @@ components:
       description: Universally unique object identifier.
       type: string
       pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    item0_20: {}
+    item0_18: {}
     tenant_uuid:
       title: UUID
       description: Universally unique object identifier.
       type: string
       pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    item0_20: {}
     error_api_response:
       type: object
       required:
       - error
       properties:
         error: {}
-    item0_18: {}
   securitySchemes:
     oauth2:
       type: oauth2

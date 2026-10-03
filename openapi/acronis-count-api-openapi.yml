@@ -90,13 +90,47 @@ components:
     debugInfo:
       description: Error debug information (map type)
       type: object
-    TypesEmbed:
-      description: 'Alert counters per alert type. Object keys are identifiers of alert
-
-        types, values are counters of alerts of these types.
-
-        '
+    TenantCountResult:
+      description: Alert counters for a tenant.
       type: object
+      required:
+      - locator
+      - id
+      - total
+      properties:
+        locator:
+          description: Locator of a tenant.
+          type: string
+        severitiesAndTypes:
+          $ref: '#/components/schemas/SeveritiesAndTypesEmbed'
+        severities:
+          $ref: '#/components/schemas/SeveritiesEmbed'
+        categories:
+          $ref: '#/components/schemas/CategoriesEmbed'
+        id:
+          description: Identifier of a tenant.
+          type: string
+        types:
+          $ref: '#/components/schemas/TypesEmbed'
+        total:
+          type: integer
+    SeveritiesAndTypesEmbed:
+      description: Alert counters grouped by severity and then by type.
+      type: object
+      required:
+      - information
+      - warning
+      - error
+      - critical
+      properties:
+        information:
+          $ref: '#/components/schemas/CountPerType'
+        warning:
+          $ref: '#/components/schemas/CountPerType'
+        error:
+          $ref: '#/components/schemas/CountPerType'
+        critical:
+          $ref: '#/components/schemas/CountPerType'
     CountPerType:
       description: Alert counters per type while grouping by severity as well.
       type: object
@@ -107,50 +141,6 @@ components:
           type: integer
         types:
           $ref: '#/components/schemas/TypesEmbed'
-    Report:
-      description: Count report.
-      type: object
-      required:
-      - total
-      properties:
-        severitiesAndTypes:
-          $ref: '#/components/schemas/SeveritiesAndTypesEmbed'
-        severities:
-          $ref: '#/components/schemas/SeveritiesEmbed'
-        categories:
-          $ref: '#/components/schemas/CategoriesEmbed'
-        types:
-          $ref: '#/components/schemas/TypesEmbed'
-        tenants:
-          description: A list of alert counters per tenant.
-          type: array
-          items:
-            $ref: '#/components/schemas/TenantCountResult'
-        total:
-          type: integer
-    Error:
-      description: Base error object
-      type: object
-      required:
-      - domain
-      - code
-      properties:
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
-          type: string
-        code:
-          description: Error id or code, unique in the domain. Same as in 'reason' field
-          type: string
-        reason:
-          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
-          type: string
-        context:
-          description: Error context dictionary
-          type: object
-        kbLink:
-          $ref: '#/components/schemas/kbLinkInfo'
-        debug:
-          $ref: '#/components/schemas/debugInfo'
     SeveritiesEmbed:
       description: Alert counters per severity.
       type: object
@@ -191,23 +181,36 @@ components:
           type: string
         os:
           type: string
-    SeveritiesAndTypesEmbed:
-      description: Alert counters grouped by severity and then by type.
+    Error:
+      description: Base error object
       type: object
       required:
-      - information
-      - warning
-      - error
-      - critical
+      - domain
+      - code
       properties:
-        information:
-          $ref: '#/components/schemas/CountPerType'
-        warning:
-          $ref: '#/components/schemas/CountPerType'
-        error:
-          $ref: '#/components/schemas/CountPerType'
-        critical:
-          $ref: '#/components/schemas/CountPerType'
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kbLink:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    TypesEmbed:
+      description: 'Alert counters per alert type. Object keys are identifiers of alert
+
+        types, values are counters of alerts of these types.
+
+        '
+      type: object
     CategoriesEmbed:
       description: 'Alert counters per alert category. Object keys are identifiers of alert
 
@@ -215,28 +218,25 @@ components:
 
         '
       type: object
-    TenantCountResult:
-      description: Alert counters for a tenant.
+    Report:
+      description: Count report.
       type: object
       required:
-      - locator
-      - id
       - total
       properties:
-        locator:
-          description: Locator of a tenant.
-          type: string
         severitiesAndTypes:
           $ref: '#/components/schemas/SeveritiesAndTypesEmbed'
         severities:
           $ref: '#/components/schemas/SeveritiesEmbed'
         categories:
           $ref: '#/components/schemas/CategoriesEmbed'
-        id:
-          description: Identifier of a tenant.
-          type: string
         types:
           $ref: '#/components/schemas/TypesEmbed'
+        tenants:
+          description: A list of alert counters per tenant.
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantCountResult'
         total:
           type: integer
   securitySchemes:

@@ -143,23 +143,29 @@ components:
     debugInfo:
       description: Error debug information (map type)
       type: object
-    GetTopicsOffsetResponse:
+    kbLinkInfo:
+      description: Components for kblink
       type: object
       required:
-      - topic_id
-      - offset
+      - line_tag
+      - ser_code
+      - version
+      - build
+      - product
+      - os
       properties:
-        topic_id:
-          description: Identifier of the topic.
-          x-cti.reference: cti.a.p.em.topic.v1.0
-          example: cti.a.p.em.topic.v1.0~a.p.tenant.v1.0
+        line_tag:
           type: string
-          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
-          maxLength: 1024
-        offset:
-          description: Requested offset sequence number.
-          type: integer
-          format: int64
+        ser_code:
+          type: string
+        version:
+          type: string
+        build:
+          type: string
+        product:
+          type: string
+        os:
+          type: string
     error:
       description: Base error object
       example:
@@ -290,29 +296,23 @@ components:
           anyOf:
           - $ref: '#/components/schemas/duration_iso'
           - $ref: '#/components/schemas/INFINITE'
-    kbLinkInfo:
-      description: Components for kblink
+    GetTopicsOffsetResponse:
       type: object
       required:
-      - line_tag
-      - ser_code
-      - version
-      - build
-      - product
-      - os
+      - topic_id
+      - offset
       properties:
-        line_tag:
+        topic_id:
+          description: Identifier of the topic.
+          x-cti.reference: cti.a.p.em.topic.v1.0
+          example: cti.a.p.em.topic.v1.0~a.p.tenant.v1.0
           type: string
-        ser_code:
-          type: string
-        version:
-          type: string
-        build:
-          type: string
-        product:
-          type: string
-        os:
-          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        offset:
+          description: Requested offset sequence number.
+          type: integer
+          format: int64
   securitySchemes:
     oauth2:
       type: oauth2

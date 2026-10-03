@@ -51,17 +51,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    forgot_link:
-      title: forgot_link_response
-      description: API /forgot_link response for Acronis Account Server
-      example:
-        link: /forgot_password
-      type: object
-      properties:
-        link:
-          title: link
-          description: URL to forgot password page
-          type: string
     errorScheme:
       type: object
       required:
@@ -101,6 +90,17 @@ components:
               type: array
               items:
                 type: string
+    forgot_link:
+      title: forgot_link_response
+      description: API /forgot_link response for Acronis Account Server
+      example:
+        link: /forgot_password
+      type: object
+      properties:
+        link:
+          title: link
+          description: URL to forgot password page
+          type: string
   securitySchemes:
     basicAuth:
       type: http

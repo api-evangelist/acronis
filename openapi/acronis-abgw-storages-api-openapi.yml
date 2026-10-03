@@ -60,14 +60,14 @@ components:
       description: Universally unique identifier.
       type: string
       format: uuid
-    uuid:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
     item1:
       description: Numeric identifier.
       type: string
       pattern: ^\d+$
+    uuid:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
   securitySchemes:
     oauth2:
       type: oauth2

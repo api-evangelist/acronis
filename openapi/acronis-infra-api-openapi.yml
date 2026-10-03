@@ -284,11 +284,14 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    backendType:
-      description: Storage backend type.
-      type:
-      - string
-      - 'null'
+    infraCap:
+      description: Capability of infrastructure component.
+      enum:
+      - backup
+      - disaster_recovery
+      - files_cloud
+      - vcd
+      type: string
     infraPost:
       example:
         owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
@@ -329,6 +332,11 @@ components:
           $ref: '#/components/schemas/link'
         backend_type:
           $ref: '#/components/schemas/backendType'
+    backendType:
+      description: Storage backend type.
+      type:
+      - string
+      - 'null'
     infraBatch:
       example:
         items:
@@ -363,6 +371,47 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/infra'
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    infraPut:
+      example:
+        name: Infrastructure Component
+        url: acronis+fes://storage20.corp.acronis.com:44445
+        capabilities:
+        - files_cloud
+        content_url: https://browse.storage20.corp.acronis.com/
+        content_mobile_url: https://browse.storage20.corp.acronis.com/mobile/
+        backend_type: azure
+        version: 10
+      type: object
+      additionalProperties: false
+      required:
+      - version
+      properties:
+        name:
+          description: Human-readable name of infrastructure component that will be displayed to the users.
+          type: string
+        location_id:
+          $ref: '#/components/schemas/uuid'
+        url:
+          $ref: '#/components/schemas/link'
+        capabilities:
+          description: Capabilities of infrastructure component.
+          type: array
+          items:
+            $ref: '#/components/schemas/infraCap'
+        content_url:
+          $ref: '#/components/schemas/link'
+        content_mobile_url:
+          $ref: '#/components/schemas/link'
+        backend_type:
+          $ref: '#/components/schemas/backendType'
+        version:
+          description: Auto-incremented infrastructure component version.
+          type: integer
     infra:
       example:
         id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
@@ -422,59 +471,10 @@ components:
         readonly:
           description: True if infra details are accessible in a limited way, e.g. infra is owned by some ancestor.
           type: boolean
-    infraCap:
-      description: Capability of infrastructure component.
-      enum:
-      - backup
-      - disaster_recovery
-      - files_cloud
-      - vcd
-      type: string
     link:
       description: URL.
       type: string
       pattern: ^[a-z0-9\+]+:\/\/[^\s\/$.?#].[^\s]*
-    infraPut:
-      example:
-        name: Infrastructure Component
-        url: acronis+fes://storage20.corp.acronis.com:44445
-        capabilities:
-        - files_cloud
-        content_url: https://browse.storage20.corp.acronis.com/
-        content_mobile_url: https://browse.storage20.corp.acronis.com/mobile/
-        backend_type: azure
-        version: 10
-      type: object
-      additionalProperties: false
-      required:
-      - version
-      properties:
-        name:
-          description: Human-readable name of infrastructure component that will be displayed to the users.
-          type: string
-        location_id:
-          $ref: '#/components/schemas/uuid'
-        url:
-          $ref: '#/components/schemas/link'
-        capabilities:
-          description: Capabilities of infrastructure component.
-          type: array
-          items:
-            $ref: '#/components/schemas/infraCap'
-        content_url:
-          $ref: '#/components/schemas/link'
-        content_mobile_url:
-          $ref: '#/components/schemas/link'
-        backend_type:
-          $ref: '#/components/schemas/backendType'
-        version:
-          description: Auto-incremented infrastructure component version.
-          type: integer
-    uuid:
-      type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
     errorScheme:
       type: object
       required:

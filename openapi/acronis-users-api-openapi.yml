@@ -954,11 +954,76 @@ paths:
       variables: {}
 components:
   schemas:
-    userNotifications:
-      description: User notifications.
-      type: array
-      items:
-        enum:
+    email:
+      type: string
+      pattern: ^$|\S+@\S+
+    userMe:
+      title: User me schema (lod=me)
+      description: User object returned for /users/me endpoint. Includes all full fields plus terms_accepted, login_totp_time, tenant_kind, tenant_pricing_model, brand_id.
+      allOf:
+      - $ref: '#/components/schemas/item0'
+      - type: object
+        required:
+        - terms_accepted
+        - tenant_kind
+        - tenant_pricing_model
+        - brand_id
+        properties:
+          terms_accepted:
+            description: Flag that defines if this user has accepted EULA.
+            type: boolean
+          login_totp_time:
+            description: Timestamp of last TOTP login.
+            allOf:
+            - $ref: '#/components/schemas/item1'
+          tenant_kind:
+            $ref: '#/components/schemas/tenantKind'
+          tenant_pricing_model:
+            $ref: '#/components/schemas/pricingMode'
+          brand_id:
+            $ref: '#/components/schemas/uuid'
+      example:
+        id: 948efcf2-b740-4c40-bb2d-4e4a46adfd87
+        version: 2
+        tenant_id: 0ef03214-6e47-4e50-87f2-a5955ba6095c
+        created_at: '2016-06-22T18:25:16'
+        updated_at: '2016-06-22T18:25:16'
+        deleted_at: null
+        access_policies: []
+        origin_id: pillr.mdr
+        origin_external_id: c66b1af2-2ac5-4764-8db6-97b054e7d27e
+        disable_after: '2017-06-22T18:25:16'
+        personal_tenant_id: 2f8ad2e2-28f2-11e7-aad1-5ffe2ad47151
+        login: mylogin
+        enabled: true
+        session_mfa_status: passed_or_not_required
+        delivery_channel: email
+        contact:
+          id: 27f6f164-63dd-47df-b5b6-83a0fd117beb
+          created_at: '2020-05-19T11:50:00'
+          updated_at: '2020-05-19T11:50:00'
+          types: []
+          email: me@mysite.com
+          address1: '1440 River Drive #100'
+          address2: ''
+          country: USA
+          state: CA
+          zipcode: '12345'
+          city: Rivertown
+          phone: '123456789'
+          firstname: John
+          lastname: Doe
+          title: ''
+          website: ''
+          industry: ''
+          organization_size: ''
+          email_confirmed: false
+          aan: '111111'
+          language: en
+        activated: true
+        language: ru
+        business_types: []
+        notifications:
         - maintenance
         - quota
         - reports
@@ -967,311 +1032,89 @@ components:
         - backup_info
         - backup_daily_report
         - backup_critical
-        - device_control_warning
-        - certificate_management_error
-        - certificate_management_warning
-        - certificate_management_info
-        type: string
-    items_1:
+        idp_id: e6f73a28-ff2e-4728-8f78-49eb74b20fce
+        external_id: S-1-5-21-917267712-1342860078-1792151419-500
+        mfa_status: setup_required
+        external_operation_status: null
+        terms_accepted: true
+        login_totp_time: null
+        tenant_kind: partner
+        tenant_pricing_model: trial
+        brand_id: a77b1af2-3ac5-576d-1db3-27b054e7d2aa
+    userBatch:
+      description: 'Batch response for users. The structure of items depends on the `lod` query parameter: stamps, basic, or full (default).'
       type: object
       required:
-      - id
-      - version
-      - created_at
-      - updated_at
-      - deleted_at
-      - trustee_id
-      - trustee_type
-      - issuer_id
-      - tenant_id
-      - role_id
+      - timestamp
+      - items
       properties:
-        id:
-          description: Access policy unique identifier.
-          type: string
-        version:
-          description: Auto-incremented entity version.
-          type: integer
-        created_at:
+        paging:
+          $ref: '#/components/schemas/paging'
+        timestamp:
           $ref: '#/components/schemas/item1'
-        updated_at:
-          $ref: '#/components/schemas/item1'
-        deleted_at:
-          description: Soft deletion timestamp.
-          allOf:
-          - $ref: '#/components/schemas/item1'
-        trustee_id:
-          description: Unique identifier of the Subject for whom access policy is granted.
-          type: string
-        trustee_type:
-          description: Type of the Subject for whom access policy is granted.
-          enum:
-          - user
-          - user_group
-          - client
-          type: string
-        issuer_id:
-          description: Issuer unique identifier.
-          type: string
-        tenant_id:
-          description: Tenant unique identifier.
-          type: string
-        resource_server_id:
-          description: Tenant unique identifier.
-          type: string
-        resource_namespace:
-          description: Resource namespace.
-          type: string
-        resource_path:
-          description: Resource path.
-          type: string
-        role_id:
-          $ref: '#/components/schemas/userRole'
-    userPut:
-      example:
-        contact:
-          firstname: John
-        notifications: []
-        disable_after: '2017-06-22T18:25:16'
-        version: 2
-      type: object
-      additionalProperties: false
-      required:
-      - version
-      properties:
-        login:
-          description: User's login.
-          type: string
-        external_id:
-          description: User's ID in external identity provider (e.g. SID in AD).
-          type: string
-        idp_id:
-          $ref: '#/components/schemas/uuid'
-        contact:
-          $ref: '#/components/schemas/contactPut'
-        enabled:
-          description: Flag, indicates whether the user is enabled or disabled.
-          type: boolean
-        language:
-          description: Preferred locale.
-          type: string
-        notifications:
-          $ref: '#/components/schemas/userNotifications'
-        version:
-          description: Auto-incremented entity version.
-          type: integer
-        disable_after:
-          $ref: '#/components/schemas/item1'
-    items:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        created_at:
-          description: Date and time when contact was created.
-          allOf:
-          - $ref: '#/components/schemas/item1'
-        updated_at:
-          description: Last update timestamp, if contact has just been created - then is equal to `created_at`.
-          allOf:
-          - $ref: '#/components/schemas/item1'
-        types:
+        items:
+          description: Array of user objects. The fields returned depend on the `lod` query parameter.
           type: array
-          minItems: 0
-          uniqueItems: true
           items:
-            enum:
-            - legal
-            - primary
-            - billing
-            - technical
-            - management
-            - company_billing
-            type: string
-        email:
-          $ref: '#/components/schemas/email'
-        address1:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        address2:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        country:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        state:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        city:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        zipcode:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        phone:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        firstname:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        lastname:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        title:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        website:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        industry:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        organization_size:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-        email_confirmed:
-          description: This field can have a null value.
-          type:
-          - boolean
-          - 'null'
-        aan:
-          description: This field can have a null value.
-          type:
-          - string
-          - 'null'
-    checkPasswordPost:
-      example:
-        password: 970C2D1A9869F18291D85BC389B33F0739496DE9
-      type: object
-      additionalProperties: false
-      required:
-      - password
-      properties:
-        password:
-          description: Password (SHA-1 hash) to check.
-          type: string
-    passwordPost:
-      example:
-        password: testSECRETpassword123
-      type: object
-      additionalProperties: false
-      required:
-      - password
-      properties:
-        password:
-          description: Password.
-          type: string
+            oneOf:
+            - title: User stamps schema (lod=stamps)
+              description: User object with minimal fields returned when lod=stamps is specified.
+              type: object
+              additionalProperties: false
+              required:
+              - id
+              - version
+              - tenant_id
+              - created_at
+              - updated_at
+              - deleted_at
+              - access_policies
+              - origin_id
+              - origin_external_id
+              - disable_after
+              properties:
+                id:
+                  $ref: '#/components/schemas/uuid'
+                version:
+                  description: Auto-incremented entity version.
+                  type: integer
+                tenant_id:
+                  $ref: '#/components/schemas/uuid'
+                created_at:
+                  $ref: '#/components/schemas/item1'
+                updated_at:
+                  $ref: '#/components/schemas/item1'
+                deleted_at:
+                  description: Soft deletion timestamp.
+                  allOf:
+                  - $ref: '#/components/schemas/item1'
+                access_policies:
+                  description: Will be returned with all user access policies if query param `with_access_policies` is provided.
+                  type: array
+                  minItems: 0
+                  items:
+                    $ref: '#/components/schemas/items_1'
+                origin_id:
+                  description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
+                  type:
+                  - string
+                  - 'null'
+                origin_external_id:
+                  description: User's external origin ID.
+                  type:
+                  - string
+                  - 'null'
+                disable_after:
+                  description: Timestamp indicating when the user will be disabled.
+                  allOf:
+                  - $ref: '#/components/schemas/item1'
+            - $ref: '#/components/schemas/userBasic'
+            - $ref: '#/components/schemas/item0'
     uuid:
       type: string
       pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
       minLength: 36
       maxLength: 36
-    userBasic:
-      title: User basic schema (lod=basic)
-      description: User object with basic fields returned when lod=basic is specified. Includes all stamps fields plus login, personal_tenant_id, enabled, session_mfa_status, delivery_channel.
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - version
-      - tenant_id
-      - created_at
-      - updated_at
-      - deleted_at
-      - access_policies
-      - origin_id
-      - origin_external_id
-      - disable_after
-      - personal_tenant_id
-      - login
-      - enabled
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        version:
-          description: Auto-incremented entity version.
-          type: integer
-        tenant_id:
-          $ref: '#/components/schemas/uuid'
-        created_at:
-          $ref: '#/components/schemas/item1'
-        updated_at:
-          $ref: '#/components/schemas/item1'
-        deleted_at:
-          description: Soft deletion timestamp.
-          allOf:
-          - $ref: '#/components/schemas/item1'
-        access_policies:
-          description: Will be returned with all user access policies if query param `with_access_policies` is provided.
-          type: array
-          minItems: 0
-          items:
-            $ref: '#/components/schemas/items_1'
-        origin_id:
-          description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
-          type:
-          - string
-          - 'null'
-        origin_external_id:
-          description: User's external origin ID.
-          type:
-          - string
-          - 'null'
-        disable_after:
-          description: Timestamp indicating when the user will be disabled.
-          allOf:
-          - $ref: '#/components/schemas/item1'
-        personal_tenant_id:
-          description: UUID of user's personal tenant. This field can have a null value.
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-        login:
-          description: User's login.
-          type: string
-        enabled:
-          description: Flag, indicates whether the user is enabled or disabled.
-          type: boolean
-        session_mfa_status:
-          description: Multi-factor authentication status of the user session.
-          enum:
-          - passed_or_not_required
-          - passed_as_trusted
-          - required
-          type: string
-        delivery_channel:
-          description: Activation delivery channel for the user.
-          enum:
-          - email
-          - none
-          type:
-          - string
-          - 'null'
     accessPoliciesList:
       example:
         timestamp: '2016-06-22T18:25:16'
@@ -1394,44 +1237,275 @@ components:
                 type: string
               role_id:
                 $ref: '#/components/schemas/userRole'
-    contactPut:
+    paging:
+      title: Generic paging parameters schema
+      type: object
+      properties:
+        cursors:
+          type: object
+          properties:
+            after:
+              type: string
+    passwordPost:
       example:
-        tenant_id: f313ecf6-9256-4afd-9d47-72e032ee81d0
-        user_id: 1bfe361d-fcb8-43ff-8f43-9ecc29a08ea5
-        types:
-        - legal
-        - primary
-        - billing
-        - technical
-        - management
-        email: owner@mysite.com
-        address1: '1440 River Drive #100'
-        address2: ''
-        country: USA
-        state: CA
-        city: Rivertown
-        zipcode: '12345'
-        phone: '123456789'
-        firstname: Company
-        lastname: Owner
-        title: Mr.
-        website: www.mysite.com
-        industry: IT
-        organization_size: 50-100
-        email_confirmed: true
-        aan: '111111'
-        language: en
-        fax: 123 Example Street
+        password: testSECRETpassword123
       type: object
       additionalProperties: false
+      required:
+      - password
       properties:
+        password:
+          description: Password.
+          type: string
+    userBasic:
+      title: User basic schema (lod=basic)
+      description: User object with basic fields returned when lod=basic is specified. Includes all stamps fields plus login, personal_tenant_id, enabled, session_mfa_status, delivery_channel.
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - version
+      - tenant_id
+      - created_at
+      - updated_at
+      - deleted_at
+      - access_policies
+      - origin_id
+      - origin_external_id
+      - disable_after
+      - personal_tenant_id
+      - login
+      - enabled
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
         tenant_id:
           $ref: '#/components/schemas/uuid'
-        user_id:
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        access_policies:
+          description: Will be returned with all user access policies if query param `with_access_policies` is provided.
+          type: array
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/items_1'
+        origin_id:
+          description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
+          type:
+          - string
+          - 'null'
+        origin_external_id:
+          description: User's external origin ID.
+          type:
+          - string
+          - 'null'
+        disable_after:
+          description: Timestamp indicating when the user will be disabled.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        personal_tenant_id:
+          description: UUID of user's personal tenant. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        login:
+          description: User's login.
+          type: string
+        enabled:
+          description: Flag, indicates whether the user is enabled or disabled.
+          type: boolean
+        session_mfa_status:
+          description: Multi-factor authentication status of the user session.
+          enum:
+          - passed_or_not_required
+          - passed_as_trusted
+          - required
+          type: string
+        delivery_channel:
+          description: Activation delivery channel for the user.
+          enum:
+          - email
+          - none
+          type:
+          - string
+          - 'null'
+    mfaUserStatusPut:
+      example:
+        enabled: true
+      type: object
+      additionalProperties: false
+      required:
+      - enabled
+      properties:
+        enabled:
+          description: Status of MFA for user.
+          type: boolean
+    userNotifications:
+      description: User notifications.
+      type: array
+      items:
+        enum:
+        - maintenance
+        - quota
+        - reports
+        - backup_error
+        - backup_warning
+        - backup_info
+        - backup_daily_report
+        - backup_critical
+        - device_control_warning
+        - certificate_management_error
+        - certificate_management_warning
+        - certificate_management_info
+        type: string
+    userPut:
+      example:
+        contact:
+          firstname: John
+        notifications: []
+        disable_after: '2017-06-22T18:25:16'
+        version: 2
+      type: object
+      additionalProperties: false
+      required:
+      - version
+      properties:
+        login:
+          description: User's login.
+          type: string
+        external_id:
+          description: User's ID in external identity provider (e.g. SID in AD).
+          type: string
+        idp_id:
           $ref: '#/components/schemas/uuid'
+        contact:
+          $ref: '#/components/schemas/contactPut'
+        enabled:
+          description: Flag, indicates whether the user is enabled or disabled.
+          type: boolean
+        language:
+          description: Preferred locale.
+          type: string
+        notifications:
+          $ref: '#/components/schemas/userNotifications'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        disable_after:
+          $ref: '#/components/schemas/item1'
+    business_types:
+      description: Business types.
+      type: array
+      items:
+        enum:
+        - buyer
+        type: string
+    items_1:
+      type: object
+      required:
+      - id
+      - version
+      - created_at
+      - updated_at
+      - deleted_at
+      - trustee_id
+      - trustee_type
+      - issuer_id
+      - tenant_id
+      - role_id
+      properties:
+        id:
+          description: Access policy unique identifier.
+          type: string
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        trustee_id:
+          description: Unique identifier of the Subject for whom access policy is granted.
+          type: string
+        trustee_type:
+          description: Type of the Subject for whom access policy is granted.
+          enum:
+          - user
+          - user_group
+          - client
+          type: string
+        issuer_id:
+          description: Issuer unique identifier.
+          type: string
+        tenant_id:
+          description: Tenant unique identifier.
+          type: string
+        resource_server_id:
+          description: Tenant unique identifier.
+          type: string
+        resource_namespace:
+          description: Resource namespace.
+          type: string
+        resource_path:
+          description: Resource path.
+          type: string
+        role_id:
+          $ref: '#/components/schemas/userRole'
+    userRole:
+      description: Name of the user role.
+      enum:
+      - root_admin
+      - partner_admin
+      - company_admin
+      - unit_admin
+      - readonly_admin
+      - protection_admin
+      - protection_ro_admin
+      - restore_operator
+      - backup_user
+      - sync_share_admin
+      - sync_share_user
+      - sync_share_guest
+      - pds_operator
+      - pds_support
+      - notary_admin
+      - notary_user
+      - hci_admin
+      - omnivoice_admin
+      - omnivoice_user
+      - greathorn_admin
+      - greathorn_user
+      - greathorn_analyst
+      - greathorn_client_manager
+      type: string
+    items:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        created_at:
+          description: Date and time when contact was created.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        updated_at:
+          description: Last update timestamp, if contact has just been created - then is equal to `created_at`.
+          allOf:
+          - $ref: '#/components/schemas/item1'
         types:
           type: array
-          minItems: 1
+          minItems: 0
           uniqueItems: true
           items:
             enum:
@@ -1440,77 +1514,207 @@ components:
             - billing
             - technical
             - management
+            - company_billing
             type: string
         email:
           $ref: '#/components/schemas/email'
         address1:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         address2:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         country:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         state:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         city:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         zipcode:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         phone:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         firstname:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         lastname:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         title:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         website:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         industry:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         organization_size:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
         email_confirmed:
+          description: This field can have a null value.
           type:
           - boolean
           - 'null'
         aan:
+          description: This field can have a null value.
           type:
           - string
           - 'null'
+    item0:
+      title: User full schema (lod=full)
+      description: User object with all fields returned when lod=full is specified (default).
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - version
+      - tenant_id
+      - created_at
+      - updated_at
+      - deleted_at
+      - access_policies
+      - origin_id
+      - origin_external_id
+      - disable_after
+      - personal_tenant_id
+      - login
+      - enabled
+      - contact
+      - activated
+      - language
+      - business_types
+      - notifications
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        version:
+          description: Auto-incremented entity version.
+          type: integer
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        created_at:
+          $ref: '#/components/schemas/item1'
+        updated_at:
+          $ref: '#/components/schemas/item1'
+        deleted_at:
+          description: Soft deletion timestamp.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        access_policies:
+          description: Will be returned with all user access policies if query param `with_access_policies` is provided.
+          type: array
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/items_1'
+        origin_id:
+          description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
+          type:
+          - string
+          - 'null'
+        origin_external_id:
+          description: User's external origin ID.
+          type:
+          - string
+          - 'null'
+        disable_after:
+          description: Timestamp indicating when the user will be disabled.
+          allOf:
+          - $ref: '#/components/schemas/item1'
+        personal_tenant_id:
+          description: UUID of user's personal tenant. This field can have a null value.
+          allOf:
+          - $ref: '#/components/schemas/uuid'
+        login:
+          description: User's login.
+          type: string
+        enabled:
+          description: Flag, indicates whether the user is enabled or disabled.
+          type: boolean
+        contact:
+          $ref: '#/components/schemas/items'
+        activated:
+          description: Flag, indicates whether the user has been activated or not.
+          type: boolean
         language:
+          description: Preferred locale.
+          type: string
+        business_types:
+          $ref: '#/components/schemas/business_types'
+        notifications:
+          $ref: '#/components/schemas/userNotifications'
+        idp_id:
+          $ref: '#/components/schemas/uuid'
+        external_id:
+          description: User's ID in external identity provider (e.g. SID in AD).
+          type: string
+        mfa_status:
+          description: Multi-factor authentication status of the user.
+          enum:
+          - disabled
+          - forcibly_disabled
+          - setup_required
+          - enabled
+          type: string
+        external_operation_status:
+          description: Indicates if some external operation in progress for this user (his personal tenant).
+          enum:
+          - deleting
+          - recovering
           type:
           - string
           - 'null'
-        fax:
-          type:
-          - string
-          - 'null'
+    tenantKind:
+      description: A tenant kind.
+      enum:
+      - root
+      - partner
+      - folder
+      - customer
+      - unit
+      type: string
+    checkPasswordPostResult:
+      example:
+        compromised: true
+      type: object
+      required:
+      - compromised
+      properties:
+        compromised:
+          description: Flag that specifies whether the password was previously exposed in data breaches. True if the password was exposed; false otherwise.
+          type: boolean
     userPost:
       example:
         tenant_id: 0ef03214-6e47-4e50-87f2-a5955ba6095c
@@ -1670,127 +1874,6 @@ components:
           type: string
         disable_after:
           $ref: '#/components/schemas/item1'
-    userRole:
-      description: Name of the user role.
-      enum:
-      - root_admin
-      - partner_admin
-      - company_admin
-      - unit_admin
-      - readonly_admin
-      - protection_admin
-      - protection_ro_admin
-      - restore_operator
-      - backup_user
-      - sync_share_admin
-      - sync_share_user
-      - sync_share_guest
-      - pds_operator
-      - pds_support
-      - notary_admin
-      - notary_user
-      - hci_admin
-      - omnivoice_admin
-      - omnivoice_user
-      - greathorn_admin
-      - greathorn_user
-      - greathorn_analyst
-      - greathorn_client_manager
-      type: string
-    checkPasswordPostResult:
-      example:
-        compromised: true
-      type: object
-      required:
-      - compromised
-      properties:
-        compromised:
-          description: Flag that specifies whether the password was previously exposed in data breaches. True if the password was exposed; false otherwise.
-          type: boolean
-    userMe:
-      title: User me schema (lod=me)
-      description: User object returned for /users/me endpoint. Includes all full fields plus terms_accepted, login_totp_time, tenant_kind, tenant_pricing_model, brand_id.
-      allOf:
-      - $ref: '#/components/schemas/item0'
-      - type: object
-        required:
-        - terms_accepted
-        - tenant_kind
-        - tenant_pricing_model
-        - brand_id
-        properties:
-          terms_accepted:
-            description: Flag that defines if this user has accepted EULA.
-            type: boolean
-          login_totp_time:
-            description: Timestamp of last TOTP login.
-            allOf:
-            - $ref: '#/components/schemas/item1'
-          tenant_kind:
-            $ref: '#/components/schemas/tenantKind'
-          tenant_pricing_model:
-            $ref: '#/components/schemas/pricingMode'
-          brand_id:
-            $ref: '#/components/schemas/uuid'
-      example:
-        id: 948efcf2-b740-4c40-bb2d-4e4a46adfd87
-        version: 2
-        tenant_id: 0ef03214-6e47-4e50-87f2-a5955ba6095c
-        created_at: '2016-06-22T18:25:16'
-        updated_at: '2016-06-22T18:25:16'
-        deleted_at: null
-        access_policies: []
-        origin_id: pillr.mdr
-        origin_external_id: c66b1af2-2ac5-4764-8db6-97b054e7d27e
-        disable_after: '2017-06-22T18:25:16'
-        personal_tenant_id: 2f8ad2e2-28f2-11e7-aad1-5ffe2ad47151
-        login: mylogin
-        enabled: true
-        session_mfa_status: passed_or_not_required
-        delivery_channel: email
-        contact:
-          id: 27f6f164-63dd-47df-b5b6-83a0fd117beb
-          created_at: '2020-05-19T11:50:00'
-          updated_at: '2020-05-19T11:50:00'
-          types: []
-          email: me@mysite.com
-          address1: '1440 River Drive #100'
-          address2: ''
-          country: USA
-          state: CA
-          zipcode: '12345'
-          city: Rivertown
-          phone: '123456789'
-          firstname: John
-          lastname: Doe
-          title: ''
-          website: ''
-          industry: ''
-          organization_size: ''
-          email_confirmed: false
-          aan: '111111'
-          language: en
-        activated: true
-        language: ru
-        business_types: []
-        notifications:
-        - maintenance
-        - quota
-        - reports
-        - backup_error
-        - backup_warning
-        - backup_info
-        - backup_daily_report
-        - backup_critical
-        idp_id: e6f73a28-ff2e-4728-8f78-49eb74b20fce
-        external_id: S-1-5-21-917267712-1342860078-1792151419-500
-        mfa_status: setup_required
-        external_operation_status: null
-        terms_accepted: true
-        login_totp_time: null
-        tenant_kind: partner
-        tenant_pricing_model: trial
-        brand_id: a77b1af2-3ac5-576d-1db3-27b054e7d2aa
     pricingMode:
       description: Mode of tenant's pricing.
       enum:
@@ -1798,214 +1881,6 @@ components:
       - production
       - suspended
       type: string
-    item1:
-      description: RFC3339 Formatted date.
-      type: string
-      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
-      minLength: 19
-      maxLength: 32
-    userBatch:
-      description: 'Batch response for users. The structure of items depends on the `lod` query parameter: stamps, basic, or full (default).'
-      type: object
-      required:
-      - timestamp
-      - items
-      properties:
-        paging:
-          $ref: '#/components/schemas/paging'
-        timestamp:
-          $ref: '#/components/schemas/item1'
-        items:
-          description: Array of user objects. The fields returned depend on the `lod` query parameter.
-          type: array
-          items:
-            oneOf:
-            - title: User stamps schema (lod=stamps)
-              description: User object with minimal fields returned when lod=stamps is specified.
-              type: object
-              additionalProperties: false
-              required:
-              - id
-              - version
-              - tenant_id
-              - created_at
-              - updated_at
-              - deleted_at
-              - access_policies
-              - origin_id
-              - origin_external_id
-              - disable_after
-              properties:
-                id:
-                  $ref: '#/components/schemas/uuid'
-                version:
-                  description: Auto-incremented entity version.
-                  type: integer
-                tenant_id:
-                  $ref: '#/components/schemas/uuid'
-                created_at:
-                  $ref: '#/components/schemas/item1'
-                updated_at:
-                  $ref: '#/components/schemas/item1'
-                deleted_at:
-                  description: Soft deletion timestamp.
-                  allOf:
-                  - $ref: '#/components/schemas/item1'
-                access_policies:
-                  description: Will be returned with all user access policies if query param `with_access_policies` is provided.
-                  type: array
-                  minItems: 0
-                  items:
-                    $ref: '#/components/schemas/items_1'
-                origin_id:
-                  description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
-                  type:
-                  - string
-                  - 'null'
-                origin_external_id:
-                  description: User's external origin ID.
-                  type:
-                  - string
-                  - 'null'
-                disable_after:
-                  description: Timestamp indicating when the user will be disabled.
-                  allOf:
-                  - $ref: '#/components/schemas/item1'
-            - $ref: '#/components/schemas/userBasic'
-            - $ref: '#/components/schemas/item0'
-    email:
-      type: string
-      pattern: ^$|\S+@\S+
-    paging:
-      title: Generic paging parameters schema
-      type: object
-      properties:
-        cursors:
-          type: object
-          properties:
-            after:
-              type: string
-    item0:
-      title: User full schema (lod=full)
-      description: User object with all fields returned when lod=full is specified (default).
-      type: object
-      additionalProperties: true
-      required:
-      - id
-      - version
-      - tenant_id
-      - created_at
-      - updated_at
-      - deleted_at
-      - access_policies
-      - origin_id
-      - origin_external_id
-      - disable_after
-      - personal_tenant_id
-      - login
-      - enabled
-      - contact
-      - activated
-      - language
-      - business_types
-      - notifications
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        version:
-          description: Auto-incremented entity version.
-          type: integer
-        tenant_id:
-          $ref: '#/components/schemas/uuid'
-        created_at:
-          $ref: '#/components/schemas/item1'
-        updated_at:
-          $ref: '#/components/schemas/item1'
-        deleted_at:
-          description: Soft deletion timestamp.
-          allOf:
-          - $ref: '#/components/schemas/item1'
-        access_policies:
-          description: Will be returned with all user access policies if query param `with_access_policies` is provided.
-          type: array
-          minItems: 0
-          items:
-            $ref: '#/components/schemas/items_1'
-        origin_id:
-          description: User's origin ID, for example, ID of a Cyber Application responsible for creating this user.
-          type:
-          - string
-          - 'null'
-        origin_external_id:
-          description: User's external origin ID.
-          type:
-          - string
-          - 'null'
-        disable_after:
-          description: Timestamp indicating when the user will be disabled.
-          allOf:
-          - $ref: '#/components/schemas/item1'
-        personal_tenant_id:
-          description: UUID of user's personal tenant. This field can have a null value.
-          allOf:
-          - $ref: '#/components/schemas/uuid'
-        login:
-          description: User's login.
-          type: string
-        enabled:
-          description: Flag, indicates whether the user is enabled or disabled.
-          type: boolean
-        contact:
-          $ref: '#/components/schemas/items'
-        activated:
-          description: Flag, indicates whether the user has been activated or not.
-          type: boolean
-        language:
-          description: Preferred locale.
-          type: string
-        business_types:
-          $ref: '#/components/schemas/business_types'
-        notifications:
-          $ref: '#/components/schemas/userNotifications'
-        idp_id:
-          $ref: '#/components/schemas/uuid'
-        external_id:
-          description: User's ID in external identity provider (e.g. SID in AD).
-          type: string
-        mfa_status:
-          description: Multi-factor authentication status of the user.
-          enum:
-          - disabled
-          - forcibly_disabled
-          - setup_required
-          - enabled
-          type: string
-        external_operation_status:
-          description: Indicates if some external operation in progress for this user (his personal tenant).
-          enum:
-          - deleting
-          - recovering
-          type:
-          - string
-          - 'null'
-    mfaUserStatusPut:
-      example:
-        enabled: true
-      type: object
-      additionalProperties: false
-      required:
-      - enabled
-      properties:
-        enabled:
-          description: Status of MFA for user.
-          type: boolean
-    business_types:
-      description: Business types.
-      type: array
-      items:
-        enum:
-        - buyer
-        type: string
     user:
       example:
         id: 948efcf2-b740-4c40-bb2d-4e4a46adfd87
@@ -2174,15 +2049,140 @@ components:
           $ref: '#/components/schemas/pricingMode'
         brand_id:
           $ref: '#/components/schemas/uuid'
-    tenantKind:
-      description: A tenant kind.
-      enum:
-      - root
-      - partner
-      - folder
-      - customer
-      - unit
+    item1:
+      description: RFC3339 Formatted date.
       type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    checkPasswordPost:
+      example:
+        password: 970C2D1A9869F18291D85BC389B33F0739496DE9
+      type: object
+      additionalProperties: false
+      required:
+      - password
+      properties:
+        password:
+          description: Password (SHA-1 hash) to check.
+          type: string
+    contactPut:
+      example:
+        tenant_id: f313ecf6-9256-4afd-9d47-72e032ee81d0
+        user_id: 1bfe361d-fcb8-43ff-8f43-9ecc29a08ea5
+        types:
+        - legal
+        - primary
+        - billing
+        - technical
+        - management
+        email: owner@mysite.com
+        address1: '1440 River Drive #100'
+        address2: ''
+        country: USA
+        state: CA
+        city: Rivertown
+        zipcode: '12345'
+        phone: '123456789'
+        firstname: Company
+        lastname: Owner
+        title: Mr.
+        website: www.mysite.com
+        industry: IT
+        organization_size: 50-100
+        email_confirmed: true
+        aan: '111111'
+        language: en
+        fax: 123 Example Street
+      type: object
+      additionalProperties: false
+      properties:
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        user_id:
+          $ref: '#/components/schemas/uuid'
+        types:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            enum:
+            - legal
+            - primary
+            - billing
+            - technical
+            - management
+            type: string
+        email:
+          $ref: '#/components/schemas/email'
+        address1:
+          type:
+          - string
+          - 'null'
+        address2:
+          type:
+          - string
+          - 'null'
+        country:
+          type:
+          - string
+          - 'null'
+        state:
+          type:
+          - string
+          - 'null'
+        city:
+          type:
+          - string
+          - 'null'
+        zipcode:
+          type:
+          - string
+          - 'null'
+        phone:
+          type:
+          - string
+          - 'null'
+        firstname:
+          type:
+          - string
+          - 'null'
+        lastname:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        website:
+          type:
+          - string
+          - 'null'
+        industry:
+          type:
+          - string
+          - 'null'
+        organization_size:
+          type:
+          - string
+          - 'null'
+        email_confirmed:
+          type:
+          - boolean
+          - 'null'
+        aan:
+          type:
+          - string
+          - 'null'
+        language:
+          type:
+          - string
+          - 'null'
+        fax:
+          type:
+          - string
+          - 'null'
     errorScheme:
       type: object
       required:
@@ -2222,27 +2222,28 @@ components:
               type: array
               items:
                 type: string
-    UUID:
-      description: Universally unique identifier
-      example: b8ccbf27-4e92-41a9-8b66-d78108985321
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    Locale:
-      description: Locale code
-      enum:
-      - cs
-      - de
-      - en
-      - es
-      - fr
-      - it
-      - ja
-      - ko
-      - pl
-      - ru
-      - zh_tw
-      - zh_cn
-      type: string
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
     User:
       example:
         name: user
@@ -2339,28 +2340,27 @@ components:
             used_space:
               type: integer
               format: int64
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
+    Locale:
+      description: Locale code
+      enum:
+      - cs
+      - de
+      - en
+      - es
+      - fr
+      - it
+      - ja
+      - ko
+      - pl
+      - ru
+      - zh_tw
+      - zh_cn
+      type: string
+    UUID:
+      description: Universally unique identifier
+      example: b8ccbf27-4e92-41a9-8b66-d78108985321
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
   securitySchemes:
     basicAuth:
       type: http

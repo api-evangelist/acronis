@@ -725,6 +725,27 @@ paths:
       x-operation-id-original: Update web preview settings
 components:
   schemas:
+    AuditLogSettings:
+      example:
+        purge_logs_older_than_enabled: true
+        purge_logs_older_than_units: weeks
+        purge_logs_older_than_n: 3
+      type: object
+      required:
+      - purge_logs_older_than_enabled
+      - purge_logs_older_than_units
+      - purge_logs_older_than_n
+      properties:
+        purge_logs_older_than_enabled:
+          type: boolean
+        purge_logs_older_than_units:
+          enum:
+          - days
+          - weeks
+          - months
+          type: string
+        purge_logs_older_than_n:
+          type: integer
     PurgingPoliciesSettings:
       example:
         purge_deleted_files_older_than_enabled: false
@@ -782,6 +803,118 @@ components:
           type: integer
         allow_users_to_selectively_purge_revisions:
           type: boolean
+    SecuritySettings:
+      example:
+        allow_collaborators_to_invite: true
+        node_share_link_enable: false
+        node_share_link_allow_public_links: true
+        node_share_link_allow_login_links: true
+        node_share_link_single_use_only: false
+        node_share_link_ttl_range_enable: true
+        node_share_link_ttl_max: 365
+        shared_folder_expiration_required: false
+        shared_folder_expiration_max_days: 365
+      type: object
+      required:
+      - allow_collaborators_to_invite
+      - node_share_link_enable
+      - node_share_link_allow_public_links
+      - node_share_link_allow_login_links
+      - node_share_link_single_use_only
+      - node_share_link_ttl_range_enable
+      - node_share_link_ttl_max
+      - shared_folder_expiration_required
+      - shared_folder_expiration_max_days
+      properties:
+        allow_collaborators_to_invite:
+          type: boolean
+        node_share_link_enable:
+          type: boolean
+        node_share_link_allow_public_links:
+          type: boolean
+        node_share_link_allow_login_links:
+          type: boolean
+        node_share_link_single_use_only:
+          type: boolean
+        node_share_link_ttl_range_enable:
+          type: boolean
+        node_share_link_ttl_max:
+          type: integer
+        shared_folder_expiration_required:
+          type: boolean
+        shared_folder_expiration_max_days:
+          type: integer
+    Locale:
+      description: Locale code
+      enum:
+      - cs
+      - de
+      - en
+      - es
+      - fr
+      - it
+      - ja
+      - ko
+      - pl
+      - ru
+      - zh_tw
+      - zh_cn
+      type: string
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
+    ServerSettings:
+      example:
+        server_name: Acronis Files Protect
+        root_web_address: https://dev-cloud.acronis.com
+        default_locale: en
+        session_timeout_in_minutes: 120
+        notification_admin_enabled: false
+        notification_admin_email: adminname@mycompany.com
+        notification_admin_frequency: 30
+      type: object
+      required:
+      - server_name
+      - root_web_address
+      - default_locale
+      - session_timeout_in_minutes
+      - notification_admin_enabled
+      - notification_admin_email
+      - notification_admin_frequency
+      properties:
+        server_name:
+          type: string
+        root_web_address:
+          type: string
+        default_locale:
+          $ref: '#/components/schemas/Locale'
+        session_timeout_in_minutes:
+          type: integer
+        notification_admin_enabled:
+          type: boolean
+        notification_admin_email:
+          type: string
+        notification_admin_frequency:
+          type: integer
     WebPreviewSettings:
       example:
         office_online_integration_enabled: false
@@ -830,139 +963,6 @@ components:
           type: boolean
         generation_max_concurrent_calls:
           type: integer
-    ServerSettings:
-      example:
-        server_name: Acronis Files Protect
-        root_web_address: https://dev-cloud.acronis.com
-        default_locale: en
-        session_timeout_in_minutes: 120
-        notification_admin_enabled: false
-        notification_admin_email: adminname@mycompany.com
-        notification_admin_frequency: 30
-      type: object
-      required:
-      - server_name
-      - root_web_address
-      - default_locale
-      - session_timeout_in_minutes
-      - notification_admin_enabled
-      - notification_admin_email
-      - notification_admin_frequency
-      properties:
-        server_name:
-          type: string
-        root_web_address:
-          type: string
-        default_locale:
-          $ref: '#/components/schemas/Locale'
-        session_timeout_in_minutes:
-          type: integer
-        notification_admin_enabled:
-          type: boolean
-        notification_admin_email:
-          type: string
-        notification_admin_frequency:
-          type: integer
-    Locale:
-      description: Locale code
-      enum:
-      - cs
-      - de
-      - en
-      - es
-      - fr
-      - it
-      - ja
-      - ko
-      - pl
-      - ru
-      - zh_tw
-      - zh_cn
-      type: string
-    AuditLogSettings:
-      example:
-        purge_logs_older_than_enabled: true
-        purge_logs_older_than_units: weeks
-        purge_logs_older_than_n: 3
-      type: object
-      required:
-      - purge_logs_older_than_enabled
-      - purge_logs_older_than_units
-      - purge_logs_older_than_n
-      properties:
-        purge_logs_older_than_enabled:
-          type: boolean
-        purge_logs_older_than_units:
-          enum:
-          - days
-          - weeks
-          - months
-          type: string
-        purge_logs_older_than_n:
-          type: integer
-    SecuritySettings:
-      example:
-        allow_collaborators_to_invite: true
-        node_share_link_enable: false
-        node_share_link_allow_public_links: true
-        node_share_link_allow_login_links: true
-        node_share_link_single_use_only: false
-        node_share_link_ttl_range_enable: true
-        node_share_link_ttl_max: 365
-        shared_folder_expiration_required: false
-        shared_folder_expiration_max_days: 365
-      type: object
-      required:
-      - allow_collaborators_to_invite
-      - node_share_link_enable
-      - node_share_link_allow_public_links
-      - node_share_link_allow_login_links
-      - node_share_link_single_use_only
-      - node_share_link_ttl_range_enable
-      - node_share_link_ttl_max
-      - shared_folder_expiration_required
-      - shared_folder_expiration_max_days
-      properties:
-        allow_collaborators_to_invite:
-          type: boolean
-        node_share_link_enable:
-          type: boolean
-        node_share_link_allow_public_links:
-          type: boolean
-        node_share_link_allow_login_links:
-          type: boolean
-        node_share_link_single_use_only:
-          type: boolean
-        node_share_link_ttl_range_enable:
-          type: boolean
-        node_share_link_ttl_max:
-          type: integer
-        shared_folder_expiration_required:
-          type: boolean
-        shared_folder_expiration_max_days:
-          type: integer
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
   securitySchemes:
     oauth_2_0:
       type: oauth2

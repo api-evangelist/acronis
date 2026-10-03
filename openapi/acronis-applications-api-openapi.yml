@@ -389,39 +389,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    application:
-      example:
-        id: 8aaf366b-fe24-4f25-93b3-bd729c86cc95
-        name: Acronis Backup Cloud
-        type: backup
-        api_base_url: /bc
-        usages:
-        - workstations
-        - vms
-      type: object
-      required:
-      - id
-      - name
-      - type
-      - usages
-      - api_base_url
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        name:
-          description: Human-readable name that will be displayed to the users.
-          type: string
-        type:
-          $ref: '#/components/schemas/applicationType'
-        usages:
-          description: Available usages for this application.
-          type: array
-          items:
-            description: Usage name.
-            type: string
-        api_base_url:
-          description: Base URL for application's HTTP API.
-          type: string
     applicationType:
       description: A type of application.
       enum:
@@ -434,50 +401,112 @@ components:
       - physical_data_shipping
       - notary
       type: string
-    errorScheme:
+    settingPut:
+      example:
+        value:
+          value: qwerty
+          lock: false
       type: object
-      required:
-      - error
+      additionalProperties: false
       properties:
-        error:
-          type: object
-          required:
-          - code
-          - domain
-          - message
-          - details
-          properties:
-            code:
-              oneOf:
-              - type: string
-              - type: integer
-            context:
-              type: object
-            domain:
-              description: This field can have a null value.
-              type:
-              - string
-              - 'null'
-            message:
-              type: string
-            details:
-              description: Additional info.
-              type: object
-              properties:
-                info:
-                  description: This field can have a null value.
-                  type:
-                  - string
-                  - 'null'
-            data:
-              type: array
-              items:
-                type: string
+        value:
+          description: Value of the setting.
+          oneOf:
+          - type: string
+          - type: boolean
+          - type: number
+          - type: object
+        lock:
+          description: Flag that controls whether the value can be overridden at another tenant's level.
+          type: boolean
+        exclusive:
+          description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
+          type: boolean
     uuid:
       type: string
       pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
       minLength: 36
       maxLength: 36
+    setting:
+      example:
+        value:
+          name: setting_1
+          application_id: 2f2a4239-f140-4337-a107-bed298fed3f1
+          own:
+            value: new_stuff
+            lock: false
+            exclusive: false
+          effective:
+            owner:
+              type: tenant
+              id: 81129b10-9f2a-4ee7-bf90-8698c4af055c
+            value: old_Stuff
+            lock: false
+      type: object
+      required:
+      - name
+      - effective
+      properties:
+        name:
+          description: Name of the setting, for internal use by the platform and applications. Serves as the setting's ID.
+          type: string
+        application_id:
+          $ref: '#/components/schemas/uuid'
+        own:
+          description: Data which was set for this tenant.
+          type:
+          - object
+          - 'null'
+          required:
+          - value
+          - lock
+          - exclusive
+          properties:
+            value:
+              description: Value of the setting. This field can have a null value.
+              oneOf:
+              - type: string
+              - type: boolean
+              - type: number
+              - type: object
+            lock:
+              description: Flag that controls whether the value can be overridden at another tenant's level.
+              default: false
+              type: boolean
+            exclusive:
+              description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
+              default: false
+              type: boolean
+        effective:
+          description: Inherited data. This field can have a null value.
+          type:
+          - object
+          - 'null'
+          properties:
+            owner:
+              type: object
+              required:
+              - type
+              - id
+              properties:
+                type:
+                  description: Type of object where this value is defined.
+                  enum:
+                  - tenant
+                  - user
+                  type: string
+                id:
+                  $ref: '#/components/schemas/uuid'
+            value:
+              description: Value of the setting. This field can have a null value.
+              oneOf:
+              - type: string
+              - type: boolean
+              - type: number
+              - type: object
+            lock:
+              description: Flag that controls whether the value can be overridden at another tenant's level.
+              type: boolean
     applicationsList:
       example:
         items:
@@ -590,107 +619,78 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/application'
-    settingPut:
+    application:
       example:
-        value:
-          value: qwerty
-          lock: false
-      type: object
-      additionalProperties: false
-      properties:
-        value:
-          description: Value of the setting.
-          oneOf:
-          - type: string
-          - type: boolean
-          - type: number
-          - type: object
-        lock:
-          description: Flag that controls whether the value can be overridden at another tenant's level.
-          type: boolean
-        exclusive:
-          description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
-          type: boolean
-    setting:
-      example:
-        value:
-          name: setting_1
-          application_id: 2f2a4239-f140-4337-a107-bed298fed3f1
-          own:
-            value: new_stuff
-            lock: false
-            exclusive: false
-          effective:
-            owner:
-              type: tenant
-              id: 81129b10-9f2a-4ee7-bf90-8698c4af055c
-            value: old_Stuff
-            lock: false
+        id: 8aaf366b-fe24-4f25-93b3-bd729c86cc95
+        name: Acronis Backup Cloud
+        type: backup
+        api_base_url: /bc
+        usages:
+        - workstations
+        - vms
       type: object
       required:
+      - id
       - name
-      - effective
+      - type
+      - usages
+      - api_base_url
       properties:
-        name:
-          description: Name of the setting, for internal use by the platform and applications. Serves as the setting's ID.
-          type: string
-        application_id:
+        id:
           $ref: '#/components/schemas/uuid'
-        own:
-          description: Data which was set for this tenant.
-          type:
-          - object
-          - 'null'
+        name:
+          description: Human-readable name that will be displayed to the users.
+          type: string
+        type:
+          $ref: '#/components/schemas/applicationType'
+        usages:
+          description: Available usages for this application.
+          type: array
+          items:
+            description: Usage name.
+            type: string
+        api_base_url:
+          description: Base URL for application's HTTP API.
+          type: string
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
           required:
-          - value
-          - lock
-          - exclusive
+          - code
+          - domain
+          - message
+          - details
           properties:
-            value:
-              description: Value of the setting. This field can have a null value.
+            code:
               oneOf:
               - type: string
-              - type: boolean
-              - type: number
-              - type: object
-            lock:
-              description: Flag that controls whether the value can be overridden at another tenant's level.
-              default: false
-              type: boolean
-            exclusive:
-              description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
-              default: false
-              type: boolean
-        effective:
-          description: Inherited data. This field can have a null value.
-          type:
-          - object
-          - 'null'
-          properties:
-            owner:
+              - type: integer
+            context:
               type: object
-              required:
-              - type
-              - id
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
               properties:
-                type:
-                  description: Type of object where this value is defined.
-                  enum:
-                  - tenant
-                  - user
-                  type: string
-                id:
-                  $ref: '#/components/schemas/uuid'
-            value:
-              description: Value of the setting. This field can have a null value.
-              oneOf:
-              - type: string
-              - type: boolean
-              - type: number
-              - type: object
-            lock:
-              description: Flag that controls whether the value can be overridden at another tenant's level.
-              type: boolean
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
   securitySchemes:
     basicAuth:
       type: http
