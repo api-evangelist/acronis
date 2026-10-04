@@ -246,14 +246,111 @@ paths:
       x-operation-id-original: Fetches Contracts by customer ID
 components:
   schemas:
-    Guid:
-      example: 00000000-0000-0000-0000-000000000000
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
     DatetimeNoTZ:
       description: RFC3339-like date and time without timezone.
       type: string
       pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+    ContractPart:
+      type: object
+      additionalProperties: false
+      required:
+      - APIConnection
+      - ActualQuantity
+      - AutomaticUpdate
+      - Contract
+      - ContractPartType
+      - Description
+      - Discount
+      - DiscountReason
+      - EndDate
+      - Id
+      - IsReadOnly
+      - MachinesCount
+      - MinBillableQuantity
+      - Price
+      - Product
+      - ProductName
+      - Quantity
+      - ServiceLevelAgreement
+      - ServiceObjectGroup
+      - ShowUsersOnInvoice
+      - StartDate
+      - SubscriptionType
+      - TrialPeriod
+      - UserType
+      - VARConnection
+      - VARGroup
+      properties:
+        APIConnection:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        ActualQuantity:
+          type: number
+        AutomaticUpdate:
+          type: boolean
+        Contract:
+          $ref: '#/components/schemas/Guid'
+        ContractPartType:
+          $ref: '#/components/schemas/Guid'
+        Description:
+          type: string
+        Discount:
+          type: number
+        DiscountReason:
+          type: string
+        EndDate:
+          $ref: '#/components/schemas/DatetimeNoTZ'
+        Id:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        IsReadOnly:
+          type: boolean
+        MachinesCount:
+          type:
+          - integer
+          - 'null'
+        MinBillableQuantity:
+          type: number
+        Price:
+          type: number
+        Product:
+          $ref: '#/components/schemas/Guid'
+        ProductName:
+          type: string
+        Quantity:
+          type: number
+        ServiceLevelAgreement:
+          $ref: '#/components/schemas/Guid'
+        ServiceObjectGroup:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        ShowUsersOnInvoice:
+          type: boolean
+        StartDate:
+          $ref: '#/components/schemas/DatetimeNoTZ'
+        SubscriptionType:
+          $ref: '#/components/schemas/Guid'
+        TrialPeriod:
+          type: integer
+        UserType:
+          type: integer
+        VARConnection:
+          $ref: '#/components/schemas/Guid'
+        VARGroup:
+          $ref: '#/components/schemas/Guid'
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
     Contract:
       type: object
       additionalProperties: false
@@ -368,103 +465,6 @@ components:
         Zipcode:
           description: 'Defines customer''s address information to be used on the invoice:  ZIP or postal code.'
           type: string
-    ContractPart:
-      type: object
-      additionalProperties: false
-      required:
-      - APIConnection
-      - ActualQuantity
-      - AutomaticUpdate
-      - Contract
-      - ContractPartType
-      - Description
-      - Discount
-      - DiscountReason
-      - EndDate
-      - Id
-      - IsReadOnly
-      - MachinesCount
-      - MinBillableQuantity
-      - Price
-      - Product
-      - ProductName
-      - Quantity
-      - ServiceLevelAgreement
-      - ServiceObjectGroup
-      - ShowUsersOnInvoice
-      - StartDate
-      - SubscriptionType
-      - TrialPeriod
-      - UserType
-      - VARConnection
-      - VARGroup
-      properties:
-        APIConnection:
-          example: 00000000-0000-0000-0000-000000000000
-          type:
-          - string
-          - 'null'
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-        ActualQuantity:
-          type: number
-        AutomaticUpdate:
-          type: boolean
-        Contract:
-          $ref: '#/components/schemas/Guid'
-        ContractPartType:
-          $ref: '#/components/schemas/Guid'
-        Description:
-          type: string
-        Discount:
-          type: number
-        DiscountReason:
-          type: string
-        EndDate:
-          $ref: '#/components/schemas/DatetimeNoTZ'
-        Id:
-          example: 00000000-0000-0000-0000-000000000000
-          type:
-          - string
-          - 'null'
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-        IsReadOnly:
-          type: boolean
-        MachinesCount:
-          type:
-          - integer
-          - 'null'
-        MinBillableQuantity:
-          type: number
-        Price:
-          type: number
-        Product:
-          $ref: '#/components/schemas/Guid'
-        ProductName:
-          type: string
-        Quantity:
-          type: number
-        ServiceLevelAgreement:
-          $ref: '#/components/schemas/Guid'
-        ServiceObjectGroup:
-          example: 00000000-0000-0000-0000-000000000000
-          type:
-          - string
-          - 'null'
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-        ShowUsersOnInvoice:
-          type: boolean
-        StartDate:
-          $ref: '#/components/schemas/DatetimeNoTZ'
-        SubscriptionType:
-          $ref: '#/components/schemas/Guid'
-        TrialPeriod:
-          type: integer
-        UserType:
-          type: integer
-        VARConnection:
-          $ref: '#/components/schemas/Guid'
-        VARGroup:
-          $ref: '#/components/schemas/Guid'
   securitySchemes:
     oauth2:
       type: oauth2

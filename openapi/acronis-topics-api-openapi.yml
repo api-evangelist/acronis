@@ -140,80 +140,6 @@ paths:
       x-operation-id-original: Fetch topic offsets
 components:
   schemas:
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - line_tag
-      - ser_code
-      - version
-      - build
-      - product
-      - os
-      properties:
-        line_tag:
-          type: string
-        ser_code:
-          type: string
-        version:
-          type: string
-        build:
-          type: string
-        product:
-          type: string
-        os:
-          type: string
-    error:
-      description: Base error object
-      example:
-        domain: EventManager
-        code: invalidEvent
-        error: Bad Request
-        context:
-          errors:
-          - event_id: 62d2afda-685e-457f-8624-92132d97a7ed
-            message: 'Invalid payload: tenant_id is required'
-      type: object
-      required:
-      - domain
-      - code
-      properties:
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
-          type: string
-        code:
-          description: Error id or code, unique in the domain. Same as in 'reason' field
-          type: string
-        message:
-          description: human-readable message, describing the error.
-          type: string
-        reason:
-          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
-          type: string
-        context:
-          description: Error context dictionary
-          type: object
-        kb_link:
-          $ref: '#/components/schemas/kbLinkInfo'
-        debug:
-          $ref: '#/components/schemas/debugInfo'
-    duration_iso:
-      description: 'Duration format compliant to [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Durations). See regex with unit tests [here](https://regex101.com/r/A2fis4).
-
-        '
-      type: string
-      pattern: ^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$
-    ErrorMessage:
-      type: object
-      additionalProperties: false
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/error'
     INFINITE:
       description: 'The retention period for events within this topic on event archive side is infinite.
 
@@ -221,6 +147,23 @@ components:
       enum:
       - INFINITE
       type: string
+    GetTopicsOffsetResponse:
+      type: object
+      required:
+      - topic_id
+      - offset
+      properties:
+        topic_id:
+          description: Identifier of the topic.
+          x-cti.reference: cti.a.p.em.topic.v1.0
+          example: cti.a.p.em.topic.v1.0~a.p.tenant.v1.0
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        offset:
+          description: Requested offset sequence number.
+          type: integer
+          format: int64
     Topic:
       description: 'Event topic is a stream of events of the same or different types sharing the same delivery, ordering, consolidation & retention rules.
 
@@ -296,23 +239,80 @@ components:
           anyOf:
           - $ref: '#/components/schemas/duration_iso'
           - $ref: '#/components/schemas/INFINITE'
-    GetTopicsOffsetResponse:
+    kbLinkInfo:
+      description: Components for kblink
       type: object
       required:
-      - topic_id
-      - offset
+      - line_tag
+      - ser_code
+      - version
+      - build
+      - product
+      - os
       properties:
-        topic_id:
-          description: Identifier of the topic.
-          x-cti.reference: cti.a.p.em.topic.v1.0
-          example: cti.a.p.em.topic.v1.0~a.p.tenant.v1.0
+        line_tag:
           type: string
-          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
-          maxLength: 1024
-        offset:
-          description: Requested offset sequence number.
-          type: integer
-          format: int64
+        ser_code:
+          type: string
+        version:
+          type: string
+        build:
+          type: string
+        product:
+          type: string
+        os:
+          type: string
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+    error:
+      description: Base error object
+      example:
+        domain: EventManager
+        code: invalidEvent
+        error: Bad Request
+        context:
+          errors:
+          - event_id: 62d2afda-685e-457f-8624-92132d97a7ed
+            message: 'Invalid payload: tenant_id is required'
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        message:
+          description: human-readable message, describing the error.
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
+          type: object
+        kb_link:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
+    ErrorMessage:
+      type: object
+      additionalProperties: false
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/error'
+    duration_iso:
+      description: 'Duration format compliant to [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Durations). See regex with unit tests [here](https://regex101.com/r/A2fis4).
+
+        '
+      type: string
+      pattern: ^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$
   securitySchemes:
     oauth2:
       type: oauth2

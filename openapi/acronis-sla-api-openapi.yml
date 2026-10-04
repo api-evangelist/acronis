@@ -111,6 +111,20 @@ paths:
       x-operation-id-original: Fetch Service Level Agreements (SLA)
 components:
   schemas:
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
     SLA:
       type: object
       additionalProperties: false
@@ -146,20 +160,6 @@ components:
         ShortName:
           description: ''
           type: string
-    Paging:
-      type: object
-      additionalProperties: false
-      required:
-      - AmountTotalItems
-      - AmountRecordsFound
-      - AmountOfPages
-      properties:
-        AmountTotalItems:
-          type: integer
-        AmountRecordsFound:
-          type: integer
-        AmountOfPages:
-          type: integer
   securitySchemes:
     oauth2:
       type: oauth2

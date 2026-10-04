@@ -1584,6 +1584,88 @@ paths:
       x-operation-id-original: Delete sync status
 components:
   schemas:
+    ConflictErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
+    UUID:
+      description: Universally unique identifier
+      example: b8ccbf27-4e92-41a9-8b66-d78108985321
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    Member:
+      description: Member of a shared folder
+      type: object
+      required:
+      - id
+      - read_only
+      - can_view_members
+      - can_invite
+      - email
+      - name
+      - permission_for
+      - can_be_changed
+      properties:
+        id:
+          description: Unique identifier of the member
+          type: string
+        read_only:
+          description: Whether the member has read-only access
+          type: boolean
+        can_view_members:
+          description: Whether the member can view other members
+          type: boolean
+        can_invite:
+          description: Whether the member can invite other members
+          type: boolean
+        email:
+          description: Email of the member
+          type: string
+        name:
+          description: Name of the member
+          type: string
+        permission_for:
+          description: Type of the member
+          enum:
+          - owner
+          - permission
+          - guest
+          type: string
+        can_be_changed:
+          description: Indicators which permissions can be changed
+          type: object
+          required:
+          - can_invite
+          - can_view_members
+          - read_only
+          properties:
+            can_invite:
+              description: Whether the `can_invite` permission can be changed
+              type: boolean
+            can_view_members:
+              description: Whether the `can_view_members` permission can be changed
+              type: boolean
+            read_only:
+              description: Whether the `read_only` permission can be changed
+              type: boolean
     FileNode:
       description: Single revision of a file
       type: object
@@ -1805,75 +1887,28 @@ components:
         has_active_links:
           description: Whether the node has any active links
           type: boolean
-    Member:
-      description: Member of a shared folder
+    ErrorResponse:
       type: object
       required:
-      - id
-      - read_only
-      - can_view_members
-      - can_invite
-      - email
-      - name
-      - permission_for
-      - can_be_changed
+      - error
       properties:
-        id:
-          description: Unique identifier of the member
-          type: string
-        read_only:
-          description: Whether the member has read-only access
-          type: boolean
-        can_view_members:
-          description: Whether the member can view other members
-          type: boolean
-        can_invite:
-          description: Whether the member can invite other members
-          type: boolean
-        email:
-          description: Email of the member
-          type: string
-        name:
-          description: Name of the member
-          type: string
-        permission_for:
-          description: Type of the member
-          enum:
-          - owner
-          - permission
-          - guest
-          type: string
-        can_be_changed:
-          description: Indicators which permissions can be changed
+        error:
           type: object
           required:
-          - can_invite
-          - can_view_members
-          - read_only
+          - domain
+          - code
+          - message
           properties:
-            can_invite:
-              description: Whether the `can_invite` permission can be changed
-              type: boolean
-            can_view_members:
-              description: Whether the `can_view_members` permission can be changed
-              type: boolean
-            read_only:
-              description: Whether the `read_only` permission can be changed
-              type: boolean
-    NodeUUID:
-      description: 'Node unique identifier
-
-
-        - UUID for any user nodes
-
-        - `0` for the root node'
-      type: string
-      pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    UUID:
-      description: Universally unique identifier
-      example: b8ccbf27-4e92-41a9-8b66-d78108985321
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
     FileLink:
       example:
         id: 252
@@ -1943,6 +1978,72 @@ components:
         updated_at:
           type: string
           format: date-time
+    NodeRevision:
+      example:
+        node_uuid: 444f4f94-9f0e-4183-9d47-b1804e819f61
+        name: file.txt
+        file_modification_date: '2019-06-12T15:28:15Z'
+        revision: 2
+        size: 13499
+        is_latest: true
+        created_at: '2019-06-13T11:40:54Z'
+        is_deleted: false
+        available: false
+        purged: true
+        writable: true
+        revised_by:
+          name: user
+          email: user@example.com
+      type: object
+      required:
+      - node_uuid
+      - name
+      - file_modification_date
+      - revision
+      - size
+      - is_latest
+      - created_at
+      - is_deleted
+      - available
+      - purged
+      - writable
+      - revised_by
+      properties:
+        node_uuid:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+        file_modification_date:
+          type: string
+          format: date-time
+        revision:
+          type: integer
+        size:
+          type: integer
+          format: int64
+        is_latest:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        is_deleted:
+          type: boolean
+        available:
+          type: boolean
+        purged:
+          type: boolean
+        writable:
+          type: boolean
+        revised_by:
+          type: object
+          required:
+          - name
+          - email
+          properties:
+            name:
+              type: string
+            email:
+              type: string
     Node:
       description: Single revision of a file or folder
       type: object
@@ -2164,116 +2265,15 @@ components:
             preview:
               description: Preview URL
               type: string
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
-    NodeRevision:
-      example:
-        node_uuid: 444f4f94-9f0e-4183-9d47-b1804e819f61
-        name: file.txt
-        file_modification_date: '2019-06-12T15:28:15Z'
-        revision: 2
-        size: 13499
-        is_latest: true
-        created_at: '2019-06-13T11:40:54Z'
-        is_deleted: false
-        available: false
-        purged: true
-        writable: true
-        revised_by:
-          name: user
-          email: user@example.com
-      type: object
-      required:
-      - node_uuid
-      - name
-      - file_modification_date
-      - revision
-      - size
-      - is_latest
-      - created_at
-      - is_deleted
-      - available
-      - purged
-      - writable
-      - revised_by
-      properties:
-        node_uuid:
-          $ref: '#/components/schemas/UUID'
-        name:
-          type: string
-        file_modification_date:
-          type: string
-          format: date-time
-        revision:
-          type: integer
-        size:
-          type: integer
-          format: int64
-        is_latest:
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-        is_deleted:
-          type: boolean
-        available:
-          type: boolean
-        purged:
-          type: boolean
-        writable:
-          type: boolean
-        revised_by:
-          type: object
-          required:
-          - name
-          - email
-          properties:
-            name:
-              type: string
-            email:
-              type: string
-    ConflictErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
+    NodeUUID:
+      description: 'Node unique identifier
+
+
+        - UUID for any user nodes
+
+        - `0` for the root node'
+      type: string
+      pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
   securitySchemes:
     oauth_2_0:
       type: oauth2

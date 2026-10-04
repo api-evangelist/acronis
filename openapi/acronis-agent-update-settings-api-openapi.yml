@@ -795,6 +795,17 @@ components:
       - CURRENT
       - STABLE
       type: string
+    DayOfWeek:
+      description: Day of week specifier.
+      enum:
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+      - SUNDAY
+      type: string
     AgentUpdateSettingsIn:
       description: Unattended agent update settings to be stored by Agent Manager. The settings can be assigned either to a particular agent instance or to a tenant. In the latter case they are called master settings and apply to every agent that belongs to the tenant and does not have its own settings assigned. Master settings also recursively apply to tenants down tenant hierarchy until a tenant with its own master settings or visibility barrier set is encountered.
       type: object
@@ -846,17 +857,6 @@ components:
           description: ID of a tenant the settings belong to. This must only be present if agent ID is absent. It is possible to omit both identifiers, in which case value from `X-Apigw-Tenant-Id` request header is used. If the header is also absent, root of tenant hierarchy as it is seen to Agent Manager (according to properties of its service account) is used.
           example: '62'
           type: string
-    DayOfWeek:
-      description: Day of week specifier.
-      enum:
-      - MONDAY
-      - TUESDAY
-      - WEDNESDAY
-      - THURSDAY
-      - FRIDAY
-      - SATURDAY
-      - SUNDAY
-      type: string
   securitySchemes:
     oauth_2_0_user:
       type: oauth2

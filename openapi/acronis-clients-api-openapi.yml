@@ -261,6 +261,50 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
     clientPut:
       example:
         data:
@@ -321,95 +365,6 @@ components:
           - client_secret_basic
           - client_secret_post
           - none
-          type: string
-        redirect_uris:
-          description: List of possible redirect uris.
-          type: array
-          items:
-            type: string
-        origin_id:
-          description: Client origin ID.
-          type: string
-    item1:
-      description: RFC3339 Formatted date.
-      type: string
-      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
-      minLength: 19
-      maxLength: 32
-    uuid:
-      type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
-    clientPostResult:
-      title: Post client result schema
-      example:
-        client_secret_expires_at: 0
-        token_endpoint_auth_method: client_secret_basic
-        tenant_id: 48f86be5-c628-49c3-8575-62e78f54e4eb
-        data:
-          client_name: Some application client
-          origin_dc_id: ff7625c0-d649-445c-a2b3-9b59e66bfc2d
-        client_secret: cfffe6f6271b4addbe90ca63236de581
-        registration_access_token: 94fe1f5e59b64bd69ad6754a34f37674
-        client_id: 3663410d-4b70-4860-860c-8db82bffab8e
-        created_at: '2019-08-24T01:23:15'
-        created_by: ab9d9f43-f9aa-4f83-9409-5547172daa27
-        type: managed_client
-        status: enabled
-        origin_id: 72403667-8e45-4dd9-bcbc-3e6047b98b3d
-      type: object
-      required:
-      - client_id
-      - tenant_id
-      - client_secret_expires_at
-      - type
-      - token_endpoint_auth_method
-      - client_secret
-      - registration_access_token
-      - created_at
-      - created_by
-      - status
-      properties:
-        client_id:
-          $ref: '#/components/schemas/uuid'
-        tenant_id:
-          $ref: '#/components/schemas/uuid'
-        client_secret_expires_at:
-          description: Time at which the client_secret will expire or 0 if it will not expire, according to the configured client secret lifetime. Its value is represented as number of seconds since the Unix epoch.
-          type: integer
-        type:
-          description: Client type.
-          enum:
-          - api_client
-          - managed_client
-          type: string
-        data:
-          description: Additional metadata, like agentType, hostname, etc...
-          type: object
-        token_endpoint_auth_method:
-          description: Explicit specified auth method.
-          enum:
-          - client_secret_basic
-          - client_secret_post
-          - none
-          type: string
-        client_secret:
-          description: Client secret.
-          type: string
-        registration_access_token:
-          description: Client registration access token.
-          type: string
-        created_at:
-          $ref: '#/components/schemas/item1'
-        created_by:
-          description: ID of the user who registered the client.
-          type: string
-        status:
-          description: Client status - either enabled or disabled. Disabled clients can no longer be used to receive Access Tokens.
-          enum:
-          - enabled
-          - disabled
           type: string
         redirect_uris:
           description: List of possible redirect uris.
@@ -503,45 +458,6 @@ components:
         origin_id:
           description: Client origin ID.
           type: string
-    errorScheme:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - domain
-          - message
-          - details
-          properties:
-            code:
-              oneOf:
-              - type: string
-              - type: integer
-            context:
-              type: object
-            domain:
-              description: This field can have a null value.
-              type:
-              - string
-              - 'null'
-            message:
-              type: string
-            details:
-              description: Additional info.
-              type: object
-              properties:
-                info:
-                  description: This field can have a null value.
-                  type:
-                  - string
-                  - 'null'
-            data:
-              type: array
-              items:
-                type: string
     clientBatch:
       example:
         items:
@@ -582,6 +498,90 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/client'
+    clientPostResult:
+      title: Post client result schema
+      example:
+        client_secret_expires_at: 0
+        token_endpoint_auth_method: client_secret_basic
+        tenant_id: 48f86be5-c628-49c3-8575-62e78f54e4eb
+        data:
+          client_name: Some application client
+          origin_dc_id: ff7625c0-d649-445c-a2b3-9b59e66bfc2d
+        client_secret: cfffe6f6271b4addbe90ca63236de581
+        registration_access_token: 94fe1f5e59b64bd69ad6754a34f37674
+        client_id: 3663410d-4b70-4860-860c-8db82bffab8e
+        created_at: '2019-08-24T01:23:15'
+        created_by: ab9d9f43-f9aa-4f83-9409-5547172daa27
+        type: managed_client
+        status: enabled
+        origin_id: 72403667-8e45-4dd9-bcbc-3e6047b98b3d
+      type: object
+      required:
+      - client_id
+      - tenant_id
+      - client_secret_expires_at
+      - type
+      - token_endpoint_auth_method
+      - client_secret
+      - registration_access_token
+      - created_at
+      - created_by
+      - status
+      properties:
+        client_id:
+          $ref: '#/components/schemas/uuid'
+        tenant_id:
+          $ref: '#/components/schemas/uuid'
+        client_secret_expires_at:
+          description: Time at which the client_secret will expire or 0 if it will not expire, according to the configured client secret lifetime. Its value is represented as number of seconds since the Unix epoch.
+          type: integer
+        type:
+          description: Client type.
+          enum:
+          - api_client
+          - managed_client
+          type: string
+        data:
+          description: Additional metadata, like agentType, hostname, etc...
+          type: object
+        token_endpoint_auth_method:
+          description: Explicit specified auth method.
+          enum:
+          - client_secret_basic
+          - client_secret_post
+          - none
+          type: string
+        client_secret:
+          description: Client secret.
+          type: string
+        registration_access_token:
+          description: Client registration access token.
+          type: string
+        created_at:
+          $ref: '#/components/schemas/item1'
+        created_by:
+          description: ID of the user who registered the client.
+          type: string
+        status:
+          description: Client status - either enabled or disabled. Disabled clients can no longer be used to receive Access Tokens.
+          enum:
+          - enabled
+          - disabled
+          type: string
+        redirect_uris:
+          description: List of possible redirect uris.
+          type: array
+          items:
+            type: string
+        origin_id:
+          description: Client origin ID.
+          type: string
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
   securitySchemes:
     basicAuth:
       type: http

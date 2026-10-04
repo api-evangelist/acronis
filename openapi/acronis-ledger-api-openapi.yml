@@ -83,6 +83,51 @@ paths:
       x-operation-id-original: Fetch ledger
 components:
   schemas:
+    GetLedgersSearchResponse:
+      example:
+        Ledgers:
+        - Id: 00000000-0000-0000-0000-000000000000
+          Number: ''
+          Description: ''
+          Active: true
+          CreationDate: '0001-01-01T00:00:00Z'
+          ExternalId: ''
+        - Id: 00000000-0000-0000-0000-000000000000
+          Number: ''
+          Description: ''
+          Active: true
+          CreationDate: '0001-01-01T00:00:00Z'
+          ExternalId: ''
+        Paging:
+          AmountTotalItems: 0
+          AmountRecordsFound: 0
+          AmountOfPages: 0
+      type: object
+      additionalProperties: false
+      required:
+      - Ledgers
+      - Paging
+      properties:
+        Ledgers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LedgerPartial'
+        Paging:
+          $ref: '#/components/schemas/Paging'
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
     Ledger:
       example:
         Id: 65ea810d-7059-4199-8b01-813e9255bc86
@@ -144,51 +189,6 @@ components:
         AllowInactive:
           description: ''
           type: boolean
-    GetLedgersSearchResponse:
-      example:
-        Ledgers:
-        - Id: 00000000-0000-0000-0000-000000000000
-          Number: ''
-          Description: ''
-          Active: true
-          CreationDate: '0001-01-01T00:00:00Z'
-          ExternalId: ''
-        - Id: 00000000-0000-0000-0000-000000000000
-          Number: ''
-          Description: ''
-          Active: true
-          CreationDate: '0001-01-01T00:00:00Z'
-          ExternalId: ''
-        Paging:
-          AmountTotalItems: 0
-          AmountRecordsFound: 0
-          AmountOfPages: 0
-      type: object
-      additionalProperties: false
-      required:
-      - Ledgers
-      - Paging
-      properties:
-        Ledgers:
-          type: array
-          items:
-            $ref: '#/components/schemas/LedgerPartial'
-        Paging:
-          $ref: '#/components/schemas/Paging'
-    Paging:
-      type: object
-      additionalProperties: false
-      required:
-      - AmountTotalItems
-      - AmountRecordsFound
-      - AmountOfPages
-      properties:
-        AmountTotalItems:
-          type: integer
-        AmountRecordsFound:
-          type: integer
-        AmountOfPages:
-          type: integer
     LedgerPartial:
       type: object
       additionalProperties: false

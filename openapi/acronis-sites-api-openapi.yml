@@ -1239,24 +1239,24 @@ paths:
       x-operation-id-original: Fetch disaster recovery site by UUID
 components:
   schemas:
-    tenant_uuid_19:
-      title: UUID
-      description: Universally unique object identifier.
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
     item0_20: {}
     item0_18: {}
-    tenant_uuid:
-      title: UUID
-      description: Universally unique object identifier.
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
     error_api_response:
       type: object
       required:
       - error
       properties:
         error: {}
+    tenant_uuid_19:
+      title: UUID
+      description: Universally unique object identifier.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    tenant_uuid:
+      title: UUID
+      description: Universally unique object identifier.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
   securitySchemes:
     oauth2:
       type: oauth2

@@ -725,6 +725,70 @@ paths:
       x-operation-id-original: Update web preview settings
 components:
   schemas:
+    WebPreviewSettings:
+      example:
+        office_online_integration_enabled: false
+        office_online_wopi_url: https://onenote.officeapps.live.com
+        office_online_type_of_use: editing
+        office_online_additional_services_enabled: false
+        office_online_allow_self_signed_certificates: false
+        web_preview_enabled: true
+        only_allow_not_converted: false
+        max_cache_size_mb: 2000
+        servlet_allow_self_signed_certificates: true
+        generation_max_concurrent_calls: 2
+      type: object
+      required:
+      - office_online_integration_enabled
+      - office_online_wopi_url
+      - office_online_type_of_use
+      - office_online_additional_services_enabled
+      - office_online_allow_self_signed_certificates
+      - web_preview_enabled
+      - only_allow_not_converted
+      - max_cache_size_mb
+      - servlet_allow_self_signed_certificates
+      - generation_max_concurrent_calls
+      properties:
+        office_online_integration_enabled:
+          type: boolean
+        office_online_wopi_url:
+          type: string
+        office_online_type_of_use:
+          enum:
+          - editing
+          - viewing-editing
+          type: string
+        office_online_additional_services_enabled:
+          type: boolean
+        office_online_allow_self_signed_certificates:
+          type: boolean
+        web_preview_enabled:
+          type: boolean
+        only_allow_not_converted:
+          type: boolean
+        max_cache_size_mb:
+          type: integer
+        servlet_allow_self_signed_certificates:
+          type: boolean
+        generation_max_concurrent_calls:
+          type: integer
+    Locale:
+      description: Locale code
+      enum:
+      - cs
+      - de
+      - en
+      - es
+      - fr
+      - it
+      - ja
+      - ko
+      - pl
+      - ru
+      - zh_tw
+      - zh_cn
+      type: string
     AuditLogSettings:
       example:
         purge_logs_older_than_enabled: true
@@ -746,6 +810,61 @@ components:
           type: string
         purge_logs_older_than_n:
           type: integer
+    ServerSettings:
+      example:
+        server_name: Acronis Files Protect
+        root_web_address: https://dev-cloud.acronis.com
+        default_locale: en
+        session_timeout_in_minutes: 120
+        notification_admin_enabled: false
+        notification_admin_email: adminname@mycompany.com
+        notification_admin_frequency: 30
+      type: object
+      required:
+      - server_name
+      - root_web_address
+      - default_locale
+      - session_timeout_in_minutes
+      - notification_admin_enabled
+      - notification_admin_email
+      - notification_admin_frequency
+      properties:
+        server_name:
+          type: string
+        root_web_address:
+          type: string
+        default_locale:
+          $ref: '#/components/schemas/Locale'
+        session_timeout_in_minutes:
+          type: integer
+        notification_admin_enabled:
+          type: boolean
+        notification_admin_email:
+          type: string
+        notification_admin_frequency:
+          type: integer
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
     PurgingPoliciesSettings:
       example:
         purge_deleted_files_older_than_enabled: false
@@ -843,125 +962,6 @@ components:
         shared_folder_expiration_required:
           type: boolean
         shared_folder_expiration_max_days:
-          type: integer
-    Locale:
-      description: Locale code
-      enum:
-      - cs
-      - de
-      - en
-      - es
-      - fr
-      - it
-      - ja
-      - ko
-      - pl
-      - ru
-      - zh_tw
-      - zh_cn
-      type: string
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
-    ServerSettings:
-      example:
-        server_name: Acronis Files Protect
-        root_web_address: https://dev-cloud.acronis.com
-        default_locale: en
-        session_timeout_in_minutes: 120
-        notification_admin_enabled: false
-        notification_admin_email: adminname@mycompany.com
-        notification_admin_frequency: 30
-      type: object
-      required:
-      - server_name
-      - root_web_address
-      - default_locale
-      - session_timeout_in_minutes
-      - notification_admin_enabled
-      - notification_admin_email
-      - notification_admin_frequency
-      properties:
-        server_name:
-          type: string
-        root_web_address:
-          type: string
-        default_locale:
-          $ref: '#/components/schemas/Locale'
-        session_timeout_in_minutes:
-          type: integer
-        notification_admin_enabled:
-          type: boolean
-        notification_admin_email:
-          type: string
-        notification_admin_frequency:
-          type: integer
-    WebPreviewSettings:
-      example:
-        office_online_integration_enabled: false
-        office_online_wopi_url: https://onenote.officeapps.live.com
-        office_online_type_of_use: editing
-        office_online_additional_services_enabled: false
-        office_online_allow_self_signed_certificates: false
-        web_preview_enabled: true
-        only_allow_not_converted: false
-        max_cache_size_mb: 2000
-        servlet_allow_self_signed_certificates: true
-        generation_max_concurrent_calls: 2
-      type: object
-      required:
-      - office_online_integration_enabled
-      - office_online_wopi_url
-      - office_online_type_of_use
-      - office_online_additional_services_enabled
-      - office_online_allow_self_signed_certificates
-      - web_preview_enabled
-      - only_allow_not_converted
-      - max_cache_size_mb
-      - servlet_allow_self_signed_certificates
-      - generation_max_concurrent_calls
-      properties:
-        office_online_integration_enabled:
-          type: boolean
-        office_online_wopi_url:
-          type: string
-        office_online_type_of_use:
-          enum:
-          - editing
-          - viewing-editing
-          type: string
-        office_online_additional_services_enabled:
-          type: boolean
-        office_online_allow_self_signed_certificates:
-          type: boolean
-        web_preview_enabled:
-          type: boolean
-        only_allow_not_converted:
-          type: boolean
-        max_cache_size_mb:
-          type: integer
-        servlet_allow_self_signed_certificates:
-          type: boolean
-        generation_max_concurrent_calls:
           type: integer
   securitySchemes:
     oauth_2_0:

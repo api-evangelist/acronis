@@ -939,35 +939,41 @@ paths:
       x-operation-id-original: Fetch the protection status of resources
 components:
   schemas:
-    KeyValuePair_7:
-      description: Generic key-value pair.
+    RunningStatus:
       type: object
       required:
-      - key
-      - value
+      - state
       properties:
-        key:
-          type: string
-        value:
-          anyOf:
-          - anyOf:
-            - type: string
-            - type: integer
-          - type: array
-            items:
-              anyOf:
-              - type: string
-              - type: integer
-    LicensingStatus:
+        state:
+          $ref: '#/components/schemas/RunningState_10'
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+        progress:
+          type: integer
+        blockers:
+          description: So-called 'interaction required' escalations.
+          type: array
+          items:
+            $ref: '#/components/schemas/error'
+    ResourceStatusPageList:
       type: object
       required:
-      - current_offering_item
-      - previous_offering_item
+      - paging
+      - items
+      - timestamp
       properties:
-        current_offering_item:
+        paging:
+          $ref: '#/components/schemas/Page'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceStatus'
+        timestamp:
+          description: Server-side timestamp of query start.
           type: string
-        previous_offering_item:
-          type: string
+          format: date-time
     Action:
       enum:
       - policy_view
@@ -1039,29 +1045,21 @@ components:
       - remoteWipe
       - cyberDesktop
       type: string
-    error:
+    LicensingStatus:
       type: object
       required:
-      - domain
-      - code
+      - current_offering_item
+      - previous_offering_item
       properties:
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+        current_offering_item:
           type: string
-        code:
-          description: Error ID or code, unique in the domain.
+        previous_offering_item:
           type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request. Use as a base for more granular code and context definitions.
+    BadRequestError:
+      description: Request is malformed.
       example:
         domain: General
-        code: InternalServerError
+        code: BadRequestError
       type: object
       required:
       - code
@@ -1073,7 +1071,7 @@ components:
         code:
           description: Error ID or code, unique in the domain.
           enum:
-          - InternalServerError
+          - BadRequestError
           type: string
         domain:
           description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
@@ -1083,15 +1081,37 @@ components:
         message:
           description: Human-readable message, describing the error.
           type: string
-    PageCursor:
-      type: string
-    Issue_1:
+    ResourceStatus:
+      description: Resource with aggregated status information.
       type: object
       required:
-      - severity
+      - context
       properties:
-        link:
-          description: Link name / ID or action / operation type, the issue is applied to.
+        context:
+          $ref: '#/components/schemas/Resource'
+        aggregate:
+          $ref: '#/components/schemas/AggregateStatus'
+        licensing:
+          $ref: '#/components/schemas/LicensingStatus'
+        policies:
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyExecutions'
+    ScopedExternalID:
+      description: Scoped external ID is used to uniquely identify replica objects. Is represented via `id` and `type_or_scope` and 'tenant' parts, serialized as string in the `id@type_or_scope!tenant` format.
+      type: string
+      pattern: ^(?<id>[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})(@(?<type_or_scope>[0-9a-zA-Z-_\.]+)?)?(!(?<tenant>[0-9a-zA-Z-_\.]+)?)?$
+    InternalID:
+      description: Service-wide unique object ID generated server-side.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    Link:
+      type: object
+      required:
+      - rel
+      properties:
+        rel:
+          description: \'Relation' - link name / ID or action / operation type.
           enum:
           - policy_view
           - policy_create
@@ -1162,180 +1182,14 @@ components:
           - remoteWipe
           - cyberDesktop
           type: string
-        severity:
-          description: Degree of trouble brought by the issue. If contains empty string, the severity is unknown.
-          enum:
-          - ok
-          - warning
-          - error
-          - critical
+        href:
+          description: URL of an endpoint that can be used for this action or operation.
           type: string
-        error:
-          description: Detailed issue domain and code, and context description as well.
-          type: object
-          required:
-          - code
-          - domain
-          properties:
-            context:
-              description: Description of context (call parameters, environment, etc), where the error occurred.
-              type: object
-            code:
-              description: Error ID or code, unique in the domain.
-              type: string
-            domain:
-              description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-              type: string
-            message:
-              description: Human-readable message, describing the error.
-              type: string
-    RunningState_10:
-      enum:
-      - running
-      - idle
-      - cancelling
-      - interaction_required
-      type: string
-    AuthenticationTimeoutError:
-      description: Access token is already expired or invalid.
-      example:
-        domain: Access
-        code: AuthenticationTimeout
-      type: object
-      required:
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - AuthenticationTimeout
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - Access
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-    UnauthorizedRequestError:
-      description: Authorization failed.
-      example:
-        domain: Access
-        code: UnauthorizedRequest
-      type: object
-      required:
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - UnauthorizedRequest
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - Access
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-    AccessDeniedError:
-      description: Access was denied.
-      example:
-        domain: Access
-        code: AccessDeniedError
-        context:
-          scope: urn:acronis.com::policy_management:1234567890:read urn:acronis.com::policy_management:0987654321:read
-          required_scope: urn:acronis.com::script_management:1234567890:reviewer
-      type: object
-      required:
-      - context
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-          required:
-          - scope
-          - required_scope
-          properties:
-            scope:
-              description: Access scope of the caller
-              type: string
-            required_scope:
-              description: Required access scope
-              type: string
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - AccessDeniedError
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - Access
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-    ExecutionStatus:
-      enum:
-      - warning
-      - error
-      - critical
-      - no_policies_applied
-      - scheduled
-      - interaction_required
-      - running
-      - cancelling
-      - idle
-      type: string
-    NamedKeyValueSet_5:
-      type: object
-      required:
-      - name
-      - kvs
-      properties:
-        name:
-          type: string
-        kvs:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValuePair_7'
-        details:
-          type: object
-    ResourceStatusPageList:
-      type: object
-      required:
-      - paging
-      - items
-      - timestamp
-      properties:
-        paging:
-          $ref: '#/components/schemas/Page'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceStatus'
-        timestamp:
-          description: Server-side timestamp of query start.
-          type: string
-          format: date-time
-    BadRequestError:
-      description: Request is malformed.
+    NotFoundError:
+      description: Specified REST resource wasn't found.
       example:
         domain: General
-        code: BadRequestError
+        code: NotFoundError
       type: object
       required:
       - code
@@ -1347,7 +1201,7 @@ components:
         code:
           description: Error ID or code, unique in the domain.
           enum:
-          - BadRequestError
+          - NotFoundError
           type: string
         domain:
           description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
@@ -1357,239 +1211,6 @@ components:
         message:
           description: Human-readable message, describing the error.
           type: string
-    AggregateStatus:
-      type: object
-      required:
-      - running
-      - status
-      properties:
-        running:
-          $ref: '#/components/schemas/RunningStatus'
-        names:
-          type: string
-        status:
-          $ref: '#/components/schemas/ExecutionStatus'
-    ResourceType:
-      description: 'A resource type in the `type.scope` format, where `type` is ''resource'' and `scope` is
-
-        like one of the `ResourceScope` values defined in `impl/resource/type_scopes.raml`.
-
-        '
-      type: string
-    ScopedExternalID:
-      description: Scoped external ID is used to uniquely identify replica objects. Is represented via `id` and `type_or_scope` and 'tenant' parts, serialized as string in the `id@type_or_scope!tenant` format.
-      type: string
-      pattern: ^(?<id>[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})(@(?<type_or_scope>[0-9a-zA-Z-_\.]+)?)?(!(?<tenant>[0-9a-zA-Z-_\.]+)?)?$
-    InternalOrExternalID:
-      anyOf:
-      - $ref: '#/components/schemas/InternalID'
-      - $ref: '#/components/schemas/ScopedExternalID'
-    Resource_4:
-      description: 'An object, which status is interesting or important to track for some reason for
-
-        end customer. Typically originates from an external (customer-owned) system or in any other
-
-        way owned by customer. Identifiable and having a granularity enough to be easy to track
-
-        to the customer. Actions executed on this object, that change status important to customer,
-
-        can be configured either per resource or via policies. In the latter case, multiple policies
-
-        (i.e., multiple rules / settings sets) may be configured for the resource simultaneously.
-
-
-        Resources can be simple (''atomic'') or composite (''groups'') or / and linked with other
-
-        resources, but no separate type for resource compositions is defined, as a consequence,
-
-        simple and composite resources share the same identifiers space.
-
-
-        From policies perspective, resources serve as contexts to which policy rules / settings are
-
-        applied and executed.
-
-        '
-      type: object
-      required:
-      - name
-      - parent_group_ids
-      - cti
-      - type
-      properties:
-        is_auto_created:
-          description: Automatic creation happens in workload merge and cluster-like use case, when `aggregates_detection_query` is defined per-workload type. Otherwise, workload is explicitly created - at the time of metadata provisioning or at runtime by a vendor agent or connector, or at runtime by a cusomter.
-          type: boolean
-        group_condition:
-          description: Per-workload children selection query, if the workload is a dynamic group.
-          type: string
-        _issues:
-          type: array
-          items:
-            $ref: '#/components/schemas/Issue_1'
-        agent_id:
-          type: string
-        external_id:
-          description: ID from original external system.
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        aspects:
-          description: Calculatable field, representing all aspects of the aggregate (i.e. all aspect workloads with same `aggregate_id` value).
-          type: array
-          items:
-            $ref: '#/components/schemas/Resource'
-        name:
-          type: string
-        allowed_member_types:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceType'
-        updated_at:
-          type: string
-          format: date-time
-        id:
-          $ref: '#/components/schemas/InternalID'
-        aggregation_status:
-          description: Aggregation / split status.
-          enum:
-          - NOT_AGGREGATED
-          - MERGED_AUTOMATICALLY
-          - MERGED_MANUALLY
-          - SPLIT_MANUALLY
-          type: string
-        user_defined_name:
-          type: string
-        attributes:
-          description: Available base namespaces listed in the `ResourceAttributeNamespace` type definition.
-          type: array
-          items:
-            $ref: '#/components/schemas/NamedKeyValueSet'
-        client_id:
-          description: client ID of an agent or other subject, that manages and accesses the aspect. In case when a workload is managed by multiple agents, there should be multiple workload aspect instances, each aspect instance referencing different client ID of a corresponding agent, of same or different agent type.
-          type: string
-        tag:
-          description: Any user-defined string value, the resources can further be filtered by it
-          type: string
-        parent_group_ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/InternalID_2'
-        aggregate_id:
-          description: Reference to workload aggregate.
-          type: string
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        settings_schema:
-          $ref: '#/components/schemas/SchemaVersion'
-        allowed_actions:
-          description: Actions, allowed for the workload.
-          type: array
-          items:
-            description: "ID used in Cyber Application to uniquely identify an entity either type or instance.\n\nGeneric format - cti.<ctx>[~<ctx>]*[~(<ctx>|<uuid>)]\n\n<ctx> - <vendor>.<application>.<name>.v<major>.<minor>\n<vendor> - vendor's short code (max 50 characters)\n<application> - application's short code (max 50 characters)\n<name> - entity's name (max 128 characters), may include `.` and `_` to be used for structuring\nv<major>.<minor> - entity's version\n\nBetter regex pattern (for advanced regex processors)\n  ^cti\\.(?'ctx'[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_.]{1,127}\\.v[\\d]+\\.[\\d]+)(~(?&ctx))*(~[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12})?$\n"
-            x-cti.reference: cti.a.p.wm.action.v0.1
-            type: string
-            pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
-            maxLength: 1024
-        is_static:
-          description: Is the workload a customer created static group.
-          type: boolean
-        agent_cluster_id:
-          type: string
-        cti:
-          description: The specific workload type.
-          type: string
-          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
-          maxLength: 1024
-        deleted_at:
-          type: string
-          format: date-time
-        _links:
-          type: array
-          items:
-            $ref: '#/components/schemas/Link'
-        type:
-          $ref: '#/components/schemas/ResourceType'
-        is_customer_managed:
-          description: Workload is managed if it's created at the time of vendor metadata provisioning, or at runtime by a vendor agent or connector. Otherwise it's managed at runtime by a cusomter (e.g. dynamic and static groups).
-          type: boolean
-        tenant_id:
-          type: string
-        _link_ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/Action'
-    PolicyExecutions:
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          type: string
-        last_run_time:
-          type: string
-          format: date-time
-        next_run_time:
-          type: string
-          format: date-time
-        last_success_run_time:
-          type: string
-          format: date-time
-        next_enable_time:
-          type: string
-          format: date-time
-        run_events:
-          type: array
-          items:
-            type: string
-        enable_events:
-          type: array
-          items:
-            type: string
-    InternalID_2:
-      description: Service-wide unique object ID generated server-side.
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    SchemaVersion:
-      description: Schema version.
-      type: string
-      pattern: ^([0-9]+)\.([0-9]+)$
-    NamedKeyValueSet:
-      type: object
-      required:
-      - name
-      - kvs
-      properties:
-        name:
-          type: string
-        kvs:
-          type: array
-          items:
-            $ref: '#/components/schemas/KeyValuePair_7'
-        details:
-          type: object
-    InternalID:
-      description: Service-wide unique object ID generated server-side.
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    RunningStatus:
-      type: object
-      required:
-      - state
-      properties:
-        state:
-          $ref: '#/components/schemas/RunningState_10'
-        activities:
-          type: array
-          items:
-            $ref: '#/components/schemas/Activity'
-        progress:
-          type: integer
-        blockers:
-          description: So-called 'interaction required' escalations.
-          type: array
-          items:
-            $ref: '#/components/schemas/error'
     Resource:
       description: 'An object, which status is interesting or important to track for some reason for
 
@@ -1725,48 +1346,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Action'
-    ResourceStatus:
-      description: Resource with aggregated status information.
-      type: object
-      required:
-      - context
-      properties:
-        context:
-          $ref: '#/components/schemas/Resource'
-        aggregate:
-          $ref: '#/components/schemas/AggregateStatus'
-        licensing:
-          $ref: '#/components/schemas/LicensingStatus'
-        policies:
-          type: array
-          items:
-            $ref: '#/components/schemas/PolicyExecutions'
-    NotFoundError:
-      description: Specified REST resource wasn't found.
-      example:
-        domain: General
-        code: NotFoundError
-      type: object
-      required:
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - NotFoundError
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - General
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
     Page:
       description: A subset of REST resources collection based on filter query.
       type: object
@@ -1783,6 +1362,411 @@ components:
             total:
               description: Total number of elements in the REST resources collection.
               type: integer
+    ResourceType:
+      description: 'A resource type in the `type.scope` format, where `type` is ''resource'' and `scope` is
+
+        like one of the `ResourceScope` values defined in `impl/resource/type_scopes.raml`.
+
+        '
+      type: string
+    AuthenticationTimeoutError:
+      description: Access token is already expired or invalid.
+      example:
+        domain: Access
+        code: AuthenticationTimeout
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - AuthenticationTimeout
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - Access
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    InternalOrExternalID:
+      anyOf:
+      - $ref: '#/components/schemas/InternalID'
+      - $ref: '#/components/schemas/ScopedExternalID'
+    NamedKeyValueSet:
+      type: object
+      required:
+      - name
+      - kvs
+      properties:
+        name:
+          type: string
+        kvs:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValuePair_7'
+        details:
+          type: object
+    UnauthorizedRequestError:
+      description: Authorization failed.
+      example:
+        domain: Access
+        code: UnauthorizedRequest
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - UnauthorizedRequest
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - Access
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    InternalID_2:
+      description: Service-wide unique object ID generated server-side.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    Activity:
+      enum:
+      - backup
+      - recover
+      - install
+      - reboot
+      - failback
+      - test_replica
+      - run_vm
+      - finalize
+      - failover
+      - replicate
+      - create_asz
+      - delete_asz
+      - resize_asz
+      - av_scan
+      - update_installation
+      - vulnerability_assessment
+      - data_protection_map
+      - disaster_recovery
+      type: string
+    SchemaVersion:
+      description: Schema version.
+      type: string
+      pattern: ^([0-9]+)\.([0-9]+)$
+    NamedKeyValueSet_5:
+      type: object
+      required:
+      - name
+      - kvs
+      properties:
+        name:
+          type: string
+        kvs:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValuePair_7'
+        details:
+          type: object
+    Resource_4:
+      description: 'An object, which status is interesting or important to track for some reason for
+
+        end customer. Typically originates from an external (customer-owned) system or in any other
+
+        way owned by customer. Identifiable and having a granularity enough to be easy to track
+
+        to the customer. Actions executed on this object, that change status important to customer,
+
+        can be configured either per resource or via policies. In the latter case, multiple policies
+
+        (i.e., multiple rules / settings sets) may be configured for the resource simultaneously.
+
+
+        Resources can be simple (''atomic'') or composite (''groups'') or / and linked with other
+
+        resources, but no separate type for resource compositions is defined, as a consequence,
+
+        simple and composite resources share the same identifiers space.
+
+
+        From policies perspective, resources serve as contexts to which policy rules / settings are
+
+        applied and executed.
+
+        '
+      type: object
+      required:
+      - name
+      - parent_group_ids
+      - cti
+      - type
+      properties:
+        is_auto_created:
+          description: Automatic creation happens in workload merge and cluster-like use case, when `aggregates_detection_query` is defined per-workload type. Otherwise, workload is explicitly created - at the time of metadata provisioning or at runtime by a vendor agent or connector, or at runtime by a cusomter.
+          type: boolean
+        group_condition:
+          description: Per-workload children selection query, if the workload is a dynamic group.
+          type: string
+        _issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue_1'
+        agent_id:
+          type: string
+        external_id:
+          description: ID from original external system.
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        aspects:
+          description: Calculatable field, representing all aspects of the aggregate (i.e. all aspect workloads with same `aggregate_id` value).
+          type: array
+          items:
+            $ref: '#/components/schemas/Resource'
+        name:
+          type: string
+        allowed_member_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceType'
+        updated_at:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/InternalID'
+        aggregation_status:
+          description: Aggregation / split status.
+          enum:
+          - NOT_AGGREGATED
+          - MERGED_AUTOMATICALLY
+          - MERGED_MANUALLY
+          - SPLIT_MANUALLY
+          type: string
+        user_defined_name:
+          type: string
+        attributes:
+          description: Available base namespaces listed in the `ResourceAttributeNamespace` type definition.
+          type: array
+          items:
+            $ref: '#/components/schemas/NamedKeyValueSet'
+        client_id:
+          description: client ID of an agent or other subject, that manages and accesses the aspect. In case when a workload is managed by multiple agents, there should be multiple workload aspect instances, each aspect instance referencing different client ID of a corresponding agent, of same or different agent type.
+          type: string
+        tag:
+          description: Any user-defined string value, the resources can further be filtered by it
+          type: string
+        parent_group_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/InternalID_2'
+        aggregate_id:
+          description: Reference to workload aggregate.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        settings_schema:
+          $ref: '#/components/schemas/SchemaVersion'
+        allowed_actions:
+          description: Actions, allowed for the workload.
+          type: array
+          items:
+            description: "ID used in Cyber Application to uniquely identify an entity either type or instance.\n\nGeneric format - cti.<ctx>[~<ctx>]*[~(<ctx>|<uuid>)]\n\n<ctx> - <vendor>.<application>.<name>.v<major>.<minor>\n<vendor> - vendor's short code (max 50 characters)\n<application> - application's short code (max 50 characters)\n<name> - entity's name (max 128 characters), may include `.` and `_` to be used for structuring\nv<major>.<minor> - entity's version\n\nBetter regex pattern (for advanced regex processors)\n  ^cti\\.(?'ctx'[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_]{0,49}\\.[a-z][a-z0-9_.]{1,127}\\.v[\\d]+\\.[\\d]+)(~(?&ctx))*(~[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12})?$\n"
+            x-cti.reference: cti.a.p.wm.action.v0.1
+            type: string
+            pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+            maxLength: 1024
+        is_static:
+          description: Is the workload a customer created static group.
+          type: boolean
+        agent_cluster_id:
+          type: string
+        cti:
+          description: The specific workload type.
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z][a-z0-9_.]+\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        deleted_at:
+          type: string
+          format: date-time
+        _links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        type:
+          $ref: '#/components/schemas/ResourceType'
+        is_customer_managed:
+          description: Workload is managed if it's created at the time of vendor metadata provisioning, or at runtime by a vendor agent or connector. Otherwise it's managed at runtime by a cusomter (e.g. dynamic and static groups).
+          type: boolean
+        tenant_id:
+          type: string
+        _link_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    ResourcePagedList:
+      type: object
+      required:
+      - paging
+      - items
+      - timestamp
+      properties:
+        paging:
+          $ref: '#/components/schemas/Page'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Resource_4'
+        timestamp:
+          description: Server-side timestamp of query start.
+          type: string
+          format: date-time
+        dynamic_group_creation_forbidden:
+          description: This field defines that user can not create a group using query defined in 'search' query parameter (i.e. last_backup_time < '2020-12-20', isOnline = true)
+          type: boolean
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request. Use as a base for more granular code and context definitions.
+      example:
+        domain: General
+        code: InternalServerError
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - InternalServerError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - General
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    Issue_1:
+      type: object
+      required:
+      - severity
+      properties:
+        link:
+          description: Link name / ID or action / operation type, the issue is applied to.
+          enum:
+          - policy_view
+          - policy_create
+          - policy_delete
+          - policy_update
+          - policy_enable
+          - policy_disable
+          - policy_add_child
+          - policy_remove_child
+          - policy_run
+          - policy_stop
+          - policy_apply
+          - policy_revoke
+          - policy_resume
+          - policy_pause
+          - policy_status
+          - backup
+          - restore
+          - getActivities
+          - largeScaleRecovery
+          - renameBackupPlans
+          - editBackupPlans
+          - collectSysinfo
+          - browse
+          - manageAsrm
+          - manageAsz
+          - activeProtection
+          - addToGroup
+          - removeFromGroup
+          - renameVMReplicationPlans
+          - editVMReplicationPlans
+          - startReplicaTest
+          - stopReplicaTest
+          - failover
+          - stopFailover
+          - failback
+          - finalize
+          - unmount
+          - detectApplications
+          - rebind
+          - permanentFailover
+          - remove
+          - replicate
+          - delete
+          - rename
+          - addResources
+          - removeResources
+          - move
+          - addStaticSubGroup
+          - addDynamicSubGroup
+          - editCondition
+          - changeCredentials
+          - changeMsSqlCredentials
+          - editCasSettings
+          - deleteCasSettings
+          - changeMsExchangeDbCredentials
+          - changeOffice365Credentials
+          - comment
+          - hostBackup
+          - removeAppliances
+          - select_disk_provision_mode
+          - reboot
+          - shutdown
+          - canDisasterRecovery
+          - manageLicense
+          - patchManagement
+          - remoteDesktop
+          - remoteWipe
+          - cyberDesktop
+          type: string
+        severity:
+          description: Degree of trouble brought by the issue. If contains empty string, the severity is unknown.
+          enum:
+          - ok
+          - warning
+          - error
+          - critical
+          type: string
+        error:
+          description: Detailed issue domain and code, and context description as well.
+          type: object
+          required:
+          - code
+          - domain
+          properties:
+            context:
+              description: Description of context (call parameters, environment, etc), where the error occurred.
+              type: object
+            code:
+              description: Error ID or code, unique in the domain.
+              type: string
+            domain:
+              description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+              type: string
+            message:
+              description: Human-readable message, describing the error.
+              type: string
     Issue:
       type: object
       required:
@@ -1887,127 +1871,143 @@ components:
             message:
               description: Human-readable message, describing the error.
               type: string
-    Link:
-      type: object
-      required:
-      - rel
-      properties:
-        rel:
-          description: \'Relation' - link name / ID or action / operation type.
-          enum:
-          - policy_view
-          - policy_create
-          - policy_delete
-          - policy_update
-          - policy_enable
-          - policy_disable
-          - policy_add_child
-          - policy_remove_child
-          - policy_run
-          - policy_stop
-          - policy_apply
-          - policy_revoke
-          - policy_resume
-          - policy_pause
-          - policy_status
-          - backup
-          - restore
-          - getActivities
-          - largeScaleRecovery
-          - renameBackupPlans
-          - editBackupPlans
-          - collectSysinfo
-          - browse
-          - manageAsrm
-          - manageAsz
-          - activeProtection
-          - addToGroup
-          - removeFromGroup
-          - renameVMReplicationPlans
-          - editVMReplicationPlans
-          - startReplicaTest
-          - stopReplicaTest
-          - failover
-          - stopFailover
-          - failback
-          - finalize
-          - unmount
-          - detectApplications
-          - rebind
-          - permanentFailover
-          - remove
-          - replicate
-          - delete
-          - rename
-          - addResources
-          - removeResources
-          - move
-          - addStaticSubGroup
-          - addDynamicSubGroup
-          - editCondition
-          - changeCredentials
-          - changeMsSqlCredentials
-          - editCasSettings
-          - deleteCasSettings
-          - changeMsExchangeDbCredentials
-          - changeOffice365Credentials
-          - comment
-          - hostBackup
-          - removeAppliances
-          - select_disk_provision_mode
-          - reboot
-          - shutdown
-          - canDisasterRecovery
-          - manageLicense
-          - patchManagement
-          - remoteDesktop
-          - remoteWipe
-          - cyberDesktop
-          type: string
-        href:
-          description: URL of an endpoint that can be used for this action or operation.
-          type: string
-    Activity:
+    RunningState_10:
       enum:
-      - backup
-      - recover
-      - install
-      - reboot
-      - failback
-      - test_replica
-      - run_vm
-      - finalize
-      - failover
-      - replicate
-      - create_asz
-      - delete_asz
-      - resize_asz
-      - av_scan
-      - update_installation
-      - vulnerability_assessment
-      - data_protection_map
-      - disaster_recovery
+      - running
+      - idle
+      - cancelling
+      - interaction_required
       type: string
-    ResourcePagedList:
+    error:
       type: object
       required:
-      - paging
-      - items
-      - timestamp
+      - domain
+      - code
       properties:
-        paging:
-          $ref: '#/components/schemas/Page'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Resource_4'
-        timestamp:
-          description: Server-side timestamp of query start.
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          type: string
+        code:
+          description: Error ID or code, unique in the domain.
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+    PageCursor:
+      type: string
+    KeyValuePair_7:
+      description: Generic key-value pair.
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          anyOf:
+          - anyOf:
+            - type: string
+            - type: integer
+          - type: array
+            items:
+              anyOf:
+              - type: string
+              - type: integer
+    AccessDeniedError:
+      description: Access was denied.
+      example:
+        domain: Access
+        code: AccessDeniedError
+        context:
+          scope: urn:acronis.com::policy_management:1234567890:read urn:acronis.com::policy_management:0987654321:read
+          required_scope: urn:acronis.com::script_management:1234567890:reviewer
+      type: object
+      required:
+      - context
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+          required:
+          - scope
+          - required_scope
+          properties:
+            scope:
+              description: Access scope of the caller
+              type: string
+            required_scope:
+              description: Required access scope
+              type: string
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - AccessDeniedError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - Access
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    AggregateStatus:
+      type: object
+      required:
+      - running
+      - status
+      properties:
+        running:
+          $ref: '#/components/schemas/RunningStatus'
+        names:
+          type: string
+        status:
+          $ref: '#/components/schemas/ExecutionStatus'
+    ExecutionStatus:
+      enum:
+      - warning
+      - error
+      - critical
+      - no_policies_applied
+      - scheduled
+      - interaction_required
+      - running
+      - cancelling
+      - idle
+      type: string
+    PolicyExecutions:
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+        last_run_time:
           type: string
           format: date-time
-        dynamic_group_creation_forbidden:
-          description: This field defines that user can not create a group using query defined in 'search' query parameter (i.e. last_backup_time < '2020-12-20', isOnline = true)
-          type: boolean
+        next_run_time:
+          type: string
+          format: date-time
+        last_success_run_time:
+          type: string
+          format: date-time
+        next_enable_time:
+          type: string
+          format: date-time
+        run_events:
+          type: array
+          items:
+            type: string
+        enable_events:
+          type: array
+          items:
+            type: string
   securitySchemes:
     oauth2:
       type: oauth2

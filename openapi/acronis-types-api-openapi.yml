@@ -328,31 +328,6 @@ paths:
       variables: {}
 components:
   schemas:
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
-    ACEPKeyValue:
-      description: 'Key-value mapping between context fields and ACEP fields.
-
-        It is mostly for internal use only.
-
-        '
-      type: object
-      required:
-      - name
-      - acep_name
-      properties:
-        name:
-          description: Context field key name.
-          type: string
-        acep_name:
-          description: Alias for corresponding field in ACEP.
-          type: string
-        acep_path:
-          description: 'If a custom column is JSON data, this property makes possible to export specific field from JSON.
-
-            '
-          type: string
     NotificationRecipient:
       enum:
       - SIBLINGS
@@ -405,13 +380,9 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    OSType:
-      enum:
-      - ios
-      - linux
-      - macos
-      - windows
-      type: string
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     Type:
       description: An information about the alert type.
       example:
@@ -522,6 +493,35 @@ components:
         alias:
           description: Alert type name alias.
           type: string
+    OSType:
+      enum:
+      - ios
+      - linux
+      - macos
+      - windows
+      type: string
+    ACEPKeyValue:
+      description: 'Key-value mapping between context fields and ACEP fields.
+
+        It is mostly for internal use only.
+
+        '
+      type: object
+      required:
+      - name
+      - acep_name
+      properties:
+        name:
+          description: Context field key name.
+          type: string
+        acep_name:
+          description: Alias for corresponding field in ACEP.
+          type: string
+        acep_path:
+          description: 'If a custom column is JSON data, this property makes possible to export specific field from JSON.
+
+            '
+          type: string
     CTIWildcard:
       description: 'CTI with wildcard support, where the wildcard `*` can only be used as the final character of a segment.
 
@@ -529,6 +529,56 @@ components:
       type: string
       pattern: ^cti((\.([a-z][a-z0-9_]*))|\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?(~(([a-z][a-z0-9_]*)|([a-z][a-z0-9_]*)\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?)*\*$|^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
       maxLength: 1024
+    EventType:
+      description: 'Defines the structure of the event type. It is used to define the structure of the event and to validate the event data.
+
+        '
+      type: object
+      additionalProperties: false
+      required:
+      - id
+      - topic_id
+      - description
+      properties:
+        allowed_subject_types:
+          description: 'List of allowed subject types for the event type. If the subject type is not in the list, the event will be rejected.
+
+            '
+          x-cti.reference: true
+          type: array
+          maxItems: 32
+          items:
+            $ref: '#/components/schemas/CTIWildcard'
+        data_schema:
+          description: 'A JSON schema that describes the structure of the event.
+
+            '
+          example: "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema\",\n  \"$id\": \"http://acronis.com/tenant-undeleted.json\",\n  \"type\": \"object\",\n  \"title\": \"The schema of tenant.undeleted event.\",\n  \"description\": \"The root schema comprises the entire JSON document.\",\n  \"properties\": {\n    \"subject\": {\n      \"type\": \"string\",\n      \"format\": \"uuid\",\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\",\n          \"examples\": [\n            \"My Tenant\"\n          ]\n        }\n      },\n      \"additionalProperties\": false\n    }\n  },\n  \"required\": [\"subject\",\"data\"],\n  \"additionalProperties\": false\n}\n"
+          type: string
+        id:
+          description: The specific event type.
+          x-cti.reference: cti.a.p.em.event.v1.0
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        topic_id:
+          description: Topic unique id
+          x-cti.reference: cti.a.p.em.topic.v1.0
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        subject_ref_template:
+          description: 'API endpoint URL to fetch subject details, so the client can
+
+            automate subject retrieval for given type of events
+
+            '
+          example: /api/v2/tenants/{{subjectId}}
+          type: string
+          maxLength: 1024
+        description:
+          description: Description of the type purpose and usage
+          type: string
     kbLinkInfo_2:
       description: Components for kblink
       type: object
@@ -594,56 +644,6 @@ components:
       properties:
         error:
           $ref: '#/components/schemas/error'
-    EventType:
-      description: 'Defines the structure of the event type. It is used to define the structure of the event and to validate the event data.
-
-        '
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - topic_id
-      - description
-      properties:
-        allowed_subject_types:
-          description: 'List of allowed subject types for the event type. If the subject type is not in the list, the event will be rejected.
-
-            '
-          x-cti.reference: true
-          type: array
-          maxItems: 32
-          items:
-            $ref: '#/components/schemas/CTIWildcard'
-        data_schema:
-          description: 'A JSON schema that describes the structure of the event.
-
-            '
-          example: "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema\",\n  \"$id\": \"http://acronis.com/tenant-undeleted.json\",\n  \"type\": \"object\",\n  \"title\": \"The schema of tenant.undeleted event.\",\n  \"description\": \"The root schema comprises the entire JSON document.\",\n  \"properties\": {\n    \"subject\": {\n      \"type\": \"string\",\n      \"format\": \"uuid\",\n    },\n    \"data\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"name\": {\n          \"type\": \"string\",\n          \"examples\": [\n            \"My Tenant\"\n          ]\n        }\n      },\n      \"additionalProperties\": false\n    }\n  },\n  \"required\": [\"subject\",\"data\"],\n  \"additionalProperties\": false\n}\n"
-          type: string
-        id:
-          description: The specific event type.
-          x-cti.reference: cti.a.p.em.event.v1.0
-          type: string
-          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
-          maxLength: 1024
-        topic_id:
-          description: Topic unique id
-          x-cti.reference: cti.a.p.em.topic.v1.0
-          type: string
-          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
-          maxLength: 1024
-        subject_ref_template:
-          description: 'API endpoint URL to fetch subject details, so the client can
-
-            automate subject retrieval for given type of events
-
-            '
-          example: /api/v2/tenants/{{subjectId}}
-          type: string
-          maxLength: 1024
-        description:
-          description: Description of the type purpose and usage
-          type: string
   securitySchemes:
     oauth_2_0:
       type: oauth2

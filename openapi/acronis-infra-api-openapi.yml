@@ -284,6 +284,45 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
     infraCap:
       description: Capability of infrastructure component.
       enum:
@@ -332,50 +371,20 @@ components:
           $ref: '#/components/schemas/link'
         backend_type:
           $ref: '#/components/schemas/backendType'
-    backendType:
-      description: Storage backend type.
-      type:
-      - string
-      - 'null'
-    infraBatch:
-      example:
-        items:
-        - id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
-          owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
-          location_id: f79546d7-d051-4e19-96f3-4cc68c2c5575
-          platform_owned: true
-          name: Infrastructure Component
-          url: acronis+fes://storage20.corp.acronis.com:44445
-          capabilities:
-          - backup
-          - files_cloud
-          content_url: https://browse.storage20.corp.acronis.com/
-          content_mobile_url: https://browse.storage20.corp.acronis.com/mobile/
-          backend_type: azure
-          version: 3
-        - id: 3d1efc54-4e9a-4db1-abe6-7d2aee50cead
-          owner_tenant_id: 3f545595-0e77-4a34-9259-dab5256f9559
-          location_id: bfdf24b0-5a72-49a8-a2bd-2fc7c085ff7b
-          platform_owned: false
-          name: DR Infrastructure Component
-          url: amazon+s3://dr.corp.acronis.com
-          capabilities:
-          - disaster_recovery
-          backend_type: acronis
-          version: 5
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/infra'
     uuid:
       type: string
       pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
       minLength: 36
       maxLength: 36
+    backendType:
+      description: Storage backend type.
+      type:
+      - string
+      - 'null'
+    link:
+      description: URL.
+      type: string
+      pattern: ^[a-z0-9\+]+:\/\/[^\s\/$.?#].[^\s]*
     infraPut:
       example:
         name: Infrastructure Component
@@ -471,49 +480,40 @@ components:
         readonly:
           description: True if infra details are accessible in a limited way, e.g. infra is owned by some ancestor.
           type: boolean
-    link:
-      description: URL.
-      type: string
-      pattern: ^[a-z0-9\+]+:\/\/[^\s\/$.?#].[^\s]*
-    errorScheme:
+    infraBatch:
+      example:
+        items:
+        - id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
+          owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+          location_id: f79546d7-d051-4e19-96f3-4cc68c2c5575
+          platform_owned: true
+          name: Infrastructure Component
+          url: acronis+fes://storage20.corp.acronis.com:44445
+          capabilities:
+          - backup
+          - files_cloud
+          content_url: https://browse.storage20.corp.acronis.com/
+          content_mobile_url: https://browse.storage20.corp.acronis.com/mobile/
+          backend_type: azure
+          version: 3
+        - id: 3d1efc54-4e9a-4db1-abe6-7d2aee50cead
+          owner_tenant_id: 3f545595-0e77-4a34-9259-dab5256f9559
+          location_id: bfdf24b0-5a72-49a8-a2bd-2fc7c085ff7b
+          platform_owned: false
+          name: DR Infrastructure Component
+          url: amazon+s3://dr.corp.acronis.com
+          capabilities:
+          - disaster_recovery
+          backend_type: acronis
+          version: 5
       type: object
       required:
-      - error
+      - items
       properties:
-        error:
-          type: object
-          required:
-          - code
-          - domain
-          - message
-          - details
-          properties:
-            code:
-              oneOf:
-              - type: string
-              - type: integer
-            context:
-              type: object
-            domain:
-              description: This field can have a null value.
-              type:
-              - string
-              - 'null'
-            message:
-              type: string
-            details:
-              description: Additional info.
-              type: object
-              properties:
-                info:
-                  description: This field can have a null value.
-                  type:
-                  - string
-                  - 'null'
-            data:
-              type: array
-              items:
-                type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/infra'
   securitySchemes:
     basicAuth:
       type: http

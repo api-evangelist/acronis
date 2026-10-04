@@ -87,9 +87,40 @@ paths:
       x-operation-id-original: Fetch alert counters
 components:
   schemas:
-    debugInfo:
-      description: Error debug information (map type)
+    SeveritiesAndTypesEmbed:
+      description: Alert counters grouped by severity and then by type.
       type: object
+      required:
+      - information
+      - warning
+      - error
+      - critical
+      properties:
+        information:
+          $ref: '#/components/schemas/CountPerType'
+        warning:
+          $ref: '#/components/schemas/CountPerType'
+        error:
+          $ref: '#/components/schemas/CountPerType'
+        critical:
+          $ref: '#/components/schemas/CountPerType'
+    SeveritiesEmbed:
+      description: Alert counters per severity.
+      type: object
+      required:
+      - information
+      - warning
+      - error
+      - critical
+      properties:
+        information:
+          type: integer
+        warning:
+          type: integer
+        error:
+          type: integer
+        critical:
+          type: integer
     TenantCountResult:
       description: Alert counters for a tenant.
       type: object
@@ -113,50 +144,6 @@ components:
         types:
           $ref: '#/components/schemas/TypesEmbed'
         total:
-          type: integer
-    SeveritiesAndTypesEmbed:
-      description: Alert counters grouped by severity and then by type.
-      type: object
-      required:
-      - information
-      - warning
-      - error
-      - critical
-      properties:
-        information:
-          $ref: '#/components/schemas/CountPerType'
-        warning:
-          $ref: '#/components/schemas/CountPerType'
-        error:
-          $ref: '#/components/schemas/CountPerType'
-        critical:
-          $ref: '#/components/schemas/CountPerType'
-    CountPerType:
-      description: Alert counters per type while grouping by severity as well.
-      type: object
-      required:
-      - total
-      properties:
-        total:
-          type: integer
-        types:
-          $ref: '#/components/schemas/TypesEmbed'
-    SeveritiesEmbed:
-      description: Alert counters per severity.
-      type: object
-      required:
-      - information
-      - warning
-      - error
-      - critical
-      properties:
-        information:
-          type: integer
-        warning:
-          type: integer
-        error:
-          type: integer
-        critical:
           type: integer
     kbLinkInfo:
       description: Components for kblink
@@ -204,6 +191,9 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     TypesEmbed:
       description: 'Alert counters per alert type. Object keys are identifiers of alert
 
@@ -211,6 +201,16 @@ components:
 
         '
       type: object
+    CountPerType:
+      description: Alert counters per type while grouping by severity as well.
+      type: object
+      required:
+      - total
+      properties:
+        total:
+          type: integer
+        types:
+          $ref: '#/components/schemas/TypesEmbed'
     CategoriesEmbed:
       description: 'Alert counters per alert category. Object keys are identifiers of alert
 

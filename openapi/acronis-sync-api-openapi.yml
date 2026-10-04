@@ -1856,24 +1856,27 @@ paths:
       x-operation-id-original: Register storage node_0
 components:
   schemas:
-    orphanage:
-      title: Set archive orphanage status request
-      description: Archive orphanage status description.
-      type: object
-      required:
-      - status
-      properties:
-        status:
-          description: Value of archive orphanage status.
-          enum:
-          - NONE
-          - NO_POLICY
-          - NO_RESOURCE
-          type: string
-    tapes_for_restore_25:
-      type: array
-      items:
-        $ref: '#/components/schemas/archive_id_15'
+    storage_type_16:
+      description: Vault storage type.
+      enum:
+      - unknown
+      - local_folder
+      - network_share
+      - ftp
+      - sftp
+      - cd
+      - tape
+      - storage_server
+      - asz
+      - removable_drive
+      - online
+      - nfs_share
+      - esx
+      - local_abgw
+      - microsoft_azure
+      - amazon_s3
+      - s3_compatible
+      type: string
     access_address:
       description: Hostname or IP address of Acronis Storage Node to create vault on.
       anyOf:
@@ -1886,89 +1889,215 @@ components:
       - type: string
         minLength: 0
       type: string
-    item4:
-      title: Wasabi S3 Vault settings
-      description: Wasabi S3 Vault settings.
-      type: object
-      additionalProperties: false
-      required:
-      - connection_id
-      - region
-      - endpoint
-      - bucket
-      - path
-      - s3_subtype
-      properties:
-        connection_id:
-          description: Connection ID is used to get Wasabi credentials from Cloud Connection Service
-          type: string
-        region:
-          description: Region of the storage
-          type: string
-        endpoint:
-          description: Endpoint of wasabi based on the region
-          type: string
-        bucket:
-          description: Bucket name
-          type: string
-        path:
-          description: Path on the storage.
-          type: string
-        s3_subtype:
-          enum:
-          - Wasabi
-          type: string
-    uuid:
-      description: Universally unique identifier.
+    items:
+      description: Backup type.
+      enum:
+      - full
+      - incremental
+      - differential
+      - unknown
+      - cdp
       type: string
-      format: uuid
-    error:
-      description: Base error object.
+    stats:
+      title: Vault stats
+      description: Vault statistics.
       type: object
       additionalProperties: false
-      required:
-      - domain
-      - reason
       properties:
-        domain:
-          description: Error type or category.
-          type: string
-        reason:
-          description: Error ID or code.
-          type: string
-        context:
-          description: Error context dictionary.
-          type: object
-        serCode:
-          type: string
-        kbLink:
-          type: string
-        hints:
-          type: array
-          items:
-            type: object
-            additionalProperties: false
-            required:
-            - name
-            - href
-            properties:
-              name:
-                type: string
-              href:
-                type: string
-        debug:
-          description: Error debug information.
+        archive_count:
+          description: Number of archives in the vault.
+          type: integer
+        backup_count:
+          description: Number of backups in the vault.
+          type: integer
+        backed_up_data_size:
+          description: Size of data stored in vault's backups.
+          type: integer
+        original_data_size:
+          description: Original size of all data vault holds.
+          type: integer
+        occupied_data_size:
+          description: Amount of space that vault takes up on storage.
+          type: integer
+        immutable_size:
+          description: Amount of space that vault takes up on immutable storage.
+          type: integer
+        free_space:
+          description: Amount of space left on storage where vault is.
+          type: integer
+        total_space:
+          description: Total about of space on storage where vault is.
+          type: integer
+        logical_archive_size:
+          description: Logical archive size sum.
+          type: integer
+        deduplication_stats:
           type: object
           additionalProperties: false
           properties:
-            msg:
+            occupied_deduplication_db_size:
+              description: Amount of space deduplication database takes up.
+              type: integer
+            free_deduplication_db_size:
+              description: Amount of space left on storage where deduplication database is.
+              type: integer
+            occupied_deduplication_ds_size:
+              description: Amount of space datastore takes up.
+              type: integer
+            occupied_deduplication_ram:
+              description: Amount of RAM deduplication database takes up.
+              type: integer
+            free_deduplication_ram:
+              description: Amount of free RAM that is left for deduplication database to use.
+              type: integer
+            deduplication_index_usage:
+              description: Load factor of deduplication database.
               type: string
-            stackTrace:
-              type: string
-    id:
+            data_to_index_size:
+              description: Amount of data that needs to be indexed (LDS size).
+              type: integer
+    item0_19:
+      type: object
+      additionalProperties: false
+      properties:
+        comment:
+          type: string
+        storage_type:
+          $ref: '#/components/schemas/storage_type'
+        catalog_type:
+          type: string
+        catalog_uri:
+          type: string
+        encryption_type:
+          enum:
+          - CRYPT_NONE
+          - CRYPT_AES128
+          - CRYPT_AES192
+          - CRYPT_AES256
+          - CRYPT_GOST
+          type: string
+        encryption_uri:
+          type: string
+        encryption_key:
+          type: string
+        dedup_type:
+          type: string
+        dedup_uri:
+          type: string
+    items_17:
       description: Universally unique identifier.
       type: string
       format: uuid
+    items_1:
+      description: Reason why Backup was created.
+      enum:
+      - patch_management
+      type: string
+    backup_update_request:
+      description: Backup updating request, modified partial version of the Backup. Identified by `vault_id`, `archive_id` and `backup_id`.
+      allOf:
+      - $ref: '#/components/schemas/item0_28'
+      - type: object
+        properties:
+          archive_credentials_id:
+            description: Archive credentials ID.
+            type: string
+      example:
+        vault_id: 885b7fe4-95ce-71fd-fff5-8de5b3cce9bb
+        archive_id: 1f8867c2-179f-ef34-159f-84279a18174d
+        backup_id: c2aa0462-dd30-4e08-afce-1bad7cfbf8be
+        av_scanning_date: '2018-02-02T01:40:05Z'
+        type: cdp
+      type: object
+    storage_node_extended:
+      description: Extended info about Storage Node and its vaults.
+      example:
+        config:
+          name: RU-O0000123
+          machine_id: 10.250.176.12
+      type: object
+      additionalProperties: false
+      required:
+      - config
+      properties:
+        config:
+          title: Storage node
+          description: Storage node description.
+          type: object
+          additionalProperties: false
+          required:
+          - name
+          - machine_id
+          properties:
+            id:
+              $ref: '#/components/schemas/id'
+            name:
+              type: string
+            machine_id:
+              description: Identifier of the machine with Storage node. Currently hostname or IP address.
+              type: string
+            status:
+              description: Status of the machine.
+              type: string
+            addresses:
+              description: Addresses of the machine.
+              type: array
+              items:
+                anyOf:
+                - type: string
+                  format: ipv4
+                - type: string
+                  format: ipv6
+                type: string
+            tenant_locator:
+              type: string
+            memory_size:
+              description: Memory size of the machine.
+              type: integer
+            processor_frequency:
+              description: Processor frequency of the machine.
+              type: integer
+            processor_name:
+              description: Processor name of the machine.
+              type: string
+            operating_system_name:
+              description: Operating system name of the machine.
+              type: string
+            architecture:
+              description: Architecture of the machine.
+              type: string
+            agent_version:
+              description: Agent version installed in the machine.
+              type: string
+            vault_count:
+              description: Number of managed vaults.
+              type: integer
+        vaults:
+          type: array
+          items:
+            description: Vault info.
+            type: object
+            additionalProperties: false
+            required:
+            - config
+            properties:
+              config:
+                $ref: '#/components/schemas/config_29'
+              stats:
+                $ref: '#/components/schemas/stats'
+              agents:
+                type: array
+                items:
+                  $ref: '#/components/schemas/id'
+              status:
+                type: object
+    checksum_validation_26:
+      description: Value of backup validation status.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
+      type: string
     item2:
       title: Amazon S3 Vault settings
       description: Amazon S3 Vault settings.
@@ -2001,61 +2130,19 @@ components:
           type: integer
           minimum: 1
           maximum: 999
-    items_14:
-      description: Composite backup ID that includes vault and archive ID. Tenant ID has meaning in case where vault ID is not unique.
-      type: object
-      additionalProperties: false
-      required:
-      - vault_id
-      - archive_id
-      - backup_id
-      properties:
-        vault_id:
-          $ref: '#/components/schemas/archive_id_15'
-        archive_id:
-          $ref: '#/components/schemas/archive_id_15'
-        backup_id:
-          $ref: '#/components/schemas/archive_id_15'
-        tenant_id:
-          $ref: '#/components/schemas/tenant_id_22'
-        archive_credentials_id:
-          type: string
-    checksum_validation_26:
-      description: Value of backup validation status.
-      enum:
-      - SUCCESS
-      - FAILURE
-      - CANCELLED
+    id:
+      description: Universally unique identifier.
       type: string
-    item0_19:
-      type: object
-      additionalProperties: false
-      properties:
-        comment:
-          type: string
-        storage_type:
-          $ref: '#/components/schemas/storage_type'
-        catalog_type:
-          type: string
-        catalog_uri:
-          type: string
-        encryption_type:
-          enum:
-          - CRYPT_NONE
-          - CRYPT_AES128
-          - CRYPT_AES192
-          - CRYPT_AES256
-          - CRYPT_GOST
-          type: string
-        encryption_uri:
-          type: string
-        encryption_key:
-          type: string
-        dedup_type:
-          type: string
-        dedup_uri:
-          type: string
-    storage_type_23:
+      format: uuid
+    item1:
+      description: Numeric identifier.
+      type: string
+      pattern: ^\d+$
+    archive_id_15:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    storage_type:
       description: Vault storage type.
       enum:
       - unknown
@@ -2076,29 +2163,6 @@ components:
       - amazon_s3
       - s3_compatible
       type: string
-    tenant_id_22:
-      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
-      oneOf:
-      - $ref: '#/components/schemas/archive_id_15'
-      - description: Numeric identifier.
-        type: string
-        pattern: ^\d+$
-    backup_update_request:
-      description: Backup updating request, modified partial version of the Backup. Identified by `vault_id`, `archive_id` and `backup_id`.
-      allOf:
-      - $ref: '#/components/schemas/item0_28'
-      - type: object
-        properties:
-          archive_credentials_id:
-            description: Archive credentials ID.
-            type: string
-      example:
-        vault_id: 885b7fe4-95ce-71fd-fff5-8de5b3cce9bb
-        archive_id: 1f8867c2-179f-ef34-159f-84279a18174d
-        backup_id: c2aa0462-dd30-4e08-afce-1bad7cfbf8be
-        av_scanning_date: '2018-02-02T01:40:05Z'
-        type: cdp
-      type: object
     archive:
       title: Archive
       description: Archive description.
@@ -2332,91 +2396,178 @@ components:
           type: boolean
         orphanage:
           $ref: '#/components/schemas/orphanage'
-    items_1:
-      description: Reason why Backup was created.
-      enum:
-      - patch_management
-      type: string
-    archive_id_15:
+    managing_agent_id:
       description: Universally unique identifier.
       type: string
       format: uuid
-    items:
-      description: Backup type.
-      enum:
-      - full
-      - incremental
-      - differential
-      - unknown
-      - cdp
-      type: string
-    config_29:
-      title: Vault description
-      description: Vault description.
+    vault_info:
+      description: Vault info.
+      example:
+        config:
+          name: 'WIN-FBM117GB12I: C:\\test\\'
+          settings:
+            storage_uri: C:/test/
+          is_full_config: true
+          uri: C:/test/
+          tenant_locator: /00000000-0000-0000-0000-000000000000/
+          storage_type: local_folder
+          version: LOCATION_VERSION_ABR12
+          managing_agent_id: 45EB1623-FA48-44A6-9C35-17188781ADC5
+          id: A574AB3E-DB44-2C60-01A9-FB9CFBA89D43
+        stats:
+          free_space: 26164383744
+          total_space: 42580570112
+        status:
+          status: ok
+          status_error: '{}\n'
+        agents:
+        - 45EB1623-FA48-44A6-9C35-17188781ADC5
       type: object
       additionalProperties: false
       required:
-      - name
-      - version
-      - storage_type
-      - settings
+      - config
+      properties:
+        config:
+          $ref: '#/components/schemas/config'
+        stats:
+          $ref: '#/components/schemas/stats'
+        agents:
+          type: array
+          items:
+            $ref: '#/components/schemas/id'
+        status:
+          type: object
+    item3:
+      title: S3 Compatible Vault settings
+      description: S3 Compatible Vault settings.
+      type: object
+      additionalProperties: false
+      required:
+      - cred_id
+      - endpoint
+      - bucket
+      - path
+      properties:
+        cred_id:
+          description: Cred ID from CredentialStore service used to get s3 credentials
+          type: string
+        s3_auth_flavour:
+          description: Authentication method
+          default: authv4
+          enum:
+          - authv2
+          - authv4
+          type: string
+        cert_verify:
+          description: Verify server cerificate?
+          default: true
+          type: boolean
+        endpoint:
+          description: Endpoint of the compatible s3 storage
+          type: string
+        bucket:
+          description: Bucket name
+          type: string
+        path:
+          description: Path on the storage.
+          type: string
+        s3_subtype:
+          default: ''
+          enum:
+          - ''
+          - ACI
+          - ImpossibleCloud
+          type: string
+    items_13:
+      description: Composite archive ID that includes vault ID.
+      type: object
+      additionalProperties: false
+      required:
+      - vault_id
+      - archive_id
+      properties:
+        vault_id:
+          $ref: '#/components/schemas/id_12'
+        archive_id:
+          $ref: '#/components/schemas/id_12'
+    items_5:
+      description: Format of archive.
+      enum:
+      - '11'
+      - '12'
+      - alwaysIncremental
+      type: string
+    storage_type_23:
+      description: Vault storage type.
+      enum:
+      - unknown
+      - local_folder
+      - network_share
+      - ftp
+      - sftp
+      - cd
+      - tape
+      - storage_server
+      - asz
+      - removable_drive
+      - online
+      - nfs_share
+      - esx
+      - local_abgw
+      - microsoft_azure
+      - amazon_s3
+      - s3_compatible
+      type: string
+    tenant_id_20:
+      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+      oneOf:
+      - $ref: '#/components/schemas/id'
+      - $ref: '#/components/schemas/item1'
+    tapes_for_restore_25:
+      type: array
+      items:
+        $ref: '#/components/schemas/archive_id_15'
+    orphanage:
+      title: Set archive orphanage status request
+      description: Archive orphanage status description.
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          description: Value of archive orphanage status.
+          enum:
+          - NONE
+          - NO_POLICY
+          - NO_RESOURCE
+          type: string
+    id_response:
+      type: object
+      additionalProperties: false
       properties:
         id:
           $ref: '#/components/schemas/id'
-        name:
-          description: Name of the vault.
+    stats_27:
+      title: Archive stats
+      description: Additional information about slices.
+      type: object
+      additionalProperties: false
+      properties:
+        first_backup:
           type: string
-        uri:
-          description: URI of the vault.
+        last_backup_size:
+          type: integer
+        last_backup_path:
           type: string
-        version:
-          description: Version of the vault.
-          type: string
-        managing_agent_id:
-          $ref: '#/components/schemas/id'
-        storage_type:
-          $ref: '#/components/schemas/storage_type'
-        organizational:
-          description: True if vault is online and is created on customer or personal tenant levels. False otherwise.
-          type: boolean
-        settings:
-          description: Any vault type specific settings.
-          oneOf:
-          - $ref: '#/components/schemas/item0_19'
-          - $ref: '#/components/schemas/item1_21'
-          - $ref: '#/components/schemas/item2'
-          - $ref: '#/components/schemas/item3'
-          - $ref: '#/components/schemas/item4'
-          - type: object
-        storage_id:
-          description: ID of the storage, for Local ABGW Vault or Storage node Vault.
-          type: string
-        status:
-          description: Status of the vault.
-          type: object
-        tenant_id:
-          $ref: '#/components/schemas/tenant_id_20'
-        tenant_locator:
-          description: Tenant locator.
-          type: string
-        access_address:
-          $ref: '#/components/schemas/access_address'
-        compacting_plan_id:
-          $ref: '#/components/schemas/id'
-        hostname:
-          description: Hostname of local vault.
-          type: string
-          format: hostname
-        consistent:
-          description: False if vault content could be outdated and a refresh is required. True otherwise.
-          type: boolean
-        last_seen_at:
-          description: Date and time in RFC 3339 format when the vault was last seen.
-          type: string
-          format: date-time
-        is_full_config:
-          description: True if `name`, `uri`, `settings`, `storage_type` are filled. False otherwise.
-          type: boolean
+        backup_count:
+          type: integer
+    tenant_id_22:
+      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
+      oneOf:
+      - $ref: '#/components/schemas/archive_id_15'
+      - description: Numeric identifier.
+        type: string
+        pattern: ^\d+$
     item0:
       description: Backup description.
       type: object
@@ -3085,233 +3236,163 @@ components:
         created_in_network_isolation:
           description: True if the backup was created after network isolation. False otherwise.
           type: boolean
-    stats:
-      title: Vault stats
-      description: Vault statistics.
-      type: object
-      additionalProperties: false
-      properties:
-        archive_count:
-          description: Number of archives in the vault.
-          type: integer
-        backup_count:
-          description: Number of backups in the vault.
-          type: integer
-        backed_up_data_size:
-          description: Size of data stored in vault's backups.
-          type: integer
-        original_data_size:
-          description: Original size of all data vault holds.
-          type: integer
-        occupied_data_size:
-          description: Amount of space that vault takes up on storage.
-          type: integer
-        immutable_size:
-          description: Amount of space that vault takes up on immutable storage.
-          type: integer
-        free_space:
-          description: Amount of space left on storage where vault is.
-          type: integer
-        total_space:
-          description: Total about of space on storage where vault is.
-          type: integer
-        logical_archive_size:
-          description: Logical archive size sum.
-          type: integer
-        deduplication_stats:
-          type: object
-          additionalProperties: false
-          properties:
-            occupied_deduplication_db_size:
-              description: Amount of space deduplication database takes up.
-              type: integer
-            free_deduplication_db_size:
-              description: Amount of space left on storage where deduplication database is.
-              type: integer
-            occupied_deduplication_ds_size:
-              description: Amount of space datastore takes up.
-              type: integer
-            occupied_deduplication_ram:
-              description: Amount of RAM deduplication database takes up.
-              type: integer
-            free_deduplication_ram:
-              description: Amount of free RAM that is left for deduplication database to use.
-              type: integer
-            deduplication_index_usage:
-              description: Load factor of deduplication database.
-              type: string
-            data_to_index_size:
-              description: Amount of data that needs to be indexed (LDS size).
-              type: integer
-    tenant_id_20:
-      description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
-      oneOf:
-      - $ref: '#/components/schemas/id'
-      - $ref: '#/components/schemas/item1'
-    item3:
-      title: S3 Compatible Vault settings
-      description: S3 Compatible Vault settings.
+    item1_21:
+      title: Local ABGW Vault settings
+      description: Local ABGW Vault settings.
       type: object
       additionalProperties: false
       required:
-      - cred_id
-      - endpoint
-      - bucket
-      - path
+      - storage_id
       properties:
-        cred_id:
-          description: Cred ID from CredentialStore service used to get s3 credentials
-          type: string
-        s3_auth_flavour:
-          description: Authentication method
-          default: authv4
-          enum:
-          - authv2
-          - authv4
-          type: string
-        cert_verify:
-          description: Verify server cerificate?
-          default: true
-          type: boolean
-        endpoint:
-          description: Endpoint of the compatible s3 storage
-          type: string
-        bucket:
-          description: Bucket name
-          type: string
         path:
           description: Path on the storage.
           type: string
-        s3_subtype:
-          default: ''
-          enum:
-          - ''
-          - ACI
-          - ImpossibleCloud
-          type: string
-    storage_node_extended:
-      description: Extended info about Storage Node and its vaults.
-      example:
-        config:
-          name: RU-O0000123
-          machine_id: 10.250.176.12
-      type: object
-      additionalProperties: false
-      required:
-      - config
-      properties:
-        config:
-          title: Storage node
-          description: Storage node description.
-          type: object
-          additionalProperties: false
-          required:
-          - name
-          - machine_id
-          properties:
-            id:
-              $ref: '#/components/schemas/id'
-            name:
-              type: string
-            machine_id:
-              description: Identifier of the machine with Storage node. Currently hostname or IP address.
-              type: string
-            status:
-              description: Status of the machine.
-              type: string
-            addresses:
-              description: Addresses of the machine.
-              type: array
-              items:
-                anyOf:
-                - type: string
-                  format: ipv4
-                - type: string
-                  format: ipv6
-                type: string
-            tenant_locator:
-              type: string
-            memory_size:
-              description: Memory size of the machine.
-              type: integer
-            processor_frequency:
-              description: Processor frequency of the machine.
-              type: integer
-            processor_name:
-              description: Processor name of the machine.
-              type: string
-            operating_system_name:
-              description: Operating system name of the machine.
-              type: string
-            architecture:
-              description: Architecture of the machine.
-              type: string
-            agent_version:
-              description: Agent version installed in the machine.
-              type: string
-            vault_count:
-              description: Number of managed vaults.
-              type: integer
-        vaults:
-          type: array
-          items:
-            description: Vault info.
-            type: object
-            additionalProperties: false
-            required:
-            - config
-            properties:
-              config:
-                $ref: '#/components/schemas/config_29'
-              stats:
-                $ref: '#/components/schemas/stats'
-              agents:
-                type: array
-                items:
-                  $ref: '#/components/schemas/id'
-              status:
-                type: object
-    items_17:
+        storage_id: {}
+    id_12:
       description: Universally unique identifier.
       type: string
       format: uuid
-    vault_info:
-      description: Vault info.
-      example:
-        config:
-          name: 'WIN-FBM117GB12I: C:\\test\\'
-          settings:
-            storage_uri: C:/test/
-          is_full_config: true
-          uri: C:/test/
-          tenant_locator: /00000000-0000-0000-0000-000000000000/
-          storage_type: local_folder
-          version: LOCATION_VERSION_ABR12
-          managing_agent_id: 45EB1623-FA48-44A6-9C35-17188781ADC5
-          id: A574AB3E-DB44-2C60-01A9-FB9CFBA89D43
-        stats:
-          free_space: 26164383744
-          total_space: 42580570112
-        status:
-          status: ok
-          status_error: '{}\n'
-        agents:
-        - 45EB1623-FA48-44A6-9C35-17188781ADC5
+    items_30:
+      title: Volume
+      description: Volume description.
+      type: object
+      additionalProperties: false
+      properties:
+        free_space:
+          description: Free volume space in bytes.
+          type: integer
+        is_bootable:
+          type: boolean
+        is_system:
+          type: boolean
+        name:
+          type: string
+        size:
+          description: Volume size in bytes.
+          type: integer
+        mount_strid:
+          description: String identifier of the volume.
+          type: string
+    config_29:
+      title: Vault description
+      description: Vault description.
       type: object
       additionalProperties: false
       required:
-      - config
+      - name
+      - version
+      - storage_type
+      - settings
       properties:
-        config:
-          $ref: '#/components/schemas/config'
-        stats:
-          $ref: '#/components/schemas/stats'
-        agents:
-          type: array
-          items:
-            $ref: '#/components/schemas/id'
+        id:
+          $ref: '#/components/schemas/id'
+        name:
+          description: Name of the vault.
+          type: string
+        uri:
+          description: URI of the vault.
+          type: string
+        version:
+          description: Version of the vault.
+          type: string
+        managing_agent_id:
+          $ref: '#/components/schemas/id'
+        storage_type:
+          $ref: '#/components/schemas/storage_type'
+        organizational:
+          description: True if vault is online and is created on customer or personal tenant levels. False otherwise.
+          type: boolean
+        settings:
+          description: Any vault type specific settings.
+          oneOf:
+          - $ref: '#/components/schemas/item0_19'
+          - $ref: '#/components/schemas/item1_21'
+          - $ref: '#/components/schemas/item2'
+          - $ref: '#/components/schemas/item3'
+          - $ref: '#/components/schemas/item4'
+          - type: object
+        storage_id:
+          description: ID of the storage, for Local ABGW Vault or Storage node Vault.
+          type: string
         status:
+          description: Status of the vault.
           type: object
+        tenant_id:
+          $ref: '#/components/schemas/tenant_id_20'
+        tenant_locator:
+          description: Tenant locator.
+          type: string
+        access_address:
+          $ref: '#/components/schemas/access_address'
+        compacting_plan_id:
+          $ref: '#/components/schemas/id'
+        hostname:
+          description: Hostname of local vault.
+          type: string
+          format: hostname
+        consistent:
+          description: False if vault content could be outdated and a refresh is required. True otherwise.
+          type: boolean
+        last_seen_at:
+          description: Date and time in RFC 3339 format when the vault was last seen.
+          type: string
+          format: date-time
+        is_full_config:
+          description: True if `name`, `uri`, `settings`, `storage_type` are filled. False otherwise.
+          type: boolean
+    backup_create_request:
+      description: Backup creation request.
+      allOf:
+      - $ref: '#/components/schemas/item0_28'
+      - type: object
+        required:
+        - change_tag
+        - created
+        - size
+        properties:
+          change_tag:
+            description: Tag to identify creation task.
+            type: string
+          archive_credentials_id:
+            description: Archive credentials ID.
+            type: string
+          created: {}
+          size: {}
+      example:
+        vault_id: 885b7fe4-95ce-71fd-fff5-8de5b3cce9bb
+        archive_id: 1f8867c2-179f-ef34-159f-84279a18174d
+        backup_id: c2aa0462-dd30-4e08-afce-1bad7cfbf8be
+        created: '2018-02-02T01:40:05Z'
+        size: 70844416
+        deleted: false
+        tenant_id: 00000000-0000-0000-0000-000000000000
+        tenant_locator: /00000000-0000-0000-0000-000000000000/
+        source_key: ''
+        source_usn: 0
+        actions:
+        - restoreDisks
+        - restoreFiles
+        - downloadFiles
+        - deleteByAgent
+        - validate
+        - replicate
+        notarized: false
+        attributes:
+          Kind: full
+          MarkedForDeletion: '0'
+          SliceMediaIDs: ''
+        resource_ids:
+        - EDD63875-4641-44AA-B1A6-BACB4610AA11
+        change_tag: b7a6e9b1-f728-45c6-a778-4b97cb651e57
+        type: full
+    tapes:
+      type: array
+      items:
+        $ref: '#/components/schemas/id'
+    uuid:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
     items_4:
       description: Archive type.
       enum:
@@ -3326,52 +3407,152 @@ components:
       - ad
       - empty
       type: string
-    items_5:
-      description: Format of archive.
-      enum:
-      - '11'
-      - '12'
-      - alwaysIncremental
-      type: string
-    tapes:
-      type: array
-      items:
-        $ref: '#/components/schemas/id'
-    id_12:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
-    managing_agent_id:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
-    id_response:
+    items_14:
+      description: Composite backup ID that includes vault and archive ID. Tenant ID has meaning in case where vault ID is not unique.
+      type: object
+      additionalProperties: false
+      required:
+      - vault_id
+      - archive_id
+      - backup_id
+      properties:
+        vault_id:
+          $ref: '#/components/schemas/archive_id_15'
+        archive_id:
+          $ref: '#/components/schemas/archive_id_15'
+        backup_id:
+          $ref: '#/components/schemas/archive_id_15'
+        tenant_id:
+          $ref: '#/components/schemas/tenant_id_22'
+        archive_credentials_id:
+          type: string
+    items_24:
+      title: Volume
+      description: Volume description.
       type: object
       additionalProperties: false
       properties:
+        free_space:
+          description: Free volume space in bytes.
+          type: integer
+        is_bootable:
+          type: boolean
+        is_system:
+          type: boolean
+        name:
+          type: string
+        size:
+          description: Volume size in bytes.
+          type: integer
+        mount_strid:
+          description: String identifier of the volume.
+          type: string
+    checksum_validation_31:
+      description: Value of backup validation status.
+      enum:
+      - SUCCESS
+      - FAILURE
+      - CANCELLED
+      type: string
+    config:
+      title: Vault description
+      description: Vault description.
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - version
+      - storage_type
+      - settings
+      properties:
         id:
           $ref: '#/components/schemas/id'
-    storage_type:
-      description: Vault storage type.
-      enum:
-      - unknown
-      - local_folder
-      - network_share
-      - ftp
-      - sftp
-      - cd
-      - tape
-      - storage_server
-      - asz
-      - removable_drive
-      - online
-      - nfs_share
-      - esx
-      - local_abgw
-      - microsoft_azure
-      - amazon_s3
-      - s3_compatible
-      type: string
+        name:
+          description: Name of the vault.
+          type: string
+        uri:
+          description: URI of the vault.
+          type: string
+        version:
+          description: Version of the vault.
+          type: string
+        managing_agent_id:
+          $ref: '#/components/schemas/id'
+        storage_type:
+          $ref: '#/components/schemas/storage_type'
+        organizational:
+          description: True if vault is online and is created on customer or personal tenant levels. False otherwise.
+          type: boolean
+        settings:
+          description: Any vault type specific settings.
+          oneOf:
+          - $ref: '#/components/schemas/item0_19'
+          - $ref: '#/components/schemas/item1_21'
+          - $ref: '#/components/schemas/item2'
+          - $ref: '#/components/schemas/item3'
+          - $ref: '#/components/schemas/item4'
+          - type: object
+        storage_id:
+          description: ID of the storage, for Local ABGW Vault or Storage node Vault.
+          type: string
+        status:
+          description: Status of the vault.
+          type: object
+        tenant_id:
+          $ref: '#/components/schemas/tenant_id_20'
+        tenant_locator:
+          description: Tenant locator.
+          type: string
+        access_address:
+          $ref: '#/components/schemas/access_address'
+        compacting_plan_id:
+          $ref: '#/components/schemas/id'
+        hostname:
+          description: Hostname of local vault.
+          type: string
+          format: hostname
+        consistent:
+          description: False if vault content could be outdated and a refresh is required. True otherwise.
+          type: boolean
+        last_seen_at:
+          description: Date and time in RFC 3339 format when the vault was last seen.
+          type: string
+          format: date-time
+        is_full_config:
+          description: True if `name`, `uri`, `settings`, `storage_type` are filled. False otherwise.
+          type: boolean
+    item4:
+      title: Wasabi S3 Vault settings
+      description: Wasabi S3 Vault settings.
+      type: object
+      additionalProperties: false
+      required:
+      - connection_id
+      - region
+      - endpoint
+      - bucket
+      - path
+      - s3_subtype
+      properties:
+        connection_id:
+          description: Connection ID is used to get Wasabi credentials from Cloud Connection Service
+          type: string
+        region:
+          description: Region of the storage
+          type: string
+        endpoint:
+          description: Endpoint of wasabi based on the region
+          type: string
+        bucket:
+          description: Bucket name
+          type: string
+        path:
+          description: Path on the storage.
+          type: string
+        s3_subtype:
+          enum:
+          - Wasabi
+          type: string
     item0_28:
       description: Backup description.
       type: object
@@ -3779,230 +3960,49 @@ components:
         created_in_network_isolation:
           description: True if the backup was created after network isolation. False otherwise.
           type: boolean
-    items_24:
-      title: Volume
-      description: Volume description.
-      type: object
-      additionalProperties: false
-      properties:
-        free_space:
-          description: Free volume space in bytes.
-          type: integer
-        is_bootable:
-          type: boolean
-        is_system:
-          type: boolean
-        name:
-          type: string
-        size:
-          description: Volume size in bytes.
-          type: integer
-        mount_strid:
-          description: String identifier of the volume.
-          type: string
-    checksum_validation_31:
-      description: Value of backup validation status.
-      enum:
-      - SUCCESS
-      - FAILURE
-      - CANCELLED
-      type: string
-    storage_type_16:
-      description: Vault storage type.
-      enum:
-      - unknown
-      - local_folder
-      - network_share
-      - ftp
-      - sftp
-      - cd
-      - tape
-      - storage_server
-      - asz
-      - removable_drive
-      - online
-      - nfs_share
-      - esx
-      - local_abgw
-      - microsoft_azure
-      - amazon_s3
-      - s3_compatible
-      type: string
-    items_13:
-      description: Composite archive ID that includes vault ID.
+    error:
+      description: Base error object.
       type: object
       additionalProperties: false
       required:
-      - vault_id
-      - archive_id
+      - domain
+      - reason
       properties:
-        vault_id:
-          $ref: '#/components/schemas/id_12'
-        archive_id:
-          $ref: '#/components/schemas/id_12'
-    backup_create_request:
-      description: Backup creation request.
-      allOf:
-      - $ref: '#/components/schemas/item0_28'
-      - type: object
-        required:
-        - change_tag
-        - created
-        - size
-        properties:
-          change_tag:
-            description: Tag to identify creation task.
-            type: string
-          archive_credentials_id:
-            description: Archive credentials ID.
-            type: string
-          created: {}
-          size: {}
-      example:
-        vault_id: 885b7fe4-95ce-71fd-fff5-8de5b3cce9bb
-        archive_id: 1f8867c2-179f-ef34-159f-84279a18174d
-        backup_id: c2aa0462-dd30-4e08-afce-1bad7cfbf8be
-        created: '2018-02-02T01:40:05Z'
-        size: 70844416
-        deleted: false
-        tenant_id: 00000000-0000-0000-0000-000000000000
-        tenant_locator: /00000000-0000-0000-0000-000000000000/
-        source_key: ''
-        source_usn: 0
-        actions:
-        - restoreDisks
-        - restoreFiles
-        - downloadFiles
-        - deleteByAgent
-        - validate
-        - replicate
-        notarized: false
-        attributes:
-          Kind: full
-          MarkedForDeletion: '0'
-          SliceMediaIDs: ''
-        resource_ids:
-        - EDD63875-4641-44AA-B1A6-BACB4610AA11
-        change_tag: b7a6e9b1-f728-45c6-a778-4b97cb651e57
-        type: full
-    item1:
-      description: Numeric identifier.
-      type: string
-      pattern: ^\d+$
-    item1_21:
-      title: Local ABGW Vault settings
-      description: Local ABGW Vault settings.
-      type: object
-      additionalProperties: false
-      required:
-      - storage_id
-      properties:
-        path:
-          description: Path on the storage.
+        domain:
+          description: Error type or category.
           type: string
-        storage_id: {}
-    items_30:
-      title: Volume
-      description: Volume description.
-      type: object
-      additionalProperties: false
-      properties:
-        free_space:
-          description: Free volume space in bytes.
-          type: integer
-        is_bootable:
-          type: boolean
-        is_system:
-          type: boolean
-        name:
+        reason:
+          description: Error ID or code.
           type: string
-        size:
-          description: Volume size in bytes.
-          type: integer
-        mount_strid:
-          description: String identifier of the volume.
-          type: string
-    config:
-      title: Vault description
-      description: Vault description.
-      type: object
-      additionalProperties: false
-      required:
-      - name
-      - version
-      - storage_type
-      - settings
-      properties:
-        id:
-          $ref: '#/components/schemas/id'
-        name:
-          description: Name of the vault.
-          type: string
-        uri:
-          description: URI of the vault.
-          type: string
-        version:
-          description: Version of the vault.
-          type: string
-        managing_agent_id:
-          $ref: '#/components/schemas/id'
-        storage_type:
-          $ref: '#/components/schemas/storage_type'
-        organizational:
-          description: True if vault is online and is created on customer or personal tenant levels. False otherwise.
-          type: boolean
-        settings:
-          description: Any vault type specific settings.
-          oneOf:
-          - $ref: '#/components/schemas/item0_19'
-          - $ref: '#/components/schemas/item1_21'
-          - $ref: '#/components/schemas/item2'
-          - $ref: '#/components/schemas/item3'
-          - $ref: '#/components/schemas/item4'
-          - type: object
-        storage_id:
-          description: ID of the storage, for Local ABGW Vault or Storage node Vault.
-          type: string
-        status:
-          description: Status of the vault.
+        context:
+          description: Error context dictionary.
           type: object
-        tenant_id:
-          $ref: '#/components/schemas/tenant_id_20'
-        tenant_locator:
-          description: Tenant locator.
+        serCode:
           type: string
-        access_address:
-          $ref: '#/components/schemas/access_address'
-        compacting_plan_id:
-          $ref: '#/components/schemas/id'
-        hostname:
-          description: Hostname of local vault.
+        kbLink:
           type: string
-          format: hostname
-        consistent:
-          description: False if vault content could be outdated and a refresh is required. True otherwise.
-          type: boolean
-        last_seen_at:
-          description: Date and time in RFC 3339 format when the vault was last seen.
-          type: string
-          format: date-time
-        is_full_config:
-          description: True if `name`, `uri`, `settings`, `storage_type` are filled. False otherwise.
-          type: boolean
-    stats_27:
-      title: Archive stats
-      description: Additional information about slices.
-      type: object
-      additionalProperties: false
-      properties:
-        first_backup:
-          type: string
-        last_backup_size:
-          type: integer
-        last_backup_path:
-          type: string
-        backup_count:
-          type: integer
+        hints:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+            - name
+            - href
+            properties:
+              name:
+                type: string
+              href:
+                type: string
+        debug:
+          description: Error debug information.
+          type: object
+          additionalProperties: false
+          properties:
+            msg:
+              type: string
+            stackTrace:
+              type: string
   securitySchemes:
     oauth2:
       type: oauth2

@@ -146,23 +146,6 @@ paths:
       x-operation-id-original: Fetch alerts grouped by scope
 components:
   schemas:
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
-    ScopeStatus:
-      description: Status of the selected scope.
-      type: object
-      required:
-      - scope
-      - status
-      properties:
-        scope:
-          description: 'Value of scope. Contains values of context or searchable details.
-
-            '
-          type: object
-        status:
-          $ref: '#/components/schemas/Status'
     kbLinkInfo:
       description: Components for kblink
       type: object
@@ -209,6 +192,9 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     Status:
       description: 'Status of any scope that represents the last alert with the highest severity in the scope.
 
@@ -243,6 +229,20 @@ components:
         details:
           description: Details about the alert.
           type: object
+    ScopeStatus:
+      description: Status of the selected scope.
+      type: object
+      required:
+      - scope
+      - status
+      properties:
+        scope:
+          description: 'Value of scope. Contains values of context or searchable details.
+
+            '
+          type: object
+        status:
+          $ref: '#/components/schemas/Status'
   securitySchemes:
     oauth_2_0:
       type: oauth2

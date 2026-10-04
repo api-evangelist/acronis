@@ -64,22 +64,6 @@ paths:
       x-operation-id-original: Fetch categories
 components:
   schemas:
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
-    Category:
-      description: An information about the alert category or alert type category.
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-        disabled:
-          type: boolean
-        alias:
-          description: Alert category name alias.
-          type: string
     kbLinkInfo:
       description: Components for kblink
       type: object
@@ -126,6 +110,22 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
+    Category:
+      description: An information about the alert category or alert type category.
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+        disabled:
+          type: boolean
+        alias:
+          description: Alert category name alias.
+          type: string
   securitySchemes:
     oauth_2_0:
       type: oauth2

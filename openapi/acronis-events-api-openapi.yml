@@ -107,26 +107,32 @@ paths:
       x-operation-id-original: Fetch events
 components:
   schemas:
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - line_tag
+      - ser_code
+      - version
+      - build
+      - product
+      - os
+      properties:
+        line_tag:
+          type: string
+        ser_code:
+          type: string
+        version:
+          type: string
+        build:
+          type: string
+        product:
+          type: string
+        os:
+          type: string
     debugInfo:
       description: Error debug information (map type)
       type: object
-    GetEventsResponse:
-      type: object
-      additionalProperties: false
-      required:
-      - offset
-      - events
-      properties:
-        offset:
-          description: Latest offset of the subscriber. This is the offset that should be used in the next poll request.
-          type: integer
-          format: int64
-        events:
-          description: A batch of events starting from the cursor position for each partition.
-          type: array
-          maxItems: 100
-          items:
-            $ref: '#/components/schemas/Event'
     Event:
       description: 'Defines the structure of the event that has occurred.
 
@@ -258,29 +264,6 @@ components:
           type: string
           maxLength: 1024
         data: {}
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - line_tag
-      - ser_code
-      - version
-      - build
-      - product
-      - os
-      properties:
-        line_tag:
-          type: string
-        ser_code:
-          type: string
-        version:
-          type: string
-        build:
-          type: string
-        product:
-          type: string
-        os:
-          type: string
     error:
       description: Base error object
       example:
@@ -315,6 +298,23 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
+    GetEventsResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - offset
+      - events
+      properties:
+        offset:
+          description: Latest offset of the subscriber. This is the offset that should be used in the next poll request.
+          type: integer
+          format: int64
+        events:
+          description: A batch of events starting from the cursor position for each partition.
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Event'
     ErrorMessage:
       type: object
       additionalProperties: false

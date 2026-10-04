@@ -191,10 +191,6 @@ paths:
       x-operation-id-original: Delete Contract Part
 components:
   schemas:
-    Guid:
-      example: 00000000-0000-0000-0000-000000000000
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
     DatetimeNoTZ:
       description: RFC3339-like date and time without timezone.
       type: string
@@ -296,6 +292,10 @@ components:
           $ref: '#/components/schemas/Guid'
         VARGroup:
           $ref: '#/components/schemas/Guid'
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
   securitySchemes:
     oauth2:
       type: oauth2

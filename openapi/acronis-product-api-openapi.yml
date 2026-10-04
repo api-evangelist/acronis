@@ -161,10 +161,6 @@ paths:
       x-operation-id-original: Fetch products
 components:
   schemas:
-    DatetimeNoTZ:
-      description: RFC3339-like date and time without timezone.
-      type: string
-      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
     GetProductSearchResponse:
       type: object
       additionalProperties: false
@@ -190,58 +186,6 @@ components:
                     $ref: '#/components/schemas/ProductPartial'
                 Paging:
                   $ref: '#/components/schemas/Paging'
-    ProductPartial:
-      type: object
-      additionalProperties: false
-      required:
-      - Id
-      - Active
-      - Name
-      - Description
-      - Price
-      - Cost
-      - ViewInContract
-      - Ledger
-      - LastChangeDate
-      - ExternalIdNumber
-      - AcronisId
-      properties:
-        Id:
-          $ref: '#/components/schemas/Guid'
-        Active:
-          type: boolean
-        Name:
-          type: string
-        Description:
-          type:
-          - string
-          - 'null'
-        Price:
-          type: number
-        Cost:
-          type: number
-        ViewInContract:
-          type: boolean
-        Ledger:
-          example: 00000000-0000-0000-0000-000000000000
-          type:
-          - string
-          - 'null'
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-        LastChangeDate:
-          description: RFC3339-like date and time without timezone.
-          type:
-          - string
-          - 'null'
-          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
-        ExternalIdNumber:
-          type:
-          - string
-          - 'null'
-        AcronisId:
-          type:
-          - string
-          - 'null'
     Product:
       example:
         Id: cbbf9a00-019e-4af8-beb1-76d3fdb73058
@@ -417,6 +361,14 @@ components:
           - 'null'
         TicketProduct:
           type: boolean
+    DatetimeNoTZ:
+      description: RFC3339-like date and time without timezone.
+      type: string
+      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
     Paging:
       type: object
       additionalProperties: false
@@ -431,10 +383,58 @@ components:
           type: integer
         AmountOfPages:
           type: integer
-    Guid:
-      example: 00000000-0000-0000-0000-000000000000
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    ProductPartial:
+      type: object
+      additionalProperties: false
+      required:
+      - Id
+      - Active
+      - Name
+      - Description
+      - Price
+      - Cost
+      - ViewInContract
+      - Ledger
+      - LastChangeDate
+      - ExternalIdNumber
+      - AcronisId
+      properties:
+        Id:
+          $ref: '#/components/schemas/Guid'
+        Active:
+          type: boolean
+        Name:
+          type: string
+        Description:
+          type:
+          - string
+          - 'null'
+        Price:
+          type: number
+        Cost:
+          type: number
+        ViewInContract:
+          type: boolean
+        Ledger:
+          example: 00000000-0000-0000-0000-000000000000
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        LastChangeDate:
+          description: RFC3339-like date and time without timezone.
+          type:
+          - string
+          - 'null'
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?$
+        ExternalIdNumber:
+          type:
+          - string
+          - 'null'
+        AcronisId:
+          type:
+          - string
+          - 'null'
   securitySchemes:
     oauth2:
       type: oauth2

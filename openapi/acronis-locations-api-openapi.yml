@@ -324,92 +324,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    location:
-      example:
-        id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
-        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
-        platform_owned: true
-        name: Boston Infrastructure
-        version: 3
-        readonly: false
-      type: object
-      required:
-      - id
-      - owner_tenant_id
-      - platform_owned
-      - name
-      - version
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        owner_tenant_id:
-          $ref: '#/components/schemas/uuid'
-        platform_owned:
-          description: Is infra location owned by Platform.
-          type: boolean
-        name:
-          description: Human-readable name of infrastructure location that will be displayed to the users.
-          type: string
-        version:
-          description: Auto-incremented infrastructure location version.
-          type: integer
-        readonly:
-          description: True if location details are accessible in a limited way, e.g. location is owned by some ancestor.
-          type: boolean
-    locationPost:
-      example:
-        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
-        name: Boston Infrastructure
-      type: object
-      additionalProperties: false
-      required:
-      - owner_tenant_id
-      - name
-      properties:
-        owner_tenant_id:
-          $ref: '#/components/schemas/uuid'
-        name:
-          description: Human-readable name of infrastructure location that will be displayed to the users.
-          type: string
-    uuid:
-      type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
-    infraList:
-      example:
-        infras:
-        - d9fd4cc3-4309-40a2-bd79-88da24a1c99d
-        - 7068976a-22c0-476e-ae3b-5f0469981ff1
-      type: object
-      properties:
-        infras:
-          type: array
-          items:
-            $ref: '#/components/schemas/uuid'
-    locationBatch:
-      example:
-        items:
-        - id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
-          owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
-          platform_owned: true
-          name: Capetown Infrastructure
-          version: 3
-          readonly: false
-        - id: 3d1efc54-4e9a-4db1-abe6-7d2aee50cead
-          owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
-          platform_owned: false
-          name: Singapore Infrastructure
-          version: 5
-          readonly: false
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/location'
     errorScheme:
       type: object
       required:
@@ -465,6 +379,92 @@ components:
         version:
           description: Auto-incremented infrastructure location version.
           type: integer
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    infraList:
+      example:
+        infras:
+        - d9fd4cc3-4309-40a2-bd79-88da24a1c99d
+        - 7068976a-22c0-476e-ae3b-5f0469981ff1
+      type: object
+      properties:
+        infras:
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid'
+    locationBatch:
+      example:
+        items:
+        - id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
+          owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+          platform_owned: true
+          name: Capetown Infrastructure
+          version: 3
+          readonly: false
+        - id: 3d1efc54-4e9a-4db1-abe6-7d2aee50cead
+          owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+          platform_owned: false
+          name: Singapore Infrastructure
+          version: 5
+          readonly: false
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/location'
+    locationPost:
+      example:
+        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+        name: Boston Infrastructure
+      type: object
+      additionalProperties: false
+      required:
+      - owner_tenant_id
+      - name
+      properties:
+        owner_tenant_id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          description: Human-readable name of infrastructure location that will be displayed to the users.
+          type: string
+    location:
+      example:
+        id: 8fcd353b-0a40-40f2-9a55-ef8137d48800
+        owner_tenant_id: 0bb386ae-e66d-4e7b-84fb-cddcf60002de
+        platform_owned: true
+        name: Boston Infrastructure
+        version: 3
+        readonly: false
+      type: object
+      required:
+      - id
+      - owner_tenant_id
+      - platform_owned
+      - name
+      - version
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        owner_tenant_id:
+          $ref: '#/components/schemas/uuid'
+        platform_owned:
+          description: Is infra location owned by Platform.
+          type: boolean
+        name:
+          description: Human-readable name of infrastructure location that will be displayed to the users.
+          type: string
+        version:
+          description: Auto-incremented infrastructure location version.
+          type: integer
+        readonly:
+          description: True if location details are accessible in a limited way, e.g. location is owned by some ancestor.
+          type: boolean
   securitySchemes:
     basicAuth:
       type: http

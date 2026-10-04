@@ -210,24 +210,6 @@ paths:
       x-operation-id-original: Fetch invoice
 components:
   schemas:
-    Guid:
-      example: 00000000-0000-0000-0000-000000000000
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-    Paging:
-      type: object
-      additionalProperties: false
-      required:
-      - AmountTotalItems
-      - AmountRecordsFound
-      - AmountOfPages
-      properties:
-        AmountTotalItems:
-          type: integer
-        AmountRecordsFound:
-          type: integer
-        AmountOfPages:
-          type: integer
     Invoice:
       type: object
       additionalProperties: false
@@ -373,6 +355,24 @@ components:
           description: ''
           default: 0
           type: number
+    Paging:
+      type: object
+      additionalProperties: false
+      required:
+      - AmountTotalItems
+      - AmountRecordsFound
+      - AmountOfPages
+      properties:
+        AmountTotalItems:
+          type: integer
+        AmountRecordsFound:
+          type: integer
+        AmountOfPages:
+          type: integer
+    Guid:
+      example: 00000000-0000-0000-0000-000000000000
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
   securitySchemes:
     oauth2:
       type: oauth2

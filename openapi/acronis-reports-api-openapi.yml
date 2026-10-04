@@ -324,6 +324,108 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    errorScheme:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - domain
+          - message
+          - details
+          properties:
+            code:
+              oneOf:
+              - type: string
+              - type: integer
+            context:
+              type: object
+            domain:
+              description: This field can have a null value.
+              type:
+              - string
+              - 'null'
+            message:
+              type: string
+            details:
+              description: Additional info.
+              type: object
+              properties:
+                info:
+                  description: This field can have a null value.
+                  type:
+                  - string
+                  - 'null'
+            data:
+              type: array
+              items:
+                type: string
+    reportPut:
+      example:
+        recipients:
+        - ca451758-b48a-45d9-9ae6-8f1059f67619
+        parameters:
+          kind: usage_current
+          tenant_id: 2a91a14d-ffd3-4ac1-9b4d-3990162c5acc
+          level: direct_partners
+          hide_zero_usage: true
+          show_skus: false
+      type: object
+      additionalProperties: false
+      properties:
+        recipients:
+          description: IDs of subscribed users.
+          type: array
+          items:
+            $ref: '#/components/schemas/uuid'
+        parameters:
+          type: object
+          properties:
+            level:
+              description: Level of report detail.
+              enum:
+              - itself
+              - direct_partners
+              - all_partners
+              - all_customers
+              - accounts
+              type: string
+            kind:
+              description: Kind of report.
+              enum:
+              - usage_daily
+              - usage_summary
+              - usage_current
+              - usage_breakdown
+              type: string
+            hide_zero_usage:
+              description: Hide metrics with zero usage in report.
+              type: boolean
+            show_skus:
+              description: Show SKU-related fields in report.
+              type: boolean
+        schedule:
+          type: object
+          required:
+          - enabled
+          properties:
+            enabled:
+              description: Flag indicating whether the report is enabled.
+              type: boolean
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
+    document_version:
+      description: 'Formatted date: YYYY-MM-DD.'
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}
+      minLength: 10
+      maxLength: 10
     report:
       example:
         id: 20dffb36-d77b-45c6-b2fa-39276e98d5fc
@@ -451,11 +553,6 @@ components:
       pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
       minLength: 19
       maxLength: 32
-    uuid:
-      type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
     reportPost:
       example:
         recipients:
@@ -568,58 +665,6 @@ components:
               type: string
         generation_date:
           $ref: '#/components/schemas/document_version'
-    reportPut:
-      example:
-        recipients:
-        - ca451758-b48a-45d9-9ae6-8f1059f67619
-        parameters:
-          kind: usage_current
-          tenant_id: 2a91a14d-ffd3-4ac1-9b4d-3990162c5acc
-          level: direct_partners
-          hide_zero_usage: true
-          show_skus: false
-      type: object
-      additionalProperties: false
-      properties:
-        recipients:
-          description: IDs of subscribed users.
-          type: array
-          items:
-            $ref: '#/components/schemas/uuid'
-        parameters:
-          type: object
-          properties:
-            level:
-              description: Level of report detail.
-              enum:
-              - itself
-              - direct_partners
-              - all_partners
-              - all_customers
-              - accounts
-              type: string
-            kind:
-              description: Kind of report.
-              enum:
-              - usage_daily
-              - usage_summary
-              - usage_current
-              - usage_breakdown
-              type: string
-            hide_zero_usage:
-              description: Hide metrics with zero usage in report.
-              type: boolean
-            show_skus:
-              description: Show SKU-related fields in report.
-              type: boolean
-        schedule:
-          type: object
-          required:
-          - enabled
-          properties:
-            enabled:
-              description: Flag indicating whether the report is enabled.
-              type: boolean
     storedReportParams:
       example:
         items:
@@ -671,51 +716,6 @@ components:
                 - saved
                 - failed
                 type: string
-    errorScheme:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - domain
-          - message
-          - details
-          properties:
-            code:
-              oneOf:
-              - type: string
-              - type: integer
-            context:
-              type: object
-            domain:
-              description: This field can have a null value.
-              type:
-              - string
-              - 'null'
-            message:
-              type: string
-            details:
-              description: Additional info.
-              type: object
-              properties:
-                info:
-                  description: This field can have a null value.
-                  type:
-                  - string
-                  - 'null'
-            data:
-              type: array
-              items:
-                type: string
-    document_version:
-      description: 'Formatted date: YYYY-MM-DD.'
-      type: string
-      pattern: \d{4}-\d{2}-\d{2}
-      minLength: 10
-      maxLength: 10
   securitySchemes:
     basicAuth:
       type: http

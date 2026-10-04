@@ -62,15 +62,15 @@ paths:
       x-operation-id-original: Fetch archive search index size stats
 components:
   schemas:
-    id:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
     tenant_id_18:
       description: Tenant identifier. Uses numeric identifier in cloud and UUID in on-premises.
       oneOf:
       - $ref: '#/components/schemas/id'
       - $ref: '#/components/schemas/item1'
+    id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
     item1:
       description: Numeric identifier.
       type: string

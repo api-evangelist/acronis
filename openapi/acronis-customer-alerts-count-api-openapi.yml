@@ -391,9 +391,6 @@ paths:
       x-operation-id-original: Fetch partner's customer alerts count
 components:
   schemas:
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
     uuid:
       type: string
       pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
@@ -443,6 +440,9 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     CustomerAlertCount:
       type: object
       required:

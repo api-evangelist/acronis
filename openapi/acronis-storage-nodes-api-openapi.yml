@@ -274,11 +274,13 @@ components:
           type: string
         protected_storage:
           $ref: '#/components/schemas/protected_storage'
+    id_response:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
     uuid:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
-    id:
       description: Universally unique identifier.
       type: string
       format: uuid
@@ -288,12 +290,10 @@ components:
       properties:
         session_id:
           $ref: '#/components/schemas/id'
-    id_response:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/id'
+    id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
     validate_credentials:
       description: Request to add new vault.
       example:

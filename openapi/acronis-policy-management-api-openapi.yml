@@ -3053,372 +3053,6 @@ paths:
       x-operation-id-original: Fetch application statuses by policy
 components:
   schemas:
-    DeploymentStatus:
-      type: object
-      required:
-      - state
-      properties:
-        state:
-          $ref: '#/components/schemas/DeploymentState'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/error'
-    CompositePolicyStatus:
-      type: array
-      items:
-        $ref: '#/components/schemas/PolicyStatus'
-    PolicyStatus:
-      type: object
-      required:
-      - policy
-      properties:
-        _issues:
-          type: array
-          items:
-            $ref: '#/components/schemas/Issue_1'
-        contexts:
-          type: object
-          required:
-          - total_number_or_resources
-          - number_of_enabled_resource_applications
-          - number_of_resources_by_status
-          - number_of_multiple_applications_conflict_resources
-          - origin_contexts
-          - deployment_status
-          properties:
-            validation_issues:
-              type: array
-              maxItems: 50
-              items:
-                $ref: '#/components/schemas/Issue_12'
-            total_number_or_resources:
-              description: Total number of policy applications on resource contexts.
-              type: integer
-            number_of_enabled_resource_applications:
-              description: Number of policy applications on resource contexts with `application.enabled` set to true.
-              type: integer
-            number_of_resources_by_status:
-              description: Number of policy applications on resource contexts with `application.status` equal to each possible value of the `ExecutionStatus` enumerator.
-              type: array
-              items:
-                type: object
-                required:
-                - status
-                - value
-                properties:
-                  status:
-                    $ref: '#/components/schemas/ExecutionStatus'
-                  value:
-                    type: integer
-            number_of_multiple_applications_conflict_resources:
-              description: Number of policy applications on resource contexts with `application.multiple_applications_conflict != null`.
-              type: integer
-            origin_contexts:
-              description: Deduplicated `origin_contexts` of policy applications on resource contexts.
-              type: array
-              items:
-                $ref: '#/components/schemas/InternalID_2'
-            deployment_status:
-              $ref: '#/components/schemas/DeploymentStatus'
-        policy:
-          type: object
-          required:
-          - created_at
-          - updated_at
-          - id
-          - tenant_id
-          - tenant_name
-          - type
-          - enabled
-          - origin
-          properties:
-            created_at:
-              type: string
-              format: date-time
-            updated_at:
-              type: string
-              format: date-time
-            id:
-              $ref: '#/components/schemas/InternalID_2'
-            tenant_id:
-              $ref: '#/components/schemas/IntegerID'
-            tenant_name:
-              type: string
-            type:
-              $ref: '#/components/schemas/PolicyType_13'
-            enabled:
-              type: boolean
-            name:
-              type: string
-            comment:
-              type: string
-            origin:
-              $ref: '#/components/schemas/EntityOrigin_14'
-            tags:
-              type: array
-              items:
-                $ref: '#/components/schemas/EntityTag_15'
-            parent_ids:
-              type: array
-              items:
-                $ref: '#/components/schemas/InternalID_2'
-        _links:
-          type: array
-          items:
-            $ref: '#/components/schemas/Link'
-        _link_ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/Action'
-    ResourceType_8:
-      description: 'A resource type in the `type.scope` format, where `type` is ''resource'' and `scope` is
-
-        like one of the `ResourceScope` values defined in `impl/resource/type_scopes.raml`.
-
-        '
-      type: string
-    BoundCompositePolicyPagedList:
-      type: object
-      required:
-      - paging
-      - items
-      - timestamp
-      properties:
-        paging:
-          $ref: '#/components/schemas/Page'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/BoundCompositePolicy'
-        timestamp:
-          description: Server-side timestamp of query start.
-          type: string
-          format: date-time
-    Policy_3:
-      description: Identifiable and (optionally) named set of rules or settings. For some policies their rules / settings are specially organized to enable easy 're-use' in context of different and multiple 'resources'. Such policies must be bound to a context during application. But that is not the only case and policies may exist, which do not require binding to any additional contexts during application.
-      type: object
-      required:
-      - enabled
-      - origin
-      - type
-      properties:
-        settings:
-          $ref: '#/components/schemas/AnyType'
-        favorite_order:
-          description: The order number of the policy.
-          type: integer
-        enabled:
-          type: boolean
-        comment:
-          type: string
-        origin:
-          $ref: '#/components/schemas/EntityOrigin'
-        default_name_template_id:
-          description: Policy name template to be used when actual `name` is not user-assigned, e.g., for template policies.
-          type: string
-        _issues:
-          type: array
-          items:
-            $ref: '#/components/schemas/Issue_1'
-        template:
-          description: A `template` policy can't be applied and is used as a prototype for initialization of another policy of the same type.
-          type: boolean
-        temporary:
-          description: A `temporary` policy lives no more than `ttl` period, after that is removed automatically.
-          type: boolean
-        created_at:
-          type: string
-          format: date-time
-        external_dependencies:
-          description: References to dependencies. Represents objects in domains external to policy, which policy refers to, and access to whom needs to be adjusted on policy change. Should be filled upon policy validation at the first. validation stage
-          type: array
-          items:
-            $ref: '#/components/schemas/ExternalDependency'
-        name:
-          description: Is usually actual only for composite policy root.
-          type: string
-        parent_ids:
-          description: References to parent policies (which this policy is linked to).
-          type: array
-          items:
-            $ref: '#/components/schemas/InternalID_2'
-        min_required_access_rules:
-          description: Minimal access rules required to access the policy and overriding default access rules. Calculated from `settings` including their external. dependencies
-          type: array
-          items:
-            $ref: '#/components/schemas/RoleAccessRule'
-        updated_at:
-          type: string
-          format: date-time
-        id:
-          $ref: '#/components/schemas/InternalID'
-        favorite:
-          description: True if the policy is favorite
-          type: boolean
-        run_args:
-          description: Arguments available for `PUT /applications/run`.
-          type: array
-          items:
-            type: string
-        settings_constraints:
-          description: Any constraint rules which applied to current policy settings - available enumerator values, numeric value ranges, string value patterns, etc.
-          anyOf:
-          - type: object
-          - type: string
-          - type: integer
-          - type: boolean
-        ls_features:
-          description: Licensing features calculated from `settings`. Empty when `enabled` is false.
-          type: string
-          pattern: ^(\w+)\|?$
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/EntityTag'
-        default:
-          description: True if the policy is default
-          type: boolean
-        settings_schema:
-          $ref: '#/components/schemas/SchemaVersion'
-        template_source_id:
-          description: Reference to the `template` policy, that was used as a prototype for initialization of this policy.
-          type: string
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        deleted_at:
-          type: string
-          format: date-time
-        ttl:
-          description: Lifetime of the `temporary` policy, in seconds. Non-zero if set
-          type: integer
-        _links:
-          type: array
-          items:
-            $ref: '#/components/schemas/Link'
-        type:
-          $ref: '#/components/schemas/PolicyType'
-        tenant_id:
-          type: string
-        _link_ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/Action'
-        validation_dependencies:
-          description: References to dependencies. Only sub-policy IDs of same composite are expected (otherwise the ID will be ignored). Should be filled upon policy validation at the first validation stage with `check_validation_dependencies`. set to `false`
-          type: array
-          items:
-            $ref: '#/components/schemas/InternalID_2'
-    Action:
-      enum:
-      - policy_view
-      - policy_create
-      - policy_delete
-      - policy_update
-      - policy_enable
-      - policy_disable
-      - policy_add_child
-      - policy_remove_child
-      - policy_run
-      - policy_stop
-      - policy_apply
-      - policy_revoke
-      - policy_resume
-      - policy_pause
-      - policy_status
-      - backup
-      - restore
-      - getActivities
-      - largeScaleRecovery
-      - renameBackupPlans
-      - editBackupPlans
-      - collectSysinfo
-      - browse
-      - manageAsrm
-      - manageAsz
-      - activeProtection
-      - addToGroup
-      - removeFromGroup
-      - renameVMReplicationPlans
-      - editVMReplicationPlans
-      - startReplicaTest
-      - stopReplicaTest
-      - failover
-      - stopFailover
-      - failback
-      - finalize
-      - unmount
-      - detectApplications
-      - rebind
-      - permanentFailover
-      - remove
-      - replicate
-      - delete
-      - rename
-      - addResources
-      - removeResources
-      - move
-      - addStaticSubGroup
-      - addDynamicSubGroup
-      - editCondition
-      - changeCredentials
-      - changeMsSqlCredentials
-      - editCasSettings
-      - deleteCasSettings
-      - changeMsExchangeDbCredentials
-      - changeOffice365Credentials
-      - comment
-      - hostBackup
-      - removeAppliances
-      - select_disk_provision_mode
-      - reboot
-      - shutdown
-      - canDisasterRecovery
-      - manageLicense
-      - patchManagement
-      - remoteDesktop
-      - remoteWipe
-      - cyberDesktop
-      type: string
-    error:
-      type: object
-      required:
-      - domain
-      - code
-      properties:
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          type: string
-        code:
-          description: Error ID or code, unique in the domain.
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-    IntegerID:
-      description: An integer ID of the object.
-      example: '123'
-      type: string
-      pattern: ^\d+$
-    ApplicationPagedList:
-      type: object
-      required:
-      - paging
-      - items
-      - timestamp
-      properties:
-        paging:
-          $ref: '#/components/schemas/Page'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CompositeApplication'
-        timestamp:
-          description: Server-side timestamp of query start.
-          type: string
-          format: date-time
     Severity:
       enum:
       - ok
@@ -3426,666 +3060,12 @@ components:
       - error
       - critical
       type: string
-    InternalServerError:
-      description: Server encountered an unexpected condition that prevented it from fulfilling the request. Use as a base for more granular code and context definitions.
-      example:
-        domain: General
-        code: InternalServerError
-      type: object
-      required:
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - InternalServerError
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - General
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-    Issue_1:
-      type: object
-      required:
-      - severity
-      properties:
-        link:
-          description: Link name / ID or action / operation type, the issue is applied to.
-          enum:
-          - policy_view
-          - policy_create
-          - policy_delete
-          - policy_update
-          - policy_enable
-          - policy_disable
-          - policy_add_child
-          - policy_remove_child
-          - policy_run
-          - policy_stop
-          - policy_apply
-          - policy_revoke
-          - policy_resume
-          - policy_pause
-          - policy_status
-          - backup
-          - restore
-          - getActivities
-          - largeScaleRecovery
-          - renameBackupPlans
-          - editBackupPlans
-          - collectSysinfo
-          - browse
-          - manageAsrm
-          - manageAsz
-          - activeProtection
-          - addToGroup
-          - removeFromGroup
-          - renameVMReplicationPlans
-          - editVMReplicationPlans
-          - startReplicaTest
-          - stopReplicaTest
-          - failover
-          - stopFailover
-          - failback
-          - finalize
-          - unmount
-          - detectApplications
-          - rebind
-          - permanentFailover
-          - remove
-          - replicate
-          - delete
-          - rename
-          - addResources
-          - removeResources
-          - move
-          - addStaticSubGroup
-          - addDynamicSubGroup
-          - editCondition
-          - changeCredentials
-          - changeMsSqlCredentials
-          - editCasSettings
-          - deleteCasSettings
-          - changeMsExchangeDbCredentials
-          - changeOffice365Credentials
-          - comment
-          - hostBackup
-          - removeAppliances
-          - select_disk_provision_mode
-          - reboot
-          - shutdown
-          - canDisasterRecovery
-          - manageLicense
-          - patchManagement
-          - remoteDesktop
-          - remoteWipe
-          - cyberDesktop
-          type: string
-        severity:
-          description: Degree of trouble brought by the issue. If contains empty string, the severity is unknown.
-          enum:
-          - ok
-          - warning
-          - error
-          - critical
-          type: string
-        error:
-          description: Detailed issue domain and code, and context description as well.
-          type: object
-          required:
-          - code
-          - domain
-          properties:
-            context:
-              description: Description of context (call parameters, environment, etc), where the error occurred.
-              type: object
-            code:
-              description: Error ID or code, unique in the domain.
-              type: string
-            domain:
-              description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-              type: string
-            message:
-              description: Human-readable message, describing the error.
-              type: string
-    PageCursor:
-      type: string
-    AuthenticationTimeoutError:
-      description: Access token is already expired or invalid.
-      example:
-        domain: Access
-        code: AuthenticationTimeout
-      type: object
-      required:
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - AuthenticationTimeout
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - Access
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-    RunningState_10:
-      enum:
-      - running
-      - idle
-      - cancelling
-      - interaction_required
-      type: string
-    Draft:
-      description: Temporary policy (policies) or application snapshot (with context). Drafts API implements 'builder' pattern, helping assemble complex policies. Typically used in interactive policy creation or editing
-      type: object
-      required:
-      - id
-      - policy
-      - clone
-      - state
-      - update
-      properties:
-        id:
-          description: Draft ID as whole. A policy beeing creating or edting and its linked policies all share the same context and draft state and draft-wide issues
-          type: string
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        policy:
-          $ref: '#/components/schemas/CompositePolicy'
-        clone:
-          type: boolean
-        context:
-          description: Either explicit or anonymous selection of resources
-          type: object
-          properties:
-            _issues:
-              type: array
-              items:
-                $ref: '#/components/schemas/Issue_1'
-            id:
-              $ref: '#/components/schemas/InternalID'
-            _links:
-              type: array
-              items:
-                $ref: '#/components/schemas/Link'
-            _link_ids:
-              type: array
-              items:
-                $ref: '#/components/schemas/Action'
-            items:
-              type: array
-              maxItems: 100
-              items:
-                $ref: '#/components/schemas/InternalID'
-            tenant_id:
-              type: string
-        state:
-          $ref: '#/components/schemas/DraftState_6'
-        issues:
-          type: array
-          items:
-            $ref: '#/components/schemas/Issue_1'
-        update:
-          type: string
-          format: date-time
-        default_name_hint:
-          description: Parameter of default name template used to avoid duplicate default names, assuming default name is built a-la 'New policy {defaultNameHint}'. Greater than 0 if draft 'name' is a default name, equal to 0 if the 'name' is set explicitly
-          type: integer
-        default_name_template_ID:
-          description: ID of default name template. Convention for ID composition is - '<policy or root policy type>.<N>', where N starts from 0. Empty if draft 'name' is set explicitly
-          type: string
-        precheck_disabled:
-          type: boolean
-    Issue_12:
-      type: object
-      required:
-      - severity
-      properties:
-        link:
-          description: Link name / ID or action / operation type, the issue is applied to.
-          enum:
-          - policy_view
-          - policy_create
-          - policy_delete
-          - policy_update
-          - policy_enable
-          - policy_disable
-          - policy_add_child
-          - policy_remove_child
-          - policy_run
-          - policy_stop
-          - policy_apply
-          - policy_revoke
-          - policy_resume
-          - policy_pause
-          - policy_status
-          - backup
-          - restore
-          - getActivities
-          - largeScaleRecovery
-          - renameBackupPlans
-          - editBackupPlans
-          - collectSysinfo
-          - browse
-          - manageAsrm
-          - manageAsz
-          - activeProtection
-          - addToGroup
-          - removeFromGroup
-          - renameVMReplicationPlans
-          - editVMReplicationPlans
-          - startReplicaTest
-          - stopReplicaTest
-          - failover
-          - stopFailover
-          - failback
-          - finalize
-          - unmount
-          - detectApplications
-          - rebind
-          - permanentFailover
-          - remove
-          - replicate
-          - delete
-          - rename
-          - addResources
-          - removeResources
-          - move
-          - addStaticSubGroup
-          - addDynamicSubGroup
-          - editCondition
-          - changeCredentials
-          - changeMsSqlCredentials
-          - editCasSettings
-          - deleteCasSettings
-          - changeMsExchangeDbCredentials
-          - changeOffice365Credentials
-          - comment
-          - hostBackup
-          - removeAppliances
-          - select_disk_provision_mode
-          - reboot
-          - shutdown
-          - canDisasterRecovery
-          - manageLicense
-          - patchManagement
-          - remoteDesktop
-          - remoteWipe
-          - cyberDesktop
-          type: string
-        severity:
-          description: Degree of trouble brought by the issue. If contains empty string, the severity is unknown.
-          enum:
-          - ok
-          - warning
-          - error
-          - critical
-          type: string
-        error:
-          description: Detailed issue domain and code, and context description as well.
-          type: object
-          required:
-          - code
-          - domain
-          properties:
-            context:
-              description: Description of context (call parameters, environment, etc), where the error occurred.
-              type: object
-            code:
-              description: Error ID or code, unique in the domain.
-              type: string
-            domain:
-              description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-              type: string
-            message:
-              description: Human-readable message, describing the error.
-              type: string
-    KeyValuePair:
-      description: Generic key-value pair.
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          anyOf:
-          - anyOf:
-            - type: string
-            - type: integer
-          - type: array
-            items:
-              anyOf:
-              - type: string
-              - type: integer
-    UnauthorizedRequestError:
-      description: Authorization failed.
-      example:
-        domain: Access
-        code: UnauthorizedRequest
-      type: object
-      required:
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - UnauthorizedRequest
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - Access
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-    AccessDeniedError:
-      description: Access was denied.
-      example:
-        domain: Access
-        code: AccessDeniedError
-        context:
-          scope: urn:acronis.com::policy_management:1234567890:read urn:acronis.com::policy_management:0987654321:read
-          required_scope: urn:acronis.com::script_management:1234567890:reviewer
-      type: object
-      required:
-      - context
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-          required:
-          - scope
-          - required_scope
-          properties:
-            scope:
-              description: Access scope of the caller
-              type: string
-            required_scope:
-              description: Required access scope
-              type: string
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - AccessDeniedError
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - Access
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-    CompositePolicyStatusPagedList:
-      type: object
-      required:
-      - paging
-      - items
-      - timestamp
-      properties:
-        paging:
-          $ref: '#/components/schemas/Page'
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CompositePolicyStatus'
-        timestamp:
-          description: Server-side timestamp of query start.
-          type: string
-          format: date-time
-    CompositePolicy:
-      description: Policy can be linked to other policies making a policy composite. Policy composite is always an acyclic directed graph with a single 'root'. Composite policy 'root' does not have parents. Non-root policy within a composite may have multiple 'parents' (which it's linked to) and multiple 'children' (which are linked to it).
-      type: array
-      items:
-        $ref: '#/components/schemas/Policy'
-    RunningState:
-      enum:
-      - running
-      - idle
-      - cancelling
-      - interaction_required
-      type: string
-    ExecutionStatus:
-      enum:
-      - warning
-      - error
-      - critical
-      - no_policies_applied
-      - scheduled
-      - interaction_required
-      - running
-      - cancelling
-      - idle
-      type: string
     AnyType:
       anyOf:
       - type: object
       - type: string
       - type: integer
       - type: boolean
-    ExternalDependency:
-      type: object
-      required:
-      - namespace
-      - tenant_id
-      - path
-      - timestamp
-      properties:
-        namespace:
-          description: Domain or namespace of the dependency object, e.g. 'credentials_store', 'script_repository'.
-          type: string
-        tenant_id:
-          description: Tenant that directly owns the dependency object.
-          example: '123'
-          type: string
-          pattern: ^\d+$
-        path:
-          description: Dependency object identifier (can be structured), e.g. credentials or script object ID. This identifier will be used to track dependency object changes and to manage dependency object access permissions.
-          type: string
-        timestamp:
-          description: Timestamp of creation or last update of the dependency object.
-          type: string
-          format: date-time
-        role:
-          description: Role (without namespace prefix), required to access the dependency object.
-          type: string
-    EntityTypeAndID:
-      description: Universal reference to an object with ID and type embedded. Formatted as 'id@type', see `EntityType` for `type` format.
-      type: string
-    EntityTag:
-      description: Key-value pair to use for object search and sorting.
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          anyOf:
-          - type: string
-          - type: integer
-          - type: boolean
-    BadRequestError:
-      description: Request is malformed.
-      example:
-        domain: General
-        code: BadRequestError
-      type: object
-      required:
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - BadRequestError
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - General
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-    EventID:
-      enum:
-      - reboot
-      type: string
-    PolicyIDAndOrder:
-      type: object
-      required:
-      - id
-      - favorite
-      properties:
-        id:
-          type: string
-        favorite:
-          type: boolean
-        favorite_order:
-          type: integer
-    EntityOrigin_14:
-      description: Object creation origin, also called 'authoritative source'.
-      enum:
-      - upstream
-      - local
-      type: string
-    CompositeApplication:
-      description: Applications grouped according to their parent policy.
-      type: array
-      items:
-        $ref: '#/components/schemas/Application'
-    DraftState_6:
-      enum:
-      - creating
-      - editing
-      - cancelled
-      - done
-      type: string
-    PolicyType_13:
-      description: 'A policy type in the `type.scope` format, where `type` is ''policy'' and `scope` is
-
-        like one of the `PolicyScope` values defined in `impl/policy/type_scopes.raml`.
-
-        '
-      type: string
-    EntityTag_15:
-      description: Key-value pair to use for object search and sorting.
-      type: object
-      required:
-      - key
-      - value
-      properties:
-        key:
-          type: string
-        value:
-          anyOf:
-          - type: string
-          - type: integer
-          - type: boolean
-    InternalID_9:
-      description: Service-wide unique object ID generated server-side.
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    EntityOrigin:
-      description: Object creation origin, also called 'authoritative source'.
-      enum:
-      - upstream
-      - local
-      type: string
-    BoundCompositePolicy:
-      type: object
-      required:
-      - policy
-      properties:
-        policy:
-          $ref: '#/components/schemas/CompositePolicy'
-        context:
-          description: Must be empty for policy that assumes binding to a context during application.
-          type: object
-          properties:
-            _issues:
-              type: array
-              items:
-                $ref: '#/components/schemas/Issue_1'
-            id:
-              $ref: '#/components/schemas/InternalID'
-            _links:
-              type: array
-              items:
-                $ref: '#/components/schemas/Link'
-            _link_ids:
-              type: array
-              items:
-                $ref: '#/components/schemas/Action'
-            items:
-              type: array
-              maxItems: 100
-              items:
-                $ref: '#/components/schemas/InternalID'
-            tenant_id:
-              type: string
-    InternalID_2:
-      description: Service-wide unique object ID generated server-side.
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    SchemaVersion:
-      description: Schema version.
-      type: string
-      pattern: ^([0-9]+)\.([0-9]+)$
-    PolicyType:
-      description: 'A policy type in the `type.scope` format, where `type` is ''policy'' and `scope` is
-
-        like one of the `PolicyScope` values defined in `impl/policy/type_scopes.raml`.
-
-        '
-      type: string
-    InternalID:
-      description: Service-wide unique object ID generated server-side.
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    DeploymentState:
-      enum:
-      - deploying
-      - deployed
-      - error
-      - not_available
-      type: string
-    PolicyType_11:
-      description: 'A policy type in the `type.scope` format, where `type` is ''policy'' and `scope` is
-
-        like one of the `PolicyScope` values defined in `impl/policy/type_scopes.raml`.
-
-        '
-      type: string
     Application:
       description: Policy rules or settings applied, i.e., being used and executed. For policy that requires parametrization by context of a resource, the application is also bound to the resource.
       type: object
@@ -4344,33 +3324,98 @@ components:
           - cancelling
           - idle
           type: string
-    NotFoundError:
-      description: Specified REST resource wasn't found.
-      example:
-        domain: General
-        code: NotFoundError
-      type: object
-      required:
-      - code
-      - domain
-      properties:
-        context:
-          description: Description of context (call parameters, environment, etc), where the error occurred.
-          type: object
-        code:
-          description: Error ID or code, unique in the domain.
-          enum:
-          - NotFoundError
-          type: string
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
-          enum:
-          - General
-          type: string
-        message:
-          description: Human-readable message, describing the error.
-          type: string
-    Issue:
+    Action:
+      enum:
+      - policy_view
+      - policy_create
+      - policy_delete
+      - policy_update
+      - policy_enable
+      - policy_disable
+      - policy_add_child
+      - policy_remove_child
+      - policy_run
+      - policy_stop
+      - policy_apply
+      - policy_revoke
+      - policy_resume
+      - policy_pause
+      - policy_status
+      - backup
+      - restore
+      - getActivities
+      - largeScaleRecovery
+      - renameBackupPlans
+      - editBackupPlans
+      - collectSysinfo
+      - browse
+      - manageAsrm
+      - manageAsz
+      - activeProtection
+      - addToGroup
+      - removeFromGroup
+      - renameVMReplicationPlans
+      - editVMReplicationPlans
+      - startReplicaTest
+      - stopReplicaTest
+      - failover
+      - stopFailover
+      - failback
+      - finalize
+      - unmount
+      - detectApplications
+      - rebind
+      - permanentFailover
+      - remove
+      - replicate
+      - delete
+      - rename
+      - addResources
+      - removeResources
+      - move
+      - addStaticSubGroup
+      - addDynamicSubGroup
+      - editCondition
+      - changeCredentials
+      - changeMsSqlCredentials
+      - editCasSettings
+      - deleteCasSettings
+      - changeMsExchangeDbCredentials
+      - changeOffice365Credentials
+      - comment
+      - hostBackup
+      - removeAppliances
+      - select_disk_provision_mode
+      - reboot
+      - shutdown
+      - canDisasterRecovery
+      - manageLicense
+      - patchManagement
+      - remoteDesktop
+      - remoteWipe
+      - cyberDesktop
+      type: string
+    RunningState:
+      enum:
+      - running
+      - idle
+      - cancelling
+      - interaction_required
+      type: string
+    ResourceType_8:
+      description: 'A resource type in the `type.scope` format, where `type` is ''resource'' and `scope` is
+
+        like one of the `ResourceScope` values defined in `impl/resource/type_scopes.raml`.
+
+        '
+      type: string
+    EntityOrigin:
+      description: Object creation origin, also called 'authoritative source'.
+      enum:
+      - upstream
+      - local
+      type: string
+    Issue_12:
       type: object
       required:
       - severity
@@ -4474,6 +3519,460 @@ components:
             message:
               description: Human-readable message, describing the error.
               type: string
+    BadRequestError:
+      description: Request is malformed.
+      example:
+        domain: General
+        code: BadRequestError
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - BadRequestError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - General
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    IntegerID:
+      description: An integer ID of the object.
+      example: '123'
+      type: string
+      pattern: ^\d+$
+    EntityTypeAndID:
+      description: Universal reference to an object with ID and type embedded. Formatted as 'id@type', see `EntityType` for `type` format.
+      type: string
+    PolicyType_13:
+      description: 'A policy type in the `type.scope` format, where `type` is ''policy'' and `scope` is
+
+        like one of the `PolicyScope` values defined in `impl/policy/type_scopes.raml`.
+
+        '
+      type: string
+    PageCursor:
+      type: string
+    Policy_3:
+      description: Identifiable and (optionally) named set of rules or settings. For some policies their rules / settings are specially organized to enable easy 're-use' in context of different and multiple 'resources'. Such policies must be bound to a context during application. But that is not the only case and policies may exist, which do not require binding to any additional contexts during application.
+      type: object
+      required:
+      - enabled
+      - origin
+      - type
+      properties:
+        settings:
+          $ref: '#/components/schemas/AnyType'
+        favorite_order:
+          description: The order number of the policy.
+          type: integer
+        enabled:
+          type: boolean
+        comment:
+          type: string
+        origin:
+          $ref: '#/components/schemas/EntityOrigin'
+        default_name_template_id:
+          description: Policy name template to be used when actual `name` is not user-assigned, e.g., for template policies.
+          type: string
+        _issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue_1'
+        template:
+          description: A `template` policy can't be applied and is used as a prototype for initialization of another policy of the same type.
+          type: boolean
+        temporary:
+          description: A `temporary` policy lives no more than `ttl` period, after that is removed automatically.
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        external_dependencies:
+          description: References to dependencies. Represents objects in domains external to policy, which policy refers to, and access to whom needs to be adjusted on policy change. Should be filled upon policy validation at the first. validation stage
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalDependency'
+        name:
+          description: Is usually actual only for composite policy root.
+          type: string
+        parent_ids:
+          description: References to parent policies (which this policy is linked to).
+          type: array
+          items:
+            $ref: '#/components/schemas/InternalID_2'
+        min_required_access_rules:
+          description: Minimal access rules required to access the policy and overriding default access rules. Calculated from `settings` including their external. dependencies
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleAccessRule'
+        updated_at:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/InternalID'
+        favorite:
+          description: True if the policy is favorite
+          type: boolean
+        run_args:
+          description: Arguments available for `PUT /applications/run`.
+          type: array
+          items:
+            type: string
+        settings_constraints:
+          description: Any constraint rules which applied to current policy settings - available enumerator values, numeric value ranges, string value patterns, etc.
+          anyOf:
+          - type: object
+          - type: string
+          - type: integer
+          - type: boolean
+        ls_features:
+          description: Licensing features calculated from `settings`. Empty when `enabled` is false.
+          type: string
+          pattern: ^(\w+)\|?$
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityTag'
+        default:
+          description: True if the policy is default
+          type: boolean
+        settings_schema:
+          $ref: '#/components/schemas/SchemaVersion'
+        template_source_id:
+          description: Reference to the `template` policy, that was used as a prototype for initialization of this policy.
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        deleted_at:
+          type: string
+          format: date-time
+        ttl:
+          description: Lifetime of the `temporary` policy, in seconds. Non-zero if set
+          type: integer
+        _links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        type:
+          $ref: '#/components/schemas/PolicyType'
+        tenant_id:
+          type: string
+        _link_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+        validation_dependencies:
+          description: References to dependencies. Only sub-policy IDs of same composite are expected (otherwise the ID will be ignored). Should be filled upon policy validation at the first validation stage with `check_validation_dependencies`. set to `false`
+          type: array
+          items:
+            $ref: '#/components/schemas/InternalID_2'
+    CompositePolicyStatusPagedList:
+      type: object
+      required:
+      - paging
+      - items
+      - timestamp
+      properties:
+        paging:
+          $ref: '#/components/schemas/Page'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompositePolicyStatus'
+        timestamp:
+          description: Server-side timestamp of query start.
+          type: string
+          format: date-time
+    InternalID:
+      description: Service-wide unique object ID generated server-side.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    DeploymentStatus:
+      type: object
+      required:
+      - state
+      properties:
+        state:
+          $ref: '#/components/schemas/DeploymentState'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/error'
+    RoleAccessRule:
+      type: object
+      required:
+      - link
+      - namespace
+      - role
+      properties:
+        link:
+          description: Type of access (link or action).
+          enum:
+          - policy_view
+          - policy_create
+          - policy_delete
+          - policy_update
+          - policy_enable
+          - policy_disable
+          - policy_add_child
+          - policy_remove_child
+          - policy_run
+          - policy_stop
+          - policy_apply
+          - policy_revoke
+          - policy_resume
+          - policy_pause
+          - policy_status
+          - backup
+          - restore
+          - getActivities
+          - largeScaleRecovery
+          - renameBackupPlans
+          - editBackupPlans
+          - collectSysinfo
+          - browse
+          - manageAsrm
+          - manageAsz
+          - activeProtection
+          - addToGroup
+          - removeFromGroup
+          - renameVMReplicationPlans
+          - editVMReplicationPlans
+          - startReplicaTest
+          - stopReplicaTest
+          - failover
+          - stopFailover
+          - failback
+          - finalize
+          - unmount
+          - detectApplications
+          - rebind
+          - permanentFailover
+          - remove
+          - replicate
+          - delete
+          - rename
+          - addResources
+          - removeResources
+          - move
+          - addStaticSubGroup
+          - addDynamicSubGroup
+          - editCondition
+          - changeCredentials
+          - changeMsSqlCredentials
+          - editCasSettings
+          - deleteCasSettings
+          - changeMsExchangeDbCredentials
+          - changeOffice365Credentials
+          - comment
+          - hostBackup
+          - removeAppliances
+          - select_disk_provision_mode
+          - reboot
+          - shutdown
+          - canDisasterRecovery
+          - manageLicense
+          - patchManagement
+          - remoteDesktop
+          - remoteWipe
+          - cyberDesktop
+          type: string
+        namespace:
+          description: Domain or namespace of the dependency object.
+          type: string
+        role:
+          description: Role (without namespace prefix), required to access the policy. In case of multiple roles for the same link brought by multiple rules, each role is required to allow the access. To completely disable the access, require a not existing role.
+          type: string
+    Link:
+      type: object
+      required:
+      - rel
+      properties:
+        rel:
+          description: \'Relation' - link name / ID or action / operation type.
+          enum:
+          - policy_view
+          - policy_create
+          - policy_delete
+          - policy_update
+          - policy_enable
+          - policy_disable
+          - policy_add_child
+          - policy_remove_child
+          - policy_run
+          - policy_stop
+          - policy_apply
+          - policy_revoke
+          - policy_resume
+          - policy_pause
+          - policy_status
+          - backup
+          - restore
+          - getActivities
+          - largeScaleRecovery
+          - renameBackupPlans
+          - editBackupPlans
+          - collectSysinfo
+          - browse
+          - manageAsrm
+          - manageAsz
+          - activeProtection
+          - addToGroup
+          - removeFromGroup
+          - renameVMReplicationPlans
+          - editVMReplicationPlans
+          - startReplicaTest
+          - stopReplicaTest
+          - failover
+          - stopFailover
+          - failback
+          - finalize
+          - unmount
+          - detectApplications
+          - rebind
+          - permanentFailover
+          - remove
+          - replicate
+          - delete
+          - rename
+          - addResources
+          - removeResources
+          - move
+          - addStaticSubGroup
+          - addDynamicSubGroup
+          - editCondition
+          - changeCredentials
+          - changeMsSqlCredentials
+          - editCasSettings
+          - deleteCasSettings
+          - changeMsExchangeDbCredentials
+          - changeOffice365Credentials
+          - comment
+          - hostBackup
+          - removeAppliances
+          - select_disk_provision_mode
+          - reboot
+          - shutdown
+          - canDisasterRecovery
+          - manageLicense
+          - patchManagement
+          - remoteDesktop
+          - remoteWipe
+          - cyberDesktop
+          type: string
+        href:
+          description: URL of an endpoint that can be used for this action or operation.
+          type: string
+    EntityOrigin_14:
+      description: Object creation origin, also called 'authoritative source'.
+      enum:
+      - upstream
+      - local
+      type: string
+    CompositeApplication:
+      description: Applications grouped according to their parent policy.
+      type: array
+      items:
+        $ref: '#/components/schemas/Application'
+    BoundCompositePolicyPagedList:
+      type: object
+      required:
+      - paging
+      - items
+      - timestamp
+      properties:
+        paging:
+          $ref: '#/components/schemas/Page'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoundCompositePolicy'
+        timestamp:
+          description: Server-side timestamp of query start.
+          type: string
+          format: date-time
+    NotFoundError:
+      description: Specified REST resource wasn't found.
+      example:
+        domain: General
+        code: NotFoundError
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - NotFoundError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - General
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    DraftState_6:
+      enum:
+      - creating
+      - editing
+      - cancelled
+      - done
+      type: string
+    EntityTag_15:
+      description: Key-value pair to use for object search and sorting.
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          anyOf:
+          - type: string
+          - type: integer
+          - type: boolean
+    ExternalDependency:
+      type: object
+      required:
+      - namespace
+      - tenant_id
+      - path
+      - timestamp
+      properties:
+        namespace:
+          description: Domain or namespace of the dependency object, e.g. 'credentials_store', 'script_repository'.
+          type: string
+        tenant_id:
+          description: Tenant that directly owns the dependency object.
+          example: '123'
+          type: string
+          pattern: ^\d+$
+        path:
+          description: Dependency object identifier (can be structured), e.g. credentials or script object ID. This identifier will be used to track dependency object changes and to manage dependency object access permissions.
+          type: string
+        timestamp:
+          description: Timestamp of creation or last update of the dependency object.
+          type: string
+          format: date-time
+        role:
+          description: Role (without namespace prefix), required to access the dependency object.
+          type: string
     Page:
       description: A subset of REST resources collection based on filter query.
       type: object
@@ -4490,12 +3989,38 @@ components:
             total:
               description: Total number of elements in the REST resources collection.
               type: integer
-    DraftState:
-      enum:
-      - creating
-      - editing
-      - cancelled
-      - done
+    AuthenticationTimeoutError:
+      description: Access token is already expired or invalid.
+      example:
+        domain: Access
+        code: AuthenticationTimeout
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - AuthenticationTimeout
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - Access
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    PolicyType_11:
+      description: 'A policy type in the `type.scope` format, where `type` is ''policy'' and `scope` is
+
+        like one of the `PolicyScope` values defined in `impl/policy/type_scopes.raml`.
+
+        '
       type: string
     Policy:
       description: Identifiable and (optionally) named set of rules or settings. For some policies their rules / settings are specially organized to enable easy 're-use' in context of different and multiple 'resources'. Such policies must be bound to a context during application. But that is not the only case and policies may exist, which do not require binding to any additional contexts during application.
@@ -4610,171 +4135,176 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InternalID_2'
-    Link:
+    PolicyIDAndOrder:
       type: object
       required:
-      - rel
+      - id
+      - favorite
       properties:
-        rel:
-          description: \'Relation' - link name / ID or action / operation type.
-          enum:
-          - policy_view
-          - policy_create
-          - policy_delete
-          - policy_update
-          - policy_enable
-          - policy_disable
-          - policy_add_child
-          - policy_remove_child
-          - policy_run
-          - policy_stop
-          - policy_apply
-          - policy_revoke
-          - policy_resume
-          - policy_pause
-          - policy_status
-          - backup
-          - restore
-          - getActivities
-          - largeScaleRecovery
-          - renameBackupPlans
-          - editBackupPlans
-          - collectSysinfo
-          - browse
-          - manageAsrm
-          - manageAsz
-          - activeProtection
-          - addToGroup
-          - removeFromGroup
-          - renameVMReplicationPlans
-          - editVMReplicationPlans
-          - startReplicaTest
-          - stopReplicaTest
-          - failover
-          - stopFailover
-          - failback
-          - finalize
-          - unmount
-          - detectApplications
-          - rebind
-          - permanentFailover
-          - remove
-          - replicate
-          - delete
-          - rename
-          - addResources
-          - removeResources
-          - move
-          - addStaticSubGroup
-          - addDynamicSubGroup
-          - editCondition
-          - changeCredentials
-          - changeMsSqlCredentials
-          - editCasSettings
-          - deleteCasSettings
-          - changeMsExchangeDbCredentials
-          - changeOffice365Credentials
-          - comment
-          - hostBackup
-          - removeAppliances
-          - select_disk_provision_mode
-          - reboot
-          - shutdown
-          - canDisasterRecovery
-          - manageLicense
-          - patchManagement
-          - remoteDesktop
-          - remoteWipe
-          - cyberDesktop
+        id:
           type: string
-        href:
-          description: URL of an endpoint that can be used for this action or operation.
-          type: string
-    RoleAccessRule:
+        favorite:
+          type: boolean
+        favorite_order:
+          type: integer
+    UnauthorizedRequestError:
+      description: Authorization failed.
+      example:
+        domain: Access
+        code: UnauthorizedRequest
       type: object
       required:
-      - link
-      - namespace
-      - role
+      - code
+      - domain
       properties:
-        link:
-          description: Type of access (link or action).
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
           enum:
-          - policy_view
-          - policy_create
-          - policy_delete
-          - policy_update
-          - policy_enable
-          - policy_disable
-          - policy_add_child
-          - policy_remove_child
-          - policy_run
-          - policy_stop
-          - policy_apply
-          - policy_revoke
-          - policy_resume
-          - policy_pause
-          - policy_status
-          - backup
-          - restore
-          - getActivities
-          - largeScaleRecovery
-          - renameBackupPlans
-          - editBackupPlans
-          - collectSysinfo
-          - browse
-          - manageAsrm
-          - manageAsz
-          - activeProtection
-          - addToGroup
-          - removeFromGroup
-          - renameVMReplicationPlans
-          - editVMReplicationPlans
-          - startReplicaTest
-          - stopReplicaTest
-          - failover
-          - stopFailover
-          - failback
-          - finalize
-          - unmount
-          - detectApplications
-          - rebind
-          - permanentFailover
-          - remove
-          - replicate
-          - delete
-          - rename
-          - addResources
-          - removeResources
-          - move
-          - addStaticSubGroup
-          - addDynamicSubGroup
-          - editCondition
-          - changeCredentials
-          - changeMsSqlCredentials
-          - editCasSettings
-          - deleteCasSettings
-          - changeMsExchangeDbCredentials
-          - changeOffice365Credentials
-          - comment
-          - hostBackup
-          - removeAppliances
-          - select_disk_provision_mode
-          - reboot
-          - shutdown
-          - canDisasterRecovery
-          - manageLicense
-          - patchManagement
-          - remoteDesktop
-          - remoteWipe
-          - cyberDesktop
+          - UnauthorizedRequest
           type: string
-        namespace:
-          description: Domain or namespace of the dependency object.
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - Access
           type: string
-        role:
-          description: Role (without namespace prefix), required to access the policy. In case of multiple roles for the same link brought by multiple rules, each role is required to allow the access. To completely disable the access, require a not existing role.
+        message:
+          description: Human-readable message, describing the error.
           type: string
+    InternalID_2:
+      description: Service-wide unique object ID generated server-side.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    InternalID_9:
+      description: Service-wide unique object ID generated server-side.
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    CompositePolicyStatus:
+      type: array
+      items:
+        $ref: '#/components/schemas/PolicyStatus'
+    ApplicationPagedList:
+      type: object
+      required:
+      - paging
+      - items
+      - timestamp
+      properties:
+        paging:
+          $ref: '#/components/schemas/Page'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompositeApplication'
+        timestamp:
+          description: Server-side timestamp of query start.
+          type: string
+          format: date-time
+    PolicyStatus:
+      type: object
+      required:
+      - policy
+      properties:
+        _issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue_1'
+        contexts:
+          type: object
+          required:
+          - total_number_or_resources
+          - number_of_enabled_resource_applications
+          - number_of_resources_by_status
+          - number_of_multiple_applications_conflict_resources
+          - origin_contexts
+          - deployment_status
+          properties:
+            validation_issues:
+              type: array
+              maxItems: 50
+              items:
+                $ref: '#/components/schemas/Issue_12'
+            total_number_or_resources:
+              description: Total number of policy applications on resource contexts.
+              type: integer
+            number_of_enabled_resource_applications:
+              description: Number of policy applications on resource contexts with `application.enabled` set to true.
+              type: integer
+            number_of_resources_by_status:
+              description: Number of policy applications on resource contexts with `application.status` equal to each possible value of the `ExecutionStatus` enumerator.
+              type: array
+              items:
+                type: object
+                required:
+                - status
+                - value
+                properties:
+                  status:
+                    $ref: '#/components/schemas/ExecutionStatus'
+                  value:
+                    type: integer
+            number_of_multiple_applications_conflict_resources:
+              description: Number of policy applications on resource contexts with `application.multiple_applications_conflict != null`.
+              type: integer
+            origin_contexts:
+              description: Deduplicated `origin_contexts` of policy applications on resource contexts.
+              type: array
+              items:
+                $ref: '#/components/schemas/InternalID_2'
+            deployment_status:
+              $ref: '#/components/schemas/DeploymentStatus'
+        policy:
+          type: object
+          required:
+          - created_at
+          - updated_at
+          - id
+          - tenant_id
+          - tenant_name
+          - type
+          - enabled
+          - origin
+          properties:
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+            id:
+              $ref: '#/components/schemas/InternalID_2'
+            tenant_id:
+              $ref: '#/components/schemas/IntegerID'
+            tenant_name:
+              type: string
+            type:
+              $ref: '#/components/schemas/PolicyType_13'
+            enabled:
+              type: boolean
+            name:
+              type: string
+            comment:
+              type: string
+            origin:
+              $ref: '#/components/schemas/EntityOrigin_14'
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityTag_15'
+            parent_ids:
+              type: array
+              items:
+                $ref: '#/components/schemas/InternalID_2'
+        _links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        _link_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
     Activity:
       enum:
       - backup
@@ -4795,6 +4325,476 @@ components:
       - vulnerability_assessment
       - data_protection_map
       - disaster_recovery
+      type: string
+    DeploymentState:
+      enum:
+      - deploying
+      - deployed
+      - error
+      - not_available
+      type: string
+    SchemaVersion:
+      description: Schema version.
+      type: string
+      pattern: ^([0-9]+)\.([0-9]+)$
+    PolicyType:
+      description: 'A policy type in the `type.scope` format, where `type` is ''policy'' and `scope` is
+
+        like one of the `PolicyScope` values defined in `impl/policy/type_scopes.raml`.
+
+        '
+      type: string
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request. Use as a base for more granular code and context definitions.
+      example:
+        domain: General
+        code: InternalServerError
+      type: object
+      required:
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - InternalServerError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - General
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    CompositePolicy:
+      description: Policy can be linked to other policies making a policy composite. Policy composite is always an acyclic directed graph with a single 'root'. Composite policy 'root' does not have parents. Non-root policy within a composite may have multiple 'parents' (which it's linked to) and multiple 'children' (which are linked to it).
+      type: array
+      items:
+        $ref: '#/components/schemas/Policy'
+    Issue_1:
+      type: object
+      required:
+      - severity
+      properties:
+        link:
+          description: Link name / ID or action / operation type, the issue is applied to.
+          enum:
+          - policy_view
+          - policy_create
+          - policy_delete
+          - policy_update
+          - policy_enable
+          - policy_disable
+          - policy_add_child
+          - policy_remove_child
+          - policy_run
+          - policy_stop
+          - policy_apply
+          - policy_revoke
+          - policy_resume
+          - policy_pause
+          - policy_status
+          - backup
+          - restore
+          - getActivities
+          - largeScaleRecovery
+          - renameBackupPlans
+          - editBackupPlans
+          - collectSysinfo
+          - browse
+          - manageAsrm
+          - manageAsz
+          - activeProtection
+          - addToGroup
+          - removeFromGroup
+          - renameVMReplicationPlans
+          - editVMReplicationPlans
+          - startReplicaTest
+          - stopReplicaTest
+          - failover
+          - stopFailover
+          - failback
+          - finalize
+          - unmount
+          - detectApplications
+          - rebind
+          - permanentFailover
+          - remove
+          - replicate
+          - delete
+          - rename
+          - addResources
+          - removeResources
+          - move
+          - addStaticSubGroup
+          - addDynamicSubGroup
+          - editCondition
+          - changeCredentials
+          - changeMsSqlCredentials
+          - editCasSettings
+          - deleteCasSettings
+          - changeMsExchangeDbCredentials
+          - changeOffice365Credentials
+          - comment
+          - hostBackup
+          - removeAppliances
+          - select_disk_provision_mode
+          - reboot
+          - shutdown
+          - canDisasterRecovery
+          - manageLicense
+          - patchManagement
+          - remoteDesktop
+          - remoteWipe
+          - cyberDesktop
+          type: string
+        severity:
+          description: Degree of trouble brought by the issue. If contains empty string, the severity is unknown.
+          enum:
+          - ok
+          - warning
+          - error
+          - critical
+          type: string
+        error:
+          description: Detailed issue domain and code, and context description as well.
+          type: object
+          required:
+          - code
+          - domain
+          properties:
+            context:
+              description: Description of context (call parameters, environment, etc), where the error occurred.
+              type: object
+            code:
+              description: Error ID or code, unique in the domain.
+              type: string
+            domain:
+              description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+              type: string
+            message:
+              description: Human-readable message, describing the error.
+              type: string
+    Issue:
+      type: object
+      required:
+      - severity
+      properties:
+        link:
+          description: Link name / ID or action / operation type, the issue is applied to.
+          enum:
+          - policy_view
+          - policy_create
+          - policy_delete
+          - policy_update
+          - policy_enable
+          - policy_disable
+          - policy_add_child
+          - policy_remove_child
+          - policy_run
+          - policy_stop
+          - policy_apply
+          - policy_revoke
+          - policy_resume
+          - policy_pause
+          - policy_status
+          - backup
+          - restore
+          - getActivities
+          - largeScaleRecovery
+          - renameBackupPlans
+          - editBackupPlans
+          - collectSysinfo
+          - browse
+          - manageAsrm
+          - manageAsz
+          - activeProtection
+          - addToGroup
+          - removeFromGroup
+          - renameVMReplicationPlans
+          - editVMReplicationPlans
+          - startReplicaTest
+          - stopReplicaTest
+          - failover
+          - stopFailover
+          - failback
+          - finalize
+          - unmount
+          - detectApplications
+          - rebind
+          - permanentFailover
+          - remove
+          - replicate
+          - delete
+          - rename
+          - addResources
+          - removeResources
+          - move
+          - addStaticSubGroup
+          - addDynamicSubGroup
+          - editCondition
+          - changeCredentials
+          - changeMsSqlCredentials
+          - editCasSettings
+          - deleteCasSettings
+          - changeMsExchangeDbCredentials
+          - changeOffice365Credentials
+          - comment
+          - hostBackup
+          - removeAppliances
+          - select_disk_provision_mode
+          - reboot
+          - shutdown
+          - canDisasterRecovery
+          - manageLicense
+          - patchManagement
+          - remoteDesktop
+          - remoteWipe
+          - cyberDesktop
+          type: string
+        severity:
+          description: Degree of trouble brought by the issue. If contains empty string, the severity is unknown.
+          enum:
+          - ok
+          - warning
+          - error
+          - critical
+          type: string
+        error:
+          description: Detailed issue domain and code, and context description as well.
+          type: object
+          required:
+          - code
+          - domain
+          properties:
+            context:
+              description: Description of context (call parameters, environment, etc), where the error occurred.
+              type: object
+            code:
+              description: Error ID or code, unique in the domain.
+              type: string
+            domain:
+              description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+              type: string
+            message:
+              description: Human-readable message, describing the error.
+              type: string
+    DraftState:
+      enum:
+      - creating
+      - editing
+      - cancelled
+      - done
+      type: string
+    EntityTag:
+      description: Key-value pair to use for object search and sorting.
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          anyOf:
+          - type: string
+          - type: integer
+          - type: boolean
+    EventID:
+      enum:
+      - reboot
+      type: string
+    RunningState_10:
+      enum:
+      - running
+      - idle
+      - cancelling
+      - interaction_required
+      type: string
+    error:
+      type: object
+      required:
+      - domain
+      - code
+      properties:
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          type: string
+        code:
+          description: Error ID or code, unique in the domain.
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+    BoundCompositePolicy:
+      type: object
+      required:
+      - policy
+      properties:
+        policy:
+          $ref: '#/components/schemas/CompositePolicy'
+        context:
+          description: Must be empty for policy that assumes binding to a context during application.
+          type: object
+          properties:
+            _issues:
+              type: array
+              items:
+                $ref: '#/components/schemas/Issue_1'
+            id:
+              $ref: '#/components/schemas/InternalID'
+            _links:
+              type: array
+              items:
+                $ref: '#/components/schemas/Link'
+            _link_ids:
+              type: array
+              items:
+                $ref: '#/components/schemas/Action'
+            items:
+              type: array
+              maxItems: 100
+              items:
+                $ref: '#/components/schemas/InternalID'
+            tenant_id:
+              type: string
+    Draft:
+      description: Temporary policy (policies) or application snapshot (with context). Drafts API implements 'builder' pattern, helping assemble complex policies. Typically used in interactive policy creation or editing
+      type: object
+      required:
+      - id
+      - policy
+      - clone
+      - state
+      - update
+      properties:
+        id:
+          description: Draft ID as whole. A policy beeing creating or edting and its linked policies all share the same context and draft state and draft-wide issues
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        policy:
+          $ref: '#/components/schemas/CompositePolicy'
+        clone:
+          type: boolean
+        context:
+          description: Either explicit or anonymous selection of resources
+          type: object
+          properties:
+            _issues:
+              type: array
+              items:
+                $ref: '#/components/schemas/Issue_1'
+            id:
+              $ref: '#/components/schemas/InternalID'
+            _links:
+              type: array
+              items:
+                $ref: '#/components/schemas/Link'
+            _link_ids:
+              type: array
+              items:
+                $ref: '#/components/schemas/Action'
+            items:
+              type: array
+              maxItems: 100
+              items:
+                $ref: '#/components/schemas/InternalID'
+            tenant_id:
+              type: string
+        state:
+          $ref: '#/components/schemas/DraftState_6'
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue_1'
+        update:
+          type: string
+          format: date-time
+        default_name_hint:
+          description: Parameter of default name template used to avoid duplicate default names, assuming default name is built a-la 'New policy {defaultNameHint}'. Greater than 0 if draft 'name' is a default name, equal to 0 if the 'name' is set explicitly
+          type: integer
+        default_name_template_ID:
+          description: ID of default name template. Convention for ID composition is - '<policy or root policy type>.<N>', where N starts from 0. Empty if draft 'name' is set explicitly
+          type: string
+        precheck_disabled:
+          type: boolean
+    AccessDeniedError:
+      description: Access was denied.
+      example:
+        domain: Access
+        code: AccessDeniedError
+        context:
+          scope: urn:acronis.com::policy_management:1234567890:read urn:acronis.com::policy_management:0987654321:read
+          required_scope: urn:acronis.com::script_management:1234567890:reviewer
+      type: object
+      required:
+      - context
+      - code
+      - domain
+      properties:
+        context:
+          description: Description of context (call parameters, environment, etc), where the error occurred.
+          type: object
+          required:
+          - scope
+          - required_scope
+          properties:
+            scope:
+              description: Access scope of the caller
+              type: string
+            required_scope:
+              description: Required access scope
+              type: string
+        code:
+          description: Error ID or code, unique in the domain.
+          enum:
+          - AccessDeniedError
+          type: string
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of specific domain model (e.g., `ResourceManagement` or `PolicyManagement`).
+          enum:
+          - Access
+          type: string
+        message:
+          description: Human-readable message, describing the error.
+          type: string
+    KeyValuePair:
+      description: Generic key-value pair.
+      type: object
+      required:
+      - key
+      - value
+      properties:
+        key:
+          type: string
+        value:
+          anyOf:
+          - anyOf:
+            - type: string
+            - type: integer
+          - type: array
+            items:
+              anyOf:
+              - type: string
+              - type: integer
+    ExecutionStatus:
+      enum:
+      - warning
+      - error
+      - critical
+      - no_policies_applied
+      - scheduled
+      - interaction_required
+      - running
+      - cancelling
+      - idle
       type: string
   securitySchemes:
     oauth2:
