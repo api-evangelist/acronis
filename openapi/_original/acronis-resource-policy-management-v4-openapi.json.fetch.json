@@ -1,0 +1,12 @@
+{
+ "url": "https://developer.acronis.com/doc/resource-policy-management/v4/reference/openapi.json",
+ "requested_url": "https://developer.acronis.com/doc/resource-policy-management/v4/reference/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 305598,
+ "sha256": "53ec9443da2e3dcc79b2404806c810730aae48479eb75f3618647e21c417b534",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}

@@ -1,0 +1,12 @@
+{
+ "url": "https://developer.acronis.com/doc/vaultman/v1/reference/openapi.json",
+ "requested_url": "https://developer.acronis.com/doc/vaultman/v1/reference/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 658215,
+ "sha256": "f73d507a65bb9a49a69ce8952f49e7de3803e2cda4614e5731082147a2f1d4ce",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}

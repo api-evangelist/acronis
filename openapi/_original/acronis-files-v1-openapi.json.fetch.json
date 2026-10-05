@@ -1,0 +1,12 @@
+{
+ "url": "https://developer.acronis.com/doc/files/v1/reference/openapi.json",
+ "requested_url": "https://developer.acronis.com/doc/files/v1/reference/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 173915,
+ "sha256": "1f645ad260a767db0333d97ba57569d044a3362f87e94d2954b71fe1861db208",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
