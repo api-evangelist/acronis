@@ -158,3 +158,45 @@ purchase_path:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  - subscription
+  units:
+  - data
+  - object
+  plans:
+  - name: Cyber Protect Cloud — Solution-based packages
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - other
+    periods:
+    - month
+  - name: Cyber Protect Cloud — Per-workload
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - other
+    periods:
+    - month
+  - name: Cyber Protect Cloud — Per-GB
+    access: other
+    model: metered
+    model_how: stated
+    units:
+    - data
+    periods:
+    - month
+  - name: Acronis True Image (consumer)
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - object
+    periods:
+    - year

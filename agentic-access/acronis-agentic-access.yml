@@ -1,4 +1,4 @@
-generated: '2026-09-16'
+generated: '2026-09-23'
 method: generated
 source: openapi/acronis-abgw-storages-api-openapi.yml, openapi/acronis-accounts-api-openapi.yml,
   openapi/acronis-activities-api-openapi.yml, openapi/acronis-agent-update-references-api-openapi.yml,
@@ -34,11 +34,11 @@ description: Recommended x-agentic-access execution contracts, classified heuris
 summary:
   operations: 320
   by_action_class:
-    acting: 168
-    connected: 152
+    acting: 167
+    connected: 153
   by_consequence:
-    write: 159
-    read: 152
+    write: 158
+    read: 153
     physical: 4
     safety-critical: 5
   human_in_the_loop_required: 5
@@ -2807,21 +2807,15 @@ operations:
   method: post
   operationId: Find vault by path
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
+    action-class: connected
+    consequence: read
+    subject: optional
     scope:
     - vault_manager::admin
     - vault_manager::system_admin
-    audience: null
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /storage_usage_stats
   method: get
   operationId: Fetch storage usage stats
