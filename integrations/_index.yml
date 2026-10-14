@@ -15,3 +15,29 @@
   relationship: distribution-channel
   status: not-a-workflow
   arazzo: null
+- slug: acronis-microsoft-sentinel-own
+  label: Microsoft Sentinel (own)
+  partner: microsoft-sentinel
+  partner_name: Microsoft Sentinel (own)
+  category: Security - Others
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/Acronis%20Cyber%20Protect%20Cloud
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: acronis-okta-own
+  label: Okta (own)
+  partner: okta
+  partner_name: Okta (own)
+  category: Single Sign-On
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.okta.com/integrations/acronis_cloud/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
