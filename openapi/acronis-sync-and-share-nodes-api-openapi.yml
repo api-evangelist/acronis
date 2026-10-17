@@ -1584,331 +1584,6 @@ paths:
       x-operation-id-original: Delete sync status
 components:
   schemas:
-    ConflictErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
-    UUID:
-      description: Universally unique identifier
-      example: b8ccbf27-4e92-41a9-8b66-d78108985321
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    Member:
-      description: Member of a shared folder
-      type: object
-      required:
-      - id
-      - read_only
-      - can_view_members
-      - can_invite
-      - email
-      - name
-      - permission_for
-      - can_be_changed
-      properties:
-        id:
-          description: Unique identifier of the member
-          type: string
-        read_only:
-          description: Whether the member has read-only access
-          type: boolean
-        can_view_members:
-          description: Whether the member can view other members
-          type: boolean
-        can_invite:
-          description: Whether the member can invite other members
-          type: boolean
-        email:
-          description: Email of the member
-          type: string
-        name:
-          description: Name of the member
-          type: string
-        permission_for:
-          description: Type of the member
-          enum:
-          - owner
-          - permission
-          - guest
-          type: string
-        can_be_changed:
-          description: Indicators which permissions can be changed
-          type: object
-          required:
-          - can_invite
-          - can_view_members
-          - read_only
-          properties:
-            can_invite:
-              description: Whether the `can_invite` permission can be changed
-              type: boolean
-            can_view_members:
-              description: Whether the `can_view_members` permission can be changed
-              type: boolean
-            read_only:
-              description: Whether the `read_only` permission can be changed
-              type: boolean
-    FileNode:
-      description: Single revision of a file
-      type: object
-      required:
-      - owner
-      - parents
-      - name
-      - office_online_permissions
-      - synced
-      - parent_uuid
-      - read_only
-      - has_shared_child_nodes
-      - is_shared
-      - has_writable_children
-      - actions
-      - file_modification_date
-      - permissions
-      - path
-      - uuid
-      - is_directory
-      - owner_email
-      - checksum
-      - is_deleted
-      - has_active_links
-      properties:
-        size:
-          description: Size of the node
-          type: integer
-          format: int64
-        owner:
-          description: Information about the owner of the node
-          type: object
-          required:
-          - uuid
-          - name
-          - email
-          properties:
-            uuid:
-              $ref: '#/components/schemas/UUID'
-            name:
-              type: string
-            email:
-              type: string
-        parents:
-          description: 'Parent nodes of the current node
-
-
-            The nodes are hierarchically ordered and include the current node'
-          type: array
-          items:
-            type: object
-            required:
-            - name
-            - uuid
-            - is_root
-            properties:
-              name:
-                type: string
-              uuid:
-                $ref: '#/components/schemas/NodeUUID'
-              is_root:
-                type: boolean
-        name:
-          description: Name of the node
-          type: string
-          minLength: 1
-        office_online_permissions:
-          description: Node permissions related to Office Online
-          type: object
-          required:
-          - can_create_files_into
-          - can_be_previewed
-          - can_be_edited
-          properties:
-            can_create_files_into:
-              type: boolean
-            can_be_previewed:
-              type: boolean
-            can_be_edited:
-              type: boolean
-        synced:
-          description: Sync status of the node
-          enum:
-          - not_synced
-          - sync_2_way
-          type: string
-        parent_uuid:
-          description: Unique identifier of the parent node
-          type: string
-          pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        read_only:
-          description: Whether the node is read-only
-          type: boolean
-        has_shared_child_nodes:
-          description: Whether any of the node's child nodes have been shared
-          type: boolean
-        is_shared:
-          description: Whether the node has been shared
-          type: boolean
-        preview_type:
-          type:
-          - string
-          - 'null'
-        has_writable_children:
-          description: Whether the node has writable child nodes
-          type: boolean
-        actions:
-          description: Relative URLs to actions that can be performed on the node
-          type: object
-          properties:
-            download:
-              description: Download URL
-              type: string
-            upload:
-              description: Upload URL
-              type: string
-            preview:
-              description: Preview URL
-              type: string
-        file_modification_date:
-          description: Modification date of the node
-          type: string
-          format: date-time
-        expiration_date:
-          description: Date when the shared access to the node will expire
-          type: string
-          format: date-time
-        permissions:
-          description: Permissions for the current user related to the node
-          type: object
-          required:
-          - can_be_renamed
-          - can_be_unsubscribed
-          - can_be_restored
-          - can_create_folders_into
-          - can_be_copied
-          - can_create_files_into
-          - can_view_members
-          - can_be_synced_2_way
-          - can_be_deleted
-          - can_be_synced_1_way
-          - can_be_moved
-          - can_be_shared
-          - can_be_shared_via_link
-          - can_invite
-          - can_be_downloaded
-          - can_selectively_purge_revisions
-          properties:
-            can_be_renamed:
-              description: Whether the node can be renamed
-              type: boolean
-            can_be_unsubscribed:
-              description: 'Whether the node can be unsubscribed from
-
-
-                Users can unsubscribe from nodes shared to them'
-              type: boolean
-            can_be_restored:
-              description: Whether a deleted node can be restored
-              type: boolean
-            can_create_folders_into:
-              description: Whether new folders can be created in this node
-              type: boolean
-            can_be_copied:
-              description: Whether the node can be copied
-              type: boolean
-            can_create_files_into:
-              description: Whether new files can be created in this node
-              type: boolean
-            can_view_members:
-              description: Whether members of this node can be viewed
-              type: boolean
-            can_be_synced_2_way:
-              description: Whether the node can be 2-way synced
-              type: boolean
-            can_be_deleted:
-              description: Whether the node can be deleted
-              type: boolean
-            can_be_synced_1_way:
-              description: Whether the node can be 1-way synced
-              type: boolean
-            can_be_moved:
-              description: Whether the node can be moved
-              type: boolean
-            can_be_shared:
-              description: Whether the node node can be shared to other users
-              type: boolean
-            can_be_shared_via_link:
-              description: Whether the node can be shared via file link
-              type: boolean
-            can_invite:
-              description: Whether new members can be invited to this node
-              type: boolean
-            can_be_downloaded:
-              description: Whether the node can be downloaded
-              type: boolean
-            can_selectively_purge_revisions:
-              description: Whether revisions of this node can be permanently deleted
-              type: boolean
-        path:
-          description: Path to the node
-          type: string
-        uuid:
-          description: Unique identifier of the node
-          type: string
-          pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        is_directory:
-          description: Whether the node is a directory or a file
-          type: boolean
-        owner_email:
-          description: Email of the node's owner
-          type: string
-        checksum:
-          description: MD5 checksum of the node
-          type: string
-        is_deleted:
-          description: Whether the node is deleted
-          type: boolean
-        has_active_links:
-          description: Whether the node has any active links
-          type: boolean
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
     FileLink:
       example:
         id: 252
@@ -2044,6 +1719,119 @@ components:
               type: string
             email:
               type: string
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
+    Member:
+      description: Member of a shared folder
+      type: object
+      required:
+      - id
+      - read_only
+      - can_view_members
+      - can_invite
+      - email
+      - name
+      - permission_for
+      - can_be_changed
+      properties:
+        id:
+          description: Unique identifier of the member
+          type: string
+        read_only:
+          description: Whether the member has read-only access
+          type: boolean
+        can_view_members:
+          description: Whether the member can view other members
+          type: boolean
+        can_invite:
+          description: Whether the member can invite other members
+          type: boolean
+        email:
+          description: Email of the member
+          type: string
+        name:
+          description: Name of the member
+          type: string
+        permission_for:
+          description: Type of the member
+          enum:
+          - owner
+          - permission
+          - guest
+          type: string
+        can_be_changed:
+          description: Indicators which permissions can be changed
+          type: object
+          required:
+          - can_invite
+          - can_view_members
+          - read_only
+          properties:
+            can_invite:
+              description: Whether the `can_invite` permission can be changed
+              type: boolean
+            can_view_members:
+              description: Whether the `can_view_members` permission can be changed
+              type: boolean
+            read_only:
+              description: Whether the `read_only` permission can be changed
+              type: boolean
+    UUID:
+      description: Universally unique identifier
+      example: b8ccbf27-4e92-41a9-8b66-d78108985321
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    NodeUUID:
+      description: 'Node unique identifier
+
+
+        - UUID for any user nodes
+
+        - `0` for the root node'
+      type: string
+      pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    ConflictErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
     Node:
       description: Single revision of a file or folder
       type: object
@@ -2265,15 +2053,227 @@ components:
             preview:
               description: Preview URL
               type: string
-    NodeUUID:
-      description: 'Node unique identifier
+    FileNode:
+      description: Single revision of a file
+      type: object
+      required:
+      - owner
+      - parents
+      - name
+      - office_online_permissions
+      - synced
+      - parent_uuid
+      - read_only
+      - has_shared_child_nodes
+      - is_shared
+      - has_writable_children
+      - actions
+      - file_modification_date
+      - permissions
+      - path
+      - uuid
+      - is_directory
+      - owner_email
+      - checksum
+      - is_deleted
+      - has_active_links
+      properties:
+        size:
+          description: Size of the node
+          type: integer
+          format: int64
+        owner:
+          description: Information about the owner of the node
+          type: object
+          required:
+          - uuid
+          - name
+          - email
+          properties:
+            uuid:
+              $ref: '#/components/schemas/UUID'
+            name:
+              type: string
+            email:
+              type: string
+        parents:
+          description: 'Parent nodes of the current node
 
 
-        - UUID for any user nodes
+            The nodes are hierarchically ordered and include the current node'
+          type: array
+          items:
+            type: object
+            required:
+            - name
+            - uuid
+            - is_root
+            properties:
+              name:
+                type: string
+              uuid:
+                $ref: '#/components/schemas/NodeUUID'
+              is_root:
+                type: boolean
+        name:
+          description: Name of the node
+          type: string
+          minLength: 1
+        office_online_permissions:
+          description: Node permissions related to Office Online
+          type: object
+          required:
+          - can_create_files_into
+          - can_be_previewed
+          - can_be_edited
+          properties:
+            can_create_files_into:
+              type: boolean
+            can_be_previewed:
+              type: boolean
+            can_be_edited:
+              type: boolean
+        synced:
+          description: Sync status of the node
+          enum:
+          - not_synced
+          - sync_2_way
+          type: string
+        parent_uuid:
+          description: Unique identifier of the parent node
+          type: string
+          pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        read_only:
+          description: Whether the node is read-only
+          type: boolean
+        has_shared_child_nodes:
+          description: Whether any of the node's child nodes have been shared
+          type: boolean
+        is_shared:
+          description: Whether the node has been shared
+          type: boolean
+        preview_type:
+          type:
+          - string
+          - 'null'
+        has_writable_children:
+          description: Whether the node has writable child nodes
+          type: boolean
+        actions:
+          description: Relative URLs to actions that can be performed on the node
+          type: object
+          properties:
+            download:
+              description: Download URL
+              type: string
+            upload:
+              description: Upload URL
+              type: string
+            preview:
+              description: Preview URL
+              type: string
+        file_modification_date:
+          description: Modification date of the node
+          type: string
+          format: date-time
+        expiration_date:
+          description: Date when the shared access to the node will expire
+          type: string
+          format: date-time
+        permissions:
+          description: Permissions for the current user related to the node
+          type: object
+          required:
+          - can_be_renamed
+          - can_be_unsubscribed
+          - can_be_restored
+          - can_create_folders_into
+          - can_be_copied
+          - can_create_files_into
+          - can_view_members
+          - can_be_synced_2_way
+          - can_be_deleted
+          - can_be_synced_1_way
+          - can_be_moved
+          - can_be_shared
+          - can_be_shared_via_link
+          - can_invite
+          - can_be_downloaded
+          - can_selectively_purge_revisions
+          properties:
+            can_be_renamed:
+              description: Whether the node can be renamed
+              type: boolean
+            can_be_unsubscribed:
+              description: 'Whether the node can be unsubscribed from
 
-        - `0` for the root node'
-      type: string
-      pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+
+                Users can unsubscribe from nodes shared to them'
+              type: boolean
+            can_be_restored:
+              description: Whether a deleted node can be restored
+              type: boolean
+            can_create_folders_into:
+              description: Whether new folders can be created in this node
+              type: boolean
+            can_be_copied:
+              description: Whether the node can be copied
+              type: boolean
+            can_create_files_into:
+              description: Whether new files can be created in this node
+              type: boolean
+            can_view_members:
+              description: Whether members of this node can be viewed
+              type: boolean
+            can_be_synced_2_way:
+              description: Whether the node can be 2-way synced
+              type: boolean
+            can_be_deleted:
+              description: Whether the node can be deleted
+              type: boolean
+            can_be_synced_1_way:
+              description: Whether the node can be 1-way synced
+              type: boolean
+            can_be_moved:
+              description: Whether the node can be moved
+              type: boolean
+            can_be_shared:
+              description: Whether the node node can be shared to other users
+              type: boolean
+            can_be_shared_via_link:
+              description: Whether the node can be shared via file link
+              type: boolean
+            can_invite:
+              description: Whether new members can be invited to this node
+              type: boolean
+            can_be_downloaded:
+              description: Whether the node can be downloaded
+              type: boolean
+            can_selectively_purge_revisions:
+              description: Whether revisions of this node can be permanently deleted
+              type: boolean
+        path:
+          description: Path to the node
+          type: string
+        uuid:
+          description: Unique identifier of the node
+          type: string
+          pattern: ^0$|^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        is_directory:
+          description: Whether the node is a directory or a file
+          type: boolean
+        owner_email:
+          description: Email of the node's owner
+          type: string
+        checksum:
+          description: MD5 checksum of the node
+          type: string
+        is_deleted:
+          description: Whether the node is deleted
+          type: boolean
+        has_active_links:
+          description: Whether the node has any active links
+          type: boolean
   securitySchemes:
     oauth_2_0:
       type: oauth2

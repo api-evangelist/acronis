@@ -513,9 +513,9 @@ components:
         falsePositive:
           description: Specifies whether alert is false positive or not.
           type: boolean
-    uuid:
-      type: string
-      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     kbLinkInfo:
       description: Components for kblink
       type: object
@@ -539,6 +539,22 @@ components:
           type: string
         os:
           type: string
+    CustomerAlerts:
+      type: object
+      required:
+      - customer_id
+      - alerts
+      properties:
+        customer_id:
+          description: Customer ID.
+          type: string
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertView'
+    uuid:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
     Error:
       description: Base error object
       type: object
@@ -562,22 +578,6 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
-    CustomerAlerts:
-      type: object
-      required:
-      - customer_id
-      - alerts
-      properties:
-        customer_id:
-          description: Customer ID.
-          type: string
-        alerts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertView'
   securitySchemes:
     oauth_2_0:
       type: oauth2

@@ -428,27 +428,51 @@ components:
               type: array
               items:
                 type: string
-    settingPut:
+    applicationType:
+      description: A type of application.
+      enum:
+      - backup
+      - files_cloud
+      - monitoring
+      - storage
+      - platform
+      - hci
+      - physical_data_shipping
+      - notary
+      type: string
+    application:
       example:
-        value:
-          value: qwerty
-          lock: false
+        id: 8aaf366b-fe24-4f25-93b3-bd729c86cc95
+        name: Acronis Backup Cloud
+        type: backup
+        api_base_url: /bc
+        usages:
+        - workstations
+        - vms
       type: object
-      additionalProperties: false
+      required:
+      - id
+      - name
+      - type
+      - usages
+      - api_base_url
       properties:
-        value:
-          description: Value of the setting.
-          oneOf:
-          - type: string
-          - type: boolean
-          - type: number
-          - type: object
-        lock:
-          description: Flag that controls whether the value can be overridden at another tenant's level.
-          type: boolean
-        exclusive:
-          description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
-          type: boolean
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          description: Human-readable name that will be displayed to the users.
+          type: string
+        type:
+          $ref: '#/components/schemas/applicationType'
+        usages:
+          description: Available usages for this application.
+          type: array
+          items:
+            description: Usage name.
+            type: string
+        api_base_url:
+          description: Base URL for application's HTTP API.
+          type: string
     applicationsList:
       example:
         items:
@@ -566,18 +590,27 @@ components:
       pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
       minLength: 36
       maxLength: 36
-    applicationType:
-      description: A type of application.
-      enum:
-      - backup
-      - files_cloud
-      - monitoring
-      - storage
-      - platform
-      - hci
-      - physical_data_shipping
-      - notary
-      type: string
+    settingPut:
+      example:
+        value:
+          value: qwerty
+          lock: false
+      type: object
+      additionalProperties: false
+      properties:
+        value:
+          description: Value of the setting.
+          oneOf:
+          - type: string
+          - type: boolean
+          - type: number
+          - type: object
+        lock:
+          description: Flag that controls whether the value can be overridden at another tenant's level.
+          type: boolean
+        exclusive:
+          description: If true, the value set for this tenant does not affect inheritance; this tenant's children will inherit the value from their grandparent tenant.
+          type: boolean
     setting:
       example:
         value:
@@ -658,39 +691,6 @@ components:
             lock:
               description: Flag that controls whether the value can be overridden at another tenant's level.
               type: boolean
-    application:
-      example:
-        id: 8aaf366b-fe24-4f25-93b3-bd729c86cc95
-        name: Acronis Backup Cloud
-        type: backup
-        api_base_url: /bc
-        usages:
-        - workstations
-        - vms
-      type: object
-      required:
-      - id
-      - name
-      - type
-      - usages
-      - api_base_url
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
-        name:
-          description: Human-readable name that will be displayed to the users.
-          type: string
-        type:
-          $ref: '#/components/schemas/applicationType'
-        usages:
-          description: Available usages for this application.
-          type: array
-          items:
-            description: Usage name.
-            type: string
-        api_base_url:
-          description: Base URL for application's HTTP API.
-          type: string
   securitySchemes:
     basicAuth:
       type: http

@@ -131,6 +131,17 @@ components:
               type: array
               items:
                 type: string
+    item1:
+      description: RFC3339 Formatted date.
+      type: string
+      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
+      minLength: 19
+      maxLength: 32
+    uuid:
+      type: string
+      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
+      minLength: 36
+      maxLength: 36
     global_search:
       example:
         items:
@@ -206,11 +217,6 @@ components:
                 description: Soft deletion timestamp.
                 allOf:
                 - $ref: '#/components/schemas/item1'
-    uuid:
-      type: string
-      pattern: '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}'
-      minLength: 36
-      maxLength: 36
     tenantKind:
       description: A tenant kind.
       enum:
@@ -220,12 +226,6 @@ components:
       - customer
       - unit
       type: string
-    item1:
-      description: RFC3339 Formatted date.
-      type: string
-      pattern: \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?([\+\-]\d{2}\:\d{2})?
-      minLength: 19
-      maxLength: 32
   securitySchemes:
     basicAuth:
       type: http

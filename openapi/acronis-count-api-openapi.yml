@@ -87,40 +87,32 @@ paths:
       x-operation-id-original: Fetch alert counters
 components:
   schemas:
-    SeveritiesAndTypesEmbed:
-      description: Alert counters grouped by severity and then by type.
+    kbLinkInfo:
+      description: Components for kblink
       type: object
       required:
-      - information
-      - warning
-      - error
-      - critical
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
       properties:
-        information:
-          $ref: '#/components/schemas/CountPerType'
-        warning:
-          $ref: '#/components/schemas/CountPerType'
-        error:
-          $ref: '#/components/schemas/CountPerType'
-        critical:
-          $ref: '#/components/schemas/CountPerType'
-    SeveritiesEmbed:
-      description: Alert counters per severity.
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    debugInfo:
+      description: Error debug information (map type)
       type: object
-      required:
-      - information
-      - warning
-      - error
-      - critical
-      properties:
-        information:
-          type: integer
-        warning:
-          type: integer
-        error:
-          type: integer
-        critical:
-          type: integer
     TenantCountResult:
       description: Alert counters for a tenant.
       type: object
@@ -145,29 +137,33 @@ components:
           $ref: '#/components/schemas/TypesEmbed'
         total:
           type: integer
-    kbLinkInfo:
-      description: Components for kblink
+    CountPerType:
+      description: Alert counters per type while grouping by severity as well.
       type: object
       required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
+      - total
       properties:
-        lineTag:
-          type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
+        total:
           type: integer
-        product:
-          type: string
-        os:
-          type: string
+        types:
+          $ref: '#/components/schemas/TypesEmbed'
+    SeveritiesAndTypesEmbed:
+      description: Alert counters grouped by severity and then by type.
+      type: object
+      required:
+      - information
+      - warning
+      - error
+      - critical
+      properties:
+        information:
+          $ref: '#/components/schemas/CountPerType'
+        warning:
+          $ref: '#/components/schemas/CountPerType'
+        error:
+          $ref: '#/components/schemas/CountPerType'
+        critical:
+          $ref: '#/components/schemas/CountPerType'
     Error:
       description: Base error object
       type: object
@@ -191,8 +187,12 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    debugInfo:
-      description: Error debug information (map type)
+    CategoriesEmbed:
+      description: 'Alert counters per alert category. Object keys are identifiers of alert
+
+        categories, values are counters of alerts of these categories.
+
+        '
       type: object
     TypesEmbed:
       description: 'Alert counters per alert type. Object keys are identifiers of alert
@@ -201,23 +201,23 @@ components:
 
         '
       type: object
-    CountPerType:
-      description: Alert counters per type while grouping by severity as well.
+    SeveritiesEmbed:
+      description: Alert counters per severity.
       type: object
       required:
-      - total
+      - information
+      - warning
+      - error
+      - critical
       properties:
-        total:
+        information:
           type: integer
-        types:
-          $ref: '#/components/schemas/TypesEmbed'
-    CategoriesEmbed:
-      description: 'Alert counters per alert category. Object keys are identifiers of alert
-
-        categories, values are counters of alerts of these categories.
-
-        '
-      type: object
+        warning:
+          type: integer
+        error:
+          type: integer
+        critical:
+          type: integer
     Report:
       description: Count report.
       type: object

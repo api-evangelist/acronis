@@ -67,14 +67,14 @@ components:
       oneOf:
       - $ref: '#/components/schemas/id'
       - $ref: '#/components/schemas/item1'
-    id:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
     item1:
       description: Numeric identifier.
       type: string
       pattern: ^\d+$
+    id:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
   securitySchemes:
     oauth2:
       type: oauth2

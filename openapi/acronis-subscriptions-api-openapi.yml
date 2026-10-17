@@ -114,90 +114,6 @@ components:
       type: string
       pattern: ^cti((\.([a-z][a-z0-9_]*))|\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?(~(([a-z][a-z0-9_]*)|([a-z][a-z0-9_]*)\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?)*\*$|^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
       maxLength: 1024
-    GetSubscriptionResponse:
-      type: object
-      additionalProperties: false
-      required:
-      - subscription_id
-      - tenant_depth
-      - types
-      - topic_id
-      properties:
-        cel:
-          description: Optional. CEL expression to filter events by.
-          type: string
-          maxLength: 4096
-        subscription_id:
-          description: Unique identifier of the subscription.
-          example: fd02a25c-fcb0-42a0-a5ce-56c1131db356
-          type: string
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        tenant_depth:
-          description: 'Required. Specifies the required tenancy depth
-
-            `CURRENT` - return all the events with the tenant_id equal to the tenant_id specified in the subscription.
-
-            `DIRECT` - return events for the tenant_id specified in the subscription and its direct children.
-
-            `ALL` - return all the events for the tenant_id specified in the subscription and all its children.
-
-            '
-          enum:
-          - CURRENT
-          - DIRECT
-          - ALL
-          type: string
-        auto_commit_interval:
-          description: 'Optional. Interval at which to auto-commit offsets. The interval is specified in ISO 8601 format.
-
-            '
-          default: PT5M
-          type: string
-          pattern: ^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$
-        auto_commit:
-          description: Optional. Keep track of the last offset acknowledged by this consumer and automatically commit it. Auto-commit will potentially be made at the beginning of each and every poll request and on subscription eviction. This is useful when the subscriber does not have an external storage to keep track of the last offset committed.
-          default: false
-          type: boolean
-        types:
-          description: "Required. List of event types this subscription delivers.\n\nAllowed CTI prefixes:\n  - `cti.a.p.em.event.v1.0~`\n  - `cti.a.p.em.msg.v1.0~`\n\nSupported forms (right side of `~` only):\n  - Exact type:\n      `cti.a.p.em.event.v1.0~a.p.tenant.created.v1.0`\n  - All types prefixed with a specific path:\n      `cti.a.p.em.event.v1.0~a.p.tenant.*`\n  - Latest version of a particular type:\n      `cti.a.p.em.event.v1.0~a.p.tenant.updated.v1.*`\n\nVersion wildcard semantics:\n  - When v1.* is used, matching events are upcast to the latest available version of that type.\n  - When version is missing (i.e.,cti.a.p.em.event.v1.0~a.p.tenant.*), matching events are upcast to the latest available version of each major version."
-          x-cti.reference:
-          - cti.a.p.em.event.v1.0
-          - cti.a.p.em.msg.v1.0
-          type: array
-          maxItems: 32
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/CTIWildcard'
-        topic_id:
-          description: 'Required. Identifier of the topic to subscribe to. The topic_id is used to filter events based on the topic they belong to.
-
-            '
-          x-cti.reference: cti.a.p.em.topic.v1.0
-          type: string
-          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
-          maxLength: 1024
-        session_timeout:
-          description: 'Optional. Defines the maximum duration an instance can hold the leadership for event fetching without sending heartbeats. If the instance fails within this period, the system will reassign the leadership to ensure continuous event processing. This mechanism enhances fault tolerance by allowing for the automatic recovery of event consumption in case of instance failures. The duration is specified in ISO 8601 format.
-
-            '
-          default: PT30S
-          type: string
-          pattern: ^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$
-        tenant_id:
-          description: 'Optional. Specifies the root of the tenant hierarchy subtree to apply event filtering.
-
-            If not provided, the tenant_id will be extracted from the access token.
-
-            '
-          type: string
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-        subject_types:
-          description: Optional. List of subject types to filter by. Wildcard is supported.
-          x-cti.reference: true
-          type: array
-          maxItems: 32
-          items:
-            $ref: '#/components/schemas/CTIWildcard'
     kbLinkInfo:
       description: Components for kblink
       type: object
@@ -221,6 +137,9 @@ components:
           type: string
         os:
           type: string
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     PostSubscriptionRequest:
       type: object
       additionalProperties: false
@@ -305,9 +224,14 @@ components:
           maxItems: 32
           items:
             $ref: '#/components/schemas/CTIWildcard'
-    debugInfo:
-      description: Error debug information (map type)
+    ErrorMessage:
       type: object
+      additionalProperties: false
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/error'
     GetSubscriptionOffsetResponse:
       type: object
       additionalProperties: false
@@ -324,6 +248,90 @@ components:
           description: Latest committed offset of the subscriber.
           type: integer
           format: int64
+    GetSubscriptionResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - subscription_id
+      - tenant_depth
+      - types
+      - topic_id
+      properties:
+        cel:
+          description: Optional. CEL expression to filter events by.
+          type: string
+          maxLength: 4096
+        subscription_id:
+          description: Unique identifier of the subscription.
+          example: fd02a25c-fcb0-42a0-a5ce-56c1131db356
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        tenant_depth:
+          description: 'Required. Specifies the required tenancy depth
+
+            `CURRENT` - return all the events with the tenant_id equal to the tenant_id specified in the subscription.
+
+            `DIRECT` - return events for the tenant_id specified in the subscription and its direct children.
+
+            `ALL` - return all the events for the tenant_id specified in the subscription and all its children.
+
+            '
+          enum:
+          - CURRENT
+          - DIRECT
+          - ALL
+          type: string
+        auto_commit_interval:
+          description: 'Optional. Interval at which to auto-commit offsets. The interval is specified in ISO 8601 format.
+
+            '
+          default: PT5M
+          type: string
+          pattern: ^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$
+        auto_commit:
+          description: Optional. Keep track of the last offset acknowledged by this consumer and automatically commit it. Auto-commit will potentially be made at the beginning of each and every poll request and on subscription eviction. This is useful when the subscriber does not have an external storage to keep track of the last offset committed.
+          default: false
+          type: boolean
+        types:
+          description: "Required. List of event types this subscription delivers.\n\nAllowed CTI prefixes:\n  - `cti.a.p.em.event.v1.0~`\n  - `cti.a.p.em.msg.v1.0~`\n\nSupported forms (right side of `~` only):\n  - Exact type:\n      `cti.a.p.em.event.v1.0~a.p.tenant.created.v1.0`\n  - All types prefixed with a specific path:\n      `cti.a.p.em.event.v1.0~a.p.tenant.*`\n  - Latest version of a particular type:\n      `cti.a.p.em.event.v1.0~a.p.tenant.updated.v1.*`\n\nVersion wildcard semantics:\n  - When v1.* is used, matching events are upcast to the latest available version of that type.\n  - When version is missing (i.e.,cti.a.p.em.event.v1.0~a.p.tenant.*), matching events are upcast to the latest available version of each major version."
+          x-cti.reference:
+          - cti.a.p.em.event.v1.0
+          - cti.a.p.em.msg.v1.0
+          type: array
+          maxItems: 32
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/CTIWildcard'
+        topic_id:
+          description: 'Required. Identifier of the topic to subscribe to. The topic_id is used to filter events based on the topic they belong to.
+
+            '
+          x-cti.reference: cti.a.p.em.topic.v1.0
+          type: string
+          pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+          maxLength: 1024
+        session_timeout:
+          description: 'Optional. Defines the maximum duration an instance can hold the leadership for event fetching without sending heartbeats. If the instance fails within this period, the system will reassign the leadership to ensure continuous event processing. This mechanism enhances fault tolerance by allowing for the automatic recovery of event consumption in case of instance failures. The duration is specified in ISO 8601 format.
+
+            '
+          default: PT30S
+          type: string
+          pattern: ^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$
+        tenant_id:
+          description: 'Optional. Specifies the root of the tenant hierarchy subtree to apply event filtering.
+
+            If not provided, the tenant_id will be extracted from the access token.
+
+            '
+          type: string
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+        subject_types:
+          description: Optional. List of subject types to filter by. Wildcard is supported.
+          x-cti.reference: true
+          type: array
+          maxItems: 32
+          items:
+            $ref: '#/components/schemas/CTIWildcard'
     error:
       description: Base error object
       example:
@@ -358,14 +366,6 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    ErrorMessage:
-      type: object
-      additionalProperties: false
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/error'
   securitySchemes:
     oauth2:
       type: oauth2

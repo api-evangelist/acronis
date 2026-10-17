@@ -266,6 +266,28 @@ paths:
       x-operation-id-original: Delete device
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - domain
+          - code
+          - message
+          properties:
+            domain:
+              enum:
+              - Files
+              type: string
+            code:
+              type: integer
+            message:
+              type: string
+            context:
+              type: object
     Device:
       description: Device used by users to access the service
       type: object
@@ -343,28 +365,6 @@ components:
             remove:
               description: Remove URL
               type: string
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - domain
-          - code
-          - message
-          properties:
-            domain:
-              enum:
-              - Files
-              type: string
-            code:
-              type: integer
-            message:
-              type: string
-            context:
-              type: object
   securitySchemes:
     oauth_2_0:
       type: oauth2

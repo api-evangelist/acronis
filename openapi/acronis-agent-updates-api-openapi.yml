@@ -106,6 +106,13 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
     AgentUpdateSettings:
       type: object
       description: Configuration for automatic agent updates
@@ -123,13 +130,6 @@ components:
           example: true
         maintenance_window:
           $ref: '#/components/schemas/MaintenanceWindow'
-    Error:
-      type: object
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     MaintenanceWindow:
       type: object
       description: Time window for restricting automatic updates

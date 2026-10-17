@@ -64,29 +64,6 @@ paths:
       x-operation-id-original: Fetch categories
 components:
   schemas:
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
-      properties:
-        lineTag:
-          type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
-          type: integer
-        product:
-          type: string
-        os:
-          type: string
     Error:
       description: Base error object
       type: object
@@ -110,9 +87,6 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
     Category:
       description: An information about the alert category or alert type category.
       type: object
@@ -126,6 +100,32 @@ components:
         alias:
           description: Alert category name alias.
           type: string
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
   securitySchemes:
     oauth_2_0:
       type: oauth2

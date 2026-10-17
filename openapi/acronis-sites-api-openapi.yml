@@ -1239,8 +1239,8 @@ paths:
       x-operation-id-original: Fetch disaster recovery site by UUID
 components:
   schemas:
-    item0_20: {}
     item0_18: {}
+    item0_20: {}
     error_api_response:
       type: object
       required:

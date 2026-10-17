@@ -725,91 +725,6 @@ paths:
       x-operation-id-original: Update web preview settings
 components:
   schemas:
-    WebPreviewSettings:
-      example:
-        office_online_integration_enabled: false
-        office_online_wopi_url: https://onenote.officeapps.live.com
-        office_online_type_of_use: editing
-        office_online_additional_services_enabled: false
-        office_online_allow_self_signed_certificates: false
-        web_preview_enabled: true
-        only_allow_not_converted: false
-        max_cache_size_mb: 2000
-        servlet_allow_self_signed_certificates: true
-        generation_max_concurrent_calls: 2
-      type: object
-      required:
-      - office_online_integration_enabled
-      - office_online_wopi_url
-      - office_online_type_of_use
-      - office_online_additional_services_enabled
-      - office_online_allow_self_signed_certificates
-      - web_preview_enabled
-      - only_allow_not_converted
-      - max_cache_size_mb
-      - servlet_allow_self_signed_certificates
-      - generation_max_concurrent_calls
-      properties:
-        office_online_integration_enabled:
-          type: boolean
-        office_online_wopi_url:
-          type: string
-        office_online_type_of_use:
-          enum:
-          - editing
-          - viewing-editing
-          type: string
-        office_online_additional_services_enabled:
-          type: boolean
-        office_online_allow_self_signed_certificates:
-          type: boolean
-        web_preview_enabled:
-          type: boolean
-        only_allow_not_converted:
-          type: boolean
-        max_cache_size_mb:
-          type: integer
-        servlet_allow_self_signed_certificates:
-          type: boolean
-        generation_max_concurrent_calls:
-          type: integer
-    Locale:
-      description: Locale code
-      enum:
-      - cs
-      - de
-      - en
-      - es
-      - fr
-      - it
-      - ja
-      - ko
-      - pl
-      - ru
-      - zh_tw
-      - zh_cn
-      type: string
-    AuditLogSettings:
-      example:
-        purge_logs_older_than_enabled: true
-        purge_logs_older_than_units: weeks
-        purge_logs_older_than_n: 3
-      type: object
-      required:
-      - purge_logs_older_than_enabled
-      - purge_logs_older_than_units
-      - purge_logs_older_than_n
-      properties:
-        purge_logs_older_than_enabled:
-          type: boolean
-        purge_logs_older_than_units:
-          enum:
-          - days
-          - weeks
-          - months
-          type: string
-        purge_logs_older_than_n:
-          type: integer
     ServerSettings:
       example:
         server_name: Acronis Files Protect
@@ -842,6 +757,68 @@ components:
         notification_admin_email:
           type: string
         notification_admin_frequency:
+          type: integer
+    SecuritySettings:
+      example:
+        allow_collaborators_to_invite: true
+        node_share_link_enable: false
+        node_share_link_allow_public_links: true
+        node_share_link_allow_login_links: true
+        node_share_link_single_use_only: false
+        node_share_link_ttl_range_enable: true
+        node_share_link_ttl_max: 365
+        shared_folder_expiration_required: false
+        shared_folder_expiration_max_days: 365
+      type: object
+      required:
+      - allow_collaborators_to_invite
+      - node_share_link_enable
+      - node_share_link_allow_public_links
+      - node_share_link_allow_login_links
+      - node_share_link_single_use_only
+      - node_share_link_ttl_range_enable
+      - node_share_link_ttl_max
+      - shared_folder_expiration_required
+      - shared_folder_expiration_max_days
+      properties:
+        allow_collaborators_to_invite:
+          type: boolean
+        node_share_link_enable:
+          type: boolean
+        node_share_link_allow_public_links:
+          type: boolean
+        node_share_link_allow_login_links:
+          type: boolean
+        node_share_link_single_use_only:
+          type: boolean
+        node_share_link_ttl_range_enable:
+          type: boolean
+        node_share_link_ttl_max:
+          type: integer
+        shared_folder_expiration_required:
+          type: boolean
+        shared_folder_expiration_max_days:
+          type: integer
+    AuditLogSettings:
+      example:
+        purge_logs_older_than_enabled: true
+        purge_logs_older_than_units: weeks
+        purge_logs_older_than_n: 3
+      type: object
+      required:
+      - purge_logs_older_than_enabled
+      - purge_logs_older_than_units
+      - purge_logs_older_than_n
+      properties:
+        purge_logs_older_than_enabled:
+          type: boolean
+        purge_logs_older_than_units:
+          enum:
+          - days
+          - weeks
+          - months
+          type: string
+        purge_logs_older_than_n:
           type: integer
     ErrorResponse:
       type: object
@@ -922,47 +899,70 @@ components:
           type: integer
         allow_users_to_selectively_purge_revisions:
           type: boolean
-    SecuritySettings:
+    WebPreviewSettings:
       example:
-        allow_collaborators_to_invite: true
-        node_share_link_enable: false
-        node_share_link_allow_public_links: true
-        node_share_link_allow_login_links: true
-        node_share_link_single_use_only: false
-        node_share_link_ttl_range_enable: true
-        node_share_link_ttl_max: 365
-        shared_folder_expiration_required: false
-        shared_folder_expiration_max_days: 365
+        office_online_integration_enabled: false
+        office_online_wopi_url: https://onenote.officeapps.live.com
+        office_online_type_of_use: editing
+        office_online_additional_services_enabled: false
+        office_online_allow_self_signed_certificates: false
+        web_preview_enabled: true
+        only_allow_not_converted: false
+        max_cache_size_mb: 2000
+        servlet_allow_self_signed_certificates: true
+        generation_max_concurrent_calls: 2
       type: object
       required:
-      - allow_collaborators_to_invite
-      - node_share_link_enable
-      - node_share_link_allow_public_links
-      - node_share_link_allow_login_links
-      - node_share_link_single_use_only
-      - node_share_link_ttl_range_enable
-      - node_share_link_ttl_max
-      - shared_folder_expiration_required
-      - shared_folder_expiration_max_days
+      - office_online_integration_enabled
+      - office_online_wopi_url
+      - office_online_type_of_use
+      - office_online_additional_services_enabled
+      - office_online_allow_self_signed_certificates
+      - web_preview_enabled
+      - only_allow_not_converted
+      - max_cache_size_mb
+      - servlet_allow_self_signed_certificates
+      - generation_max_concurrent_calls
       properties:
-        allow_collaborators_to_invite:
+        office_online_integration_enabled:
           type: boolean
-        node_share_link_enable:
+        office_online_wopi_url:
+          type: string
+        office_online_type_of_use:
+          enum:
+          - editing
+          - viewing-editing
+          type: string
+        office_online_additional_services_enabled:
           type: boolean
-        node_share_link_allow_public_links:
+        office_online_allow_self_signed_certificates:
           type: boolean
-        node_share_link_allow_login_links:
+        web_preview_enabled:
           type: boolean
-        node_share_link_single_use_only:
+        only_allow_not_converted:
           type: boolean
-        node_share_link_ttl_range_enable:
-          type: boolean
-        node_share_link_ttl_max:
+        max_cache_size_mb:
           type: integer
-        shared_folder_expiration_required:
+        servlet_allow_self_signed_certificates:
           type: boolean
-        shared_folder_expiration_max_days:
+        generation_max_concurrent_calls:
           type: integer
+    Locale:
+      description: Locale code
+      enum:
+      - cs
+      - de
+      - en
+      - es
+      - fr
+      - it
+      - ja
+      - ko
+      - pl
+      - ru
+      - zh_tw
+      - zh_cn
+      type: string
   securitySchemes:
     oauth_2_0:
       type: oauth2

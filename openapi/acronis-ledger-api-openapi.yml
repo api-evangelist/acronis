@@ -83,37 +83,6 @@ paths:
       x-operation-id-original: Fetch ledger
 components:
   schemas:
-    GetLedgersSearchResponse:
-      example:
-        Ledgers:
-        - Id: 00000000-0000-0000-0000-000000000000
-          Number: ''
-          Description: ''
-          Active: true
-          CreationDate: '0001-01-01T00:00:00Z'
-          ExternalId: ''
-        - Id: 00000000-0000-0000-0000-000000000000
-          Number: ''
-          Description: ''
-          Active: true
-          CreationDate: '0001-01-01T00:00:00Z'
-          ExternalId: ''
-        Paging:
-          AmountTotalItems: 0
-          AmountRecordsFound: 0
-          AmountOfPages: 0
-      type: object
-      additionalProperties: false
-      required:
-      - Ledgers
-      - Paging
-      properties:
-        Ledgers:
-          type: array
-          items:
-            $ref: '#/components/schemas/LedgerPartial'
-        Paging:
-          $ref: '#/components/schemas/Paging'
     Paging:
       type: object
       additionalProperties: false
@@ -223,6 +192,37 @@ components:
         Number:
           description: ''
           type: string
+    GetLedgersSearchResponse:
+      example:
+        Ledgers:
+        - Id: 00000000-0000-0000-0000-000000000000
+          Number: ''
+          Description: ''
+          Active: true
+          CreationDate: '0001-01-01T00:00:00Z'
+          ExternalId: ''
+        - Id: 00000000-0000-0000-0000-000000000000
+          Number: ''
+          Description: ''
+          Active: true
+          CreationDate: '0001-01-01T00:00:00Z'
+          ExternalId: ''
+        Paging:
+          AmountTotalItems: 0
+          AmountRecordsFound: 0
+          AmountOfPages: 0
+      type: object
+      additionalProperties: false
+      required:
+      - Ledgers
+      - Paging
+      properties:
+        Ledgers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LedgerPartial'
+        Paging:
+          $ref: '#/components/schemas/Paging'
   securitySchemes:
     oauth2:
       type: oauth2

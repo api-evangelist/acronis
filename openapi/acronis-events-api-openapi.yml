@@ -133,6 +133,14 @@ components:
     debugInfo:
       description: Error debug information (map type)
       type: object
+    ErrorMessage:
+      type: object
+      additionalProperties: false
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/error'
     Event:
       description: 'Defines the structure of the event that has occurred.
 
@@ -264,6 +272,23 @@ components:
           type: string
           maxLength: 1024
         data: {}
+    GetEventsResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - offset
+      - events
+      properties:
+        offset:
+          description: Latest offset of the subscriber. This is the offset that should be used in the next poll request.
+          type: integer
+          format: int64
+        events:
+          description: A batch of events starting from the cursor position for each partition.
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Event'
     error:
       description: Base error object
       example:
@@ -298,31 +323,6 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    GetEventsResponse:
-      type: object
-      additionalProperties: false
-      required:
-      - offset
-      - events
-      properties:
-        offset:
-          description: Latest offset of the subscriber. This is the offset that should be used in the next poll request.
-          type: integer
-          format: int64
-        events:
-          description: A batch of events starting from the cursor position for each partition.
-          type: array
-          maxItems: 100
-          items:
-            $ref: '#/components/schemas/Event'
-    ErrorMessage:
-      type: object
-      additionalProperties: false
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/error'
   securitySchemes:
     oauth2:
       type: oauth2

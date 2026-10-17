@@ -1399,6 +1399,40 @@ paths:
       x-operation-id-original: Mark alert as false positive
 components:
   schemas:
+    paging:
+      description: Paging format.
+      type: object
+      required:
+      - cursors
+      properties:
+        cursors:
+          $ref: '#/components/schemas/cursors'
+    kbLinkInfo:
+      description: Components for kblink
+      type: object
+      required:
+      - lineTag
+      - serCode
+      - version
+      - build
+      - product
+      - os
+      properties:
+        lineTag:
+          type: string
+        serCode:
+          type: string
+        version:
+          type: string
+        build:
+          type: integer
+        product:
+          type: string
+        os:
+          type: string
+    debugInfo:
+      description: Error debug information (map type)
+      type: object
     AlertView:
       description: View of alert in responses.
       example:
@@ -1494,41 +1528,9 @@ components:
         falsePositive:
           description: Specifies whether alert is false positive or not.
           type: boolean
-    AlertID:
-      example:
-        id: BACA9625-A993-4722-B03F-F2807C85E76F
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          $ref: '#/components/schemas/uuid'
     uuid:
       type: string
       pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-    kbLinkInfo:
-      description: Components for kblink
-      type: object
-      required:
-      - lineTag
-      - serCode
-      - version
-      - build
-      - product
-      - os
-      properties:
-        lineTag:
-          type: string
-        serCode:
-          type: string
-        version:
-          type: string
-        build:
-          type: integer
-        product:
-          type: string
-        os:
-          type: string
     Error:
       description: Base error object
       type: object
@@ -1552,17 +1554,9 @@ components:
           $ref: '#/components/schemas/kbLinkInfo'
         debug:
           $ref: '#/components/schemas/debugInfo'
-    debugInfo:
-      description: Error debug information (map type)
-      type: object
-    paging:
-      description: Paging format.
-      type: object
-      required:
-      - cursors
-      properties:
-        cursors:
-          $ref: '#/components/schemas/cursors'
+    cursor:
+      description: Specific location in some collection.
+      type: string
     cursors:
       description: Cursors before and after the current page.
       type: object
@@ -1571,6 +1565,15 @@ components:
           $ref: '#/components/schemas/cursor'
         after:
           $ref: '#/components/schemas/cursor'
+    AlertID:
+      example:
+        id: BACA9625-A993-4722-B03F-F2807C85E76F
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
     Context:
       description: '**Deprecated.** Value of unique key for alerts with current type.
 
@@ -1580,9 +1583,6 @@ components:
 
         '
       type: object
-    cursor:
-      description: Specific location in some collection.
-      type: string
   securitySchemes:
     oauth_2_0:
       type: oauth2

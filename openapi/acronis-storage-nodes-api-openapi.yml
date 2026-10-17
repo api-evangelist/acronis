@@ -260,36 +260,6 @@ paths:
       x-operation-id-original: Find vault by path
 components:
   schemas:
-    find_location:
-      description: Checks if the path provided contains a vault.
-      example:
-        uri_to_find: E:\MyDocuments
-        protected_storage:
-          session_id: 0F6C5CB2-C01F-4E7C-A061-6F61F01692A1
-      type: object
-      additionalProperties: false
-      properties:
-        uri_to_find:
-          description: Path of possible vault.
-          type: string
-        protected_storage:
-          $ref: '#/components/schemas/protected_storage'
-    id_response:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/id'
-    uuid:
-      description: Universally unique identifier.
-      type: string
-      format: uuid
-    protected_storage:
-      type: object
-      additionalProperties: false
-      properties:
-        session_id:
-          $ref: '#/components/schemas/id'
     id:
       description: Universally unique identifier.
       type: string
@@ -307,6 +277,36 @@ components:
         uri:
           description: URI in Protected storage.
           type: string
+    uuid:
+      description: Universally unique identifier.
+      type: string
+      format: uuid
+    id_response:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+    protected_storage:
+      type: object
+      additionalProperties: false
+      properties:
+        session_id:
+          $ref: '#/components/schemas/id'
+    find_location:
+      description: Checks if the path provided contains a vault.
+      example:
+        uri_to_find: E:\MyDocuments
+        protected_storage:
+          session_id: 0F6C5CB2-C01F-4E7C-A061-6F61F01692A1
+      type: object
+      additionalProperties: false
+      properties:
+        uri_to_find:
+          description: Path of possible vault.
+          type: string
+        protected_storage:
+          $ref: '#/components/schemas/protected_storage'
   securitySchemes:
     oauth2:
       type: oauth2

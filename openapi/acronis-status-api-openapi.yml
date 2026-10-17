@@ -169,32 +169,23 @@ components:
           type: string
         os:
           type: string
-    Error:
-      description: Base error object
-      type: object
-      required:
-      - domain
-      - code
-      properties:
-        domain:
-          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
-          type: string
-        code:
-          description: Error id or code, unique in the domain. Same as in 'reason' field
-          type: string
-        reason:
-          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
-          type: string
-        context:
-          description: Error context dictionary
-          type: object
-        kbLink:
-          $ref: '#/components/schemas/kbLinkInfo'
-        debug:
-          $ref: '#/components/schemas/debugInfo'
     debugInfo:
       description: Error debug information (map type)
       type: object
+    ScopeStatus:
+      description: Status of the selected scope.
+      type: object
+      required:
+      - scope
+      - status
+      properties:
+        scope:
+          description: 'Value of scope. Contains values of context or searchable details.
+
+            '
+          type: object
+        status:
+          $ref: '#/components/schemas/Status'
     Status:
       description: 'Status of any scope that represents the last alert with the highest severity in the scope.
 
@@ -229,20 +220,29 @@ components:
         details:
           description: Details about the alert.
           type: object
-    ScopeStatus:
-      description: Status of the selected scope.
+    Error:
+      description: Base error object
       type: object
       required:
-      - scope
-      - status
+      - domain
+      - code
       properties:
-        scope:
-          description: 'Value of scope. Contains values of context or searchable details.
-
-            '
+        domain:
+          description: Error type or category. Can be ['Licensing','Access'] or name of service (for example 'PolicyManager' or 'VaultManager')
+          type: string
+        code:
+          description: Error id or code, unique in the domain. Same as in 'reason' field
+          type: string
+        reason:
+          description: Obsolete. Error id or code, unique in the domain. Same as in 'code' field
+          type: string
+        context:
+          description: Error context dictionary
           type: object
-        status:
-          $ref: '#/components/schemas/Status'
+        kbLink:
+          $ref: '#/components/schemas/kbLinkInfo'
+        debug:
+          $ref: '#/components/schemas/debugInfo'
   securitySchemes:
     oauth_2_0:
       type: oauth2
