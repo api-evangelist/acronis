@@ -1556,9 +1556,10 @@ apis:
   humanURL: https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html
   baseURL: https://{datacenter}.acronis.com/api
   tags:
-  - IDP
+  - Intelligent Document Processing
   tags_raw:
   - Idp
+  - IDP
   properties:
   - type: OpenAPI
     url: openapi/acronis-idp-api-openapi.yml
