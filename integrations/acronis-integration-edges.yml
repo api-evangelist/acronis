@@ -1,7 +1,14 @@
 generated: '2026-10-13'
 method: searched
 checked:
+- https://api.nuget.org/v3
 - https://azuremarketplace.microsoft.com/
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://zapier.com/api/v4/apps/
 - microsoft-sentinel/integrations/microsoft-sentinel-integration-edges.yml
 - okta/integrations/okta-integration-edges.yml
@@ -109,6 +116,165 @@ edges:
     builder: unknown (not in the directory record)
   detected_by: sweep-workflow-automation.py
   first_seen: '2026-10-15'
+- partner_name: Go module proxy
+  partner: null
+  partner_match: null
+  type: register
+  direction: provider-built
+  category: official SDK (Go)
+  evidence: https://pkg.go.dev/github.com/acronis/go-appkit
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: Go module proxy (public registry JSON)
+    spec_file: null
+    language: Go
+    packages:
+    - name: github.com/acronis/go-appkit
+      version: v1.34.0
+      released: '2026-09-24'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/acronis/go-appkit
+      repo_leg: github-org:acronis
+      publisher_leg: org:acronis
+      matched_by: github-org
+    - name: github.com/acronis/go-authkit
+      version: v0.36.0
+      released: '2026-09-24'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/acronis/go-authkit
+      repo_leg: github-org:acronis
+      publisher_leg: org:acronis
+      matched_by: github-org
+    - name: github.com/acronis/go-cti
+      version: v1.1.0
+      released: '2025-05-15'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/acronis/go-cti
+      repo_leg: github-org:acronis
+      publisher_leg: org:acronis
+      matched_by: github-org
+    - name: github.com/acronis/go-dbkit
+      version: v0.15.0
+      released: '2026-04-30'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/acronis/go-dbkit
+      repo_leg: github-org:acronis
+      publisher_leg: org:acronis
+      matched_by: github-org
+    - name: github.com/acronis/go-raml
+      version: v1.23.0
+      released: '2025-05-05'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/acronis/go-raml
+      repo_leg: github-org:acronis
+      publisher_leg: org:acronis
+      matched_by: github-org
+    - name: github.com/acronis/go-stacktrace
+      version: v0.7.0
+      released: '2026-06-09'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/acronis/go-stacktrace
+      repo_leg: github-org:acronis
+      publisher_leg: org:acronis
+      matched_by: github-org
+    - name: github.com/acronis/perfkit
+      version: v1.1.0
+      released: '2024-10-16'
+      released_field: Time
+      lapsed: true
+      page: https://pkg.go.dev/github.com/acronis/perfkit
+      repo_leg: github-org:acronis
+      publisher_leg: org:acronis
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@acronis-platform/design-assets
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@acronis-platform/design-assets'
+      version: 2.0.0
+      released: '2026-09-29'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@acronis-platform/design-assets
+      repo_leg: github-org:acronis
+      publisher_leg: email:acronis.com
+      matched_by: domain
+    - name: '@acronis-platform/design-tokens'
+      version: 3.0.1
+      released: '2026-10-06'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@acronis-platform/design-tokens
+      repo_leg: github-org:acronis
+      publisher_leg: email:acronis.com
+      matched_by: domain
+    - name: '@acronis-platform/shadcn-uikit'
+      version: 0.36.3
+      released: '2026-09-01'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@acronis-platform/shadcn-uikit
+      repo_leg: github-org:acronis
+      publisher_leg: email:acronis.com
+      matched_by: domain
+    - name: '@acronis-platform/tokens-pd'
+      version: 4.0.1
+      released: '2026-10-06'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@acronis-platform/tokens-pd
+      repo_leg: github-org:acronis
+      publisher_leg: email:acronis.com
+      matched_by: domain
+    - name: '@acronis-platform/ui-component-library'
+      version: 1.35.3
+      released: '2026-09-01'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@acronis-platform/ui-component-library
+      repo_leg: github-org:acronis
+      publisher_leg: email:acronis.com
+      matched_by: domain
+    - name: '@acronis-platform/ui-react'
+      version: 5.5.6
+      released: '2026-10-14'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@acronis-platform/ui-react
+      repo_leg: github-org:acronis
+      publisher_leg: email:acronis.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 source:
 - microsoft-sentinel/integrations/microsoft-sentinel-integration-edges.yml
 - okta/integrations/okta-integration-edges.yml
