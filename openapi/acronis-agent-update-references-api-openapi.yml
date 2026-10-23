@@ -329,3 +329,9 @@ components:
             urn:acronis.com::agent_manager::agent_viewer: ''
           authorizationUrl: /api/2/idp/authorize
           tokenUrl: /api/2/idp/token
+x-provenance:
+  method: harvested
+  publisher: Acronis
+  source: https://developer.acronis.com/doc/agents/v2/reference/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

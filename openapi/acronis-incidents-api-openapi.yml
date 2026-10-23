@@ -2240,3 +2240,9 @@ components:
             edr_mgmtsvc::threat_feed_data_viewer: 'null'
             edr_mgmtsvc::threat_feed_admin: 'null'
             edr_mgmtsvc::viewer: 'null'
+x-provenance:
+  method: harvested
+  publisher: Acronis
+  source: https://developer.acronis.com/doc/mdr/v1/reference/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

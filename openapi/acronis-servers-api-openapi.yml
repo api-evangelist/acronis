@@ -2631,3 +2631,9 @@ components:
             resource_manager::admin: ''
           authorizationUrl: https://dev-cloud.acronis.com/api/2/idp/authorize
           tokenUrl: https://dev-cloud.acronis.com/api/2/idp/token
+x-provenance:
+  method: harvested
+  publisher: Acronis
+  source: https://developer.acronis.com/doc/disaster-recovery/v2/reference/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

@@ -390,3 +390,9 @@ components:
             urn:acronis.com:audit:{role|permissions}: ''
           authorizationUrl: /bc/ipd/authorize
           tokenUrl: /bc/ipd/token
+x-provenance:
+  method: harvested
+  publisher: Acronis
+  source: https://developer.acronis.com/doc/events/v1/reference/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

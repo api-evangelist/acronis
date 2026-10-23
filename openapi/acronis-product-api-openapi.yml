@@ -491,3 +491,9 @@ x-roles:
   description: private role
   x-tags:
   - private
+x-provenance:
+  method: harvested
+  publisher: Acronis
+  source: https://developer.acronis.com/doc/advanced-automation/v1/reference/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
