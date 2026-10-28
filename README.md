@@ -1,4 +1,4 @@
-# Acronis (acronis)
+# Acronis
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,264 +64,369 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Acronis is a leading provider of cyber protection solutions delivering innovative technology to protect data, applications, and systems. They offer backup and disaster recovery, file sync and share, anti-malware, and endpoint detection and response through the Acronis Cyber Protect Cloud platform. The Acronis developer API enables MSPs, IT administrators, and security teams to automate tenant management, agent monitoring, backup task tracking, and usage reporting.
-
-**URL:** [Visit APIs.json](https://raw.githubusercontent.com/api-evangelist/acronis/refs/heads/main/apis.yml)
-
-**Run:** [Capabilities Using Naftiko](https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=company-api-evangelist&utm_content=repo)
-
-## Tags:
-
- - Cybersecurity, Data Protection, Endpoint Management
-
-## Timestamps
-
-- **Created:** 2025-02-17
-- **Modified:** 2026-04-19
-
-## APIs
-
-### Acronis Account Management API
-Manages tenant hierarchy, users, OAuth clients, applications, licensing (offering items), usage reporting, and infrastructure within Acronis Cyber Protect Cloud.
-
-**Human URL:** [https://developer.acronis.com/doc/account-management/v2/reference/index.html](https://developer.acronis.com/doc/account-management/v2/reference/index.html)
-
-#### Tags:
-
- - Account Management, Acronis, Tenants, Users
-
-#### Properties
-
-- [Documentation](https://developer.acronis.com/doc/outbound/apis/api-library/account/index.html)
-- [OpenAPI](openapi/acronis-account-management-openapi.yaml)
-- [NaftikoCapability](capabilities/shared/acronis-account-management.yaml)
-
----
-
-### Acronis Agent Management REST API
-Provides endpoints for managing Acronis backup agents registered across the platform, update settings, and hardware node management.
-
-**Human URL:** [https://developer.acronis.com/doc/agents/v2/reference/index.html](https://developer.acronis.com/doc/agents/v2/reference/index.html)
-
-#### Tags:
-
- - Acronis, Agent Management, Backup, Endpoints
-
-#### Properties
-
-- [Documentation](https://developer.acronis.com/doc/agents/v2/reference/index.html)
-- [OpenAPI](openapi/acronis-agent-management-openapi.yaml)
-
----
-
-### Acronis Resource and Policy Management API
-Enables organizations to manage protection policies and resources within their IT infrastructure.
-
-**Human URL:** [https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html](https://developer.acronis.com/doc/resource-policy-management/v4/reference/index.html)
-
-#### Tags:
-
- - Acronis, Policy Management, Resources
-
-#### Properties
-
-- [Documentation](https://developer.acronis.com/doc/resource-policy-management/v4/guide/index.html)
-
----
-
-### Acronis Task Manager API
-Monitors backup and protection tasks and activities with filtering, state tracking, and pagination.
-
-**Human URL:** [https://developer.acronis.com/doc/tasks/v2/reference/index.html](https://developer.acronis.com/doc/tasks/v2/reference/index.html)
-
-#### Tags:
-
- - Acronis, Backup, Monitoring, Tasks
-
-#### Properties
-
-- [Documentation](https://developer.acronis.com/doc/tasks/v2/guide/index.html)
-- [OpenAPI](openapi/acronis-task-manager-openapi.yaml)
-
----
-
-### Acronis Advanced Automation API
-Automates and streamlines backup and recovery processes with custom scripts and workflows for MSPs.
-
-**Human URL:** [https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html](https://developer.acronis.com/doc/advanced-automation/v1/reference/index.html)
-
-#### Tags:
-
- - Acronis, Advanced Automation, PSA
-
-#### Properties
-
-- [Documentation](https://developer.acronis.com/doc/outbound/apis/api-library/advanced-automation/index.html)
-
----
-
-### Acronis Event Manager API
-Monitors and manages events across the Acronis ecosystem with real-time event data access.
-
-**Human URL:** [https://developer.acronis.com/doc/events/v1/reference/index.html](https://developer.acronis.com/doc/events/v1/reference/index.html)
-
-#### Tags:
-
- - Acronis, Events, Monitoring
-
-#### Properties
-
-- [Documentation](https://developer.acronis.com/doc/vendor-side/apis/api-library/events/index.html)
-
----
-
-### Acronis Disaster Recovery Service API
-Automates and streamlines disaster recovery processes for business continuity.
-
-**Human URL:** [https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html](https://developer.acronis.com/doc/disaster-recovery/v2/reference/index.html)
-
-#### Tags:
-
- - Acronis, Disaster Recovery
-
-#### Properties
-
-- [Documentation](https://developer.acronis.com/doc/outbound/apis/api-library/dr/index.html)
-
----
-
-### Acronis Endpoint Detection and Response API
-Provides EDR capabilities for detecting and responding to cybersecurity threats in real-time.
-
-**Human URL:** [https://developer.acronis.com/doc/mdr/v1/reference/index.html](https://developer.acronis.com/doc/mdr/v1/reference/index.html)
-
-#### Tags:
-
- - Acronis, EDR, Endpoint Security
-
-#### Properties
-
-- [Documentation](https://developer.acronis.com/doc/outbound/apis/api-library/mdr/index.html)
-
----
-
-### Acronis Vault Manager REST API
-Manages Acronis Vault storage solutions programmatically for backup storage configuration.
-
-**Human URL:** [https://developer.acronis.com/doc/vaultman/v1/reference/index.html](https://developer.acronis.com/doc/vaultman/v1/reference/index.html)
-
-#### Tags:
-
- - Acronis, Storage, Vault Management
-
-#### Properties
-
-- [Documentation](https://developer.acronis.com/doc/vaultman/v1/reference/index.html)
-
-## Common Properties
-
-- [Portal](https://developer.acronis.com/)
-- [GettingStarted](https://developer.acronis.com/doc/outbound/apis/getting-started/index.html)
-- [Authentication](https://developer.acronis.com/doc/outbound/apis/authentication/index.html)
-- [Blog](https://www.acronis.com/en-us/blog/)
-- [Support](https://www.acronis.com/en-us/support/)
+Acronis is a leading provider of cyber protection solutions that deliver innovative technology to protect data, applications, and systems from the ever-evolving threats of today's digital world. They offer a comprehensive suite of products, including backup and disaster recovery solutions, file sync and share services, and anti-malware protection.
+
+**Areas:** Cybersecurity · Data Protection · Endpoint Management · Backup and Recovery · Disaster Recovery · Managed Service Providers · Endpoint Detection and Response · Cloud Storage
+
+## Acronis on APIs.io
+
+Everything profiled for Acronis is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/acronis/](https://apis.io/providers/acronis/)** — or go straight to one of the APIs or properties below.
+
+### APIs (71)
+
+- [Acronis Activities API](https://apis.io/apis/acronis/acronis-activities-api/) — Task activity and sub-operation tracking
+- [Acronis Agent Updates API](https://apis.io/apis/acronis/acronis-agent-updates-api/) — Agent update configuration and execution
+- [Acronis Agents API](https://apis.io/apis/acronis/acronis-agents-api/) — Acronis protection agent management
+- [Acronis Clients API](https://apis.io/apis/acronis/acronis-clients-api/) — OAuth2 client credential management
+- [Acronis Hardware Nodes API](https://apis.io/apis/acronis/acronis-hardware-nodes-api/) — Hardware node management
+- [Acronis Tasks API](https://apis.io/apis/acronis/acronis-tasks-api/) — Backup and protection task monitoring
+- [Acronis Tenants API](https://apis.io/apis/acronis/acronis-tenants-api/) — Tenant hierarchy management and configuration
+- [Acronis Users API](https://apis.io/apis/acronis/acronis-users-api/) — User account management within tenants
+- [Acronis Abgw Storages API](https://apis.io/apis/acronis/acronis-abgw-storages-api/) — The Abgw Storages API from Acronis — 1 operation(s) for abgw storages.
+- [Acronis Accounts API](https://apis.io/apis/acronis/acronis-accounts-api/) — The Accounts API from Acronis — 1 operation(s) for accounts.
+- [Acronis Agent Update References API](https://apis.io/apis/acronis/acronis-agent-update-references-api/) — The Agent Update References API from Acronis — 1 operation(s) for agent update references.
+- [Acronis Agent Update Settings API](https://apis.io/apis/acronis/acronis-agent-update-settings-api/) — The Agent Update Settings API from Acronis — 2 operation(s) for agent update settings.
+- [Acronis Alerts API](https://apis.io/apis/acronis/acronis-alerts-api/) — The Alerts API from Acronis — 3 operation(s) for alerts.
+- [Acronis Antimalware Scan Stats API](https://apis.io/apis/acronis/acronis-antimalware-scan-stats-api/) — The Antimalware Scan Stats API from Acronis — 1 operation(s) for antimalware scan stats.
+- [Acronis Applications API](https://apis.io/apis/acronis/acronis-applications-api/) — The Applications API from Acronis — 4 operation(s) for applications.
+- [Acronis Archives API](https://apis.io/apis/acronis/acronis-archives-api/) — The Archives API from Acronis — 2 operation(s) for archives.
+- [Acronis Audit Log API](https://apis.io/apis/acronis/acronis-audit-log-api/) — The Audit Log API from Acronis — 1 operation(s) for audit log.
+- [Acronis Backed Up Resources API](https://apis.io/apis/acronis/acronis-backed-up-resources-api/) — The Backed Up Resources API from Acronis — 1 operation(s) for backed up resources.
+- [Acronis Backups API](https://apis.io/apis/acronis/acronis-backups-api/) — The Backups API from Acronis — 1 operation(s) for backups.
+- [Acronis Call API](https://apis.io/apis/acronis/acronis-call-api/) — The Call API from Acronis — 1 operation(s) for call.
+- [Acronis Categories API](https://apis.io/apis/acronis/acronis-categories-api/) — The Categories API from Acronis — 1 operation(s) for categories.
+- [Acronis Contract Part API](https://apis.io/apis/acronis/acronis-contractpart-api/) — The ContractPart API from Acronis — 1 operation(s) for contractpart.
+- [Acronis Contracts API](https://apis.io/apis/acronis/acronis-contracts-api/) — The Contracts API from Acronis — 1 operation(s) for contracts.
+- [Acronis Count API](https://apis.io/apis/acronis/acronis-count-api/) — The Count API from Acronis — 1 operation(s) for count.
+- [Acronis Customer Alerts API](https://apis.io/apis/acronis/acronis-customer-alerts-api/) — The Customer Alerts API from Acronis — 1 operation(s) for customer alerts.
+- [Acronis Customer Alerts Count API](https://apis.io/apis/acronis/acronis-customer-alerts-count-api/) — The Customer Alerts Count API from Acronis — 1 operation(s) for customer alerts count.
+- [Acronis Devices API](https://apis.io/apis/acronis/acronis-devices-api/) — The Devices API from Acronis — 2 operation(s) for devices.
+- [Acronis Download Invoice API](https://apis.io/apis/acronis/acronis-downloadinvoice-api/) — The DownloadInvoice API from Acronis — 1 operation(s) for downloadinvoice.
+- [Acronis Effective Price Lists API](https://apis.io/apis/acronis/acronis-effective-price-lists-api/) — The Effective Price Lists API from Acronis — 1 operation(s) for effective price lists.
+- [Acronis Email Updates API](https://apis.io/apis/acronis/acronis-emailupdates-api/) — The EmailUpdates API from Acronis — 1 operation(s) for emailupdates.
+- [Acronis Events API](https://apis.io/apis/acronis/acronis-events-api/) — The Events API from Acronis — 1 operation(s) for events.
+- [Acronis Export Invoice API](https://apis.io/apis/acronis/acronis-exportinvoice-api/) — The ExportInvoice API from Acronis — 1 operation(s) for exportinvoice.
+- [Acronis Idp API](https://apis.io/apis/acronis/acronis-idp-api/) — The Idp API from Acronis — 9 operation(s) for idp.
+- [Acronis Incidents API](https://apis.io/apis/acronis/acronis-incidents-api/) — The Incidents API from Acronis — 5 operation(s) for incidents.
+- [Acronis Infra API](https://apis.io/apis/acronis/acronis-infra-api/) — The Infra API from Acronis — 2 operation(s) for infra.
+- [Acronis Invoice Overview API](https://apis.io/apis/acronis/acronis-invoiceoverview-api/) — The InvoiceOverview API from Acronis — 1 operation(s) for invoiceoverview.
+- [Acronis Ledger API](https://apis.io/apis/acronis/acronis-ledger-api/) — The Ledger API from Acronis — 1 operation(s) for ledger.
+- [Acronis Ledgers API](https://apis.io/apis/acronis/acronis-ledgers-api/) — The Ledgers API from Acronis — 1 operation(s) for ledgers.
+- [Acronis Locations API](https://apis.io/apis/acronis/acronis-locations-api/) — The Locations API from Acronis — 3 operation(s) for locations.
+- [Acronis Policy Management API](https://apis.io/apis/acronis/acronis-policy-management-api/) — The Policy Management API from Acronis — 21 operation(s) for policy management.
+- [Acronis Priorities API](https://apis.io/apis/acronis/acronis-priorities-api/) — The Priorities API from Acronis — 1 operation(s) for priorities.
+- [Acronis Product API](https://apis.io/apis/acronis/acronis-product-api/) — The Product API from Acronis — 1 operation(s) for product.
+- [Acronis Registration Tokens API](https://apis.io/apis/acronis/acronis-registration-tokens-api/) — The Registration Tokens API from Acronis — 2 operation(s) for registration tokens.
+- [Acronis Reports API](https://apis.io/apis/acronis/acronis-reports-api/) — The Reports API from Acronis — 4 operation(s) for reports.
+- [Acronis Resource Management API](https://apis.io/apis/acronis/acronis-resource-management-api/) — The Resource Management API from Acronis — 6 operation(s) for resource management.
+- [Acronis Resource Status API](https://apis.io/apis/acronis/acronis-resource-status-api/) — The Resource Status API from Acronis — 1 operation(s) for resource status.
+- [Acronis Sales Items API](https://apis.io/apis/acronis/acronis-salesitems-api/) — The SalesItems API from Acronis — 1 operation(s) for salesitems.
+- [Acronis Scheduler Tickets API](https://apis.io/apis/acronis/acronis-schedulertickets-api/) — The SchedulerTickets API from Acronis — 1 operation(s) for schedulertickets.
+- [Acronis Search API](https://apis.io/apis/acronis/acronis-search-api/) — The Search API from Acronis — 1 operation(s) for search.
+- [Acronis Search Index Size Stats API](https://apis.io/apis/acronis/acronis-search-index-size-stats-api/) — The Search Index Size Stats API from Acronis — 1 operation(s) for search index size stats.
+- [Acronis Servers API](https://apis.io/apis/acronis/acronis-servers-api/) — The Servers API from Acronis — 5 operation(s) for servers.
+- [Acronis Settings API](https://apis.io/apis/acronis/acronis-settings-api/) — The Settings API from Acronis — 5 operation(s) for settings.
+- [Acronis Sites API](https://apis.io/apis/acronis/acronis-sites-api/) — The Sites API from Acronis — 2 operation(s) for sites.
+- [Acronis SLA API](https://apis.io/apis/acronis/acronis-sla-api/) — The SLA API from Acronis — 1 operation(s) for sla.
+- [Acronis Stats API](https://apis.io/apis/acronis/acronis-stats-api/) — The Stats API from Acronis — 1 operation(s) for stats.
+- [Acronis Status API](https://apis.io/apis/acronis/acronis-status-api/) — The Status API from Acronis — 1 operation(s) for status.
+- [Acronis Statuses API](https://apis.io/apis/acronis/acronis-statuses-api/) — The Statuses API from Acronis — 1 operation(s) for statuses.
+- [Acronis Storage Dirs API](https://apis.io/apis/acronis/acronis-storage-dirs-api/) — The Storage Dirs API from Acronis — 2 operation(s) for storage dirs.
+- [Acronis Storage Nodes API](https://apis.io/apis/acronis/acronis-storage-nodes-api/) — The Storage Nodes API from Acronis — 3 operation(s) for storage nodes.
+- [Acronis Storage Usage Stats API](https://apis.io/apis/acronis/acronis-storage-usage-stats-api/) — The Storage Usage Stats API from Acronis — 1 operation(s) for storage usage stats.
+- [Acronis Subscriptions API](https://apis.io/apis/acronis/acronis-subscriptions-api/) — The Subscriptions API from Acronis — 2 operation(s) for subscriptions.
+- [Acronis Sync And Share Nodes API](https://apis.io/apis/acronis/acronis-sync-and-share-nodes-api/) — The Sync And Share Nodes API from Acronis — 14 operation(s) for sync and share nodes.
+- [Acronis Sync API](https://apis.io/apis/acronis/acronis-sync-api/) — The Sync API from Acronis — 11 operation(s) for sync.
+- [Acronis Taxes API](https://apis.io/apis/acronis/acronis-taxes-api/) — The Taxes API from Acronis — 1 operation(s) for taxes.
+- [Acronis Topics API](https://apis.io/apis/acronis/acronis-topics-api/) — The Topics API from Acronis — 2 operation(s) for topics.
+- [Acronis Types API](https://apis.io/apis/acronis/acronis-types-api/) — The Types API from Acronis — 2 operation(s) for types.
+- [Acronis Uploaded Files API](https://apis.io/apis/acronis/acronis-uploadedfiles-api/) — The UploadedFiles API from Acronis — 1 operation(s) for uploadedfiles.
+- [Acronis Vaults API](https://apis.io/apis/acronis/acronis-vaults-api/) — The Vaults API from Acronis — 22 operation(s) for vaults.
+- [Acronis .well Known API](https://apis.io/apis/acronis/acronis-well-known-api/) — The .well Known API from Acronis — 1 operation(s) for .well known.
+- [Acronis Dashboard Data API](https://apis.io/apis/acronis/acronis-dashboard-data-api/) — The Dashboard Data API from Acronis — 1 operation(s) for dashboard data.
+- [Acronis Health Check API](https://apis.io/apis/acronis/acronis-health-check-api/) — The Health Check API from Acronis — 1 operation(s) for health check.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Acronis Events Webhooks](https://apis.io/asyncapis/acronis/acronis-events-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Acronis API MCP](https://apis.io/servers/acronis/acronis-api-mcp/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Acronis Agentic Access](https://apis.io/agentic-access/acronis/acronis-agentic-access/)
+
+#### JSON Schema (48)
+
+The data models the API reads and writes.
+
+- [Client](https://apis.io/schemas/acronis/account-management-client/)
+- [Contact](https://apis.io/schemas/acronis/account-management-contact/)
+- [OfferingItem](https://apis.io/schemas/acronis/account-management-offering-item/)
+- [Quota](https://apis.io/schemas/acronis/account-management-quota/)
+- [Report](https://apis.io/schemas/acronis/account-management-report/)
+- [SearchResults](https://apis.io/schemas/acronis/account-management-search-results/)
+- [Tenant](https://apis.io/schemas/acronis/account-management-tenant/)
+- [TokenResponse](https://apis.io/schemas/acronis/account-management-token-response/)
+- [UsageItem](https://apis.io/schemas/acronis/account-management-usage-item/)
+- [User](https://apis.io/schemas/acronis/account-management-user/)
+- [Activity](https://apis.io/schemas/acronis/acronis-activity/)
+- [ActivityList](https://apis.io/schemas/acronis/acronis-activitylist/)
+- [Agent](https://apis.io/schemas/acronis/acronis-agent/)
+- [AgentList](https://apis.io/schemas/acronis/acronis-agentlist/)
+- [AgentOS](https://apis.io/schemas/acronis/acronis-agentos/)
+- [AgentUpdateSettings](https://apis.io/schemas/acronis/acronis-agentupdatesettings/)
+- [Client](https://apis.io/schemas/acronis/acronis-client/)
+- [ClientList](https://apis.io/schemas/acronis/acronis-clientlist/)
+- [ClientRequest](https://apis.io/schemas/acronis/acronis-clientrequest/)
+- [Contact](https://apis.io/schemas/acronis/acronis-contact/)
+- [Error](https://apis.io/schemas/acronis/acronis-error/)
+- [HardwareNode](https://apis.io/schemas/acronis/acronis-hardwarenode/)
+- [HardwareNodeList](https://apis.io/schemas/acronis/acronis-hardwarenodelist/)
+- [MaintenanceWindow](https://apis.io/schemas/acronis/acronis-maintenancewindow/)
+- [OfferingItem](https://apis.io/schemas/acronis/acronis-offeringitem/)
+- …and 23 more published on APIs.io
+
+#### JSON Structure (17)
+
+Data models expressed in JSON Structure.
+
+- [Account Management Client Structure](https://apis.io/json-structure/acronis/account-management-client-structure/)
+- [Account Management Contact Structure](https://apis.io/json-structure/acronis/account-management-contact-structure/)
+- [Account Management Offering Item Structure](https://apis.io/json-structure/acronis/account-management-offering-item-structure/)
+- [Account Management Quota Structure](https://apis.io/json-structure/acronis/account-management-quota-structure/)
+- [Account Management Report Structure](https://apis.io/json-structure/acronis/account-management-report-structure/)
+- [Account Management Search Results Structure](https://apis.io/json-structure/acronis/account-management-search-results-structure/)
+- [Account Management Tenant Structure](https://apis.io/json-structure/acronis/account-management-tenant-structure/)
+- [Account Management Token Response Structure](https://apis.io/json-structure/acronis/account-management-token-response-structure/)
+- [Account Management Usage Item Structure](https://apis.io/json-structure/acronis/account-management-usage-item-structure/)
+- [Account Management User Structure](https://apis.io/json-structure/acronis/account-management-user-structure/)
+- [Acronis Structure](https://apis.io/json-structure/acronis/acronis-structure/)
+- [Agent Management Agent O S Structure](https://apis.io/json-structure/acronis/agent-management-agent-o-s-structure/)
+- [Agent Management Agent Structure](https://apis.io/json-structure/acronis/agent-management-agent-structure/)
+- [Agent Management Agent Update Settings Structure](https://apis.io/json-structure/acronis/agent-management-agent-update-settings-structure/)
+- [Agent Management Hardware Node Structure](https://apis.io/json-structure/acronis/agent-management-hardware-node-structure/)
+- [Task Manager Activity Structure](https://apis.io/json-structure/acronis/task-manager-activity-structure/)
+- [Task Manager Task Structure](https://apis.io/json-structure/acronis/task-manager-task-structure/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Acronis Context](https://apis.io/jsonld/acronis/acronis-context/)
+
+#### Vocabulary (1)
+
+The provider's domain terms, defined.
+
+- [Acronis Vocabulary](https://apis.io/vocabularies/acronis/acronis-vocabulary/)
+
+#### Examples (22)
+
+Example requests and responses.
+
+- [Account Management Client Example](https://apis.io/examples/acronis/account-management-client-example/)
+- [Account Management Contact Example](https://apis.io/examples/acronis/account-management-contact-example/)
+- [Account Management Offering Item Example](https://apis.io/examples/acronis/account-management-offering-item-example/)
+- [Account Management Quota Example](https://apis.io/examples/acronis/account-management-quota-example/)
+- [Account Management Report Example](https://apis.io/examples/acronis/account-management-report-example/)
+- [Account Management Search Results Example](https://apis.io/examples/acronis/account-management-search-results-example/)
+- [Account Management Tenant Example](https://apis.io/examples/acronis/account-management-tenant-example/)
+- [Account Management Token Response Example](https://apis.io/examples/acronis/account-management-token-response-example/)
+- [Account Management Usage Item Example](https://apis.io/examples/acronis/account-management-usage-item-example/)
+- [Account Management User Example](https://apis.io/examples/acronis/account-management-user-example/)
+- [Acronis Createtenant Example](https://apis.io/examples/acronis/acronis-createtenant-example/)
+- [Acronis Getagent Example](https://apis.io/examples/acronis/acronis-getagent-example/)
+- [Acronis Gettask Example](https://apis.io/examples/acronis/acronis-gettask-example/)
+- [Acronis Listagents Example](https://apis.io/examples/acronis/acronis-listagents-example/)
+- [Acronis Listtasks Example](https://apis.io/examples/acronis/acronis-listtasks-example/)
+- [Acronis Listtenants Example](https://apis.io/examples/acronis/acronis-listtenants-example/)
+- [Agent Management Agent Example](https://apis.io/examples/acronis/agent-management-agent-example/)
+- [Agent Management Agent O S Example](https://apis.io/examples/acronis/agent-management-agent-o-s-example/)
+- [Agent Management Agent Update Settings Example](https://apis.io/examples/acronis/agent-management-agent-update-settings-example/)
+- [Agent Management Hardware Node Example](https://apis.io/examples/acronis/agent-management-hardware-node-example/)
+- [Task Manager Activity Example](https://apis.io/examples/acronis/task-manager-activity-example/)
+- [Task Manager Task Example](https://apis.io/examples/acronis/task-manager-task-example/)
+
+#### Collections (22)
+
+Postman and Open Collection request collections.
+
+- [Acronis Account Management Activities API](https://apis.io/collections/acronis/open-acronis-activities-api/)
+- [Acronis Account Management Activities Agent Updates API](https://apis.io/collections/acronis/open-acronis-agent-updates-api/)
+- [Acronis Account Management Activities Agents API](https://apis.io/collections/acronis/open-acronis-agents-api/)
+- [Acronis Account Management Activities Authentication API](https://apis.io/collections/acronis/open-acronis-authentication-api/)
+- [Acronis Account Management Activities Clients API](https://apis.io/collections/acronis/open-acronis-clients-api/)
+- [Acronis Account Management Activities Hardware Nodes API](https://apis.io/collections/acronis/open-acronis-hardware-nodes-api/)
+- [Acronis Account Management Activities Licensing API](https://apis.io/collections/acronis/open-acronis-licensing-api/)
+- [Acronis Account Management Activities Tasks API](https://apis.io/collections/acronis/open-acronis-tasks-api/)
+- [Acronis Account Management Activities Tenants API](https://apis.io/collections/acronis/open-acronis-tenants-api/)
+- [Acronis Account Management Activities Usage API](https://apis.io/collections/acronis/open-acronis-usage-api/)
+- [Acronis Account Management Activities Users API](https://apis.io/collections/acronis/open-acronis-users-api/)
+- [Acronis Account Management Activities API](https://apis.io/collections/acronis/postman-acronis-activities-api/)
+- [Acronis Account Management Activities Agent Updates API](https://apis.io/collections/acronis/postman-acronis-agent-updates-api/)
+- [Acronis Account Management Activities Agents API](https://apis.io/collections/acronis/postman-acronis-agents-api/)
+- [Acronis Account Management Activities Authentication API](https://apis.io/collections/acronis/postman-acronis-authentication-api/)
+- [Acronis Account Management Activities Clients API](https://apis.io/collections/acronis/postman-acronis-clients-api/)
+- [Acronis Account Management Activities Hardware Nodes API](https://apis.io/collections/acronis/postman-acronis-hardware-nodes-api/)
+- [Acronis Account Management Activities Licensing API](https://apis.io/collections/acronis/postman-acronis-licensing-api/)
+- [Acronis Account Management Activities Tasks API](https://apis.io/collections/acronis/postman-acronis-tasks-api/)
+- [Acronis Account Management Activities Tenants API](https://apis.io/collections/acronis/postman-acronis-tenants-api/)
+- [Acronis Account Management Activities Usage API](https://apis.io/collections/acronis/postman-acronis-usage-api/)
+- [Acronis Account Management Activities Users API](https://apis.io/collections/acronis/postman-acronis-users-api/)
+
+#### Overlays (83)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Acronis Abgw Storages Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-abgw-storages-api-phrasing-overlay/)
+- [Acronis Account Management V2 Overlay](https://apis.io/overlays/acronis/acronis-account-management-v2-overlay/)
+- [Acronis Accounts Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-accounts-api-phrasing-overlay/)
+- [Acronis Activities Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-activities-api-phrasing-overlay/)
+- [Acronis Advanced Automation V1 Overlay](https://apis.io/overlays/acronis/acronis-advanced-automation-v1-overlay/)
+- [Acronis Agent Update References Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-agent-update-references-api-phrasing-overlay/)
+- [Acronis Agent Update Settings Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-agent-update-settings-api-phrasing-overlay/)
+- [Acronis Agent Updates Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-agent-updates-api-phrasing-overlay/)
+- [Acronis Agents Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-agents-api-phrasing-overlay/)
+- [Acronis Agents V2 Overlay](https://apis.io/overlays/acronis/acronis-agents-v2-overlay/)
+- [Acronis Alerts Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-alerts-api-phrasing-overlay/)
+- [Acronis Alerts V1 Overlay](https://apis.io/overlays/acronis/acronis-alerts-v1-overlay/)
+- [Acronis Antimalware Scan Stats Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-antimalware-scan-stats-api-phrasing-overlay/)
+- [Acronis Applications Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-applications-api-phrasing-overlay/)
+- [Acronis Archives Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-archives-api-phrasing-overlay/)
+- [Acronis Audit Log Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-audit-log-api-phrasing-overlay/)
+- [Acronis Backed Up Resources Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-backed-up-resources-api-phrasing-overlay/)
+- [Acronis Backups Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-backups-api-phrasing-overlay/)
+- [Acronis Call Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-call-api-phrasing-overlay/)
+- [Acronis Categories Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-categories-api-phrasing-overlay/)
+- [Acronis Clients Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-clients-api-phrasing-overlay/)
+- [Acronis Contractpart Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-contractpart-api-phrasing-overlay/)
+- [Acronis Contracts Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-contracts-api-phrasing-overlay/)
+- [Acronis Count Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-count-api-phrasing-overlay/)
+- [Acronis Customer Alerts Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-customer-alerts-api-phrasing-overlay/)
+- …and 58 more published on APIs.io
+
+#### Governance rules (2)
+
+Spectral rulesets for the provider's contracts.
+
+- [Acronis — jsonschema rules](https://apis.io/rules/acronis/acronis-jsonschema-spectral-rules/)
+- [Acronis API Rules](https://apis.io/rules/acronis/acronis-spectral-rules/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Acronis Authentication](https://apis.io/security/acronis/acronis-authentication/)
+- [Acronis Domain Security](https://apis.io/security/acronis/acronis-domain-security/)
+- [Acronis Trust Center](https://apis.io/security/acronis/acronis-trust-center/)
+- [Acronis Vulnerability Disclosure](https://apis.io/security/acronis/acronis-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Acronis Scopes](https://apis.io/scopes/acronis/acronis-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Acronis Plans Pricing](https://apis.io/plans/acronis/acronis-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Acronis Rate Limits](https://apis.io/rate-limits/acronis/acronis-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Acronis Finops](https://apis.io/finops/acronis/acronis-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.acronis.com/)
+- [Documentation](https://developer.acronis.com/doc/)
+- [Getting started](https://developer.acronis.com/doc/outbound/apis/getting-started/index.html)
+- [API reference](https://developer.acronis.com/doc/outbound/apis/index.html)
 - [Pricing](https://www.acronis.com/en-us/products/cloud/cyber-protect/pricing/)
-- [Partners](https://www.acronis.com/en-us/partners/)
-- [GitHubOrganization](https://github.com/acronis)
+- [Sign up](https://www.acronis.com/en-us/my/)
+- [Support](https://www.acronis.com/en-us/support/)
+- [Changelog](https://dl.acronis.com/u/baas/rn/API_change_log/en-US/AcronisCyberCloud_API_change_log.pdf)
+- [Blog](https://www.acronis.com/en-us/blog/)
+- [Terms of service](https://www.acronis.com/en-us/legal/)
+- [Privacy policy](https://www.acronis.com/en-us/company/privacy/)
+- [GitHub](https://github.com/acronis)
+- [Status](https://status.acronis.com/)
 
-## Features
+## API Evangelist rating
 
-| Name | Description |
-|------|-------------|
-| Tenant Hierarchy Management | Multi-tier tenant management for MSPs, partners, and customers with offering item quotas. |
-| Agent Management | Remote management of Acronis backup agents across Windows, Linux, macOS, and cloud workloads. |
-| Backup Task Monitoring | Real-time monitoring of backup and protection tasks with state, result, and activity tracking. |
-| Usage Reporting | Automated usage metrics collection and report generation for billing and capacity planning. |
-| Policy Management | Programmatic creation and application of protection policies to resources. |
-| Disaster Recovery API | Automated failover and recovery orchestration for business continuity. |
-| Endpoint Detection and Response | EDR capabilities for threat detection, investigation, and response via API. |
+**Kin Score 82.9** — exemplar · rubric 0.25.0 · scored 2026-10-23
 
-## Use Cases
+| Facet | Score |
+|---|---|
+| Discoverability | 76.7 |
+| Contract quality | 61.5 |
+| Contract governance | 45.5 |
+| Operational transparency | 76.3 |
+| Developer ergonomics | 86.3 |
+| Access clarity | 92.1 |
 
-| Name | Description |
-|------|-------------|
-| MSP Platform Automation | Automate tenant provisioning, licensing management, and usage reporting for managed service providers. |
-| Backup Monitoring Dashboard | Build custom dashboards tracking backup task status, failures, and completion rates. |
-| Agent Health Monitoring | Monitor agent online status, version compliance, and update management across endpoints. |
-| Compliance Reporting | Generate automated reports on data protection status for compliance and audit requirements. |
-| Disaster Recovery Automation | Trigger and monitor DR failover workflows programmatically for RTO/RPO compliance. |
+**Agent readiness 55.2** — agent-native
 
-## Integrations
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | verified |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | verified |
+| Event Surface Described | yes |
+| Agent Skills | yes |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | documented (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
 
-| Name | Description |
-|------|-------------|
-| PSA Platforms | Integration with ConnectWise, Autotask, and other PSA platforms for MSP billing and ticketing. |
-| SIEM Systems | Event streaming to SIEM platforms via Event Manager API for security monitoring. |
-| RMM Tools | Integration with RMM platforms for agent deployment and backup policy management. |
-| Billing Systems | Usage data export for automated billing via usage and offering item APIs. |
+**Regulatory alignment 45.1** — Horizontal (data, software, accessibility, platform)
 
-## Artifacts
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/acronis/](https://apis.io/providers/acronis/).
 
-Machine-readable API specifications organized by format.
+## How this profile is made
 
-### OpenAPI
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
 
-- [Acronis Account Management API](openapi/acronis-account-management-openapi.yaml)
-- [Acronis Agent Management REST API](openapi/acronis-agent-management-openapi.yaml)
-- [Acronis Task Manager API](openapi/acronis-task-manager-openapi.yaml)
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Acronis: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
 
-### JSON Schema
+## Open an issue
 
-- [Tenant Schema](json-schema/account-management-tenant-schema.json)
-- [User Schema](json-schema/account-management-user-schema.json)
-- [Agent Schema](json-schema/agent-management-agent-schema.json)
-- [Task Schema](json-schema/task-manager-task-schema.json)
-- [Offering Item Schema](json-schema/account-management-offering-item-schema.json)
-- [Client Schema](json-schema/account-management-client-schema.json)
-- [Usage Item Schema](json-schema/account-management-usage-item-schema.json)
-
-### JSON Structure
-
-- [Tenant Structure](json-structure/account-management-tenant-structure.json)
-- [Agent Structure](json-structure/agent-management-agent-structure.json)
-- [Task Structure](json-structure/task-manager-task-structure.json)
-
-### JSON-LD
-
-- [Acronis Context](json-ld/acronis-context.jsonld)
-
-### Examples
-
-- [Tenant Example](examples/account-management-tenant-example.json)
-- [Agent Example](examples/agent-management-agent-example.json)
-- [Task Example](examples/task-manager-task-example.json)
-
-## Capabilities
-
-Naftiko capabilities organized as shared per-API definitions composed into customer-facing workflows.
-
-### Shared Per-API Definitions
-
-- [Acronis Account Management](capabilities/shared/acronis-account-management.yaml) — 7 operations for tenant, user, and licensing management
-- [Acronis Agent Management](capabilities/shared/acronis-agent-management.yaml) — 3 operations for agent monitoring
-- [Acronis Task Manager](capabilities/shared/acronis-task-manager.yaml) — 3 operations for task monitoring
-
-### Workflow Capabilities
-
-| Workflow | APIs Combined | Tools | Persona |
-|----------|--------------|-------|---------|
-| [Cyber Protection Operations](capabilities/cyber-protection-operations.yaml) | Account, Agents, Tasks | 10 | MSP Administrator, IT Administrator, Security Analyst |
-
-## Vocabulary
-
-- [Acronis Vocabulary](vocabulary/acronis-vocabulary.yaml) — Unified taxonomy mapping 12 resources, 7 actions, 1 workflow, and 3 personas across operational (OpenAPI) and capability (Naftiko) dimensions
-
-## Rules
-
-- [Acronis Spectral Rules](rules/acronis-spectral-rules.yml) — 35+ rules across 13 categories enforcing Acronis API conventions
-
-## Maintainers
-
-**FN:** Kin Lane
-
-**Email:** kin@apievangelist.com
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/acronis/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
