@@ -11,6 +11,12 @@ artifacts:
   authentication/acronis-authentication.yml:
     method: searched
     evidence: declared in the artifact
+  certification/observations-2026-11-11.jsonl:
+    method: unknown
+    evidence: no authorship recorded
+  certification/status.yml:
+    method: unknown
+    evidence: no authorship recorded
   changelog/acronis-changelog.yml:
     method: searched
     evidence: declared in the artifact
@@ -83,6 +89,9 @@ artifacts:
   collections/acronis-users-api.postman_collection.json:
     method: derived
     evidence: openapi/acronis-users-api
+  compliance/acronis-compliance.yml:
+    method: harvested
+    evidence: declared in the artifact
   components/acronis-components.yml:
     method: searched
     evidence: declared in the artifact
@@ -92,8 +101,14 @@ artifacts:
   conventions/acronis-conventions.yml:
     method: derived
     evidence: declared in the artifact
+  data-license/acronis-data-license.yml:
+    method: harvested
+    evidence: declared in the artifact
   data-model/acronis-data-model.yml:
     method: derived
+    evidence: declared in the artifact
+  eligibility/acronis-eligibility.yml:
+    method: harvested
     evidence: declared in the artifact
   errors/acronis-decline-codes.yml:
     method: unknown
@@ -174,6 +189,12 @@ artifacts:
     method: unknown
     evidence: no authorship recorded
   heartbeat/2026-11-02.yml:
+    method: unknown
+    evidence: no authorship recorded
+  heartbeat/2026-11-06.yml:
+    method: unknown
+    evidence: no authorship recorded
+  heartbeat/2026-11-13.yml:
     method: unknown
     evidence: no authorship recorded
   hosts/acronis-hosts.yml:
@@ -713,7 +734,7 @@ artifacts:
   kin/checks-2026-10-23T222754.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
-  kin/checks-2026-11-02T082323.yml:
+  kin/checks-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-23T000603.yml:
@@ -780,6 +801,9 @@ artifacts:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-11-02T082323.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   lifecycle/acronis-lifecycle.yml:
@@ -1346,6 +1370,9 @@ artifacts:
   postman/acronis-users-api.postman_collection.json:
     method: derived
     evidence: openapi/acronis-users-api
+  privacy/acronis-privacy-policy.yml:
+    method: harvested
+    evidence: declared in the artifact
   rate-limits/acronis-rate-limits.yml:
     method: searched
     evidence: declared in the artifact
@@ -1387,6 +1414,9 @@ artifacts:
     evidence: declared in the artifact
   sla/acronis-sla.yml:
     method: generated
+    evidence: declared in the artifact
+  terms/acronis-terms-of-service.yml:
+    method: harvested
     evidence: declared in the artifact
   vendors/acronis-vendors.yml:
     method: unknown
