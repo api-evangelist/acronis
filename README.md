@@ -168,7 +168,7 @@ Which operations an agent can call, which act, and which need a human in the loo
 
 - [Acronis Agentic Access](https://apis.io/agentic-access/acronis/acronis-agentic-access/)
 
-#### JSON Schema (48)
+#### JSON Schema (157)
 
 The data models the API reads and writes.
 
@@ -182,22 +182,22 @@ The data models the API reads and writes.
 - [TokenResponse](https://apis.io/schemas/acronis/account-management-token-response/)
 - [UsageItem](https://apis.io/schemas/acronis/account-management-usage-item/)
 - [User](https://apis.io/schemas/acronis/account-management-user/)
+- [accessPoliciesList](https://apis.io/schemas/acronis/acronis-access-policies-list/)
+- [Action](https://apis.io/schemas/acronis/acronis-action/)
 - [Activity](https://apis.io/schemas/acronis/acronis-activity/)
+- [activity_2](https://apis.io/schemas/acronis/acronis-activity-2/)
 - [ActivityList](https://apis.io/schemas/acronis/acronis-activitylist/)
+- [Address](https://apis.io/schemas/acronis/acronis-address/)
 - [Agent](https://apis.io/schemas/acronis/acronis-agent/)
+- [AgentCollection](https://apis.io/schemas/acronis/acronis-agent-collection/)
+- [AgentUpdateChannel](https://apis.io/schemas/acronis/acronis-agent-update-channel/)
+- [AgentUpdateSettings](https://apis.io/schemas/acronis/acronis-agent-update-settings/)
+- [AgentUpdateSettingsIn](https://apis.io/schemas/acronis/acronis-agent-update-settings-in/)
 - [AgentList](https://apis.io/schemas/acronis/acronis-agentlist/)
 - [AgentOS](https://apis.io/schemas/acronis/acronis-agentos/)
 - [AgentUpdateSettings](https://apis.io/schemas/acronis/acronis-agentupdatesettings/)
-- [Client](https://apis.io/schemas/acronis/acronis-client/)
-- [ClientList](https://apis.io/schemas/acronis/acronis-clientlist/)
-- [ClientRequest](https://apis.io/schemas/acronis/acronis-clientrequest/)
-- [Contact](https://apis.io/schemas/acronis/acronis-contact/)
-- [Error](https://apis.io/schemas/acronis/acronis-error/)
-- [HardwareNode](https://apis.io/schemas/acronis/acronis-hardwarenode/)
-- [HardwareNodeList](https://apis.io/schemas/acronis/acronis-hardwarenodelist/)
-- [MaintenanceWindow](https://apis.io/schemas/acronis/acronis-maintenancewindow/)
-- [OfferingItem](https://apis.io/schemas/acronis/acronis-offeringitem/)
-- …and 23 more published on APIs.io
+- [AlertID](https://apis.io/schemas/acronis/acronis-alert-id/)
+- …and 132 more published on APIs.io
 
 #### JSON Structure (17)
 
@@ -318,11 +318,12 @@ OpenAPI overlays, including conversational phrasing for each operation.
 - [Acronis Customer Alerts Api Phrasing Overlay](https://apis.io/overlays/acronis/acronis-customer-alerts-api-phrasing-overlay/)
 - …and 58 more published on APIs.io
 
-#### Governance rules (2)
+#### Governance rules (3)
 
 Spectral rulesets for the provider's contracts.
 
 - [Acronis — jsonschema rules](https://apis.io/rules/acronis/acronis-jsonschema-spectral-rules/)
+- [Acronis API Rules](https://apis.io/rules/acronis/acronis-rules/)
 - [Acronis API Rules](https://apis.io/rules/acronis/acronis-spectral-rules/)
 
 #### Security (4)
@@ -378,18 +379,18 @@ Links to the company's own pages. This repository publishes no copy of their spe
 
 ## API Evangelist rating
 
-**Kin Score 82.9** — exemplar · rubric 0.25.0 · scored 2026-10-23
+**Kin Score 86.2** — exemplar · rubric 0.28.1 · scored 2026-11-21
 
 | Facet | Score |
 |---|---|
-| Discoverability | 76.7 |
-| Contract quality | 61.5 |
+| Discoverability | 88.3 |
+| Contract quality | 69.2 |
 | Contract governance | 45.5 |
-| Operational transparency | 76.3 |
+| Operational transparency | 78.6 |
 | Developer ergonomics | 86.3 |
-| Access clarity | 92.1 |
+| Access clarity | 91.5 |
 
-**Agent readiness 55.2** — agent-native
+**Agent readiness 54.1** — agent-native
 
 | Agent-readiness dimension | Result |
 |---|---|
@@ -414,6 +415,10 @@ Links to the company's own pages. This repository publishes no copy of their spe
 | Agentic Commerce | — |
 | Pagination Ratio | — |
 | Operation Distinctiveness | distinct |
+| MCP Tool Quality | na |
+| Onboarding Descriptor | — |
+| Dns Aid Index | na |
+| Markdown Negotiation | na |
 
 **Regulatory alignment 45.1** — Horizontal (data, software, accessibility, platform)
 
